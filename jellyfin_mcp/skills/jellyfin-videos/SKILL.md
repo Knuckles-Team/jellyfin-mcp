@@ -1,0 +1,135 @@
+---
+name: jellyfin-videos
+description: "Generated skill for Videos operations. Contains 5 tools."
+---
+
+### Overview
+This skill handles operations related to Videos.
+
+### Available Tools
+- `get_additional_part_tool`: Gets additional parts for a video.
+  - **Parameters**:
+    - `item_id` (str)
+    - `user_id` (Optional[str])
+- `delete_alternate_sources_tool`: Removes alternate video sources.
+  - **Parameters**:
+    - `item_id` (str)
+- `get_video_stream_tool`: Gets a video stream.
+  - **Parameters**:
+    - `item_id` (str)
+    - `container` (Optional[str])
+    - `static` (Optional[bool])
+    - `params` (Optional[str])
+    - `tag` (Optional[str])
+    - `device_profile_id` (Optional[str])
+    - `play_session_id` (Optional[str])
+    - `segment_container` (Optional[str])
+    - `segment_length` (Optional[int])
+    - `min_segments` (Optional[int])
+    - `media_source_id` (Optional[str])
+    - `device_id` (Optional[str])
+    - `audio_codec` (Optional[str])
+    - `enable_auto_stream_copy` (Optional[bool])
+    - `allow_video_stream_copy` (Optional[bool])
+    - `allow_audio_stream_copy` (Optional[bool])
+    - `break_on_non_key_frames` (Optional[bool])
+    - `audio_sample_rate` (Optional[int])
+    - `max_audio_bit_depth` (Optional[int])
+    - `audio_bit_rate` (Optional[int])
+    - `audio_channels` (Optional[int])
+    - `max_audio_channels` (Optional[int])
+    - `profile` (Optional[str])
+    - `level` (Optional[str])
+    - `framerate` (Optional[float])
+    - `max_framerate` (Optional[float])
+    - `copy_timestamps` (Optional[bool])
+    - `start_time_ticks` (Optional[int])
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `video_bit_rate` (Optional[int])
+    - `subtitle_stream_index` (Optional[int])
+    - `subtitle_method` (Optional[str])
+    - `max_ref_frames` (Optional[int])
+    - `max_video_bit_depth` (Optional[int])
+    - `require_avc` (Optional[bool])
+    - `de_interlace` (Optional[bool])
+    - `require_non_anamorphic` (Optional[bool])
+    - `transcoding_max_audio_channels` (Optional[int])
+    - `cpu_core_limit` (Optional[int])
+    - `live_stream_id` (Optional[str])
+    - `enable_mpegts_m2_ts_mode` (Optional[bool])
+    - `video_codec` (Optional[str])
+    - `subtitle_codec` (Optional[str])
+    - `transcode_reasons` (Optional[str])
+    - `audio_stream_index` (Optional[int])
+    - `video_stream_index` (Optional[int])
+    - `context` (Optional[str])
+    - `stream_options` (Optional[Dict[str, Any]])
+    - `enable_audio_vbr_encoding` (Optional[bool])
+- `get_video_stream_by_container_tool`: Gets a video stream.
+  - **Parameters**:
+    - `item_id` (str)
+    - `container` (str)
+    - `static` (Optional[bool])
+    - `params` (Optional[str])
+    - `tag` (Optional[str])
+    - `device_profile_id` (Optional[str])
+    - `play_session_id` (Optional[str])
+    - `segment_container` (Optional[str])
+    - `segment_length` (Optional[int])
+    - `min_segments` (Optional[int])
+    - `media_source_id` (Optional[str])
+    - `device_id` (Optional[str])
+    - `audio_codec` (Optional[str])
+    - `enable_auto_stream_copy` (Optional[bool])
+    - `allow_video_stream_copy` (Optional[bool])
+    - `allow_audio_stream_copy` (Optional[bool])
+    - `break_on_non_key_frames` (Optional[bool])
+    - `audio_sample_rate` (Optional[int])
+    - `max_audio_bit_depth` (Optional[int])
+    - `audio_bit_rate` (Optional[int])
+    - `audio_channels` (Optional[int])
+    - `max_audio_channels` (Optional[int])
+    - `profile` (Optional[str])
+    - `level` (Optional[str])
+    - `framerate` (Optional[float])
+    - `max_framerate` (Optional[float])
+    - `copy_timestamps` (Optional[bool])
+    - `start_time_ticks` (Optional[int])
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `video_bit_rate` (Optional[int])
+    - `subtitle_stream_index` (Optional[int])
+    - `subtitle_method` (Optional[str])
+    - `max_ref_frames` (Optional[int])
+    - `max_video_bit_depth` (Optional[int])
+    - `require_avc` (Optional[bool])
+    - `de_interlace` (Optional[bool])
+    - `require_non_anamorphic` (Optional[bool])
+    - `transcoding_max_audio_channels` (Optional[int])
+    - `cpu_core_limit` (Optional[int])
+    - `live_stream_id` (Optional[str])
+    - `enable_mpegts_m2_ts_mode` (Optional[bool])
+    - `video_codec` (Optional[str])
+    - `subtitle_codec` (Optional[str])
+    - `transcode_reasons` (Optional[str])
+    - `audio_stream_index` (Optional[int])
+    - `video_stream_index` (Optional[int])
+    - `context` (Optional[str])
+    - `stream_options` (Optional[Dict[str, Any]])
+    - `enable_audio_vbr_encoding` (Optional[bool])
+- `merge_versions_tool`: Merges videos into a single record.
+  - **Parameters**:
+    - `ids` (Optional[List[Any]])
+
+### Usage Instructions
+1. Review the tool available in this skill.
+2. Call the tool with the required parameters.
+
+### Error Handling
+- Ensure all required parameters are provided.
+- Check return values for error messages.

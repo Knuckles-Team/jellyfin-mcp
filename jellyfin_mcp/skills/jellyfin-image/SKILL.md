@@ -1,0 +1,295 @@
+---
+name: jellyfin-image
+description: "Generated skill for Image operations. Contains 24 tools."
+---
+
+### Overview
+This skill handles operations related to Image.
+
+### Available Tools
+- `get_artist_image_tool`: Get artist image by name.
+  - **Parameters**:
+    - `name` (str)
+    - `image_type` (str)
+    - `image_index` (int)
+    - `tag` (Optional[str])
+    - `format` (Optional[str])
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `percent_played` (Optional[float])
+    - `unplayed_count` (Optional[int])
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `quality` (Optional[int])
+    - `fill_width` (Optional[int])
+    - `fill_height` (Optional[int])
+    - `blur` (Optional[int])
+    - `background_color` (Optional[str])
+    - `foreground_layer` (Optional[str])
+- `get_splashscreen_tool`: Generates or gets the splashscreen.
+  - **Parameters**:
+    - `tag` (Optional[str])
+    - `format` (Optional[str])
+- `upload_custom_splashscreen_tool`: Uploads a custom splashscreen. The body is expected to the image contents base64 encoded.
+  - **Parameters**:
+    - `body` (Optional[Dict[str, Any]])
+- `delete_custom_splashscreen_tool`: Delete a custom splashscreen.
+- `get_genre_image_tool`: Get genre image by name.
+  - **Parameters**:
+    - `name` (str)
+    - `image_type` (str)
+    - `tag` (Optional[str])
+    - `format` (Optional[str])
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `percent_played` (Optional[float])
+    - `unplayed_count` (Optional[int])
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `quality` (Optional[int])
+    - `fill_width` (Optional[int])
+    - `fill_height` (Optional[int])
+    - `blur` (Optional[int])
+    - `background_color` (Optional[str])
+    - `foreground_layer` (Optional[str])
+    - `image_index` (Optional[int])
+- `get_genre_image_by_index_tool`: Get genre image by name.
+  - **Parameters**:
+    - `name` (str)
+    - `image_type` (str)
+    - `image_index` (int)
+    - `tag` (Optional[str])
+    - `format` (Optional[str])
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `percent_played` (Optional[float])
+    - `unplayed_count` (Optional[int])
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `quality` (Optional[int])
+    - `fill_width` (Optional[int])
+    - `fill_height` (Optional[int])
+    - `blur` (Optional[int])
+    - `background_color` (Optional[str])
+    - `foreground_layer` (Optional[str])
+- `get_item_image_infos_tool`: Get item image infos.
+  - **Parameters**:
+    - `item_id` (str)
+- `delete_item_image_tool`: Delete an item's image.
+  - **Parameters**:
+    - `item_id` (str)
+    - `image_type` (str)
+    - `image_index` (Optional[int])
+- `set_item_image_tool`: Set item image.
+  - **Parameters**:
+    - `item_id` (str)
+    - `image_type` (str)
+    - `body` (Optional[Dict[str, Any]])
+- `get_item_image_tool`: Gets the item's image.
+  - **Parameters**:
+    - `item_id` (str)
+    - `image_type` (str)
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `quality` (Optional[int])
+    - `fill_width` (Optional[int])
+    - `fill_height` (Optional[int])
+    - `tag` (Optional[str])
+    - `format` (Optional[str])
+    - `percent_played` (Optional[float])
+    - `unplayed_count` (Optional[int])
+    - `blur` (Optional[int])
+    - `background_color` (Optional[str])
+    - `foreground_layer` (Optional[str])
+    - `image_index` (Optional[int])
+- `delete_item_image_by_index_tool`: Delete an item's image.
+  - **Parameters**:
+    - `item_id` (str)
+    - `image_type` (str)
+    - `image_index` (int)
+- `set_item_image_by_index_tool`: Set item image.
+  - **Parameters**:
+    - `item_id` (str)
+    - `image_type` (str)
+    - `image_index` (int)
+    - `body` (Optional[Dict[str, Any]])
+- `get_item_image_by_index_tool`: Gets the item's image.
+  - **Parameters**:
+    - `item_id` (str)
+    - `image_type` (str)
+    - `image_index` (int)
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `quality` (Optional[int])
+    - `fill_width` (Optional[int])
+    - `fill_height` (Optional[int])
+    - `tag` (Optional[str])
+    - `format` (Optional[str])
+    - `percent_played` (Optional[float])
+    - `unplayed_count` (Optional[int])
+    - `blur` (Optional[int])
+    - `background_color` (Optional[str])
+    - `foreground_layer` (Optional[str])
+- `get_item_image2_tool`: Gets the item's image.
+  - **Parameters**:
+    - `item_id` (str)
+    - `image_type` (str)
+    - `max_width` (int)
+    - `max_height` (int)
+    - `tag` (str)
+    - `format` (str)
+    - `percent_played` (float)
+    - `unplayed_count` (int)
+    - `image_index` (int)
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `quality` (Optional[int])
+    - `fill_width` (Optional[int])
+    - `fill_height` (Optional[int])
+    - `blur` (Optional[int])
+    - `background_color` (Optional[str])
+    - `foreground_layer` (Optional[str])
+- `update_item_image_index_tool`: Updates the index for an item image.
+  - **Parameters**:
+    - `item_id` (str)
+    - `image_type` (str)
+    - `image_index` (int)
+    - `new_index` (Optional[int])
+- `get_music_genre_image_tool`: Get music genre image by name.
+  - **Parameters**:
+    - `name` (str)
+    - `image_type` (str)
+    - `tag` (Optional[str])
+    - `format` (Optional[str])
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `percent_played` (Optional[float])
+    - `unplayed_count` (Optional[int])
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `quality` (Optional[int])
+    - `fill_width` (Optional[int])
+    - `fill_height` (Optional[int])
+    - `blur` (Optional[int])
+    - `background_color` (Optional[str])
+    - `foreground_layer` (Optional[str])
+    - `image_index` (Optional[int])
+- `get_music_genre_image_by_index_tool`: Get music genre image by name.
+  - **Parameters**:
+    - `name` (str)
+    - `image_type` (str)
+    - `image_index` (int)
+    - `tag` (Optional[str])
+    - `format` (Optional[str])
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `percent_played` (Optional[float])
+    - `unplayed_count` (Optional[int])
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `quality` (Optional[int])
+    - `fill_width` (Optional[int])
+    - `fill_height` (Optional[int])
+    - `blur` (Optional[int])
+    - `background_color` (Optional[str])
+    - `foreground_layer` (Optional[str])
+- `get_person_image_tool`: Get person image by name.
+  - **Parameters**:
+    - `name` (str)
+    - `image_type` (str)
+    - `tag` (Optional[str])
+    - `format` (Optional[str])
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `percent_played` (Optional[float])
+    - `unplayed_count` (Optional[int])
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `quality` (Optional[int])
+    - `fill_width` (Optional[int])
+    - `fill_height` (Optional[int])
+    - `blur` (Optional[int])
+    - `background_color` (Optional[str])
+    - `foreground_layer` (Optional[str])
+    - `image_index` (Optional[int])
+- `get_person_image_by_index_tool`: Get person image by name.
+  - **Parameters**:
+    - `name` (str)
+    - `image_type` (str)
+    - `image_index` (int)
+    - `tag` (Optional[str])
+    - `format` (Optional[str])
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `percent_played` (Optional[float])
+    - `unplayed_count` (Optional[int])
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `quality` (Optional[int])
+    - `fill_width` (Optional[int])
+    - `fill_height` (Optional[int])
+    - `blur` (Optional[int])
+    - `background_color` (Optional[str])
+    - `foreground_layer` (Optional[str])
+- `get_studio_image_tool`: Get studio image by name.
+  - **Parameters**:
+    - `name` (str)
+    - `image_type` (str)
+    - `tag` (Optional[str])
+    - `format` (Optional[str])
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `percent_played` (Optional[float])
+    - `unplayed_count` (Optional[int])
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `quality` (Optional[int])
+    - `fill_width` (Optional[int])
+    - `fill_height` (Optional[int])
+    - `blur` (Optional[int])
+    - `background_color` (Optional[str])
+    - `foreground_layer` (Optional[str])
+    - `image_index` (Optional[int])
+- `get_studio_image_by_index_tool`: Get studio image by name.
+  - **Parameters**:
+    - `name` (str)
+    - `image_type` (str)
+    - `image_index` (int)
+    - `tag` (Optional[str])
+    - `format` (Optional[str])
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `percent_played` (Optional[float])
+    - `unplayed_count` (Optional[int])
+    - `width` (Optional[int])
+    - `height` (Optional[int])
+    - `quality` (Optional[int])
+    - `fill_width` (Optional[int])
+    - `fill_height` (Optional[int])
+    - `blur` (Optional[int])
+    - `background_color` (Optional[str])
+    - `foreground_layer` (Optional[str])
+- `post_user_image_tool`: Sets the user image.
+  - **Parameters**:
+    - `user_id` (Optional[str])
+    - `body` (Optional[Dict[str, Any]])
+- `delete_user_image_tool`: Delete the user's image.
+  - **Parameters**:
+    - `user_id` (Optional[str])
+- `get_user_image_tool`: Get user profile image.
+  - **Parameters**:
+    - `user_id` (Optional[str])
+    - `tag` (Optional[str])
+    - `format` (Optional[str])
+
+### Usage Instructions
+1. Review the tool available in this skill.
+2. Call the tool with the required parameters.
+
+### Error Handling
+- Ensure all required parameters are provided.
+- Check return values for error messages.
