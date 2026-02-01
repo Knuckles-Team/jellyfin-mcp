@@ -30,7 +30,7 @@ repos:
     rev: v0.14.14
     hooks:
       - id: ruff
-        exclude: ^(test/|tests/\.py$)
+        exclude: ^(tests/|test/|scripts/|script/)
         types_or: [ python, pyi, jupyter ]
         args: ["--fix", "--ignore=E402"]
   - repo: https://github.com/codespell-project/codespell
@@ -47,4 +47,4 @@ repos:
     rev: 1.9.1
     hooks:
       - id: nbqa-black
-        exclude: ^(\.\/test/|\./tests/)
+        exclude: ^(tests/|test/|scripts/|script/)
