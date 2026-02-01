@@ -1,6 +1,9 @@
 import threading
+import os
 from fastmcp.server.middleware import MiddlewareContext, Middleware
 from fastmcp.utilities.logging import get_logger
+from jellyfin_mcp.jellyfin_api import Api
+from jellyfin_mcp.utils import to_boolean
 
 # Thread-local storage for user token
 local = threading.local()
@@ -51,3 +54,16 @@ class JWTClaimsLoggingMiddleware(Middleware):
                     "scopes": context.auth.claims.get("scope"),
                 },
             )
+
+
+def get_client():
+    base_url = os.environ.get("JELLYFIN_BASE_URL")
+    token = os.environ.get("JELLYFIN_TOKEN")
+    username = os.environ.get("JELLYFIN_USERNAME")
+    password = os.environ.get("JELLYFIN_PASSWORD")
+    verify = to_boolean(os.environ.get("JELLYFIN_VERIFY", "False"))
+    if not base_url:
+        raise ValueError("JELLYFIN_BASE_URL environment variable is required")
+    return Api(
+        base_url, token=token, username=username, password=password, verify=verify
+    )

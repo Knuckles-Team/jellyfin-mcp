@@ -19,11 +19,11 @@ from fastmcp.server.middleware.timing import TimingMiddleware
 from fastmcp.server.middleware.rate_limiting import RateLimitingMiddleware
 from fastmcp.server.middleware.error_handling import ErrorHandlingMiddleware
 from fastmcp.utilities.logging import get_logger
-from jellyfin_mcp.jellyfin_api import Api
 from jellyfin_mcp.utils import to_boolean, to_integer
 from jellyfin_mcp.middlewares import (
     UserTokenMiddleware,
     JWTClaimsLoggingMiddleware,
+    get_client,
 )
 
 __version__ = "0.1.1"
@@ -53,20 +53,11 @@ DEFAULT_HOST = os.getenv("HOST", "0.0.0.0")
 DEFAULT_PORT = to_integer(string=os.getenv("PORT", "8000"))
 
 
-def get_api_client():
-    base_url = os.environ.get("JELLYFIN_BASE_URL")
-    token = os.environ.get("JELLYFIN_TOKEN")
-    username = os.environ.get("JELLYFIN_USERNAME")
-    password = os.environ.get("JELLYFIN_PASSWORD")
-    verify = to_boolean(os.environ.get("JELLYFIN_VERIFY", "False"))
-    if not base_url:
-        raise ValueError("JELLYFIN_BASE_URL environment variable is required")
-    return Api(
-        base_url, token=token, username=username, password=password, verify=verify
-    )
-
-
 def register_tools(mcp: FastMCP):
+    @mcp.custom_route("/health", methods=["GET"])
+    async def health_check() -> Dict:
+        return {"status": "OK"}
+
     @mcp.tool(
         name="get_log_entries",
         description="Gets activity log entries.",
@@ -90,7 +81,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets activity log entries."""
-        api = get_api_client()
+        api = get_client()
         return api.get_log_entries(
             start_index=start_index,
             limit=limit,
@@ -101,7 +92,7 @@ def register_tools(mcp: FastMCP):
     @mcp.tool(name="get_keys", description="Get all keys.", tags={"ApiKey"})
     def get_keys_tool() -> Any:
         """Get all keys."""
-        api = get_api_client()
+        api = get_client()
         return api.get_keys()
 
     @mcp.tool(name="create_key", description="Create a new api key.", tags={"ApiKey"})
@@ -111,7 +102,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Create a new api key."""
-        api = get_api_client()
+        api = get_client()
         return api.create_key(app=app)
 
     @mcp.tool(name="revoke_key", description="Remove an api key.", tags={"ApiKey"})
@@ -119,7 +110,7 @@ def register_tools(mcp: FastMCP):
         key: str = Field(description="The access token to delete."),
     ) -> Any:
         """Remove an api key."""
-        api = get_api_client()
+        api = get_client()
         return api.revoke_key(key=key)
 
     @mcp.tool(
@@ -248,7 +239,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets all artists from a given item, folder, or the entire library."""
-        api = get_api_client()
+        api = get_client()
         return api.get_artists(
             min_community_rating=min_community_rating,
             start_index=start_index,
@@ -297,7 +288,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets an artist by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_artist_by_name(name=name, user_id=user_id)
 
     @mcp.tool(
@@ -426,7 +417,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets all album artists from a given item, folder, or the entire library."""
-        api = get_api_client()
+        api = get_client()
         return api.get_album_artists(
             min_community_rating=min_community_rating,
             start_index=start_index,
@@ -640,7 +631,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets an audio stream."""
-        api = get_api_client()
+        api = get_client()
         return api.get_audio_stream(
             item_id=item_id,
             container=container,
@@ -872,7 +863,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets an audio stream."""
-        api = get_api_client()
+        api = get_client()
         return api.get_audio_stream_by_container(
             item_id=item_id,
             container=container,
@@ -933,7 +924,7 @@ def register_tools(mcp: FastMCP):
     )
     def list_backups_tool() -> Any:
         """Gets a list of all currently present backups in the backup directory."""
-        api = get_api_client()
+        api = get_client()
         return api.list_backups()
 
     @mcp.tool(
@@ -943,7 +934,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Creates a new Backup."""
-        api = get_api_client()
+        api = get_client()
         return api.create_backup(body=body)
 
     @mcp.tool(
@@ -957,7 +948,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Gets the descriptor from an existing archive is present."""
-        api = get_api_client()
+        api = get_client()
         return api.get_backup(path=path)
 
     @mcp.tool(
@@ -969,7 +960,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Restores to a backup by restarting the server and applying the backup."""
-        api = get_api_client()
+        api = get_client()
         return api.start_restore_backup(body=body)
 
     @mcp.tool(
@@ -979,7 +970,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_branding_options_tool() -> Any:
         """Gets branding configuration."""
-        api = get_api_client()
+        api = get_client()
         return api.get_branding_options()
 
     @mcp.tool(
@@ -987,7 +978,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_branding_css_tool() -> Any:
         """Gets branding css."""
-        api = get_api_client()
+        api = get_client()
         return api.get_branding_css()
 
     @mcp.tool(
@@ -995,7 +986,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_branding_css_2_tool() -> Any:
         """Gets branding css."""
-        api = get_api_client()
+        api = get_client()
         return api.get_branding_css_2()
 
     @mcp.tool(
@@ -1027,7 +1018,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets available channels."""
-        api = get_api_client()
+        api = get_client()
         return api.get_channels(
             user_id=user_id,
             start_index=start_index,
@@ -1046,7 +1037,7 @@ def register_tools(mcp: FastMCP):
         channel_id: str = Field(description="Channel id."),
     ) -> Any:
         """Get channel features."""
-        api = get_api_client()
+        api = get_client()
         return api.get_channel_features(channel_id=channel_id)
 
     @mcp.tool(
@@ -1082,7 +1073,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get channel items."""
-        api = get_api_client()
+        api = get_client()
         return api.get_channel_items(
             channel_id=channel_id,
             folder_id=folder_id,
@@ -1102,7 +1093,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_all_channel_features_tool() -> Any:
         """Get all channel features."""
-        api = get_api_client()
+        api = get_client()
         return api.get_all_channel_features()
 
     @mcp.tool(
@@ -1133,7 +1124,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets latest channel items."""
-        api = get_api_client()
+        api = get_client()
         return api.get_latest_channel_items(
             user_id=user_id,
             start_index=start_index,
@@ -1148,7 +1139,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Upload a document."""
-        api = get_api_client()
+        api = get_client()
         return api.log_file(body=body)
 
     @mcp.tool(
@@ -1172,7 +1163,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Creates a new collection."""
-        api = get_api_client()
+        api = get_client()
         return api.create_collection(
             name=name, ids=ids, parent_id=parent_id, is_locked=is_locked
         )
@@ -1189,7 +1180,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Adds items to a collection."""
-        api = get_api_client()
+        api = get_client()
         return api.add_to_collection(collection_id=collection_id, ids=ids)
 
     @mcp.tool(
@@ -1204,7 +1195,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Removes items from a collection."""
-        api = get_api_client()
+        api = get_client()
         return api.remove_from_collection(collection_id=collection_id, ids=ids)
 
     @mcp.tool(
@@ -1214,7 +1205,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_configuration_tool() -> Any:
         """Gets application configuration."""
-        api = get_api_client()
+        api = get_client()
         return api.get_configuration()
 
     @mcp.tool(
@@ -1226,7 +1217,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Updates application configuration."""
-        api = get_api_client()
+        api = get_client()
         return api.update_configuration(body=body)
 
     @mcp.tool(
@@ -1238,7 +1229,7 @@ def register_tools(mcp: FastMCP):
         key: str = Field(description="Configuration key."),
     ) -> Any:
         """Gets a named configuration."""
-        api = get_api_client()
+        api = get_client()
         return api.get_named_configuration(key=key)
 
     @mcp.tool(
@@ -1253,7 +1244,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Updates named configuration."""
-        api = get_api_client()
+        api = get_client()
         return api.update_named_configuration(key=key, body=body)
 
     @mcp.tool(
@@ -1265,7 +1256,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Updates branding configuration."""
-        api = get_api_client()
+        api = get_client()
         return api.update_branding_configuration(body=body)
 
     @mcp.tool(
@@ -1275,7 +1266,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_default_metadata_options_tool() -> Any:
         """Gets a default MetadataOptions object."""
-        api = get_api_client()
+        api = get_client()
         return api.get_default_metadata_options()
 
     @mcp.tool(
@@ -1287,7 +1278,7 @@ def register_tools(mcp: FastMCP):
         name: Optional[str] = Field(default=None, description="The name of the page.")
     ) -> Any:
         """Gets a dashboard configuration page."""
-        api = get_api_client()
+        api = get_client()
         return api.get_dashboard_configuration_page(name=name)
 
     @mcp.tool(
@@ -1301,7 +1292,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Gets the configuration pages."""
-        api = get_api_client()
+        api = get_client()
         return api.get_configuration_pages(enable_in_main_menu=enable_in_main_menu)
 
     @mcp.tool(name="get_devices", description="Get Devices.", tags={"Devices"})
@@ -1311,7 +1302,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Get Devices."""
-        api = get_api_client()
+        api = get_client()
         return api.get_devices(user_id=user_id)
 
     @mcp.tool(name="delete_device", description="Deletes a device.", tags={"Devices"})
@@ -1319,7 +1310,7 @@ def register_tools(mcp: FastMCP):
         id: Optional[str] = Field(default=None, description="Device Id.")
     ) -> Any:
         """Deletes a device."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_device(id=id)
 
     @mcp.tool(
@@ -1329,7 +1320,7 @@ def register_tools(mcp: FastMCP):
         id: Optional[str] = Field(default=None, description="Device Id.")
     ) -> Any:
         """Get info for a device."""
-        api = get_api_client()
+        api = get_client()
         return api.get_device_info(id=id)
 
     @mcp.tool(
@@ -1341,7 +1332,7 @@ def register_tools(mcp: FastMCP):
         id: Optional[str] = Field(default=None, description="Device Id.")
     ) -> Any:
         """Get options for a device."""
-        api = get_api_client()
+        api = get_client()
         return api.get_device_options(id=id)
 
     @mcp.tool(
@@ -1356,7 +1347,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Update device options."""
-        api = get_api_client()
+        api = get_client()
         return api.update_device_options(id=id, body=body)
 
     @mcp.tool(
@@ -1370,7 +1361,7 @@ def register_tools(mcp: FastMCP):
         client: Optional[str] = Field(default=None, description="Client."),
     ) -> Any:
         """Get Display Preferences."""
-        api = get_api_client()
+        api = get_client()
         return api.get_display_preferences(
             display_preferences_id=display_preferences_id,
             user_id=user_id,
@@ -1391,7 +1382,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Update Display Preferences."""
-        api = get_api_client()
+        api = get_client()
         return api.update_display_preferences(
             display_preferences_id=display_preferences_id,
             user_id=user_id,
@@ -1590,7 +1581,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a video stream using HTTP live streaming."""
-        api = get_api_client()
+        api = get_client()
         return api.get_hls_audio_segment(
             item_id=item_id,
             playlist_id=playlist_id,
@@ -1829,7 +1820,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets an audio stream using HTTP live streaming."""
-        api = get_api_client()
+        api = get_client()
         return api.get_variant_hls_audio_playlist(
             item_id=item_id,
             static=static,
@@ -2066,7 +2057,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets an audio hls playlist stream."""
-        api = get_api_client()
+        api = get_client()
         return api.get_master_hls_audio_playlist(
             item_id=item_id,
             static=static,
@@ -2321,7 +2312,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a video stream using HTTP live streaming."""
-        api = get_api_client()
+        api = get_client()
         return api.get_hls_video_segment(
             item_id=item_id,
             playlist_id=playlist_id,
@@ -2576,7 +2567,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a hls live stream."""
-        api = get_api_client()
+        api = get_client()
         return api.get_live_hls_stream(
             item_id=item_id,
             container=container,
@@ -2823,7 +2814,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a video stream using HTTP live streaming."""
-        api = get_api_client()
+        api = get_client()
         return api.get_variant_hls_video_playlist(
             item_id=item_id,
             static=static,
@@ -3075,7 +3066,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a video hls playlist stream."""
-        api = get_api_client()
+        api = get_client()
         return api.get_master_hls_video_playlist(
             item_id=item_id,
             static=static,
@@ -3140,7 +3131,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_default_directory_browser_tool() -> Any:
         """Get Default directory browser."""
-        api = get_api_client()
+        api = get_client()
         return api.get_default_directory_browser()
 
     @mcp.tool(
@@ -3160,7 +3151,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets the contents of a given directory in the file system."""
-        api = get_api_client()
+        api = get_client()
         return api.get_directory_contents(
             path=path,
             include_files=include_files,
@@ -3174,7 +3165,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_drives_tool() -> Any:
         """Gets available drives from the server's file system."""
-        api = get_api_client()
+        api = get_client()
         return api.get_drives()
 
     @mcp.tool(
@@ -3184,7 +3175,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_network_shares_tool() -> Any:
         """Gets network paths."""
-        api = get_api_client()
+        api = get_client()
         return api.get_network_shares()
 
     @mcp.tool(
@@ -3196,7 +3187,7 @@ def register_tools(mcp: FastMCP):
         path: Optional[str] = Field(default=None, description="The path.")
     ) -> Any:
         """Gets the parent path of a given path."""
-        api = get_api_client()
+        api = get_client()
         return api.get_parent_path(path=path)
 
     @mcp.tool(name="validate_path", description="Validates path.", tags={"Environment"})
@@ -3204,7 +3195,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Validates path."""
-        api = get_api_client()
+        api = get_client()
         return api.validate_path(body=body)
 
     @mcp.tool(
@@ -3227,7 +3218,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets legacy query filters."""
-        api = get_api_client()
+        api = get_client()
         return api.get_query_filters_legacy(
             user_id=user_id,
             parent_id=parent_id,
@@ -3271,7 +3262,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets query filters."""
-        api = get_api_client()
+        api = get_client()
         return api.get_query_filters(
             user_id=user_id,
             parent_id=parent_id,
@@ -3358,7 +3349,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets all genres from a given item, folder, or the entire library."""
-        api = get_api_client()
+        api = get_client()
         return api.get_genres(
             start_index=start_index,
             limit=limit,
@@ -3386,7 +3377,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="The user id."),
     ) -> Any:
         """Gets a genre, by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_genre(genre_name=genre_name, user_id=user_id)
 
     @mcp.tool(
@@ -3399,7 +3390,7 @@ def register_tools(mcp: FastMCP):
         segment_id: str = Field(description="The segment id."),
     ) -> Any:
         """Gets the specified audio segment for an audio item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_hls_audio_segment_legacy_aac(
             item_id=item_id, segment_id=segment_id
         )
@@ -3414,7 +3405,7 @@ def register_tools(mcp: FastMCP):
         segment_id: str = Field(description="The segment id."),
     ) -> Any:
         """Gets the specified audio segment for an audio item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_hls_audio_segment_legacy_mp3(
             item_id=item_id, segment_id=segment_id
         )
@@ -3431,7 +3422,7 @@ def register_tools(mcp: FastMCP):
         segment_container: str = Field(description="The segment container."),
     ) -> Any:
         """Gets a hls video segment."""
-        api = get_api_client()
+        api = get_client()
         return api.get_hls_video_segment_legacy(
             item_id=item_id,
             playlist_id=playlist_id,
@@ -3449,7 +3440,7 @@ def register_tools(mcp: FastMCP):
         playlist_id: str = Field(description="The playlist id."),
     ) -> Any:
         """Gets a hls video playlist."""
-        api = get_api_client()
+        api = get_client()
         return api.get_hls_playlist_legacy(item_id=item_id, playlist_id=playlist_id)
 
     @mcp.tool(
@@ -3467,7 +3458,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Stops an active encoding."""
-        api = get_api_client()
+        api = get_client()
         return api.stop_encoding_process(
             device_id=device_id, play_session_id=play_session_id
         )
@@ -3527,7 +3518,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get artist image by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_artist_image(
             name=name,
             image_type=image_type,
@@ -3564,7 +3555,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Generates or gets the splashscreen."""
-        api = get_api_client()
+        api = get_client()
         return api.get_splashscreen(tag=tag, format=format)
 
     @mcp.tool(
@@ -3576,7 +3567,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Uploads a custom splashscreen. The body is expected to the image contents base64 encoded."""
-        api = get_api_client()
+        api = get_client()
         return api.upload_custom_splashscreen(body=body)
 
     @mcp.tool(
@@ -3586,7 +3577,7 @@ def register_tools(mcp: FastMCP):
     )
     def delete_custom_splashscreen_tool() -> Any:
         """Delete a custom splashscreen."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_custom_splashscreen()
 
     @mcp.tool(
@@ -3644,7 +3635,7 @@ def register_tools(mcp: FastMCP):
         image_index: Optional[int] = Field(default=None, description="Image index."),
     ) -> Any:
         """Get genre image by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_genre_image(
             name=name,
             image_type=image_type,
@@ -3722,7 +3713,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get genre image by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_genre_image_by_index(
             name=name,
             image_type=image_type,
@@ -3748,7 +3739,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_item_image_infos_tool(item_id: str = Field(description="Item id.")) -> Any:
         """Get item image infos."""
-        api = get_api_client()
+        api = get_client()
         return api.get_item_image_infos(item_id=item_id)
 
     @mcp.tool(
@@ -3762,7 +3753,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Delete an item's image."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_item_image(
             item_id=item_id, image_type=image_type, image_index=image_index
         )
@@ -3776,7 +3767,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Set item image."""
-        api = get_api_client()
+        api = get_client()
         return api.set_item_image(item_id=item_id, image_type=image_type, body=body)
 
     @mcp.tool(
@@ -3834,7 +3825,7 @@ def register_tools(mcp: FastMCP):
         image_index: Optional[int] = Field(default=None, description="Image index."),
     ) -> Any:
         """Gets the item's image."""
-        api = get_api_client()
+        api = get_client()
         return api.get_item_image(
             item_id=item_id,
             image_type=image_type,
@@ -3866,7 +3857,7 @@ def register_tools(mcp: FastMCP):
         image_index: int = Field(description="The image index."),
     ) -> Any:
         """Delete an item's image."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_item_image_by_index(
             item_id=item_id, image_type=image_type, image_index=image_index
         )
@@ -3883,7 +3874,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Set item image."""
-        api = get_api_client()
+        api = get_client()
         return api.set_item_image_by_index(
             item_id=item_id, image_type=image_type, image_index=image_index, body=body
         )
@@ -3945,7 +3936,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets the item's image."""
-        api = get_api_client()
+        api = get_client()
         return api.get_item_image_by_index(
             item_id=item_id,
             image_type=image_type,
@@ -4014,7 +4005,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets the item's image."""
-        api = get_api_client()
+        api = get_client()
         return api.get_item_image2(
             item_id=item_id,
             image_type=image_type,
@@ -4047,7 +4038,7 @@ def register_tools(mcp: FastMCP):
         new_index: Optional[int] = Field(default=None, description="New image index."),
     ) -> Any:
         """Updates the index for an item image."""
-        api = get_api_client()
+        api = get_client()
         return api.update_item_image_index(
             item_id=item_id,
             image_type=image_type,
@@ -4112,7 +4103,7 @@ def register_tools(mcp: FastMCP):
         image_index: Optional[int] = Field(default=None, description="Image index."),
     ) -> Any:
         """Get music genre image by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_music_genre_image(
             name=name,
             image_type=image_type,
@@ -4190,7 +4181,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get music genre image by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_music_genre_image_by_index(
             name=name,
             image_type=image_type,
@@ -4266,7 +4257,7 @@ def register_tools(mcp: FastMCP):
         image_index: Optional[int] = Field(default=None, description="Image index."),
     ) -> Any:
         """Get person image by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_person_image(
             name=name,
             image_type=image_type,
@@ -4344,7 +4335,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get person image by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_person_image_by_index(
             name=name,
             image_type=image_type,
@@ -4420,7 +4411,7 @@ def register_tools(mcp: FastMCP):
         image_index: Optional[int] = Field(default=None, description="Image index."),
     ) -> Any:
         """Get studio image by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_studio_image(
             name=name,
             image_type=image_type,
@@ -4498,7 +4489,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get studio image by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_studio_image_by_index(
             name=name,
             image_type=image_type,
@@ -4529,7 +4520,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Sets the user image."""
-        api = get_api_client()
+        api = get_client()
         return api.post_user_image(user_id=user_id, body=body)
 
     @mcp.tool(
@@ -4539,7 +4530,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="User Id.")
     ) -> Any:
         """Delete the user's image."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_user_image(user_id=user_id)
 
     @mcp.tool(
@@ -4557,7 +4548,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get user profile image."""
-        api = get_api_client()
+        api = get_client()
         return api.get_user_image(user_id=user_id, tag=tag, format=format)
 
     @mcp.tool(
@@ -4595,7 +4586,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Creates an instant playlist based on a given album."""
-        api = get_api_client()
+        api = get_client()
         return api.get_instant_mix_from_album(
             item_id=item_id,
             user_id=user_id,
@@ -4642,7 +4633,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Creates an instant playlist based on a given artist."""
-        api = get_api_client()
+        api = get_client()
         return api.get_instant_mix_from_artists(
             item_id=item_id,
             user_id=user_id,
@@ -4689,7 +4680,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Creates an instant playlist based on a given artist."""
-        api = get_api_client()
+        api = get_client()
         return api.get_instant_mix_from_artists2(
             id=id,
             user_id=user_id,
@@ -4736,7 +4727,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Creates an instant playlist based on a given item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_instant_mix_from_item(
             item_id=item_id,
             user_id=user_id,
@@ -4783,7 +4774,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Creates an instant playlist based on a given genre."""
-        api = get_api_client()
+        api = get_client()
         return api.get_instant_mix_from_music_genre_by_name(
             name=name,
             user_id=user_id,
@@ -4830,7 +4821,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Creates an instant playlist based on a given genre."""
-        api = get_api_client()
+        api = get_client()
         return api.get_instant_mix_from_music_genre_by_id(
             id=id,
             user_id=user_id,
@@ -4877,7 +4868,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Creates an instant playlist based on a given playlist."""
-        api = get_api_client()
+        api = get_client()
         return api.get_instant_mix_from_playlist(
             item_id=item_id,
             user_id=user_id,
@@ -4924,7 +4915,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Creates an instant playlist based on a given song."""
-        api = get_api_client()
+        api = get_client()
         return api.get_instant_mix_from_song(
             item_id=item_id,
             user_id=user_id,
@@ -4943,7 +4934,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_external_id_infos_tool(item_id: str = Field(description="Item id.")) -> Any:
         """Get the item's external id info."""
-        api = get_api_client()
+        api = get_client()
         return api.get_external_id_infos(item_id=item_id)
 
     @mcp.tool(
@@ -4962,7 +4953,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Applies search criteria to an item and refreshes metadata."""
-        api = get_api_client()
+        api = get_client()
         return api.apply_search_criteria(
             item_id=item_id, replace_all_images=replace_all_images, body=body
         )
@@ -4976,7 +4967,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Get book remote search."""
-        api = get_api_client()
+        api = get_client()
         return api.get_book_remote_search_results(body=body)
 
     @mcp.tool(
@@ -4988,7 +4979,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Get box set remote search."""
-        api = get_api_client()
+        api = get_client()
         return api.get_box_set_remote_search_results(body=body)
 
     @mcp.tool(
@@ -5000,7 +4991,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Get movie remote search."""
-        api = get_api_client()
+        api = get_client()
         return api.get_movie_remote_search_results(body=body)
 
     @mcp.tool(
@@ -5012,7 +5003,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Get music album remote search."""
-        api = get_api_client()
+        api = get_client()
         return api.get_music_album_remote_search_results(body=body)
 
     @mcp.tool(
@@ -5024,7 +5015,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Get music artist remote search."""
-        api = get_api_client()
+        api = get_client()
         return api.get_music_artist_remote_search_results(body=body)
 
     @mcp.tool(
@@ -5036,7 +5027,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Get music video remote search."""
-        api = get_api_client()
+        api = get_client()
         return api.get_music_video_remote_search_results(body=body)
 
     @mcp.tool(
@@ -5048,7 +5039,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Get person remote search."""
-        api = get_api_client()
+        api = get_client()
         return api.get_person_remote_search_results(body=body)
 
     @mcp.tool(
@@ -5060,7 +5051,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Get series remote search."""
-        api = get_api_client()
+        api = get_client()
         return api.get_series_remote_search_results(body=body)
 
     @mcp.tool(
@@ -5072,7 +5063,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Get trailer remote search."""
-        api = get_api_client()
+        api = get_client()
         return api.get_trailer_remote_search_results(body=body)
 
     @mcp.tool(
@@ -5102,7 +5093,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Refreshes metadata for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.refresh_item(
             item_id=item_id,
             metadata_refresh_mode=metadata_refresh_mode,
@@ -5438,7 +5429,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets items based on a query."""
-        api = get_api_client()
+        api = get_client()
         return api.get_items(
             user_id=user_id,
             max_official_rating=max_official_rating,
@@ -5537,7 +5528,7 @@ def register_tools(mcp: FastMCP):
         ids: Optional[List[Any]] = Field(default=None, description="The item ids.")
     ) -> Any:
         """Deletes items from the library and filesystem."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_items(ids=ids)
 
     @mcp.tool(
@@ -5548,7 +5539,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="The user id."),
     ) -> Any:
         """Get Item User Data."""
-        api = get_api_client()
+        api = get_client()
         return api.get_item_user_data(user_id=user_id, item_id=item_id)
 
     @mcp.tool(
@@ -5564,7 +5555,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Update Item User Data."""
-        api = get_api_client()
+        api = get_client()
         return api.update_item_user_data(user_id=user_id, item_id=item_id, body=body)
 
     @mcp.tool(
@@ -5624,7 +5615,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets items based on a query."""
-        api = get_api_client()
+        api = get_client()
         return api.get_resume_items(
             user_id=user_id,
             start_index=start_index,
@@ -5651,7 +5642,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Updates an item."""
-        api = get_api_client()
+        api = get_client()
         return api.update_item(item_id=item_id, body=body)
 
     @mcp.tool(
@@ -5661,7 +5652,7 @@ def register_tools(mcp: FastMCP):
     )
     def delete_item_tool(item_id: str = Field(description="The item id.")) -> Any:
         """Deletes an item from the library and filesystem."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_item(item_id=item_id)
 
     @mcp.tool(
@@ -5674,7 +5665,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="User id."),
     ) -> Any:
         """Gets an item from a user's library."""
-        api = get_api_client()
+        api = get_client()
         return api.get_item(user_id=user_id, item_id=item_id)
 
     @mcp.tool(
@@ -5689,7 +5680,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Updates an item's content type."""
-        api = get_api_client()
+        api = get_client()
         return api.update_item_content_type(item_id=item_id, content_type=content_type)
 
     @mcp.tool(
@@ -5701,7 +5692,7 @@ def register_tools(mcp: FastMCP):
         item_id: str = Field(description="The item id."),
     ) -> Any:
         """Gets metadata editor info for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_metadata_editor_info(item_id=item_id)
 
     @mcp.tool(
@@ -5726,7 +5717,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets similar items."""
-        api = get_api_client()
+        api = get_client()
         return api.get_similar_albums(
             item_id=item_id,
             exclude_artist_ids=exclude_artist_ids,
@@ -5757,7 +5748,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets similar items."""
-        api = get_api_client()
+        api = get_client()
         return api.get_similar_artists(
             item_id=item_id,
             exclude_artist_ids=exclude_artist_ids,
@@ -5779,7 +5770,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets all parents of an item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_ancestors(item_id=item_id, user_id=user_id)
 
     @mcp.tool(
@@ -5789,7 +5780,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_critic_reviews_tool(item_id: str = Field(description="")) -> Any:
         """Gets critic review for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_critic_reviews(item_id=item_id)
 
     @mcp.tool(
@@ -5797,7 +5788,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_download_tool(item_id: str = Field(description="The item id.")) -> Any:
         """Downloads item media."""
-        api = get_api_client()
+        api = get_client()
         return api.get_download(item_id=item_id)
 
     @mcp.tool(
@@ -5807,7 +5798,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_file_tool(item_id: str = Field(description="The item id.")) -> Any:
         """Get the original file of an item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_file(item_id=item_id)
 
     @mcp.tool(
@@ -5832,7 +5823,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets similar items."""
-        api = get_api_client()
+        api = get_client()
         return api.get_similar_items(
             item_id=item_id,
             exclude_artist_ids=exclude_artist_ids,
@@ -5865,7 +5856,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get theme songs and videos for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_theme_media(
             item_id=item_id,
             user_id=user_id,
@@ -5898,7 +5889,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get theme songs for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_theme_songs(
             item_id=item_id,
             user_id=user_id,
@@ -5931,7 +5922,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get theme videos for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_theme_videos(
             item_id=item_id,
             user_id=user_id,
@@ -5951,7 +5942,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get item counts."""
-        api = get_api_client()
+        api = get_client()
         return api.get_item_counts(user_id=user_id, is_favorite=is_favorite)
 
     @mcp.tool(
@@ -5968,7 +5959,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets the library options info."""
-        api = get_api_client()
+        api = get_client()
         return api.get_library_options_info(
             library_content_type=library_content_type, is_new_library=is_new_library
         )
@@ -5982,7 +5973,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Reports that new movies have been added by an external source."""
-        api = get_api_client()
+        api = get_client()
         return api.post_updated_media(body=body)
 
     @mcp.tool(
@@ -5997,7 +5988,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Gets all user media folders."""
-        api = get_api_client()
+        api = get_client()
         return api.get_media_folders(is_hidden=is_hidden)
 
     @mcp.tool(
@@ -6010,7 +6001,7 @@ def register_tools(mcp: FastMCP):
         imdb_id: Optional[str] = Field(default=None, description="The imdbId."),
     ) -> Any:
         """Reports that new movies have been added by an external source."""
-        api = get_api_client()
+        api = get_client()
         return api.post_added_movies(tmdb_id=tmdb_id, imdb_id=imdb_id)
 
     @mcp.tool(
@@ -6023,7 +6014,7 @@ def register_tools(mcp: FastMCP):
         imdb_id: Optional[str] = Field(default=None, description="The imdbId."),
     ) -> Any:
         """Reports that new movies have been added by an external source."""
-        api = get_api_client()
+        api = get_client()
         return api.post_updated_movies(tmdb_id=tmdb_id, imdb_id=imdb_id)
 
     @mcp.tool(
@@ -6033,7 +6024,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_physical_paths_tool() -> Any:
         """Gets a list of physical paths from virtual folders."""
-        api = get_api_client()
+        api = get_client()
         return api.get_physical_paths()
 
     @mcp.tool(
@@ -6041,7 +6032,7 @@ def register_tools(mcp: FastMCP):
     )
     def refresh_library_tool() -> Any:
         """Starts a library scan."""
-        api = get_api_client()
+        api = get_client()
         return api.refresh_library()
 
     @mcp.tool(
@@ -6053,7 +6044,7 @@ def register_tools(mcp: FastMCP):
         tvdb_id: Optional[str] = Field(default=None, description="The tvdbId.")
     ) -> Any:
         """Reports that new episodes of a series have been added by an external source."""
-        api = get_api_client()
+        api = get_client()
         return api.post_added_series(tvdb_id=tvdb_id)
 
     @mcp.tool(
@@ -6065,7 +6056,7 @@ def register_tools(mcp: FastMCP):
         tvdb_id: Optional[str] = Field(default=None, description="The tvdbId.")
     ) -> Any:
         """Reports that new episodes of a series have been added by an external source."""
-        api = get_api_client()
+        api = get_client()
         return api.post_updated_series(tvdb_id=tvdb_id)
 
     @mcp.tool(
@@ -6090,7 +6081,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets similar items."""
-        api = get_api_client()
+        api = get_client()
         return api.get_similar_movies(
             item_id=item_id,
             exclude_artist_ids=exclude_artist_ids,
@@ -6121,7 +6112,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets similar items."""
-        api = get_api_client()
+        api = get_client()
         return api.get_similar_shows(
             item_id=item_id,
             exclude_artist_ids=exclude_artist_ids,
@@ -6152,7 +6143,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets similar items."""
-        api = get_api_client()
+        api = get_client()
         return api.get_similar_trailers(
             item_id=item_id,
             exclude_artist_ids=exclude_artist_ids,
@@ -6168,7 +6159,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_virtual_folders_tool() -> Any:
         """Gets all virtual folders."""
-        api = get_api_client()
+        api = get_client()
         return api.get_virtual_folders()
 
     @mcp.tool(
@@ -6194,7 +6185,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Adds a virtual folder."""
-        api = get_api_client()
+        api = get_client()
         return api.add_virtual_folder(
             name=name,
             collection_type=collection_type,
@@ -6217,7 +6208,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Removes a virtual folder."""
-        api = get_api_client()
+        api = get_client()
         return api.remove_virtual_folder(name=name, refresh_library=refresh_library)
 
     @mcp.tool(
@@ -6229,7 +6220,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Update library options."""
-        api = get_api_client()
+        api = get_client()
         return api.update_library_options(body=body)
 
     @mcp.tool(
@@ -6247,7 +6238,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Renames a virtual folder."""
-        api = get_api_client()
+        api = get_client()
         return api.rename_virtual_folder(
             name=name, new_name=new_name, refresh_library=refresh_library
         )
@@ -6266,7 +6257,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Add a media path to a library."""
-        api = get_api_client()
+        api = get_client()
         return api.add_media_path(refresh_library=refresh_library, body=body)
 
     @mcp.tool(
@@ -6284,7 +6275,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Remove a media path."""
-        api = get_api_client()
+        api = get_client()
         return api.remove_media_path(
             name=name, path=path, refresh_library=refresh_library
         )
@@ -6298,7 +6289,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Updates a media path."""
-        api = get_api_client()
+        api = get_client()
         return api.update_media_path(body=body)
 
     @mcp.tool(
@@ -6310,7 +6301,7 @@ def register_tools(mcp: FastMCP):
         provider_id: Optional[str] = Field(default=None, description="Provider id.")
     ) -> Any:
         """Get channel mapping options."""
-        api = get_api_client()
+        api = get_client()
         return api.get_channel_mapping_options(provider_id=provider_id)
 
     @mcp.tool(
@@ -6320,7 +6311,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Set channel mappings."""
-        api = get_api_client()
+        api = get_client()
         return api.set_channel_mapping(body=body)
 
     @mcp.tool(
@@ -6404,7 +6395,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets available live tv channels."""
-        api = get_api_client()
+        api = get_client()
         return api.get_live_tv_channels(
             type=type,
             user_id=user_id,
@@ -6439,13 +6430,13 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a live tv channel."""
-        api = get_api_client()
+        api = get_client()
         return api.get_channel(channel_id=channel_id, user_id=user_id)
 
     @mcp.tool(name="get_guide_info", description="Get guide info.", tags={"LiveTv"})
     def get_guide_info_tool() -> Any:
         """Get guide info."""
-        api = get_api_client()
+        api = get_client()
         return api.get_guide_info()
 
     @mcp.tool(
@@ -6455,7 +6446,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_live_tv_info_tool() -> Any:
         """Gets available live tv services."""
-        api = get_api_client()
+        api = get_client()
         return api.get_live_tv_info()
 
     @mcp.tool(
@@ -6476,7 +6467,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Adds a listings provider."""
-        api = get_api_client()
+        api = get_client()
         return api.add_listing_provider(
             pw=pw,
             validate_listings=validate_listings,
@@ -6493,7 +6484,7 @@ def register_tools(mcp: FastMCP):
         id: Optional[str] = Field(default=None, description="Listing provider id.")
     ) -> Any:
         """Delete listing provider."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_listing_provider(id=id)
 
     @mcp.tool(
@@ -6503,7 +6494,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_default_listing_provider_tool() -> Any:
         """Gets default listings provider info."""
-        api = get_api_client()
+        api = get_client()
         return api.get_default_listing_provider()
 
     @mcp.tool(
@@ -6516,7 +6507,7 @@ def register_tools(mcp: FastMCP):
         country: Optional[str] = Field(default=None, description="Country."),
     ) -> Any:
         """Gets available lineups."""
-        api = get_api_client()
+        api = get_client()
         return api.get_lineups(id=id, type=type, location=location, country=country)
 
     @mcp.tool(
@@ -6526,7 +6517,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_schedules_direct_countries_tool() -> Any:
         """Gets available countries."""
-        api = get_api_client()
+        api = get_client()
         return api.get_schedules_direct_countries()
 
     @mcp.tool(
@@ -6538,7 +6529,7 @@ def register_tools(mcp: FastMCP):
         recording_id: str = Field(description="Recording id."),
     ) -> Any:
         """Gets a live tv recording stream."""
-        api = get_api_client()
+        api = get_client()
         return api.get_live_recording_file(recording_id=recording_id)
 
     @mcp.tool(
@@ -6551,7 +6542,7 @@ def register_tools(mcp: FastMCP):
         container: str = Field(description="Container type."),
     ) -> Any:
         """Gets a live tv channel stream."""
-        api = get_api_client()
+        api = get_client()
         return api.get_live_stream_file(stream_id=stream_id, container=container)
 
     @mcp.tool(
@@ -6651,7 +6642,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets available live tv epgs."""
-        api = get_api_client()
+        api = get_client()
         return api.get_live_tv_programs(
             channel_ids=channel_ids,
             user_id=user_id,
@@ -6689,7 +6680,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Gets available live tv epgs."""
-        api = get_api_client()
+        api = get_client()
         return api.get_programs(body=body)
 
     @mcp.tool(
@@ -6702,7 +6693,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a live tv program."""
-        api = get_api_client()
+        api = get_client()
         return api.get_program(program_id=program_id, user_id=user_id)
 
     @mcp.tool(
@@ -6771,7 +6762,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets recommended live tv epgs."""
-        api = get_api_client()
+        api = get_client()
         return api.get_recommended_programs(
             user_id=user_id,
             start_index=start_index,
@@ -6862,7 +6853,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets live tv recordings."""
-        api = get_api_client()
+        api = get_client()
         return api.get_recordings(
             channel_id=channel_id,
             user_id=user_id,
@@ -6895,7 +6886,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a live tv recording."""
-        api = get_api_client()
+        api = get_client()
         return api.get_recording(recording_id=recording_id, user_id=user_id)
 
     @mcp.tool(
@@ -6907,7 +6898,7 @@ def register_tools(mcp: FastMCP):
         recording_id: str = Field(description="Recording id."),
     ) -> Any:
         """Deletes a live tv recording."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_recording(recording_id=recording_id)
 
     @mcp.tool(
@@ -6921,7 +6912,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Gets recording folders."""
-        api = get_api_client()
+        api = get_client()
         return api.get_recording_folders(user_id=user_id)
 
     @mcp.tool(
@@ -6935,7 +6926,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Gets live tv recording groups."""
-        api = get_api_client()
+        api = get_client()
         return api.get_recording_groups(user_id=user_id)
 
     @mcp.tool(
@@ -6943,7 +6934,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_recording_group_tool(group_id: str = Field(description="Group id.")) -> Any:
         """Get recording group."""
-        api = get_api_client()
+        api = get_client()
         return api.get_recording_group(group_id=group_id)
 
     @mcp.tool(
@@ -7003,7 +6994,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets live tv recording series."""
-        api = get_api_client()
+        api = get_client()
         return api.get_recordings_series(
             channel_id=channel_id,
             user_id=user_id,
@@ -7035,7 +7026,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets live tv series timers."""
-        api = get_api_client()
+        api = get_client()
         return api.get_series_timers(sort_by=sort_by, sort_order=sort_order)
 
     @mcp.tool(
@@ -7047,7 +7038,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Creates a live tv series timer."""
-        api = get_api_client()
+        api = get_client()
         return api.create_series_timer(body=body)
 
     @mcp.tool(
@@ -7057,7 +7048,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_series_timer_tool(timer_id: str = Field(description="Timer id.")) -> Any:
         """Gets a live tv series timer."""
-        api = get_api_client()
+        api = get_client()
         return api.get_series_timer(timer_id=timer_id)
 
     @mcp.tool(
@@ -7067,7 +7058,7 @@ def register_tools(mcp: FastMCP):
     )
     def cancel_series_timer_tool(timer_id: str = Field(description="Timer id.")) -> Any:
         """Cancels a live tv series timer."""
-        api = get_api_client()
+        api = get_client()
         return api.cancel_series_timer(timer_id=timer_id)
 
     @mcp.tool(
@@ -7082,7 +7073,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Updates a live tv series timer."""
-        api = get_api_client()
+        api = get_client()
         return api.update_series_timer(timer_id=timer_id, body=body)
 
     @mcp.tool(
@@ -7104,7 +7095,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets the live tv timers."""
-        api = get_api_client()
+        api = get_client()
         return api.get_timers(
             channel_id=channel_id,
             series_timer_id=series_timer_id,
@@ -7119,13 +7110,13 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Creates a live tv timer."""
-        api = get_api_client()
+        api = get_client()
         return api.create_timer(body=body)
 
     @mcp.tool(name="get_timer", description="Gets a timer.", tags={"LiveTv"})
     def get_timer_tool(timer_id: str = Field(description="Timer id.")) -> Any:
         """Gets a timer."""
-        api = get_api_client()
+        api = get_client()
         return api.get_timer(timer_id=timer_id)
 
     @mcp.tool(
@@ -7133,7 +7124,7 @@ def register_tools(mcp: FastMCP):
     )
     def cancel_timer_tool(timer_id: str = Field(description="Timer id.")) -> Any:
         """Cancels a live tv timer."""
-        api = get_api_client()
+        api = get_client()
         return api.cancel_timer(timer_id=timer_id)
 
     @mcp.tool(
@@ -7146,7 +7137,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Updates a live tv timer."""
-        api = get_api_client()
+        api = get_client()
         return api.update_timer(timer_id=timer_id, body=body)
 
     @mcp.tool(
@@ -7161,7 +7152,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Gets the default values for a new timer."""
-        api = get_api_client()
+        api = get_client()
         return api.get_default_timer(program_id=program_id)
 
     @mcp.tool(name="add_tuner_host", description="Adds a tuner host.", tags={"LiveTv"})
@@ -7169,7 +7160,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Adds a tuner host."""
-        api = get_api_client()
+        api = get_client()
         return api.add_tuner_host(body=body)
 
     @mcp.tool(
@@ -7179,7 +7170,7 @@ def register_tools(mcp: FastMCP):
         id: Optional[str] = Field(default=None, description="Tuner host id.")
     ) -> Any:
         """Deletes a tuner host."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_tuner_host(id=id)
 
     @mcp.tool(
@@ -7189,13 +7180,13 @@ def register_tools(mcp: FastMCP):
     )
     def get_tuner_host_types_tool() -> Any:
         """Get tuner host types."""
-        api = get_api_client()
+        api = get_client()
         return api.get_tuner_host_types()
 
     @mcp.tool(name="reset_tuner", description="Resets a tv tuner.", tags={"LiveTv"})
     def reset_tuner_tool(tuner_id: str = Field(description="Tuner id.")) -> Any:
         """Resets a tv tuner."""
-        api = get_api_client()
+        api = get_client()
         return api.reset_tuner(tuner_id=tuner_id)
 
     @mcp.tool(name="discover_tuners", description="Discover tuners.", tags={"LiveTv"})
@@ -7205,7 +7196,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Discover tuners."""
-        api = get_api_client()
+        api = get_client()
         return api.discover_tuners(new_devices_only=new_devices_only)
 
     @mcp.tool(name="discvover_tuners", description="Discover tuners.", tags={"LiveTv"})
@@ -7215,7 +7206,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Discover tuners."""
-        api = get_api_client()
+        api = get_client()
         return api.discvover_tuners(new_devices_only=new_devices_only)
 
     @mcp.tool(
@@ -7223,7 +7214,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_countries_tool() -> Any:
         """Gets known countries."""
-        api = get_api_client()
+        api = get_client()
         return api.get_countries()
 
     @mcp.tool(
@@ -7231,7 +7222,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_cultures_tool() -> Any:
         """Gets known cultures."""
-        api = get_api_client()
+        api = get_client()
         return api.get_cultures()
 
     @mcp.tool(
@@ -7241,7 +7232,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_localization_options_tool() -> Any:
         """Gets localization options."""
-        api = get_api_client()
+        api = get_client()
         return api.get_localization_options()
 
     @mcp.tool(
@@ -7251,13 +7242,13 @@ def register_tools(mcp: FastMCP):
     )
     def get_parental_ratings_tool() -> Any:
         """Gets known parental ratings."""
-        api = get_api_client()
+        api = get_client()
         return api.get_parental_ratings()
 
     @mcp.tool(name="get_lyrics", description="Gets an item's lyrics.", tags={"Lyrics"})
     def get_lyrics_tool(item_id: str = Field(description="Item id.")) -> Any:
         """Gets an item's lyrics."""
-        api = get_api_client()
+        api = get_client()
         return api.get_lyrics(item_id=item_id)
 
     @mcp.tool(
@@ -7275,7 +7266,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Upload an external lyric file."""
-        api = get_api_client()
+        api = get_client()
         return api.upload_lyrics(item_id=item_id, file_name=file_name, body=body)
 
     @mcp.tool(
@@ -7285,7 +7276,7 @@ def register_tools(mcp: FastMCP):
     )
     def delete_lyrics_tool(item_id: str = Field(description="The item id.")) -> Any:
         """Deletes an external lyric file."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_lyrics(item_id=item_id)
 
     @mcp.tool(
@@ -7297,7 +7288,7 @@ def register_tools(mcp: FastMCP):
         item_id: str = Field(description="The item id."),
     ) -> Any:
         """Search remote lyrics."""
-        api = get_api_client()
+        api = get_client()
         return api.search_remote_lyrics(item_id=item_id)
 
     @mcp.tool(
@@ -7310,7 +7301,7 @@ def register_tools(mcp: FastMCP):
         lyric_id: str = Field(description="The lyric id."),
     ) -> Any:
         """Downloads a remote lyric."""
-        api = get_api_client()
+        api = get_client()
         return api.download_remote_lyrics(item_id=item_id, lyric_id=lyric_id)
 
     @mcp.tool(
@@ -7320,7 +7311,7 @@ def register_tools(mcp: FastMCP):
         lyric_id: str = Field(description="The remote provider item id."),
     ) -> Any:
         """Gets the remote lyrics."""
-        api = get_api_client()
+        api = get_client()
         return api.get_remote_lyrics(lyric_id=lyric_id)
 
     @mcp.tool(
@@ -7333,7 +7324,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="The user id."),
     ) -> Any:
         """Gets live playback media info for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_playback_info(item_id=item_id, user_id=user_id)
 
     @mcp.tool(
@@ -7390,7 +7381,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets live playback media info for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_posted_playback_info(
             item_id=item_id,
             user_id=user_id,
@@ -7421,7 +7412,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Closes a media source."""
-        api = get_api_client()
+        api = get_client()
         return api.close_live_stream(live_stream_id=live_stream_id)
 
     @mcp.tool(
@@ -7463,7 +7454,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Opens a media source."""
-        api = get_api_client()
+        api = get_client()
         return api.open_live_stream(
             open_token=open_token,
             user_id=user_id,
@@ -7491,7 +7482,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Tests the network with a request with the size of the bitrate."""
-        api = get_api_client()
+        api = get_client()
         return api.get_bitrate_test_bytes(size=size)
 
     @mcp.tool(
@@ -7506,7 +7497,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets all media segments based on an itemId."""
-        api = get_api_client()
+        api = get_client()
         return api.get_item_segments(
             item_id=item_id, include_segment_types=include_segment_types
         )
@@ -7536,7 +7527,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets movie recommendations."""
-        api = get_api_client()
+        api = get_client()
         return api.get_movie_recommendations(
             user_id=user_id,
             parent_id=parent_id,
@@ -7618,7 +7609,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets all music genres from a given item, folder, or the entire library."""
-        api = get_api_client()
+        api = get_client()
         return api.get_music_genres(
             start_index=start_index,
             limit=limit,
@@ -7653,7 +7644,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a music genre, by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_music_genre(genre_name=genre_name, user_id=user_id)
 
     @mcp.tool(
@@ -7661,7 +7652,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_packages_tool() -> Any:
         """Gets available packages."""
-        api = get_api_client()
+        api = get_client()
         return api.get_packages()
 
     @mcp.tool(
@@ -7676,7 +7667,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a package by name or assembly GUID."""
-        api = get_api_client()
+        api = get_client()
         return api.get_package_info(name=name, assembly_guid=assembly_guid)
 
     @mcp.tool(
@@ -7696,7 +7687,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Installs a package."""
-        api = get_api_client()
+        api = get_client()
         return api.install_package(
             name=name,
             assembly_guid=assembly_guid,
@@ -7713,7 +7704,7 @@ def register_tools(mcp: FastMCP):
         package_id: str = Field(description="Installation Id."),
     ) -> Any:
         """Cancels a package installation."""
-        api = get_api_client()
+        api = get_client()
         return api.cancel_package_installation(package_id=package_id)
 
     @mcp.tool(
@@ -7723,7 +7714,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_repositories_tool() -> Any:
         """Gets all package repositories."""
-        api = get_api_client()
+        api = get_client()
         return api.get_repositories()
 
     @mcp.tool(
@@ -7735,7 +7726,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Sets the enabled and existing package repositories."""
-        api = get_api_client()
+        api = get_client()
         return api.set_repositories(body=body)
 
     @mcp.tool(name="get_persons", description="Gets all persons.", tags={"Persons"})
@@ -7787,7 +7778,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets all persons."""
-        api = get_api_client()
+        api = get_client()
         return api.get_persons(
             limit=limit,
             search_term=search_term,
@@ -7813,7 +7804,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get person by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_person(name=name, user_id=user_id)
 
     @mcp.tool(
@@ -7831,7 +7822,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Creates a new playlist."""
-        api = get_api_client()
+        api = get_client()
         return api.create_playlist(
             name=name, ids=ids, user_id=user_id, media_type=media_type, body=body
         )
@@ -7846,7 +7837,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Updates a playlist."""
-        api = get_api_client()
+        api = get_client()
         return api.update_playlist(playlist_id=playlist_id, body=body)
 
     @mcp.tool(name="get_playlist", description="Get a playlist.", tags={"Playlists"})
@@ -7854,7 +7845,7 @@ def register_tools(mcp: FastMCP):
         playlist_id: str = Field(description="The playlist id."),
     ) -> Any:
         """Get a playlist."""
-        api = get_api_client()
+        api = get_client()
         return api.get_playlist(playlist_id=playlist_id)
 
     @mcp.tool(
@@ -7870,7 +7861,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="The userId."),
     ) -> Any:
         """Adds items to a playlist."""
-        api = get_api_client()
+        api = get_client()
         return api.add_item_to_playlist(
             playlist_id=playlist_id, ids=ids, user_id=user_id
         )
@@ -7887,7 +7878,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Removes items from a playlist."""
-        api = get_api_client()
+        api = get_client()
         return api.remove_item_from_playlist(
             playlist_id=playlist_id, entry_ids=entry_ids
         )
@@ -7928,7 +7919,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets the original items of a playlist."""
-        api = get_api_client()
+        api = get_client()
         return api.get_playlist_items(
             playlist_id=playlist_id,
             user_id=user_id,
@@ -7950,7 +7941,7 @@ def register_tools(mcp: FastMCP):
         new_index: int = Field(description="The new index."),
     ) -> Any:
         """Moves a playlist item."""
-        api = get_api_client()
+        api = get_client()
         return api.move_item(
             playlist_id=playlist_id, item_id=item_id, new_index=new_index
         )
@@ -7964,7 +7955,7 @@ def register_tools(mcp: FastMCP):
         playlist_id: str = Field(description="The playlist id."),
     ) -> Any:
         """Get a playlist's users."""
-        api = get_api_client()
+        api = get_client()
         return api.get_playlist_users(playlist_id=playlist_id)
 
     @mcp.tool(
@@ -7975,7 +7966,7 @@ def register_tools(mcp: FastMCP):
         user_id: str = Field(description="The user id."),
     ) -> Any:
         """Get a playlist user."""
-        api = get_api_client()
+        api = get_client()
         return api.get_playlist_user(playlist_id=playlist_id, user_id=user_id)
 
     @mcp.tool(
@@ -7991,7 +7982,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Modify a user of a playlist's users."""
-        api = get_api_client()
+        api = get_client()
         return api.update_playlist_user(
             playlist_id=playlist_id, user_id=user_id, body=body
         )
@@ -8006,7 +7997,7 @@ def register_tools(mcp: FastMCP):
         user_id: str = Field(description="The user id."),
     ) -> Any:
         """Remove a user from a playlist's users."""
-        api = get_api_client()
+        api = get_client()
         return api.remove_user_from_playlist(playlist_id=playlist_id, user_id=user_id)
 
     @mcp.tool(
@@ -8039,7 +8030,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Reports that a session has begun playing an item."""
-        api = get_api_client()
+        api = get_client()
         return api.on_playback_start(
             item_id=item_id,
             media_source_id=media_source_id,
@@ -8076,7 +8067,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Reports that a session has stopped playing an item."""
-        api = get_api_client()
+        api = get_client()
         return api.on_playback_stopped(
             item_id=item_id,
             media_source_id=media_source_id,
@@ -8129,7 +8120,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Reports a session's playback progress."""
-        api = get_api_client()
+        api = get_client()
         return api.on_playback_progress(
             item_id=item_id,
             media_source_id=media_source_id,
@@ -8154,7 +8145,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Reports playback has started within a session."""
-        api = get_api_client()
+        api = get_client()
         return api.report_playback_start(body=body)
 
     @mcp.tool(
@@ -8168,7 +8159,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Pings a playback session."""
-        api = get_api_client()
+        api = get_client()
         return api.ping_playback_session(play_session_id=play_session_id)
 
     @mcp.tool(
@@ -8180,7 +8171,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Reports playback progress within a session."""
-        api = get_api_client()
+        api = get_client()
         return api.report_playback_progress(body=body)
 
     @mcp.tool(
@@ -8192,7 +8183,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Reports playback has stopped within a session."""
-        api = get_api_client()
+        api = get_client()
         return api.report_playback_stopped(body=body)
 
     @mcp.tool(
@@ -8208,7 +8199,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Marks an item as played for user."""
-        api = get_api_client()
+        api = get_client()
         return api.mark_played_item(
             user_id=user_id, item_id=item_id, date_played=date_played
         )
@@ -8223,7 +8214,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="User id."),
     ) -> Any:
         """Marks an item as unplayed for user."""
-        api = get_api_client()
+        api = get_client()
         return api.mark_unplayed_item(user_id=user_id, item_id=item_id)
 
     @mcp.tool(
@@ -8233,7 +8224,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_plugins_tool() -> Any:
         """Gets a list of currently installed plugins."""
-        api = get_api_client()
+        api = get_client()
         return api.get_plugins()
 
     @mcp.tool(
@@ -8241,7 +8232,7 @@ def register_tools(mcp: FastMCP):
     )
     def uninstall_plugin_tool(plugin_id: str = Field(description="Plugin id.")) -> Any:
         """Uninstalls a plugin."""
-        api = get_api_client()
+        api = get_client()
         return api.uninstall_plugin(plugin_id=plugin_id)
 
     @mcp.tool(
@@ -8254,7 +8245,7 @@ def register_tools(mcp: FastMCP):
         version: str = Field(description="Plugin version."),
     ) -> Any:
         """Uninstalls a plugin by version."""
-        api = get_api_client()
+        api = get_client()
         return api.uninstall_plugin_by_version(plugin_id=plugin_id, version=version)
 
     @mcp.tool(name="disable_plugin", description="Disable a plugin.", tags={"Plugins"})
@@ -8263,7 +8254,7 @@ def register_tools(mcp: FastMCP):
         version: str = Field(description="Plugin version."),
     ) -> Any:
         """Disable a plugin."""
-        api = get_api_client()
+        api = get_client()
         return api.disable_plugin(plugin_id=plugin_id, version=version)
 
     @mcp.tool(
@@ -8274,7 +8265,7 @@ def register_tools(mcp: FastMCP):
         version: str = Field(description="Plugin version."),
     ) -> Any:
         """Enables a disabled plugin."""
-        api = get_api_client()
+        api = get_client()
         return api.enable_plugin(plugin_id=plugin_id, version=version)
 
     @mcp.tool(
@@ -8285,7 +8276,7 @@ def register_tools(mcp: FastMCP):
         version: str = Field(description="Plugin version."),
     ) -> Any:
         """Gets a plugin's image."""
-        api = get_api_client()
+        api = get_client()
         return api.get_plugin_image(plugin_id=plugin_id, version=version)
 
     @mcp.tool(
@@ -8297,7 +8288,7 @@ def register_tools(mcp: FastMCP):
         plugin_id: str = Field(description="Plugin id."),
     ) -> Any:
         """Gets plugin configuration."""
-        api = get_api_client()
+        api = get_client()
         return api.get_plugin_configuration(plugin_id=plugin_id)
 
     @mcp.tool(
@@ -8309,7 +8300,7 @@ def register_tools(mcp: FastMCP):
         plugin_id: str = Field(description="Plugin id."),
     ) -> Any:
         """Updates plugin configuration."""
-        api = get_api_client()
+        api = get_client()
         return api.update_plugin_configuration(plugin_id=plugin_id)
 
     @mcp.tool(
@@ -8321,7 +8312,7 @@ def register_tools(mcp: FastMCP):
         plugin_id: str = Field(description="Plugin id."),
     ) -> Any:
         """Gets a plugin's manifest."""
-        api = get_api_client()
+        api = get_client()
         return api.get_plugin_manifest(plugin_id=plugin_id)
 
     @mcp.tool(
@@ -8339,7 +8330,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Authorizes a pending quick connect request."""
-        api = get_api_client()
+        api = get_client()
         return api.authorize_quick_connect(code=code, user_id=user_id)
 
     @mcp.tool(
@@ -8354,7 +8345,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Attempts to retrieve authentication information."""
-        api = get_api_client()
+        api = get_client()
         return api.get_quick_connect_state(secret=secret)
 
     @mcp.tool(
@@ -8364,7 +8355,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_quick_connect_enabled_tool() -> Any:
         """Gets the current quick connect state."""
-        api = get_api_client()
+        api = get_client()
         return api.get_quick_connect_enabled()
 
     @mcp.tool(
@@ -8374,7 +8365,7 @@ def register_tools(mcp: FastMCP):
     )
     def initiate_quick_connect_tool() -> Any:
         """Initiate a new quick connect request."""
-        api = get_api_client()
+        api = get_client()
         return api.initiate_quick_connect()
 
     @mcp.tool(
@@ -8401,7 +8392,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets available remote images for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_remote_images(
             item_id=item_id,
             type=type,
@@ -8422,7 +8413,7 @@ def register_tools(mcp: FastMCP):
         image_url: Optional[str] = Field(default=None, description="The image url."),
     ) -> Any:
         """Downloads a remote image for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.download_remote_image(
             item_id=item_id, type=type, image_url=image_url
         )
@@ -8436,7 +8427,7 @@ def register_tools(mcp: FastMCP):
         item_id: str = Field(description="Item Id."),
     ) -> Any:
         """Gets available remote image providers for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_remote_image_providers(item_id=item_id)
 
     @mcp.tool(name="get_tasks", description="Get tasks.", tags={"ScheduledTasks"})
@@ -8449,13 +8440,13 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get tasks."""
-        api = get_api_client()
+        api = get_client()
         return api.get_tasks(is_hidden=is_hidden, is_enabled=is_enabled)
 
     @mcp.tool(name="get_task", description="Get task by id.", tags={"ScheduledTasks"})
     def get_task_tool(task_id: str = Field(description="Task Id.")) -> Any:
         """Get task by id."""
-        api = get_api_client()
+        api = get_client()
         return api.get_task(task_id=task_id)
 
     @mcp.tool(
@@ -8470,7 +8461,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Update specified task triggers."""
-        api = get_api_client()
+        api = get_client()
         return api.update_task(task_id=task_id, body=body)
 
     @mcp.tool(
@@ -8478,7 +8469,7 @@ def register_tools(mcp: FastMCP):
     )
     def start_task_tool(task_id: str = Field(description="Task Id.")) -> Any:
         """Start specified task."""
-        api = get_api_client()
+        api = get_client()
         return api.start_task(task_id=task_id)
 
     @mcp.tool(
@@ -8486,7 +8477,7 @@ def register_tools(mcp: FastMCP):
     )
     def stop_task_tool(task_id: str = Field(description="Task Id.")) -> Any:
         """Stop specified task."""
-        api = get_api_client()
+        api = get_client()
         return api.stop_task(task_id=task_id)
 
     @mcp.tool(
@@ -8558,7 +8549,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets the search hint result."""
-        api = get_api_client()
+        api = get_client()
         return api.get_search_hints(
             start_index=start_index,
             limit=limit,
@@ -8587,7 +8578,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_password_reset_providers_tool() -> Any:
         """Get all password reset providers."""
-        api = get_api_client()
+        api = get_client()
         return api.get_password_reset_providers()
 
     @mcp.tool(
@@ -8597,7 +8588,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_auth_providers_tool() -> Any:
         """Get all auth providers."""
-        api = get_api_client()
+        api = get_client()
         return api.get_auth_providers()
 
     @mcp.tool(
@@ -8617,7 +8608,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a list of sessions."""
-        api = get_api_client()
+        api = get_client()
         return api.get_sessions(
             controllable_by_user_id=controllable_by_user_id,
             device_id=device_id,
@@ -8636,7 +8627,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Issues a full general command to a client."""
-        api = get_api_client()
+        api = get_client()
         return api.send_full_general_command(session_id=session_id, body=body)
 
     @mcp.tool(
@@ -8649,7 +8640,7 @@ def register_tools(mcp: FastMCP):
         command: str = Field(description="The command to send."),
     ) -> Any:
         """Issues a general command to a client."""
-        api = get_api_client()
+        api = get_client()
         return api.send_general_command(session_id=session_id, command=command)
 
     @mcp.tool(
@@ -8664,7 +8655,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Issues a command to a client to display a message to the user."""
-        api = get_api_client()
+        api = get_client()
         return api.send_message_command(session_id=session_id, body=body)
 
     @mcp.tool(
@@ -8699,7 +8690,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Instructs a session to play an item."""
-        api = get_api_client()
+        api = get_client()
         return api.play(
             session_id=session_id,
             play_command=play_command,
@@ -8729,7 +8720,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Issues a playstate command to a client."""
-        api = get_api_client()
+        api = get_client()
         return api.send_playstate_command(
             session_id=session_id,
             command=command,
@@ -8747,7 +8738,7 @@ def register_tools(mcp: FastMCP):
         command: str = Field(description="The command to send."),
     ) -> Any:
         """Issues a system command to a client."""
-        api = get_api_client()
+        api = get_client()
         return api.send_system_command(session_id=session_id, command=command)
 
     @mcp.tool(
@@ -8760,7 +8751,7 @@ def register_tools(mcp: FastMCP):
         user_id: str = Field(description="The user id."),
     ) -> Any:
         """Adds an additional user to a session."""
-        api = get_api_client()
+        api = get_client()
         return api.add_user_to_session(session_id=session_id, user_id=user_id)
 
     @mcp.tool(
@@ -8773,7 +8764,7 @@ def register_tools(mcp: FastMCP):
         user_id: str = Field(description="The user id."),
     ) -> Any:
         """Removes an additional user from a session."""
-        api = get_api_client()
+        api = get_client()
         return api.remove_user_from_session(session_id=session_id, user_id=user_id)
 
     @mcp.tool(
@@ -8792,7 +8783,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Instructs a session to browse to an item or view."""
-        api = get_api_client()
+        api = get_client()
         return api.display_content(
             session_id=session_id,
             item_type=item_type,
@@ -8825,7 +8816,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Updates capabilities for a device."""
-        api = get_api_client()
+        api = get_client()
         return api.post_capabilities(
             id=id,
             playable_media_types=playable_media_types,
@@ -8846,7 +8837,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Updates capabilities for a device."""
-        api = get_api_client()
+        api = get_client()
         return api.post_full_capabilities(id=id, body=body)
 
     @mcp.tool(
@@ -8856,7 +8847,7 @@ def register_tools(mcp: FastMCP):
     )
     def report_session_ended_tool() -> Any:
         """Reports that a session has ended."""
-        api = get_api_client()
+        api = get_client()
         return api.report_session_ended()
 
     @mcp.tool(
@@ -8869,7 +8860,7 @@ def register_tools(mcp: FastMCP):
         item_id: Optional[str] = Field(default=None, description="The item id."),
     ) -> Any:
         """Reports that a session is viewing an item."""
-        api = get_api_client()
+        api = get_client()
         return api.report_viewing(session_id=session_id, item_id=item_id)
 
     @mcp.tool(
@@ -8879,7 +8870,7 @@ def register_tools(mcp: FastMCP):
     )
     def complete_wizard_tool() -> Any:
         """Completes the startup wizard."""
-        api = get_api_client()
+        api = get_client()
         return api.complete_wizard()
 
     @mcp.tool(
@@ -8889,7 +8880,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_startup_configuration_tool() -> Any:
         """Gets the initial startup wizard configuration."""
-        api = get_api_client()
+        api = get_client()
         return api.get_startup_configuration()
 
     @mcp.tool(
@@ -8901,7 +8892,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Sets the initial startup wizard configuration."""
-        api = get_api_client()
+        api = get_client()
         return api.update_initial_configuration(body=body)
 
     @mcp.tool(
@@ -8909,7 +8900,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_first_user_2_tool() -> Any:
         """Gets the first user."""
-        api = get_api_client()
+        api = get_client()
         return api.get_first_user_2()
 
     @mcp.tool(
@@ -8921,7 +8912,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Sets remote access and UPnP."""
-        api = get_api_client()
+        api = get_client()
         return api.set_remote_access(body=body)
 
     @mcp.tool(
@@ -8929,7 +8920,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_first_user_tool() -> Any:
         """Gets the first user."""
-        api = get_api_client()
+        api = get_client()
         return api.get_first_user()
 
     @mcp.tool(
@@ -8941,7 +8932,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Sets the user name and password."""
-        api = get_api_client()
+        api = get_client()
         return api.update_startup_user(body=body)
 
     @mcp.tool(
@@ -9013,7 +9004,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets all studios from a given item, folder, or the entire library."""
-        api = get_api_client()
+        api = get_client()
         return api.get_studios(
             start_index=start_index,
             limit=limit,
@@ -9043,7 +9034,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a studio by name."""
-        api = get_api_client()
+        api = get_client()
         return api.get_studio(name=name, user_id=user_id)
 
     @mcp.tool(
@@ -9053,7 +9044,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_fallback_font_list_tool() -> Any:
         """Gets a list of available fallback font files."""
-        api = get_api_client()
+        api = get_client()
         return api.get_fallback_font_list()
 
     @mcp.tool(
@@ -9065,7 +9056,7 @@ def register_tools(mcp: FastMCP):
         name: str = Field(description="The name of the fallback font file to get."),
     ) -> Any:
         """Gets a fallback font file."""
-        api = get_api_client()
+        api = get_client()
         return api.get_fallback_font(name=name)
 
     @mcp.tool(
@@ -9082,7 +9073,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Search remote subtitles."""
-        api = get_api_client()
+        api = get_client()
         return api.search_remote_subtitles(
             item_id=item_id, language=language, is_perfect_match=is_perfect_match
         )
@@ -9097,7 +9088,7 @@ def register_tools(mcp: FastMCP):
         subtitle_id: str = Field(description="The subtitle id."),
     ) -> Any:
         """Downloads a remote subtitle."""
-        api = get_api_client()
+        api = get_client()
         return api.download_remote_subtitles(item_id=item_id, subtitle_id=subtitle_id)
 
     @mcp.tool(
@@ -9109,7 +9100,7 @@ def register_tools(mcp: FastMCP):
         subtitle_id: str = Field(description="The item id."),
     ) -> Any:
         """Gets the remote subtitles."""
-        api = get_api_client()
+        api = get_client()
         return api.get_remote_subtitles(subtitle_id=subtitle_id)
 
     @mcp.tool(
@@ -9126,7 +9117,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets an HLS subtitle playlist."""
-        api = get_api_client()
+        api = get_client()
         return api.get_subtitle_playlist(
             item_id=item_id,
             index=index,
@@ -9146,7 +9137,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Upload an external subtitle file."""
-        api = get_api_client()
+        api = get_client()
         return api.upload_subtitle(item_id=item_id, body=body)
 
     @mcp.tool(
@@ -9159,7 +9150,7 @@ def register_tools(mcp: FastMCP):
         index: int = Field(description="The index of the subtitle file."),
     ) -> Any:
         """Deletes an external subtitle file."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_subtitle(item_id=item_id, index=index)
 
     @mcp.tool(
@@ -9202,7 +9193,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets subtitles in a specified format."""
-        api = get_api_client()
+        api = get_client()
         return api.get_subtitle_with_ticks(
             route_item_id=route_item_id,
             route_media_source_id=route_media_source_id,
@@ -9256,7 +9247,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets subtitles in a specified format."""
-        api = get_api_client()
+        api = get_client()
         return api.get_subtitle(
             route_item_id=route_item_id,
             route_media_source_id=route_media_source_id,
@@ -9290,7 +9281,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets suggestions."""
-        api = get_api_client()
+        api = get_client()
         return api.get_suggestions(
             user_id=user_id,
             media_type=media_type,
@@ -9309,7 +9300,7 @@ def register_tools(mcp: FastMCP):
         id: str = Field(description="The id of the group."),
     ) -> Any:
         """Gets a SyncPlay group by id."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_get_group(id=id)
 
     @mcp.tool(
@@ -9321,7 +9312,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Notify SyncPlay group that member is buffering."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_buffering(body=body)
 
     @mcp.tool(
@@ -9333,7 +9324,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Join an existing SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_join_group(body=body)
 
     @mcp.tool(
@@ -9343,7 +9334,7 @@ def register_tools(mcp: FastMCP):
     )
     def sync_play_leave_group_tool() -> Any:
         """Leave the joined SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_leave_group()
 
     @mcp.tool(
@@ -9353,7 +9344,7 @@ def register_tools(mcp: FastMCP):
     )
     def sync_play_get_groups_tool() -> Any:
         """Gets all SyncPlay groups."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_get_groups()
 
     @mcp.tool(
@@ -9365,7 +9356,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Request to move an item in the playlist in SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_move_playlist_item(body=body)
 
     @mcp.tool(
@@ -9377,7 +9368,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Create a new SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_create_group(body=body)
 
     @mcp.tool(
@@ -9389,7 +9380,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Request next item in SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_next_item(body=body)
 
     @mcp.tool(
@@ -9399,7 +9390,7 @@ def register_tools(mcp: FastMCP):
     )
     def sync_play_pause_tool() -> Any:
         """Request pause in SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_pause()
 
     @mcp.tool(
@@ -9409,7 +9400,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Update session ping."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_ping(body=body)
 
     @mcp.tool(
@@ -9421,7 +9412,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Request previous item in SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_previous_item(body=body)
 
     @mcp.tool(
@@ -9433,7 +9424,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Request to queue items to the playlist of a SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_queue(body=body)
 
     @mcp.tool(
@@ -9445,7 +9436,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Notify SyncPlay group that member is ready for playback."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_ready(body=body)
 
     @mcp.tool(
@@ -9457,7 +9448,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Request to remove items from the playlist in SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_remove_from_playlist(body=body)
 
     @mcp.tool(
@@ -9469,7 +9460,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Request seek in SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_seek(body=body)
 
     @mcp.tool(
@@ -9481,7 +9472,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Request SyncPlay group to ignore member during group-wait."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_set_ignore_wait(body=body)
 
     @mcp.tool(
@@ -9493,7 +9484,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Request to set new playlist in SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_set_new_queue(body=body)
 
     @mcp.tool(
@@ -9505,7 +9496,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Request to change playlist item in SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_set_playlist_item(body=body)
 
     @mcp.tool(
@@ -9517,7 +9508,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Request to set repeat mode in SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_set_repeat_mode(body=body)
 
     @mcp.tool(
@@ -9529,7 +9520,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Request to set shuffle mode in SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_set_shuffle_mode(body=body)
 
     @mcp.tool(
@@ -9539,7 +9530,7 @@ def register_tools(mcp: FastMCP):
     )
     def sync_play_stop_tool() -> Any:
         """Request stop in SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_stop()
 
     @mcp.tool(
@@ -9549,7 +9540,7 @@ def register_tools(mcp: FastMCP):
     )
     def sync_play_unpause_tool() -> Any:
         """Request unpause in SyncPlay group."""
-        api = get_api_client()
+        api = get_client()
         return api.sync_play_unpause()
 
     @mcp.tool(
@@ -9559,7 +9550,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_endpoint_info_tool() -> Any:
         """Gets information about the request endpoint."""
-        api = get_api_client()
+        api = get_client()
         return api.get_endpoint_info()
 
     @mcp.tool(
@@ -9569,7 +9560,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_system_info_tool() -> Any:
         """Gets information about the server."""
-        api = get_api_client()
+        api = get_client()
         return api.get_system_info()
 
     @mcp.tool(
@@ -9579,7 +9570,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_public_system_info_tool() -> Any:
         """Gets public information about the server."""
-        api = get_api_client()
+        api = get_client()
         return api.get_public_system_info()
 
     @mcp.tool(
@@ -9589,7 +9580,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_system_storage_tool() -> Any:
         """Gets information about the server."""
-        api = get_api_client()
+        api = get_client()
         return api.get_system_storage()
 
     @mcp.tool(
@@ -9599,7 +9590,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_server_logs_tool() -> Any:
         """Gets a list of available server log files."""
-        api = get_api_client()
+        api = get_client()
         return api.get_server_logs()
 
     @mcp.tool(name="get_log_file", description="Gets a log file.", tags={"System"})
@@ -9609,19 +9600,19 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Gets a log file."""
-        api = get_api_client()
+        api = get_client()
         return api.get_log_file(name=name)
 
     @mcp.tool(name="get_ping_system", description="Pings the system.", tags={"System"})
     def get_ping_system_tool() -> Any:
         """Pings the system."""
-        api = get_api_client()
+        api = get_client()
         return api.get_ping_system()
 
     @mcp.tool(name="post_ping_system", description="Pings the system.", tags={"System"})
     def post_ping_system_tool() -> Any:
         """Pings the system."""
-        api = get_api_client()
+        api = get_client()
         return api.post_ping_system()
 
     @mcp.tool(
@@ -9631,7 +9622,7 @@ def register_tools(mcp: FastMCP):
     )
     def restart_application_tool() -> Any:
         """Restarts the application."""
-        api = get_api_client()
+        api = get_client()
         return api.restart_application()
 
     @mcp.tool(
@@ -9641,7 +9632,7 @@ def register_tools(mcp: FastMCP):
     )
     def shutdown_application_tool() -> Any:
         """Shuts down the application."""
-        api = get_api_client()
+        api = get_client()
         return api.shutdown_application()
 
     @mcp.tool(
@@ -9649,7 +9640,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_utc_time_tool() -> Any:
         """Gets the current UTC time."""
-        api = get_api_client()
+        api = get_client()
         return api.get_utc_time()
 
     @mcp.tool(
@@ -9659,7 +9650,7 @@ def register_tools(mcp: FastMCP):
     )
     def tmdb_client_configuration_tool() -> Any:
         """Gets the TMDb image configuration options."""
-        api = get_api_client()
+        api = get_client()
         return api.tmdb_client_configuration()
 
     @mcp.tool(
@@ -9983,7 +9974,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Finds movies and trailers similar to a given trailer."""
-        api = get_api_client()
+        api = get_client()
         return api.get_trailers(
             user_id=user_id,
             max_official_rating=max_official_rating,
@@ -10086,7 +10077,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a trickplay tile image."""
-        api = get_api_client()
+        api = get_client()
         return api.get_trickplay_tile_image(
             item_id=item_id, width=width, index=index, media_source_id=media_source_id
         )
@@ -10105,7 +10096,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets an image tiles playlist for trickplay."""
-        api = get_api_client()
+        api = get_client()
         return api.get_trickplay_hls_playlist(
             item_id=item_id, width=width, media_source_id=media_source_id
         )
@@ -10168,7 +10159,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets episodes for a tv season."""
-        api = get_api_client()
+        api = get_client()
         return api.get_episodes(
             series_id=series_id,
             user_id=user_id,
@@ -10226,7 +10217,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets seasons for a tv series."""
-        api = get_api_client()
+        api = get_client()
         return api.get_seasons(
             series_id=series_id,
             user_id=user_id,
@@ -10305,7 +10296,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a list of next up episodes."""
-        api = get_api_client()
+        api = get_client()
         return api.get_next_up(
             user_id=user_id,
             start_index=start_index,
@@ -10366,7 +10357,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a list of upcoming episodes."""
-        api = get_api_client()
+        api = get_client()
         return api.get_upcoming_episodes(
             user_id=user_id,
             start_index=start_index,
@@ -10447,7 +10438,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets an audio stream."""
-        api = get_api_client()
+        api = get_client()
         return api.get_universal_audio_stream(
             item_id=item_id,
             container=container,
@@ -10480,7 +10471,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a list of users."""
-        api = get_api_client()
+        api = get_client()
         return api.get_users(is_hidden=is_hidden, is_disabled=is_disabled)
 
     @mcp.tool(name="update_user", description="Updates a user.", tags={"User"})
@@ -10491,19 +10482,19 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Updates a user."""
-        api = get_api_client()
+        api = get_client()
         return api.update_user(user_id=user_id, body=body)
 
     @mcp.tool(name="get_user_by_id", description="Gets a user by Id.", tags={"User"})
     def get_user_by_id_tool(user_id: str = Field(description="The user id.")) -> Any:
         """Gets a user by Id."""
-        api = get_api_client()
+        api = get_client()
         return api.get_user_by_id(user_id=user_id)
 
     @mcp.tool(name="delete_user", description="Deletes a user.", tags={"User"})
     def delete_user_tool(user_id: str = Field(description="The user id.")) -> Any:
         """Deletes a user."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_user(user_id=user_id)
 
     @mcp.tool(
@@ -10516,7 +10507,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Updates a user policy."""
-        api = get_api_client()
+        api = get_client()
         return api.update_user_policy(user_id=user_id, body=body)
 
     @mcp.tool(
@@ -10528,7 +10519,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Authenticates a user by name."""
-        api = get_api_client()
+        api = get_client()
         return api.authenticate_user_by_name(body=body)
 
     @mcp.tool(
@@ -10540,7 +10531,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Authenticates a user with quick connect."""
-        api = get_api_client()
+        api = get_client()
         return api.authenticate_with_quick_connect(body=body)
 
     @mcp.tool(
@@ -10555,7 +10546,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Updates a user configuration."""
-        api = get_api_client()
+        api = get_client()
         return api.update_user_configuration(user_id=user_id, body=body)
 
     @mcp.tool(
@@ -10567,7 +10558,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Initiates the forgot password process for a local user."""
-        api = get_api_client()
+        api = get_client()
         return api.forgot_password(body=body)
 
     @mcp.tool(
@@ -10579,7 +10570,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Redeems a forgot password pin."""
-        api = get_api_client()
+        api = get_client()
         return api.forgot_password_pin(body=body)
 
     @mcp.tool(
@@ -10589,7 +10580,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_current_user_tool() -> Any:
         """Gets the user based on auth token."""
-        api = get_api_client()
+        api = get_client()
         return api.get_current_user()
 
     @mcp.tool(name="create_user_by_name", description="Creates a user.", tags={"User"})
@@ -10597,7 +10588,7 @@ def register_tools(mcp: FastMCP):
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
     ) -> Any:
         """Creates a user."""
-        api = get_api_client()
+        api = get_client()
         return api.create_user_by_name(body=body)
 
     @mcp.tool(
@@ -10612,7 +10603,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Updates a user's password."""
-        api = get_api_client()
+        api = get_client()
         return api.update_user_password(user_id=user_id, body=body)
 
     @mcp.tool(
@@ -10622,7 +10613,7 @@ def register_tools(mcp: FastMCP):
     )
     def get_public_users_tool() -> Any:
         """Gets a list of publicly visible users for display on a login screen."""
-        api = get_api_client()
+        api = get_client()
         return api.get_public_users()
 
     @mcp.tool(
@@ -10635,7 +10626,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="User id."),
     ) -> Any:
         """Gets intros to play before the main media item plays."""
-        api = get_api_client()
+        api = get_client()
         return api.get_intros(user_id=user_id, item_id=item_id)
 
     @mcp.tool(
@@ -10648,7 +10639,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="User id."),
     ) -> Any:
         """Gets local trailers for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_local_trailers(user_id=user_id, item_id=item_id)
 
     @mcp.tool(
@@ -10661,7 +10652,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="User id."),
     ) -> Any:
         """Gets special features for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.get_special_features(user_id=user_id, item_id=item_id)
 
     @mcp.tool(
@@ -10705,7 +10696,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets latest media."""
-        api = get_api_client()
+        api = get_client()
         return api.get_latest_media(
             user_id=user_id,
             parent_id=parent_id,
@@ -10729,7 +10720,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="User id.")
     ) -> Any:
         """Gets the root folder from a user's library."""
-        api = get_api_client()
+        api = get_client()
         return api.get_root_folder(user_id=user_id)
 
     @mcp.tool(
@@ -10742,7 +10733,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="User id."),
     ) -> Any:
         """Marks an item as a favorite."""
-        api = get_api_client()
+        api = get_client()
         return api.mark_favorite_item(user_id=user_id, item_id=item_id)
 
     @mcp.tool(
@@ -10755,7 +10746,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="User id."),
     ) -> Any:
         """Unmarks item as a favorite."""
-        api = get_api_client()
+        api = get_client()
         return api.unmark_favorite_item(user_id=user_id, item_id=item_id)
 
     @mcp.tool(
@@ -10768,7 +10759,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="User id."),
     ) -> Any:
         """Deletes a user's saved personal rating for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_user_item_rating(user_id=user_id, item_id=item_id)
 
     @mcp.tool(
@@ -10785,7 +10776,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Updates a user's rating for an item."""
-        api = get_api_client()
+        api = get_client()
         return api.update_user_item_rating(
             user_id=user_id, item_id=item_id, likes=likes
         )
@@ -10805,7 +10796,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get user views."""
-        api = get_api_client()
+        api = get_client()
         return api.get_user_views(
             user_id=user_id,
             include_external_content=include_external_content,
@@ -10822,7 +10813,7 @@ def register_tools(mcp: FastMCP):
         user_id: Optional[str] = Field(default=None, description="User id.")
     ) -> Any:
         """Get user view grouping options."""
-        api = get_api_client()
+        api = get_client()
         return api.get_grouping_options(user_id=user_id)
 
     @mcp.tool(
@@ -10836,7 +10827,7 @@ def register_tools(mcp: FastMCP):
         index: int = Field(description="Attachment Index."),
     ) -> Any:
         """Get video attachment."""
-        api = get_api_client()
+        api = get_client()
         return api.get_attachment(
             video_id=video_id, media_source_id=media_source_id, index=index
         )
@@ -10854,7 +10845,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets additional parts for a video."""
-        api = get_api_client()
+        api = get_client()
         return api.get_additional_part(item_id=item_id, user_id=user_id)
 
     @mcp.tool(
@@ -10866,7 +10857,7 @@ def register_tools(mcp: FastMCP):
         item_id: str = Field(description="The item id."),
     ) -> Any:
         """Removes alternate video sources."""
-        api = get_api_client()
+        api = get_client()
         return api.delete_alternate_sources(item_id=item_id)
 
     @mcp.tool(
@@ -11056,7 +11047,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a video stream."""
-        api = get_api_client()
+        api = get_client()
         return api.get_video_stream(
             item_id=item_id,
             container=container,
@@ -11300,7 +11291,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a video stream."""
-        api = get_api_client()
+        api = get_client()
         return api.get_video_stream_by_container(
             item_id=item_id,
             container=container,
@@ -11368,7 +11359,7 @@ def register_tools(mcp: FastMCP):
         )
     ) -> Any:
         """Merges videos into a single record."""
-        api = get_api_client()
+        api = get_client()
         return api.merge_versions(ids=ids)
 
     @mcp.tool(name="get_years", description="Get years.", tags={"Years"})
@@ -11428,7 +11419,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Get years."""
-        api = get_api_client()
+        api = get_client()
         return api.get_years(
             start_index=start_index,
             limit=limit,
@@ -11456,7 +11447,7 @@ def register_tools(mcp: FastMCP):
         ),
     ) -> Any:
         """Gets a year."""
-        api = get_api_client()
+        api = get_client()
         return api.get_year(year=year, user_id=user_id)
 
 
