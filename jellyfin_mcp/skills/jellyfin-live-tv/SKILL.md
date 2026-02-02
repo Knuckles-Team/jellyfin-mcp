@@ -1,0 +1,239 @@
+---
+name: jellyfin-live-tv
+description: "Generated skill for LiveTv operations. Contains 41 tools."
+---
+
+### Overview
+This skill handles operations related to LiveTv.
+
+### Available Tools
+- `get_channel_mapping_options_tool`: Get channel mapping options.
+  - **Parameters**:
+    - `provider_id` (Optional[str])
+- `set_channel_mapping_tool`: Set channel mappings.
+  - **Parameters**:
+    - `body` (Optional[Dict[str, Any]])
+- `get_live_tv_channels_tool`: Gets available live tv channels.
+  - **Parameters**:
+    - `type` (Optional[str])
+    - `user_id` (Optional[str])
+    - `start_index` (Optional[int])
+    - `is_movie` (Optional[bool])
+    - `is_series` (Optional[bool])
+    - `is_news` (Optional[bool])
+    - `is_kids` (Optional[bool])
+    - `is_sports` (Optional[bool])
+    - `limit` (Optional[int])
+    - `is_favorite` (Optional[bool])
+    - `is_liked` (Optional[bool])
+    - `is_disliked` (Optional[bool])
+    - `enable_images` (Optional[bool])
+    - `image_type_limit` (Optional[int])
+    - `enable_image_types` (Optional[List[Any]])
+    - `fields` (Optional[List[Any]])
+    - `enable_user_data` (Optional[bool])
+    - `sort_by` (Optional[List[Any]])
+    - `sort_order` (Optional[str])
+    - `enable_favorite_sorting` (Optional[bool])
+    - `add_current_program` (Optional[bool])
+- `get_channel_tool`: Gets a live tv channel.
+  - **Parameters**:
+    - `channel_id` (str)
+    - `user_id` (Optional[str])
+- `get_guide_info_tool`: Get guide info.
+- `get_live_tv_info_tool`: Gets available live tv services.
+- `add_listing_provider_tool`: Adds a listings provider.
+  - **Parameters**:
+    - `pw` (Optional[str])
+    - `validate_listings` (Optional[bool])
+    - `validate_login` (Optional[bool])
+    - `body` (Optional[Dict[str, Any]])
+- `delete_listing_provider_tool`: Delete listing provider.
+  - **Parameters**:
+    - `id` (Optional[str])
+- `get_default_listing_provider_tool`: Gets default listings provider info.
+- `get_lineups_tool`: Gets available lineups.
+  - **Parameters**:
+    - `id` (Optional[str])
+    - `type` (Optional[str])
+    - `location` (Optional[str])
+    - `country` (Optional[str])
+- `get_schedules_direct_countries_tool`: Gets available countries.
+- `get_live_recording_file_tool`: Gets a live tv recording stream.
+  - **Parameters**:
+    - `recording_id` (str)
+- `get_live_stream_file_tool`: Gets a live tv channel stream.
+  - **Parameters**:
+    - `stream_id` (str)
+    - `container` (str)
+- `get_live_tv_programs_tool`: Gets available live tv epgs.
+  - **Parameters**:
+    - `channel_ids` (Optional[List[Any]])
+    - `user_id` (Optional[str])
+    - `min_start_date` (Optional[str])
+    - `has_aired` (Optional[bool])
+    - `is_airing` (Optional[bool])
+    - `max_start_date` (Optional[str])
+    - `min_end_date` (Optional[str])
+    - `max_end_date` (Optional[str])
+    - `is_movie` (Optional[bool])
+    - `is_series` (Optional[bool])
+    - `is_news` (Optional[bool])
+    - `is_kids` (Optional[bool])
+    - `is_sports` (Optional[bool])
+    - `start_index` (Optional[int])
+    - `limit` (Optional[int])
+    - `sort_by` (Optional[List[Any]])
+    - `sort_order` (Optional[List[Any]])
+    - `genres` (Optional[List[Any]])
+    - `genre_ids` (Optional[List[Any]])
+    - `enable_images` (Optional[bool])
+    - `image_type_limit` (Optional[int])
+    - `enable_image_types` (Optional[List[Any]])
+    - `enable_user_data` (Optional[bool])
+    - `series_timer_id` (Optional[str])
+    - `library_series_id` (Optional[str])
+    - `fields` (Optional[List[Any]])
+    - `enable_total_record_count` (Optional[bool])
+- `get_programs_tool`: Gets available live tv epgs.
+  - **Parameters**:
+    - `body` (Optional[Dict[str, Any]])
+- `get_program_tool`: Gets a live tv program.
+  - **Parameters**:
+    - `program_id` (str)
+    - `user_id` (Optional[str])
+- `get_recommended_programs_tool`: Gets recommended live tv epgs.
+  - **Parameters**:
+    - `user_id` (Optional[str])
+    - `start_index` (Optional[int])
+    - `limit` (Optional[int])
+    - `is_airing` (Optional[bool])
+    - `has_aired` (Optional[bool])
+    - `is_series` (Optional[bool])
+    - `is_movie` (Optional[bool])
+    - `is_news` (Optional[bool])
+    - `is_kids` (Optional[bool])
+    - `is_sports` (Optional[bool])
+    - `enable_images` (Optional[bool])
+    - `image_type_limit` (Optional[int])
+    - `enable_image_types` (Optional[List[Any]])
+    - `genre_ids` (Optional[List[Any]])
+    - `fields` (Optional[List[Any]])
+    - `enable_user_data` (Optional[bool])
+    - `enable_total_record_count` (Optional[bool])
+- `get_recordings_tool`: Gets live tv recordings.
+  - **Parameters**:
+    - `channel_id` (Optional[str])
+    - `user_id` (Optional[str])
+    - `start_index` (Optional[int])
+    - `limit` (Optional[int])
+    - `status` (Optional[str])
+    - `is_in_progress` (Optional[bool])
+    - `series_timer_id` (Optional[str])
+    - `enable_images` (Optional[bool])
+    - `image_type_limit` (Optional[int])
+    - `enable_image_types` (Optional[List[Any]])
+    - `fields` (Optional[List[Any]])
+    - `enable_user_data` (Optional[bool])
+    - `is_movie` (Optional[bool])
+    - `is_series` (Optional[bool])
+    - `is_kids` (Optional[bool])
+    - `is_sports` (Optional[bool])
+    - `is_news` (Optional[bool])
+    - `is_library_item` (Optional[bool])
+    - `enable_total_record_count` (Optional[bool])
+- `get_recording_tool`: Gets a live tv recording.
+  - **Parameters**:
+    - `recording_id` (str)
+    - `user_id` (Optional[str])
+- `delete_recording_tool`: Deletes a live tv recording.
+  - **Parameters**:
+    - `recording_id` (str)
+- `get_recording_folders_tool`: Gets recording folders.
+  - **Parameters**:
+    - `user_id` (Optional[str])
+- `get_recording_groups_tool`: Gets live tv recording groups.
+  - **Parameters**:
+    - `user_id` (Optional[str])
+- `get_recording_group_tool`: Get recording group.
+  - **Parameters**:
+    - `group_id` (str)
+- `get_recordings_series_tool`: Gets live tv recording series.
+  - **Parameters**:
+    - `channel_id` (Optional[str])
+    - `user_id` (Optional[str])
+    - `group_id` (Optional[str])
+    - `start_index` (Optional[int])
+    - `limit` (Optional[int])
+    - `status` (Optional[str])
+    - `is_in_progress` (Optional[bool])
+    - `series_timer_id` (Optional[str])
+    - `enable_images` (Optional[bool])
+    - `image_type_limit` (Optional[int])
+    - `enable_image_types` (Optional[List[Any]])
+    - `fields` (Optional[List[Any]])
+    - `enable_user_data` (Optional[bool])
+    - `enable_total_record_count` (Optional[bool])
+- `get_series_timers_tool`: Gets live tv series timers.
+  - **Parameters**:
+    - `sort_by` (Optional[str])
+    - `sort_order` (Optional[str])
+- `create_series_timer_tool`: Creates a live tv series timer.
+  - **Parameters**:
+    - `body` (Optional[Dict[str, Any]])
+- `get_series_timer_tool`: Gets a live tv series timer.
+  - **Parameters**:
+    - `timer_id` (str)
+- `cancel_series_timer_tool`: Cancels a live tv series timer.
+  - **Parameters**:
+    - `timer_id` (str)
+- `update_series_timer_tool`: Updates a live tv series timer.
+  - **Parameters**:
+    - `timer_id` (str)
+    - `body` (Optional[Dict[str, Any]])
+- `get_timers_tool`: Gets the live tv timers.
+  - **Parameters**:
+    - `channel_id` (Optional[str])
+    - `series_timer_id` (Optional[str])
+    - `is_active` (Optional[bool])
+    - `is_scheduled` (Optional[bool])
+- `create_timer_tool`: Creates a live tv timer.
+  - **Parameters**:
+    - `body` (Optional[Dict[str, Any]])
+- `get_timer_tool`: Gets a timer.
+  - **Parameters**:
+    - `timer_id` (str)
+- `cancel_timer_tool`: Cancels a live tv timer.
+  - **Parameters**:
+    - `timer_id` (str)
+- `update_timer_tool`: Updates a live tv timer.
+  - **Parameters**:
+    - `timer_id` (str)
+    - `body` (Optional[Dict[str, Any]])
+- `get_default_timer_tool`: Gets the default values for a new timer.
+  - **Parameters**:
+    - `program_id` (Optional[str])
+- `add_tuner_host_tool`: Adds a tuner host.
+  - **Parameters**:
+    - `body` (Optional[Dict[str, Any]])
+- `delete_tuner_host_tool`: Deletes a tuner host.
+  - **Parameters**:
+    - `id` (Optional[str])
+- `get_tuner_host_types_tool`: Get tuner host types.
+- `reset_tuner_tool`: Resets a tv tuner.
+  - **Parameters**:
+    - `tuner_id` (str)
+- `discover_tuners_tool`: Discover tuners.
+  - **Parameters**:
+    - `new_devices_only` (Optional[bool])
+- `discvover_tuners_tool`: Discover tuners.
+  - **Parameters**:
+    - `new_devices_only` (Optional[bool])
+
+### Usage Instructions
+1. Review the tool available in this skill.
+2. Call the tool with the required parameters.
+
+### Error Handling
+- Ensure all required parameters are provided.
+- Check return values for error messages.

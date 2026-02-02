@@ -1,0 +1,103 @@
+---
+name: jellyfin-trailers
+description: "Generated skill for Trailers operations. Contains 1 tools."
+---
+
+### Overview
+This skill handles operations related to Trailers.
+
+### Available Tools
+- `get_trailers_tool`: Finds movies and trailers similar to a given trailer.
+  - **Parameters**:
+    - `user_id` (Optional[str])
+    - `max_official_rating` (Optional[str])
+    - `has_theme_song` (Optional[bool])
+    - `has_theme_video` (Optional[bool])
+    - `has_subtitles` (Optional[bool])
+    - `has_special_feature` (Optional[bool])
+    - `has_trailer` (Optional[bool])
+    - `adjacent_to` (Optional[str])
+    - `parent_index_number` (Optional[int])
+    - `has_parental_rating` (Optional[bool])
+    - `is_hd` (Optional[bool])
+    - `is4_k` (Optional[bool])
+    - `location_types` (Optional[List[Any]])
+    - `exclude_location_types` (Optional[List[Any]])
+    - `is_missing` (Optional[bool])
+    - `is_unaired` (Optional[bool])
+    - `min_community_rating` (Optional[float])
+    - `min_critic_rating` (Optional[float])
+    - `min_premiere_date` (Optional[str])
+    - `min_date_last_saved` (Optional[str])
+    - `min_date_last_saved_for_user` (Optional[str])
+    - `max_premiere_date` (Optional[str])
+    - `has_overview` (Optional[bool])
+    - `has_imdb_id` (Optional[bool])
+    - `has_tmdb_id` (Optional[bool])
+    - `has_tvdb_id` (Optional[bool])
+    - `is_movie` (Optional[bool])
+    - `is_series` (Optional[bool])
+    - `is_news` (Optional[bool])
+    - `is_kids` (Optional[bool])
+    - `is_sports` (Optional[bool])
+    - `exclude_item_ids` (Optional[List[Any]])
+    - `start_index` (Optional[int])
+    - `limit` (Optional[int])
+    - `recursive` (Optional[bool])
+    - `search_term` (Optional[str])
+    - `sort_order` (Optional[List[Any]])
+    - `parent_id` (Optional[str])
+    - `fields` (Optional[List[Any]])
+    - `exclude_item_types` (Optional[List[Any]])
+    - `filters` (Optional[List[Any]])
+    - `is_favorite` (Optional[bool])
+    - `media_types` (Optional[List[Any]])
+    - `image_types` (Optional[List[Any]])
+    - `sort_by` (Optional[List[Any]])
+    - `is_played` (Optional[bool])
+    - `genres` (Optional[List[Any]])
+    - `official_ratings` (Optional[List[Any]])
+    - `tags` (Optional[List[Any]])
+    - `years` (Optional[List[Any]])
+    - `enable_user_data` (Optional[bool])
+    - `image_type_limit` (Optional[int])
+    - `enable_image_types` (Optional[List[Any]])
+    - `person` (Optional[str])
+    - `person_ids` (Optional[List[Any]])
+    - `person_types` (Optional[List[Any]])
+    - `studios` (Optional[List[Any]])
+    - `artists` (Optional[List[Any]])
+    - `exclude_artist_ids` (Optional[List[Any]])
+    - `artist_ids` (Optional[List[Any]])
+    - `album_artist_ids` (Optional[List[Any]])
+    - `contributing_artist_ids` (Optional[List[Any]])
+    - `albums` (Optional[List[Any]])
+    - `album_ids` (Optional[List[Any]])
+    - `ids` (Optional[List[Any]])
+    - `video_types` (Optional[List[Any]])
+    - `min_official_rating` (Optional[str])
+    - `is_locked` (Optional[bool])
+    - `is_place_holder` (Optional[bool])
+    - `has_official_rating` (Optional[bool])
+    - `collapse_box_set_items` (Optional[bool])
+    - `min_width` (Optional[int])
+    - `min_height` (Optional[int])
+    - `max_width` (Optional[int])
+    - `max_height` (Optional[int])
+    - `is3_d` (Optional[bool])
+    - `series_status` (Optional[List[Any]])
+    - `name_starts_with_or_greater` (Optional[str])
+    - `name_starts_with` (Optional[str])
+    - `name_less_than` (Optional[str])
+    - `studio_ids` (Optional[List[Any]])
+    - `genre_ids` (Optional[List[Any]])
+    - `enable_total_record_count` (Optional[bool])
+    - `enable_images` (Optional[bool])
+
+### Usage Instructions
+1. Review the tool available in this skill.
+2. Call the tool with the required parameters.
+
+### Error Handling
+- Ensure all required parameters are provided.
+- Check return values for error messages.
