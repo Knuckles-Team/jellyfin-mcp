@@ -1,7 +1,7 @@
 ---
 services:
   jellyfin-mcp:
-    image: docker.io/knucklessg1/jellyfin-mcp:latest
+    image: docker.io/knucklessg1/jellyfin:latest
 #    build:
 #      context: . # Debug
 #      dockerfile: debug.Dockerfile
@@ -49,7 +49,7 @@ services:
       start_period: 10s
 
   jellyfin-agent:
-    image: docker.io/knucklessg1/jellyfin-mcp:latest
+    image: docker.io/knucklessg1/jellyfin:latest
     #    build:
     #      context: . # Debug
     #      dockerfile: debug.Dockerfile
