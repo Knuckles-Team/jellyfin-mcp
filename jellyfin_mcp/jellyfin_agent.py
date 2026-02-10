@@ -35,7 +35,7 @@ from jellyfin_mcp.utils import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 # Configuration
 AGENT_NAME = "JellyfinAgent"
