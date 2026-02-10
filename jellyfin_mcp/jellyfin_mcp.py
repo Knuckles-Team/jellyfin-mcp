@@ -26,7 +26,7 @@ from jellyfin_mcp.middlewares import (
     get_client,
 )
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 print(f"Jellyfin MCP v{__version__}")
 
 logger = get_logger(name="TokenMiddleware")
