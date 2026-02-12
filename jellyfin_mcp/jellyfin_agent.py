@@ -21,6 +21,7 @@ from fastapi import FastAPI, Request
 from starlette.responses import Response, StreamingResponse
 from pydantic import ValidationError
 import uvicorn
+import httpx
 
 from jellyfin_mcp.utils import (
     to_integer,
@@ -35,13 +36,11 @@ from jellyfin_mcp.utils import (
     prune_large_messages,
 )
 
-# Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-__version__ = "0.2.4"
+__version__ = "0.2.5"
 
-# Configuration
 AGENT_NAME = "JellyfinAgent"
 AGENT_DESCRIPTION = (
     "An intelligent agent for managing and interacting with a Jellyfin media server."
@@ -60,7 +59,6 @@ DEFAULT_SKILLS_DIRECTORY = os.getenv("SKILLS_DIRECTORY", get_skills_path())
 DEFAULT_ENABLE_WEB_UI = to_boolean(os.getenv("ENABLE_WEB_UI", "False"))
 DEFAULT_SSL_VERIFY = to_boolean(os.getenv("SSL_VERIFY", "True"))
 
-# Model Settings
 DEFAULT_MAX_TOKENS = to_integer(os.getenv("MAX_TOKENS", "16384"))
 DEFAULT_TEMPERATURE = to_float(os.getenv("TEMPERATURE", "0.7"))
 DEFAULT_TOP_P = to_float(os.getenv("TOP_P", "1.0"))
@@ -75,7 +73,6 @@ DEFAULT_STOP_SEQUENCES = to_list(os.getenv("STOP_SEQUENCES", None))
 DEFAULT_EXTRA_HEADERS = to_dict(os.getenv("EXTRA_HEADERS", None))
 DEFAULT_EXTRA_BODY = to_dict(os.getenv("EXTRA_BODY", None))
 
-# Prompts
 SUPERVISOR_SYSTEM_PROMPT = """You are the Jellyfin Supervisor Agent.
 Your goal is to assist the user by assigning tasks to specialized child agents through your available toolset.
 Analyze the user's request and determine which domain(s) it falls into (Media, System, User, LiveTV, Devices).
@@ -118,8 +115,8 @@ Use your tools to manage client devices connected to the server.
 def create_agent(
     provider: str = DEFAULT_PROVIDER,
     model_id: str = DEFAULT_MODEL_ID,
-    base_url: Optional[str] = None,
-    api_key: Optional[str] = None,
+    base_url: Optional[str] = DEFAULT_LLM_BASE_URL,
+    api_key: Optional[str] = DEFAULT_LLM_API_KEY,
     mcp_url: str = DEFAULT_MCP_URL,
     mcp_config: str = DEFAULT_MCP_CONFIG,
     skills_directory: Optional[str] = DEFAULT_SKILLS_DIRECTORY,
@@ -150,25 +147,29 @@ def create_agent(
         extra_body=DEFAULT_EXTRA_BODY,
     )
 
-    # Load master toolsets
     agent_toolsets = []
     if mcp_url:
         if "sse" in mcp_url.lower():
-            server = MCPServerSSE(mcp_url)
+            server = MCPServerSSE(
+                mcp_url, http_client=httpx.AsyncClient(verify=ssl_verify)
+            )
         else:
-            server = MCPServerStreamableHTTP(mcp_url)
+            server = MCPServerStreamableHTTP(
+                mcp_url, http_client=httpx.AsyncClient(verify=ssl_verify)
+            )
         agent_toolsets.append(server)
         logger.info(f"Connected to MCP Server: {mcp_url}")
     elif mcp_config:
         mcp_toolset = load_mcp_servers(mcp_config)
+        for server in mcp_toolset:
+            if hasattr(server, "http_client"):
+                server.http_client = httpx.AsyncClient(verify=ssl_verify)
         agent_toolsets.extend(mcp_toolset)
         logger.info(f"Connected to MCP Config JSON: {mcp_toolset}")
 
     if skills_directory and os.path.exists(skills_directory):
         agent_toolsets.append(SkillsToolset(directories=[str(skills_directory)]))
 
-    # Define Tag -> Agent Definitions
-    # (prompt, name, tags)
     agent_defs = {
         "media": (
             MEDIA_AGENT_PROMPT,
@@ -261,8 +262,6 @@ def create_agent(
         for ts in agent_toolsets:
 
             def filter_func(ctx, tool_def, t_list=tags_list):
-                # Check if tool has Any of the tags in t_list
-                # tool_def.tags is usually a list of strings
                 if not tool_def.tags:
                     return False
                 return any(t in tool_def.tags for t in t_list)
@@ -281,7 +280,6 @@ def create_agent(
         )
         child_agents[tag_key] = agent
 
-    # Supervisor
     supervisor = Agent(
         name=AGENT_NAME,
         system_prompt=SUPERVISOR_SYSTEM_PROMPT,
@@ -331,8 +329,8 @@ def create_agent(
 def create_agent_server(
     provider: str = DEFAULT_PROVIDER,
     model_id: str = DEFAULT_MODEL_ID,
-    base_url: Optional[str] = None,
-    api_key: Optional[str] = None,
+    base_url: Optional[str] = DEFAULT_LLM_BASE_URL,
+    api_key: Optional[str] = DEFAULT_LLM_API_KEY,
     mcp_url: str = DEFAULT_MCP_URL,
     mcp_config: str = DEFAULT_MCP_CONFIG,
     skills_directory: Optional[str] = DEFAULT_SKILLS_DIRECTORY,
@@ -343,7 +341,12 @@ def create_agent_server(
     ssl_verify: bool = DEFAULT_SSL_VERIFY,
 ):
     print(
-        f"Starting {AGENT_NAME} with provider={provider}, model={model_id}, mcp={mcp_url} | {mcp_config}"
+        f"Starting {AGENT_NAME}:"
+        f"\tprovider={provider}"
+        f"\tmodel={model_id}"
+        f"\tbase_url={base_url}"
+        f"\tmcp={mcp_url} | {mcp_config}"
+        f"\tssl_verify={ssl_verify}"
     )
     agent = create_agent(
         provider=provider,
@@ -355,7 +358,6 @@ def create_agent_server(
         skills_directory=skills_directory,
         ssl_verify=ssl_verify,
     )
-    # Simple skills loading for default exposure in A2A
     skills = []
     if skills_directory and os.path.exists(skills_directory):
         skills = load_skills_from_directory(skills_directory)
