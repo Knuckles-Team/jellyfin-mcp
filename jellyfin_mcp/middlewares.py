@@ -5,7 +5,6 @@ from fastmcp.utilities.logging import get_logger
 from jellyfin_mcp.jellyfin_api import Api
 from jellyfin_mcp.utils import to_boolean
 
-# Thread-local storage for user token
 local = threading.local()
 logger = get_logger(name="TokenMiddleware")
 
@@ -22,9 +21,8 @@ class UserTokenMiddleware(Middleware):
             if auth and auth.startswith("Bearer "):
                 token = auth.split(" ")[1]
                 local.user_token = token
-                local.user_claims = None  # Will be populated by JWTVerifier
+                local.user_claims = None
 
-                # Extract claims if JWTVerifier already validated
                 if hasattr(context, "auth") and hasattr(context.auth, "claims"):
                     local.user_claims = context.auth.claims
                     logger.info(

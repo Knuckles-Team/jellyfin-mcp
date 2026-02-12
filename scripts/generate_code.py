@@ -10,8 +10,6 @@ def snake_case(name: str) -> str:
 
 
 def clean_param_name(name: str) -> str:
-    # Some params like 'ContentType' need to be snake_cased
-    # Some might be reserved words
     if name == "from":
         return "from_idx"
     return snake_case(name).replace("-", "_")
@@ -27,7 +25,7 @@ def get_type_annotation(param_schema: Dict) -> str:
     elif p_type == "number":
         return "float"
     elif p_type == "array":
-        return "List[Any]"  # Simplification
+        return "List[Any]"
     elif p_type == "object":
         return "Dict[str, Any]"
     else:
@@ -55,9 +53,7 @@ def generate_api_code(spec: Dict) -> str:
     lines.append("        self._session = requests.Session()")
     lines.append("        self._session.verify = verify")
     lines.append("        if token:")
-    lines.append(
-        "            self._session.headers.update({'X-Emby-Token': token})"
-    )  # Confirm header name for Jellyfin
+    lines.append("            self._session.headers.update({'X-Emby-Token': token})")
     lines.append("        # TODO: Implement basic auth or login flow if needed")
     lines.append("")
     lines.append(
@@ -86,16 +82,13 @@ def generate_api_code(spec: Dict) -> str:
             func_name = snake_case(op_id)
             summary = op.get("summary", "No summary")
 
-            # extract params
             params = op.get("parameters", [])
-            # We need to separate path params, query params, and body
             path_params_list = []
             query_params_dict = []
 
             args_required = []
             args_optional = []
 
-            # Include path params in args signature
             for p in params:
                 p_name = p.get("name")
                 p_in = p.get("in")
@@ -107,37 +100,26 @@ def generate_api_code(spec: Dict) -> str:
                     args_required.append(f"{clean_name}: {p_type}")
                     path_params_list.append((p_name, clean_name))
                 elif p_in == "query":
-                    # Make query params optional
                     args_optional.append(f"{clean_name}: Optional[{p_type}] = None")
                     query_params_dict.append((p_name, clean_name))
 
-            # Check body
             request_body = op.get("requestBody")
             if request_body:
                 args_optional.append("body: Optional[Dict[str, Any]] = None")
 
-            # Join args
-            # self is always first
             all_args = ["self"] + args_required + args_optional
             args_str = ", ".join(all_args)
 
             lines.append(f"    def {func_name}({args_str}) -> Any:")
             lines.append(f'        """{summary}"""')
 
-            # Format endpoint with path params
             endpoint_str = f'"{path}"'
             if path_params_list:
                 format_args = ", ".join(
                     [f"{original}={clean}" for original, clean in path_params_list]
                 )
                 endpoint_str = f'"{path}".format({format_args})'
-                # Python format string needs {param} to match key
-                # But openapi uses {param} syntax too.
-                # Let's hope the names match or used f-string if we replaced it.
-                # Actually safest is to replace {name} with {name} and call format
-                # But we renamed some params.
 
-                # Better approach: string replacement
                 lines.append(f'        endpoint = "{path}"')
                 for original, clean in path_params_list:
                     lines.append(
@@ -146,7 +128,6 @@ def generate_api_code(spec: Dict) -> str:
             else:
                 lines.append(f'        endpoint = "{path}"')
 
-            # Construct params dict
             if query_params_dict:
                 lines.append("        params = {}")
                 for original, clean in query_params_dict:
@@ -155,7 +136,6 @@ def generate_api_code(spec: Dict) -> str:
             else:
                 lines.append("        params = None")
 
-            # Call request
             call_args = f'"{method.upper()}", endpoint, params=params'
             if request_body:
                 call_args += ", json_data=body"
@@ -214,11 +194,9 @@ def generate_mcp_code(spec: Dict) -> str:
                 f'@mcp.tool(name="{func_name}", description="{summary}", tags=["{tag_name}"])'
             )
 
-            # build args
             params = op.get("parameters", [])
             args_list = []
 
-            # collect args for api call
             api_call_args = []
 
             args_required = []
@@ -233,19 +211,13 @@ def generate_mcp_code(spec: Dict) -> str:
                 p_desc = p.get("description", "")
                 p_desc = p_desc.replace("\n", " ").replace("\r", "").replace('"', '\\"')
 
-                # Check directly if required in param definition, defaults to False
-                # But path params are always required in OpenAPI
                 is_required = p.get("required", False) or p_in == "path"
 
                 if p_in == "query":
-                    # We force query params to be optional in this generator for simplicity
-                    # But if it is marked required in OAS, maybe we should respect it?
-                    # For now, sticking to previous logic: Query -> Optional
                     field = f'Field(default=None, description="{p_desc}")'
                     lines_arg = f"{clean_name}: Optional[{p_type}] = {field}"
                     args_optional.append(lines_arg)
                 else:
-                    # Path params or header params (if any)
                     field = f'Field(description="{p_desc}")'
                     lines_arg = f"{clean_name}: {p_type} = {field}"
                     args_required.append(lines_arg)
@@ -254,7 +226,6 @@ def generate_mcp_code(spec: Dict) -> str:
 
             request_body = op.get("requestBody")
             if request_body:
-                # Body is optional in our previous logic
                 args_optional.append(
                     'body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")'
                 )

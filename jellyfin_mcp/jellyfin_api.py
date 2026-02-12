@@ -23,7 +23,6 @@ class Api:
         self._session.verify = verify
         if token:
             self._session.headers.update({"X-Emby-Token": token})
-        # TODO: Implement basic auth or login flow if needed
 
     def request(
         self,
