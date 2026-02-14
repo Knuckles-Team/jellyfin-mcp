@@ -39,7 +39,7 @@ from jellyfin_mcp.utils import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-__version__ = "0.2.7"
+__version__ = "0.2.8"
 
 AGENT_NAME = "JellyfinAgent"
 AGENT_DESCRIPTION = (
@@ -366,7 +366,6 @@ def create_agent_server(
         mcp_config=mcp_config,
         skills_directory=skills_directory,
         ssl_verify=ssl_verify,
-        timeout=DEFAULT_TIMEOUT,
     )
     skills = []
     if skills_directory and os.path.exists(skills_directory):
