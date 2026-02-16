@@ -26,7 +26,7 @@ from jellyfin_mcp.middlewares import (
     get_client,
 )
 
-__version__ = "0.2.9"
+__version__ = "0.2.10"
 print(f"Jellyfin MCP v{__version__}")
 
 logger = get_logger(name="TokenMiddleware")
@@ -69,7 +69,7 @@ def register_prompts(mcp: FastMCP):
 
 def register_tools(mcp: FastMCP):
     @mcp.custom_route("/health", methods=["GET"])
-    async def health_check() -> Dict:
+    async def health_check(request: Any) -> Dict:
         return {"status": "OK"}
 
     @mcp.tool(
