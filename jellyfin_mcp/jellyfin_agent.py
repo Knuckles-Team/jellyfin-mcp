@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import os
+import re
 import logging
 import argparse
 from typing import Optional, Any
@@ -13,7 +14,6 @@ from pydantic_ai.mcp import (
     MCPServerSSE,
 )
 from pydantic_ai_skills import SkillsToolset
-from fasta2a import Skill
 from pydantic_ai.ui.ag_ui import AGUIAdapter
 from pydantic_ai.ui import SSE_CONTENT_TYPE
 
@@ -31,7 +31,6 @@ from jellyfin_mcp.utils import (
     to_dict,
     get_mcp_config_path,
     get_skills_path,
-    load_skills_from_directory,
     create_model,
     prune_large_messages,
 )
@@ -39,7 +38,7 @@ from jellyfin_mcp.utils import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-__version__ = "0.2.11"
+__version__ = "0.2.12"
 
 AGENT_NAME = "JellyfinAgent"
 AGENT_DESCRIPTION = (
@@ -55,7 +54,7 @@ DEFAULT_LLM_BASE_URL = os.getenv("LLM_BASE_URL", None)
 DEFAULT_LLM_API_KEY = os.getenv("LLM_API_KEY", None)
 DEFAULT_MCP_URL = os.getenv("MCP_URL", None)
 DEFAULT_MCP_CONFIG = os.getenv("MCP_CONFIG", get_mcp_config_path())
-DEFAULT_SKILLS_DIRECTORY = os.getenv("SKILLS_DIRECTORY", get_skills_path())
+DEFAULT_CUSTOM_SKILLS_DIRECTORY = os.getenv("CUSTOM_SKILLS_DIRECTORY", None)
 DEFAULT_ENABLE_WEB_UI = to_boolean(os.getenv("ENABLE_WEB_UI", "False"))
 DEFAULT_SSL_VERIFY = to_boolean(os.getenv("SSL_VERIFY", "True"))
 
@@ -119,7 +118,7 @@ def create_agent(
     api_key: Optional[str] = DEFAULT_LLM_API_KEY,
     mcp_url: str = DEFAULT_MCP_URL,
     mcp_config: str = DEFAULT_MCP_CONFIG,
-    skills_directory: Optional[str] = DEFAULT_SKILLS_DIRECTORY,
+    custom_skills_directory: Optional[str] = DEFAULT_CUSTOM_SKILLS_DIRECTORY,
     ssl_verify: bool = DEFAULT_SSL_VERIFY,
 ) -> Agent:
 
@@ -176,8 +175,15 @@ def create_agent(
         agent_toolsets.extend(mcp_toolset)
         logger.info(f"Connected to MCP Config JSON: {mcp_toolset}")
 
-    if skills_directory and os.path.exists(skills_directory):
-        agent_toolsets.append(SkillsToolset(directories=[str(skills_directory)]))
+    # Always load default skills
+
+    skill_dirs = [get_skills_path()]
+
+    if custom_skills_directory and os.path.exists(custom_skills_directory):
+
+        skill_dirs.append(str(custom_skills_directory))
+
+    agent_toolsets.append(SkillsToolset(directories=skill_dirs))
 
     agent_defs = {
         "media": (
@@ -279,6 +285,24 @@ def create_agent(
                 filtered_ts = ts.filtered(filter_func)
                 tag_toolsets.append(filtered_ts)
 
+        # Load specific skills for these tags
+        for tag in tags_list:
+            # Convert CamelCase to kebab-case for directory name
+            # e.g. ActivityLog -> activity-log
+            kebab_tag = re.sub(r"(?<!^)(?=[A-Z])", "-", tag).lower()
+            skill_dir_name = f"jellyfin-{kebab_tag}"
+
+            # Check custom skills directory
+            if custom_skills_directory:
+                skill_dir_path = os.path.join(custom_skills_directory, skill_dir_name)
+                if os.path.exists(skill_dir_path):
+                    tag_toolsets.append(SkillsToolset(directories=[skill_dir_path]))
+
+            # Check default skills directory
+            default_skill_path = os.path.join(get_skills_path(), skill_dir_name)
+            if os.path.exists(default_skill_path):
+                tag_toolsets.append(SkillsToolset(directories=[default_skill_path]))
+
         agent = Agent(
             name=agent_name,
             system_prompt=system_prompt,
@@ -342,7 +366,7 @@ def create_agent_server(
     api_key: Optional[str] = DEFAULT_LLM_API_KEY,
     mcp_url: str = DEFAULT_MCP_URL,
     mcp_config: str = DEFAULT_MCP_CONFIG,
-    skills_directory: Optional[str] = DEFAULT_SKILLS_DIRECTORY,
+    custom_skills_directory: Optional[str] = DEFAULT_CUSTOM_SKILLS_DIRECTORY,
     debug: bool = DEFAULT_DEBUG,
     host: str = DEFAULT_HOST,
     port: int = DEFAULT_PORT,
@@ -364,29 +388,16 @@ def create_agent_server(
         api_key=api_key,
         mcp_url=mcp_url,
         mcp_config=mcp_config,
-        skills_directory=skills_directory,
+        custom_skills_directory=custom_skills_directory,
         ssl_verify=ssl_verify,
     )
-    skills = []
-    if skills_directory and os.path.exists(skills_directory):
-        skills = load_skills_from_directory(skills_directory)
-    else:
-        skills = [
-            Skill(
-                id="jellyfin",
-                name="Jellyfin",
-                description="Control Jellyfin Server",
-                tags=["jellyfin"],
-                input_modes=["text"],
-                output_modes=["text"],
-            )
-        ]
+    # Skills are loaded per-agent based on tags
 
     a2a_app = agent.to_a2a(
         name=AGENT_NAME,
         description=AGENT_DESCRIPTION,
         version=__version__,
-        skills=skills,
+        skills=[],
         debug=debug,
     )
 
@@ -509,6 +520,7 @@ def agent_server():
         api_key=args.api_key,
         mcp_url=args.mcp_url,
         mcp_config=args.mcp_config,
+        custom_skills_directory=args.custom_skills_directory,
         debug=args.debug,
         host=args.host,
         port=args.port,
