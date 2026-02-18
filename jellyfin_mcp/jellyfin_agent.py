@@ -38,7 +38,7 @@ from jellyfin_mcp.utils import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-__version__ = "0.2.13"
+__version__ = "0.2.14"
 
 AGENT_NAME = "JellyfinAgent"
 AGENT_DESCRIPTION = (
@@ -270,7 +270,9 @@ def create_agent(
         "device": (DEVICE_AGENT_PROMPT, "Jellyfin_Device_Agent", ["Devices"]),
     }
 
+    supervisor_skills = []
     child_agents = {}
+    supervisor_skills_directories = [get_skills_path()]
 
     for tag_key, (system_prompt, agent_name, tags_list) in agent_defs.items():
         tag_toolsets = []
@@ -292,16 +294,22 @@ def create_agent(
             kebab_tag = re.sub(r"(?<!^)(?=[A-Z])", "-", tag).lower()
             skill_dir_name = f"jellyfin-{kebab_tag}"
 
+            child_skills_directories = []
+
             # Check custom skills directory
             if custom_skills_directory:
                 skill_dir_path = os.path.join(custom_skills_directory, skill_dir_name)
                 if os.path.exists(skill_dir_path):
-                    tag_toolsets.append(SkillsToolset(directories=[skill_dir_path]))
+                    child_skills_directories.append(skill_dir_path)
 
             # Check default skills directory
             default_skill_path = os.path.join(get_skills_path(), skill_dir_name)
             if os.path.exists(default_skill_path):
-                tag_toolsets.append(SkillsToolset(directories=[default_skill_path]))
+                child_skills_directories.append(default_skill_path)
+
+            if child_skills_directories:
+                ts = SkillsToolset(directories=child_skills_directories)
+                tag_toolsets.append(ts)
 
         agent = Agent(
             name=agent_name,
@@ -313,11 +321,17 @@ def create_agent(
         )
         child_agents[tag_key] = agent
 
+    if custom_skills_directory:
+        supervisor_skills_directories.append(custom_skills_directory)
+    supervisor_skills.append(SkillsToolset(directories=supervisor_skills_directories))
+    logger.info(f"Loaded supervisor skills from: {supervisor_skills_directories}")
+
     supervisor = Agent(
         name=AGENT_NAME,
         system_prompt=SUPERVISOR_SYSTEM_PROMPT,
         model=model,
         model_settings=settings,
+        toolsets=supervisor_skills,
         deps_type=Any,
     )
 
