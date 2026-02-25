@@ -1,6 +1,7 @@
 ---
 name: jellyfin-items
 description: "Generated skill for Items operations. Contains 4 tools."
+tags: [items]
 ---
 
 ### Overview

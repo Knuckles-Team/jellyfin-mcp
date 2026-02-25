@@ -1,6 +1,7 @@
 ---
 name: jellyfin-branding
 description: "Generated skill for Branding operations. Contains 3 tools."
+tags: [branding]
 ---
 
 ### Overview

@@ -1,6 +1,7 @@
 ---
 name: jellyfin-environment
 description: "Generated skill for Environment operations. Contains 6 tools."
+tags: [environment]
 ---
 
 ### Overview

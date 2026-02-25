@@ -1,6 +1,7 @@
 ---
 name: jellyfin-configuration
 description: "Generated skill for Configuration operations. Contains 6 tools."
+tags: [configuration]
 ---
 
 ### Overview

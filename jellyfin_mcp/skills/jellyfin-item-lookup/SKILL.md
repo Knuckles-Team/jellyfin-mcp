@@ -1,6 +1,7 @@
 ---
 name: jellyfin-item-lookup
 description: "Generated skill for ItemLookup operations. Contains 11 tools."
+tags: [item-lookup]
 ---
 
 ### Overview

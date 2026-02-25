@@ -1,6 +1,7 @@
 ---
 name: jellyfin-trailers
 description: "Generated skill for Trailers operations. Contains 1 tools."
+tags: [trailers]
 ---
 
 ### Overview

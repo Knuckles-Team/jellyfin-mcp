@@ -1,6 +1,7 @@
 ---
 name: jellyfin-trickplay
 description: "Generated skill for Trickplay operations. Contains 2 tools."
+tags: [trickplay]
 ---
 
 ### Overview

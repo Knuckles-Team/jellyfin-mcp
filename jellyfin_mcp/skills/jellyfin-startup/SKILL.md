@@ -1,6 +1,7 @@
 ---
 name: jellyfin-startup
 description: "Generated skill for Startup operations. Contains 7 tools."
+tags: [startup]
 ---
 
 ### Overview

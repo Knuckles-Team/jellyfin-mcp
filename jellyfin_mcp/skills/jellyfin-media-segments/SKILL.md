@@ -1,6 +1,7 @@
 ---
 name: jellyfin-media-segments
 description: "Generated skill for MediaSegments operations. Contains 1 tools."
+tags: [media-segments]
 ---
 
 ### Overview

@@ -1,6 +1,7 @@
 ---
 name: jellyfin-live-tv
 description: "Generated skill for LiveTv operations. Contains 41 tools."
+tags: [live-tv]
 ---
 
 ### Overview

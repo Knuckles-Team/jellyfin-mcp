@@ -1,6 +1,7 @@
 ---
 name: jellyfin-scheduled-tasks
 description: "Generated skill for ScheduledTasks operations. Contains 5 tools."
+tags: [scheduled-tasks]
 ---
 
 ### Overview

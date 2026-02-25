@@ -1,6 +1,7 @@
 ---
 name: jellyfin-playstate
 description: "Generated skill for Playstate operations. Contains 9 tools."
+tags: [playstate]
 ---
 
 ### Overview

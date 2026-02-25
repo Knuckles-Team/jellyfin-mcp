@@ -1,6 +1,7 @@
 ---
 name: jellyfin-user-library
 description: "Generated skill for UserLibrary operations. Contains 10 tools."
+tags: [user-library]
 ---
 
 ### Overview

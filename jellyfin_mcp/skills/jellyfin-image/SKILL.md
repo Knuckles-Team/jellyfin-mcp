@@ -1,6 +1,7 @@
 ---
 name: jellyfin-image
 description: "Generated skill for Image operations. Contains 24 tools."
+tags: [image]
 ---
 
 ### Overview

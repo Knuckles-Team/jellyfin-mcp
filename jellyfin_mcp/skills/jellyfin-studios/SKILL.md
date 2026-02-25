@@ -1,6 +1,7 @@
 ---
 name: jellyfin-studios
 description: "Generated skill for Studios operations. Contains 2 tools."
+tags: [studios]
 ---
 
 ### Overview

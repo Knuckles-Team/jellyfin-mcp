@@ -1,6 +1,7 @@
 ---
 name: jellyfin-library
 description: "Generated skill for Library operations. Contains 25 tools."
+tags: [library]
 ---
 
 ### Overview

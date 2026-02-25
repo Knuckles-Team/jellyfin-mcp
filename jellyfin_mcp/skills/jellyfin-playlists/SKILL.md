@@ -1,6 +1,7 @@
 ---
 name: jellyfin-playlists
 description: "Generated skill for Playlists operations. Contains 11 tools."
+tags: [playlists]
 ---
 
 ### Overview

@@ -1,6 +1,7 @@
 ---
 name: jellyfin-subtitle
 description: "Generated skill for Subtitle operations. Contains 10 tools."
+tags: [subtitle]
 ---
 
 ### Overview

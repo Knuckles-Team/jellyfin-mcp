@@ -1,6 +1,7 @@
 ---
 name: jellyfin-remote-image
 description: "Generated skill for RemoteImage operations. Contains 3 tools."
+tags: [remote-image]
 ---
 
 ### Overview

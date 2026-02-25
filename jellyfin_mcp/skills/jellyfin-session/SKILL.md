@@ -1,6 +1,7 @@
 ---
 name: jellyfin-session
 description: "Generated skill for Session operations. Contains 16 tools."
+tags: [session]
 ---
 
 ### Overview

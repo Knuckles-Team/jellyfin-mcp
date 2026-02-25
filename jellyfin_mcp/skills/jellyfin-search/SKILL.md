@@ -1,6 +1,7 @@
 ---
 name: jellyfin-search
 description: "Generated skill for Search operations. Contains 1 tools."
+tags: [search]
 ---
 
 ### Overview

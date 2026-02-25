@@ -1,6 +1,7 @@
 ---
 name: jellyfin-quick-connect
 description: "Generated skill for QuickConnect operations. Contains 4 tools."
+tags: [quick-connect]
 ---
 
 ### Overview

@@ -1,6 +1,7 @@
 ---
 name: jellyfin-filter
 description: "Generated skill for Filter operations. Contains 2 tools."
+tags: [filter]
 ---
 
 ### Overview

@@ -1,6 +1,7 @@
 ---
 name: jellyfin-years
 description: "Generated skill for Years operations. Contains 2 tools."
+tags: [years]
 ---
 
 ### Overview

@@ -1,6 +1,7 @@
 ---
 name: jellyfin-channels
 description: "Generated skill for Channels operations. Contains 5 tools."
+tags: [channels]
 ---
 
 ### Overview

@@ -1,6 +1,7 @@
 ---
 name: jellyfin-universal-audio
 description: "Generated skill for UniversalAudio operations. Contains 1 tools."
+tags: [universal-audio]
 ---
 
 ### Overview

@@ -1,6 +1,7 @@
 ---
 name: jellyfin-item-update
 description: "Generated skill for ItemUpdate operations. Contains 3 tools."
+tags: [item-update]
 ---
 
 ### Overview

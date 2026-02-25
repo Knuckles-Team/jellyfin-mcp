@@ -1,6 +1,7 @@
 ---
 name: jellyfin-movies
 description: "Generated skill for Movies operations. Contains 1 tools."
+tags: [movies]
 ---
 
 ### Overview

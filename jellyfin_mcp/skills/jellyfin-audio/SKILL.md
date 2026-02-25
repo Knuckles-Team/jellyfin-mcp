@@ -1,6 +1,7 @@
 ---
 name: jellyfin-audio
 description: "Generated skill for Audio operations. Contains 2 tools."
+tags: [audio]
 ---
 
 ### Overview

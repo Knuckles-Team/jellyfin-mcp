@@ -1,6 +1,7 @@
 ---
 name: jellyfin-lyrics
 description: "Generated skill for Lyrics operations. Contains 6 tools."
+tags: [lyrics]
 ---
 
 ### Overview

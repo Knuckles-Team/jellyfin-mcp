@@ -1,6 +1,7 @@
 ---
 name: jellyfin-library-structure
 description: "Generated skill for LibraryStructure operations. Contains 8 tools."
+tags: [library-structure]
 ---
 
 ### Overview

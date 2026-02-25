@@ -1,6 +1,7 @@
 ---
 name: jellyfin-api-key
 description: "Generated skill for ApiKey operations. Contains 3 tools."
+tags: [api-key]
 ---
 
 ### Overview

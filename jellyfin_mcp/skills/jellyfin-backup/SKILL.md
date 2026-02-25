@@ -1,6 +1,7 @@
 ---
 name: jellyfin-backup
 description: "Generated skill for Backup operations. Contains 4 tools."
+tags: [backup]
 ---
 
 ### Overview

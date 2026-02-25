@@ -1,6 +1,7 @@
 ---
 name: jellyfin-devices
 description: "Generated skill for Devices operations. Contains 5 tools."
+tags: [devices]
 ---
 
 ### Overview

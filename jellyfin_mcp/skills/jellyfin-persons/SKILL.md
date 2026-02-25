@@ -1,6 +1,7 @@
 ---
 name: jellyfin-persons
 description: "Generated skill for Persons operations. Contains 2 tools."
+tags: [persons]
 ---
 
 ### Overview

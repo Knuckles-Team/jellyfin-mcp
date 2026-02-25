@@ -1,6 +1,7 @@
 ---
 name: jellyfin-item-refresh
 description: "Generated skill for ItemRefresh operations. Contains 1 tools."
+tags: [item-refresh]
 ---
 
 ### Overview

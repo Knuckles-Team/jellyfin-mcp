@@ -1,6 +1,7 @@
 ---
 name: jellyfin-dashboard
 description: "Generated skill for Dashboard operations. Contains 2 tools."
+tags: [dashboard]
 ---
 
 ### Overview

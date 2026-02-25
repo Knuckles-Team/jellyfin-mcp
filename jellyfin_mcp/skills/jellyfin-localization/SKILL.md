@@ -1,6 +1,7 @@
 ---
 name: jellyfin-localization
 description: "Generated skill for Localization operations. Contains 4 tools."
+tags: [localization]
 ---
 
 ### Overview

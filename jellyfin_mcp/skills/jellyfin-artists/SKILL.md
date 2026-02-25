@@ -1,6 +1,7 @@
 ---
 name: jellyfin-artists
 description: "Generated skill for Artists operations. Contains 3 tools."
+tags: [artists]
 ---
 
 ### Overview

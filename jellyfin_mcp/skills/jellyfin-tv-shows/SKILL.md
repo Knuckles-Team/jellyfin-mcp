@@ -1,6 +1,7 @@
 ---
 name: jellyfin-tv-shows
 description: "Generated skill for TvShows operations. Contains 4 tools."
+tags: [tv-shows]
 ---
 
 ### Overview

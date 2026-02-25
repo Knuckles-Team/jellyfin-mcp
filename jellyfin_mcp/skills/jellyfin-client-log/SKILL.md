@@ -1,6 +1,7 @@
 ---
 name: jellyfin-client-log
 description: "Generated skill for ClientLog operations. Contains 1 tools."
+tags: [client-log]
 ---
 
 ### Overview

@@ -1,6 +1,7 @@
 ---
 name: jellyfin-activity-log
 description: "Generated skill for ActivityLog operations. Contains 1 tools."
+tags: [activity-log]
 ---
 
 ### Overview

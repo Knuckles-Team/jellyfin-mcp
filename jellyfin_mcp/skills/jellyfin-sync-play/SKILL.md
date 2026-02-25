@@ -1,6 +1,7 @@
 ---
 name: jellyfin-sync-play
 description: "Generated skill for SyncPlay operations. Contains 22 tools."
+tags: [sync-play]
 ---
 
 ### Overview

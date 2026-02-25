@@ -1,6 +1,7 @@
 ---
 name: jellyfin-tmdb
 description: "Generated skill for Tmdb operations. Contains 1 tools."
+tags: [tmdb]
 ---
 
 ### Overview

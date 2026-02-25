@@ -1,6 +1,7 @@
 ---
 name: jellyfin-dynamic-hls
 description: "Generated skill for DynamicHls operations. Contains 7 tools."
+tags: [dynamic-hls]
 ---
 
 ### Overview

@@ -1,6 +1,7 @@
 ---
 name: jellyfin-package
 description: "Generated skill for Package operations. Contains 6 tools."
+tags: [package]
 ---
 
 ### Overview

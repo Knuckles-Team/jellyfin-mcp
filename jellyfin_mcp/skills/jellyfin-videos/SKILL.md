@@ -1,6 +1,7 @@
 ---
 name: jellyfin-videos
 description: "Generated skill for Videos operations. Contains 5 tools."
+tags: [videos]
 ---
 
 ### Overview

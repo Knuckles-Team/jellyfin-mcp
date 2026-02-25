@@ -1,6 +1,7 @@
 ---
 name: jellyfin-user-views
 description: "Generated skill for UserViews operations. Contains 2 tools."
+tags: [user-views]
 ---
 
 ### Overview

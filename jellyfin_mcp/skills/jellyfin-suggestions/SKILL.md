@@ -1,6 +1,7 @@
 ---
 name: jellyfin-suggestions
 description: "Generated skill for Suggestions operations. Contains 1 tools."
+tags: [suggestions]
 ---
 
 ### Overview

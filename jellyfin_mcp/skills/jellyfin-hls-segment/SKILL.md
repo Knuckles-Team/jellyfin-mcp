@@ -1,6 +1,7 @@
 ---
 name: jellyfin-hls-segment
 description: "Generated skill for HlsSegment operations. Contains 5 tools."
+tags: [hls-segment]
 ---
 
 ### Overview

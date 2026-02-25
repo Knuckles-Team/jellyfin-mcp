@@ -1,6 +1,7 @@
 ---
 name: jellyfin-video-attachments
 description: "Generated skill for VideoAttachments operations. Contains 1 tools."
+tags: [video-attachments]
 ---
 
 ### Overview

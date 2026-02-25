@@ -1,6 +1,7 @@
 ---
 name: jellyfin-media-info
 description: "Generated skill for MediaInfo operations. Contains 5 tools."
+tags: [media-info]
 ---
 
 ### Overview

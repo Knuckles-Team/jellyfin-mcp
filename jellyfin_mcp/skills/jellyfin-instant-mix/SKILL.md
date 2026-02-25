@@ -1,6 +1,7 @@
 ---
 name: jellyfin-instant-mix
 description: "Generated skill for InstantMix operations. Contains 8 tools."
+tags: [instant-mix]
 ---
 
 ### Overview

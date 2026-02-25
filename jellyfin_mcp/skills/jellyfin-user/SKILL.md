@@ -1,6 +1,7 @@
 ---
 name: jellyfin-user
 description: "Generated skill for User operations. Contains 14 tools."
+tags: [user]
 ---
 
 ### Overview

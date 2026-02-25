@@ -1,6 +1,7 @@
 ---
 name: jellyfin-music-genres
 description: "Generated skill for MusicGenres operations. Contains 2 tools."
+tags: [music-genres]
 ---
 
 ### Overview

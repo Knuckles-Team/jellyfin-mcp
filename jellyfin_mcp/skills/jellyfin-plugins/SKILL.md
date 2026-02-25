@@ -1,6 +1,7 @@
 ---
 name: jellyfin-plugins
 description: "Generated skill for Plugins operations. Contains 9 tools."
+tags: [plugins]
 ---
 
 ### Overview

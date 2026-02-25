@@ -1,6 +1,7 @@
 ---
 name: jellyfin-genres
 description: "Generated skill for Genres operations. Contains 2 tools."
+tags: [genres]
 ---
 
 ### Overview

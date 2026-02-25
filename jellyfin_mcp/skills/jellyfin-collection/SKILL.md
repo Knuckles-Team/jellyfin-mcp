@@ -1,6 +1,7 @@
 ---
 name: jellyfin-collection
 description: "Generated skill for Collection operations. Contains 3 tools."
+tags: [collection]
 ---
 
 ### Overview

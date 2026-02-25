@@ -1,6 +1,7 @@
 ---
 name: jellyfin-display-preferences
 description: "Generated skill for DisplayPreferences operations. Contains 2 tools."
+tags: [display-preferences]
 ---
 
 ### Overview

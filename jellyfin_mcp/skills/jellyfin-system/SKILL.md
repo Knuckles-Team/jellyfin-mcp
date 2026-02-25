@@ -1,6 +1,7 @@
 ---
 name: jellyfin-system
 description: "Generated skill for System operations. Contains 10 tools."
+tags: [system]
 ---
 
 ### Overview

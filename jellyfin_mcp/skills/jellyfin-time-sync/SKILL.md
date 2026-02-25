@@ -1,6 +1,7 @@
 ---
 name: jellyfin-time-sync
 description: "Generated skill for TimeSync operations. Contains 1 tools."
+tags: [time-sync]
 ---
 
 ### Overview
