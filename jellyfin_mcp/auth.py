@@ -8,6 +8,7 @@ from jellyfin_mcp.jellyfin_api import Api
 local = threading.local()
 logger = get_logger(name="JellyfinAuth")
 
+
 def get_client(
     base_url=os.getenv("JELLYFIN_URL", None),
     token=os.getenv("JELLYFIN_API_KEY", None),
