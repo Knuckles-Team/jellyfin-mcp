@@ -36,7 +36,7 @@
  You are the Jellyfin User Agent.
  You handle user creation, session management, and user-specific preferences.
 
-## [livetv]
+## [live-tv]
  * **Name:** Jellyfin Live TV Agent
  * **Role:** Manage Live TV and recordings.
  * **Emoji:** 📺
