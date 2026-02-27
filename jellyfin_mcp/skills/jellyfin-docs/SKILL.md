@@ -1,46 +1,61 @@
 ---
 name: jellyfin-docs
-description: Agent skill-graph for Jellyfin documentation (including API reference).
-categories: [Documentation, Knowledge Base]
-tags: [docs, jellyfin-docs, reference]
+description: Combined user, admin, and API documentation for Jellyfin.
+source_url: https://jellyfin.org/docs/, https://api.jellyfin.org
+categories: [Documentation, Knowledge Base, Reference]
+tags: [docs, reference, jellyfin-docs, knowledge-base]
 ---
 
 # Jellyfin Docs Documentation
 
-Agent skill-graph for Jellyfin documentation (including API reference).
+Combined user, admin, and API documentation for Jellyfin.
 
-## Reference Files
+**Original Sources**:
+- [https://jellyfin.org/docs/](https://jellyfin.org/docs/)
+- [https://api.jellyfin.org](https://api.jellyfin.org)
 
-- [Contact](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/contact.md)
-- [How to Contribute](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/contribute.md)
-- [Welcome to the Jellyfin Documentation](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs.md)
-- [About Jellyfin](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_about.md)
-- [Backup and Restore](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_administration_backup-and-restore.md)
-- [Migrating](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_administration_migrate.md)
-- [Clients](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_clients.md)
-- [Jellyfin Community Standards](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_community-standards.md)
-- [Contributing to Jellyfin](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_contributing.md)
-- [Reporting Issues](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_contributing_issues.md)
-- [Frequently Asked Questions](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_faq.md)
-- [Getting Help](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_getting-help.md)
-- [Installation](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_installation.md)
-- [Manual Installation](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_installation_advanced_manual.md)
-- [Building from source](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_installation_advanced_source.md)
-- [Installation on Synology](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_installation_advanced_synology.md)
-- [TrueNAS SCALE](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_installation_advanced_truenas.md)
-- [Container](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_installation_container.md)
-- [Linux](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_installation_linux.md)
-- [macOS](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_installation_macos.md)
-- [Windows](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_installation_windows.md)
-- [Networking](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_post-install_networking.md)
-- [Monitoring](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_post-install_networking_advanced_monitoring.md)
-- [Hardware Acceleration](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_post-install_transcoding_hardware-acceleration.md)
-- [Quick Start](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_quick-start.md)
-- [Plugins](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_server_plugins.md)
-- [Style Guides](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_style-guides.md)
-- [Testing Jellyfin](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/docs_general_testing.md)
-- [Downloads](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/downloads.md)
-- [Downloads](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/downloads_clients.md)
-- [Jellyfin API (10.11.6)](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/index.md)
-- [openapi_jellyfin-openapi-stable.json.md](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/openapi_jellyfin-openapi-stable.json.md)
-- [posts.md](file:///home/genius/Workspace/agent-packages/universal-skills/universal_skills/skill-graphs/jellyfin-docs/reference/posts.md)
+**Contains**: 33 markdown files with full folder structure.
+*Last updated: February 27, 2026*
+
+## 📚 Table of Contents
+
+- [About Jellyfin](reference/about.md)
+- [Backup and Restore](reference/administration_backup-and-restore.md)
+- [Migrating](reference/administration_migrate.md)
+- [Clients](reference/clients.md)
+- [Jellyfin Community Standards](reference/community-standards.md)
+- [Contact](reference/contact.md)
+- [How to Contribute](reference/contribute.md)
+- [Contributing to Jellyfin](reference/contributing.md)
+- [Reporting Issues](reference/contributing_issues.md)
+- [Welcome to the Jellyfin Documentation](reference/docs.md)
+- [Downloads](reference/downloads.md)
+- [Downloads](reference/downloads_clients.md)
+- [Frequently Asked Questions](reference/faq.md)
+- [Getting Help](reference/getting-help.md)
+- [Index](reference/index.md)
+- [Installation](reference/installation.md)
+- [Manual Installation](reference/installation_advanced_manual.md)
+- [Building from source](reference/installation_advanced_source.md)
+- [Installation on Synology](reference/installation_advanced_synology.md)
+- [TrueNAS SCALE](reference/installation_advanced_truenas.md)
+- [Container](reference/installation_container.md)
+- [Linux](reference/installation_linux.md)
+- [macOS](reference/installation_macos.md)
+- [Windows](reference/installation_windows.md)
+- [Openapi Jellyfin Openapi Stable.Json](reference/openapi_jellyfin-openapi-stable.json.md)
+- [Networking](reference/post-install_networking.md)
+- [Monitoring](reference/post-install_networking_advanced_monitoring.md)
+- [Hardware Acceleration](reference/post-install_transcoding_hardware-acceleration.md)
+- [Posts](reference/posts.md)
+- [Quick Start](reference/quick-start.md)
+- [Plugins](reference/server_plugins.md)
+- [Style Guides](reference/style-guides.md)
+- [Testing Jellyfin](reference/testing.md)
+
+## 🤖 Agent Usage Guide
+
+- When the user asks anything about **Jellyfin Docs**, consult the reference files.
+- Prefer exact quotes and direct links to the relevant file/section.
+- The hierarchical TOC above makes navigation fast and intuitive.
+- All images and assets are preserved so links work perfectly.
