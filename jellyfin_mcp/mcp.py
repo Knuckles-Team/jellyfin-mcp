@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # coding: utf-8
 
+from dotenv import load_dotenv, find_dotenv
+from agent_utilities.base_utilities import to_boolean
 import os
 import sys
 import logging
@@ -28,7 +30,7 @@ from agent_utilities.middlewares import (
 )
 from jellyfin_mcp.auth import get_client
 
-__version__ = "0.2.26"
+__version__ = "0.2.27"
 print(f"Jellyfin MCP v{__version__}")
 
 logger = get_logger(name="TokenMiddleware")
@@ -49,11 +51,12 @@ def register_prompts(mcp: FastMCP):
         return "Please show recently added media."
 
 
-def register_tools(mcp: FastMCP):
-    @mcp.custom_route("/health", methods=["GET"])
+def register_misc_tools(mcp: FastMCP):
     async def health_check(request: Any) -> Dict:
         return {"status": "OK"}
 
+
+def register_activitylog_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_log_entries",
         description="Gets activity log entries.",
@@ -85,6 +88,8 @@ def register_tools(mcp: FastMCP):
             has_user_id=has_user_id,
         )
 
+
+def register_apikey_tools(mcp: FastMCP):
     @mcp.tool(name="get_keys", description="Get all keys.", tags={"ApiKey"})
     def get_keys_tool() -> Any:
         """Get all keys."""
@@ -109,6 +114,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.revoke_key(key=key)
 
+
+def register_artists_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_artists",
         description="Gets all artists from a given item, folder, or the entire library.",
@@ -449,6 +456,8 @@ def register_tools(mcp: FastMCP):
             enable_total_record_count=enable_total_record_count,
         )
 
+
+def register_audio_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_audio_stream", description="Gets an audio stream.", tags={"Audio"}
     )
@@ -913,6 +922,8 @@ def register_tools(mcp: FastMCP):
             enable_audio_vbr_encoding=enable_audio_vbr_encoding,
         )
 
+
+def register_backup_tools(mcp: FastMCP):
     @mcp.tool(
         name="list_backups",
         description="Gets a list of all currently present backups in the backup directory.",
@@ -959,6 +970,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.start_restore_backup(body=body)
 
+
+def register_branding_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_branding_options",
         description="Gets branding configuration.",
@@ -985,6 +998,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_branding_css_2()
 
+
+def register_channels_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_channels", description="Gets available channels.", tags={"Channels"}
     )
@@ -1130,6 +1145,8 @@ def register_tools(mcp: FastMCP):
             channel_ids=channel_ids,
         )
 
+
+def register_clientlog_tools(mcp: FastMCP):
     @mcp.tool(name="log_file", description="Upload a document.", tags={"ClientLog"})
     def log_file_tool(
         body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
@@ -1138,6 +1155,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.log_file(body=body)
 
+
+def register_collection_tools(mcp: FastMCP):
     @mcp.tool(
         name="create_collection",
         description="Creates a new collection.",
@@ -1194,6 +1213,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.remove_from_collection(collection_id=collection_id, ids=ids)
 
+
+def register_configuration_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_configuration",
         description="Gets application configuration.",
@@ -1265,6 +1286,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_default_metadata_options()
 
+
+def register_dashboard_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_dashboard_configuration_page",
         description="Gets a dashboard configuration page.",
@@ -1291,6 +1314,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_configuration_pages(enable_in_main_menu=enable_in_main_menu)
 
+
+def register_devices_tools(mcp: FastMCP):
     @mcp.tool(name="get_devices", description="Get Devices.", tags={"Devices"})
     def get_devices_tool(
         user_id: Optional[str] = Field(
@@ -1346,6 +1371,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.update_device_options(id=id, body=body)
 
+
+def register_displaypreferences_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_display_preferences",
         description="Get Display Preferences.",
@@ -1386,6 +1413,8 @@ def register_tools(mcp: FastMCP):
             body=body,
         )
 
+
+def register_dynamichls_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_hls_audio_segment",
         description="Gets a video stream using HTTP live streaming.",
@@ -3120,6 +3149,8 @@ def register_tools(mcp: FastMCP):
             always_burn_in_subtitle_when_transcoding=always_burn_in_subtitle_when_transcoding,
         )
 
+
+def register_environment_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_default_directory_browser",
         description="Get Default directory browser.",
@@ -3194,6 +3225,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.validate_path(body=body)
 
+
+def register_filter_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_query_filters_legacy",
         description="Gets legacy query filters.",
@@ -3272,6 +3305,8 @@ def register_tools(mcp: FastMCP):
             recursive=recursive,
         )
 
+
+def register_genres_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_genres",
         description="Gets all genres from a given item, folder, or the entire library.",
@@ -3376,6 +3411,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_genre(genre_name=genre_name, user_id=user_id)
 
+
+def register_hlssegment_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_hls_audio_segment_legacy_aac",
         description="Gets the specified audio segment for an audio item.",
@@ -3459,6 +3496,8 @@ def register_tools(mcp: FastMCP):
             device_id=device_id, play_session_id=play_session_id
         )
 
+
+def register_image_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_artist_image", description="Get artist image by name.", tags={"Image"}
     )
@@ -4547,6 +4586,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_user_image(user_id=user_id, tag=tag, format=format)
 
+
+def register_instantmix_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_instant_mix_from_album",
         description="Creates an instant playlist based on a given album.",
@@ -4923,6 +4964,8 @@ def register_tools(mcp: FastMCP):
             enable_image_types=enable_image_types,
         )
 
+
+def register_itemlookup_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_external_id_infos",
         description="Get the item's external id info.",
@@ -5062,6 +5105,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_trailer_remote_search_results(body=body)
 
+
+def register_itemrefresh_tools(mcp: FastMCP):
     @mcp.tool(
         name="refresh_item",
         description="Refreshes metadata for an item.",
@@ -5099,6 +5144,8 @@ def register_tools(mcp: FastMCP):
             regenerate_trickplay=regenerate_trickplay,
         )
 
+
+def register_items_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_items", description="Gets items based on a query.", tags={"Items"}
     )
@@ -5516,18 +5563,6 @@ def register_tools(mcp: FastMCP):
         )
 
     @mcp.tool(
-        name="delete_items",
-        description="Deletes items from the library and filesystem.",
-        tags={"Library"},
-    )
-    def delete_items_tool(
-        ids: Optional[List[Any]] = Field(default=None, description="The item ids.")
-    ) -> Any:
-        """Deletes items from the library and filesystem."""
-        api = get_client()
-        return api.delete_items(ids=ids)
-
-    @mcp.tool(
         name="get_item_user_data", description="Get Item User Data.", tags={"Items"}
     )
     def get_item_user_data_tool(
@@ -5630,16 +5665,19 @@ def register_tools(mcp: FastMCP):
             exclude_active_sessions=exclude_active_sessions,
         )
 
-    @mcp.tool(name="update_item", description="Updates an item.", tags={"ItemUpdate"})
-    def update_item_tool(
-        item_id: str = Field(description="The item id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+
+def register_library_tools(mcp: FastMCP):
+    @mcp.tool(
+        name="delete_items",
+        description="Deletes items from the library and filesystem.",
+        tags={"Library"},
+    )
+    def delete_items_tool(
+        ids: Optional[List[Any]] = Field(default=None, description="The item ids.")
     ) -> Any:
-        """Updates an item."""
+        """Deletes items from the library and filesystem."""
         api = get_client()
-        return api.update_item(item_id=item_id, body=body)
+        return api.delete_items(ids=ids)
 
     @mcp.tool(
         name="delete_item",
@@ -5650,46 +5688,6 @@ def register_tools(mcp: FastMCP):
         """Deletes an item from the library and filesystem."""
         api = get_client()
         return api.delete_item(item_id=item_id)
-
-    @mcp.tool(
-        name="get_item",
-        description="Gets an item from a user's library.",
-        tags={"UserLibrary"},
-    )
-    def get_item_tool(
-        item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-    ) -> Any:
-        """Gets an item from a user's library."""
-        api = get_client()
-        return api.get_item(user_id=user_id, item_id=item_id)
-
-    @mcp.tool(
-        name="update_item_content_type",
-        description="Updates an item's content type.",
-        tags={"ItemUpdate"},
-    )
-    def update_item_content_type_tool(
-        item_id: str = Field(description="The item id."),
-        content_type: Optional[str] = Field(
-            default=None, description="The content type of the item."
-        ),
-    ) -> Any:
-        """Updates an item's content type."""
-        api = get_client()
-        return api.update_item_content_type(item_id=item_id, content_type=content_type)
-
-    @mcp.tool(
-        name="get_metadata_editor_info",
-        description="Gets metadata editor info for an item.",
-        tags={"ItemUpdate"},
-    )
-    def get_metadata_editor_info_tool(
-        item_id: str = Field(description="The item id."),
-    ) -> Any:
-        """Gets metadata editor info for an item."""
-        api = get_client()
-        return api.get_metadata_editor_info(item_id=item_id)
 
     @mcp.tool(
         name="get_similar_albums", description="Gets similar items.", tags={"Library"}
@@ -6148,6 +6146,228 @@ def register_tools(mcp: FastMCP):
             fields=fields,
         )
 
+
+def register_itemupdate_tools(mcp: FastMCP):
+    @mcp.tool(name="update_item", description="Updates an item.", tags={"ItemUpdate"})
+    def update_item_tool(
+        item_id: str = Field(description="The item id."),
+        body: Optional[Dict[str, Any]] = Field(
+            default=None, description="Request body"
+        ),
+    ) -> Any:
+        """Updates an item."""
+        api = get_client()
+        return api.update_item(item_id=item_id, body=body)
+
+    @mcp.tool(
+        name="update_item_content_type",
+        description="Updates an item's content type.",
+        tags={"ItemUpdate"},
+    )
+    def update_item_content_type_tool(
+        item_id: str = Field(description="The item id."),
+        content_type: Optional[str] = Field(
+            default=None, description="The content type of the item."
+        ),
+    ) -> Any:
+        """Updates an item's content type."""
+        api = get_client()
+        return api.update_item_content_type(item_id=item_id, content_type=content_type)
+
+    @mcp.tool(
+        name="get_metadata_editor_info",
+        description="Gets metadata editor info for an item.",
+        tags={"ItemUpdate"},
+    )
+    def get_metadata_editor_info_tool(
+        item_id: str = Field(description="The item id."),
+    ) -> Any:
+        """Gets metadata editor info for an item."""
+        api = get_client()
+        return api.get_metadata_editor_info(item_id=item_id)
+
+
+def register_userlibrary_tools(mcp: FastMCP):
+    @mcp.tool(
+        name="get_item",
+        description="Gets an item from a user's library.",
+        tags={"UserLibrary"},
+    )
+    def get_item_tool(
+        item_id: str = Field(description="Item id."),
+        user_id: Optional[str] = Field(default=None, description="User id."),
+    ) -> Any:
+        """Gets an item from a user's library."""
+        api = get_client()
+        return api.get_item(user_id=user_id, item_id=item_id)
+
+    @mcp.tool(
+        name="get_intros",
+        description="Gets intros to play before the main media item plays.",
+        tags={"UserLibrary"},
+    )
+    def get_intros_tool(
+        item_id: str = Field(description="Item id."),
+        user_id: Optional[str] = Field(default=None, description="User id."),
+    ) -> Any:
+        """Gets intros to play before the main media item plays."""
+        api = get_client()
+        return api.get_intros(user_id=user_id, item_id=item_id)
+
+    @mcp.tool(
+        name="get_local_trailers",
+        description="Gets local trailers for an item.",
+        tags={"UserLibrary"},
+    )
+    def get_local_trailers_tool(
+        item_id: str = Field(description="Item id."),
+        user_id: Optional[str] = Field(default=None, description="User id."),
+    ) -> Any:
+        """Gets local trailers for an item."""
+        api = get_client()
+        return api.get_local_trailers(user_id=user_id, item_id=item_id)
+
+    @mcp.tool(
+        name="get_special_features",
+        description="Gets special features for an item.",
+        tags={"UserLibrary"},
+    )
+    def get_special_features_tool(
+        item_id: str = Field(description="Item id."),
+        user_id: Optional[str] = Field(default=None, description="User id."),
+    ) -> Any:
+        """Gets special features for an item."""
+        api = get_client()
+        return api.get_special_features(user_id=user_id, item_id=item_id)
+
+    @mcp.tool(
+        name="get_latest_media", description="Gets latest media.", tags={"UserLibrary"}
+    )
+    def get_latest_media_tool(
+        user_id: Optional[str] = Field(default=None, description="User id."),
+        parent_id: Optional[str] = Field(
+            default=None,
+            description="Specify this to localize the search to a specific item or folder. Omit to use the root.",
+        ),
+        fields: Optional[List[Any]] = Field(
+            default=None,
+            description="Optional. Specify additional fields of information to return in the output.",
+        ),
+        include_item_types: Optional[List[Any]] = Field(
+            default=None,
+            description="Optional. If specified, results will be filtered based on item type. This allows multiple, comma delimited.",
+        ),
+        is_played: Optional[bool] = Field(
+            default=None, description="Filter by items that are played, or not."
+        ),
+        enable_images: Optional[bool] = Field(
+            default=None, description="Optional. include image information in output."
+        ),
+        image_type_limit: Optional[int] = Field(
+            default=None,
+            description="Optional. the max number of images to return, per image type.",
+        ),
+        enable_image_types: Optional[List[Any]] = Field(
+            default=None,
+            description="Optional. The image types to include in the output.",
+        ),
+        enable_user_data: Optional[bool] = Field(
+            default=None, description="Optional. include user data."
+        ),
+        limit: Optional[int] = Field(default=None, description="Return item limit."),
+        group_items: Optional[bool] = Field(
+            default=None,
+            description="Whether or not to group items into a parent container.",
+        ),
+    ) -> Any:
+        """Gets latest media."""
+        api = get_client()
+        return api.get_latest_media(
+            user_id=user_id,
+            parent_id=parent_id,
+            fields=fields,
+            include_item_types=include_item_types,
+            is_played=is_played,
+            enable_images=enable_images,
+            image_type_limit=image_type_limit,
+            enable_image_types=enable_image_types,
+            enable_user_data=enable_user_data,
+            limit=limit,
+            group_items=group_items,
+        )
+
+    @mcp.tool(
+        name="get_root_folder",
+        description="Gets the root folder from a user's library.",
+        tags={"UserLibrary"},
+    )
+    def get_root_folder_tool(
+        user_id: Optional[str] = Field(default=None, description="User id.")
+    ) -> Any:
+        """Gets the root folder from a user's library."""
+        api = get_client()
+        return api.get_root_folder(user_id=user_id)
+
+    @mcp.tool(
+        name="mark_favorite_item",
+        description="Marks an item as a favorite.",
+        tags={"UserLibrary"},
+    )
+    def mark_favorite_item_tool(
+        item_id: str = Field(description="Item id."),
+        user_id: Optional[str] = Field(default=None, description="User id."),
+    ) -> Any:
+        """Marks an item as a favorite."""
+        api = get_client()
+        return api.mark_favorite_item(user_id=user_id, item_id=item_id)
+
+    @mcp.tool(
+        name="unmark_favorite_item",
+        description="Unmarks item as a favorite.",
+        tags={"UserLibrary"},
+    )
+    def unmark_favorite_item_tool(
+        item_id: str = Field(description="Item id."),
+        user_id: Optional[str] = Field(default=None, description="User id."),
+    ) -> Any:
+        """Unmarks item as a favorite."""
+        api = get_client()
+        return api.unmark_favorite_item(user_id=user_id, item_id=item_id)
+
+    @mcp.tool(
+        name="delete_user_item_rating",
+        description="Deletes a user's saved personal rating for an item.",
+        tags={"UserLibrary"},
+    )
+    def delete_user_item_rating_tool(
+        item_id: str = Field(description="Item id."),
+        user_id: Optional[str] = Field(default=None, description="User id."),
+    ) -> Any:
+        """Deletes a user's saved personal rating for an item."""
+        api = get_client()
+        return api.delete_user_item_rating(user_id=user_id, item_id=item_id)
+
+    @mcp.tool(
+        name="update_user_item_rating",
+        description="Updates a user's rating for an item.",
+        tags={"UserLibrary"},
+    )
+    def update_user_item_rating_tool(
+        item_id: str = Field(description="Item id."),
+        user_id: Optional[str] = Field(default=None, description="User id."),
+        likes: Optional[bool] = Field(
+            default=None,
+            description="Whether this M:Jellyfin.Api.Controllers.UserLibraryController.UpdateUserItemRating(System.Nullable{System.Guid},System.Guid,System.Nullable{System.Boolean}) is likes.",
+        ),
+    ) -> Any:
+        """Updates a user's rating for an item."""
+        api = get_client()
+        return api.update_user_item_rating(
+            user_id=user_id, item_id=item_id, likes=likes
+        )
+
+
+def register_librarystructure_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_virtual_folders",
         description="Gets all virtual folders.",
@@ -6288,6 +6508,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.update_media_path(body=body)
 
+
+def register_livetv_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_channel_mapping_options",
         description="Get channel mapping options.",
@@ -7205,6 +7427,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.discvover_tuners(new_devices_only=new_devices_only)
 
+
+def register_localization_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_countries", description="Gets known countries.", tags={"Localization"}
     )
@@ -7241,6 +7465,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_parental_ratings()
 
+
+def register_lyrics_tools(mcp: FastMCP):
     @mcp.tool(name="get_lyrics", description="Gets an item's lyrics.", tags={"Lyrics"})
     def get_lyrics_tool(item_id: str = Field(description="Item id.")) -> Any:
         """Gets an item's lyrics."""
@@ -7310,6 +7536,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_remote_lyrics(lyric_id=lyric_id)
 
+
+def register_mediainfo_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_playback_info",
         description="Gets live playback media info for an item.",
@@ -7481,6 +7709,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_bitrate_test_bytes(size=size)
 
+
+def register_mediasegments_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_item_segments",
         description="Gets all media segments based on an itemId.",
@@ -7498,6 +7728,8 @@ def register_tools(mcp: FastMCP):
             item_id=item_id, include_segment_types=include_segment_types
         )
 
+
+def register_movies_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_movie_recommendations",
         description="Gets movie recommendations.",
@@ -7532,6 +7764,8 @@ def register_tools(mcp: FastMCP):
             item_limit=item_limit,
         )
 
+
+def register_musicgenres_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_music_genres",
         description="Gets all music genres from a given item, folder, or the entire library.",
@@ -7643,6 +7877,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_music_genre(genre_name=genre_name, user_id=user_id)
 
+
+def register_package_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_packages", description="Gets available packages.", tags={"Package"}
     )
@@ -7725,6 +7961,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.set_repositories(body=body)
 
+
+def register_persons_tools(mcp: FastMCP):
     @mcp.tool(name="get_persons", description="Gets all persons.", tags={"Persons"})
     def get_persons_tool(
         limit: Optional[int] = Field(
@@ -7803,6 +8041,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_person(name=name, user_id=user_id)
 
+
+def register_playlists_tools(mcp: FastMCP):
     @mcp.tool(
         name="create_playlist",
         description="Creates a new playlist.",
@@ -7996,6 +8236,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.remove_user_from_playlist(playlist_id=playlist_id, user_id=user_id)
 
+
+def register_playstate_tools(mcp: FastMCP):
     @mcp.tool(
         name="on_playback_start",
         description="Reports that a session has begun playing an item.",
@@ -8213,6 +8455,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.mark_unplayed_item(user_id=user_id, item_id=item_id)
 
+
+def register_plugins_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_plugins",
         description="Gets a list of currently installed plugins.",
@@ -8311,6 +8555,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_plugin_manifest(plugin_id=plugin_id)
 
+
+def register_quickconnect_tools(mcp: FastMCP):
     @mcp.tool(
         name="authorize_quick_connect",
         description="Authorizes a pending quick connect request.",
@@ -8364,6 +8610,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.initiate_quick_connect()
 
+
+def register_remoteimage_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_remote_images",
         description="Gets available remote images for an item.",
@@ -8426,6 +8674,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_remote_image_providers(item_id=item_id)
 
+
+def register_scheduledtasks_tools(mcp: FastMCP):
     @mcp.tool(name="get_tasks", description="Get tasks.", tags={"ScheduledTasks"})
     def get_tasks_tool(
         is_hidden: Optional[bool] = Field(
@@ -8476,6 +8726,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.stop_task(task_id=task_id)
 
+
+def register_search_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_search_hints",
         description="Gets the search hint result.",
@@ -8567,6 +8819,8 @@ def register_tools(mcp: FastMCP):
             include_artists=include_artists,
         )
 
+
+def register_session_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_password_reset_providers",
         description="Get all password reset providers.",
@@ -8859,6 +9113,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.report_viewing(session_id=session_id, item_id=item_id)
 
+
+def register_startup_tools(mcp: FastMCP):
     @mcp.tool(
         name="complete_wizard",
         description="Completes the startup wizard.",
@@ -8931,6 +9187,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.update_startup_user(body=body)
 
+
+def register_studios_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_studios",
         description="Gets all studios from a given item, folder, or the entire library.",
@@ -9033,6 +9291,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_studio(name=name, user_id=user_id)
 
+
+def register_subtitle_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_fallback_font_list",
         description="Gets a list of available fallback font files.",
@@ -9259,6 +9519,8 @@ def register_tools(mcp: FastMCP):
             start_position_ticks=start_position_ticks,
         )
 
+
+def register_suggestions_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_suggestions", description="Gets suggestions.", tags={"Suggestions"}
     )
@@ -9287,6 +9549,8 @@ def register_tools(mcp: FastMCP):
             enable_total_record_count=enable_total_record_count,
         )
 
+
+def register_syncplay_tools(mcp: FastMCP):
     @mcp.tool(
         name="sync_play_get_group",
         description="Gets a SyncPlay group by id.",
@@ -9539,6 +9803,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.sync_play_unpause()
 
+
+def register_system_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_endpoint_info",
         description="Gets information about the request endpoint.",
@@ -9631,6 +9897,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.shutdown_application()
 
+
+def register_timesync_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_utc_time", description="Gets the current UTC time.", tags={"TimeSync"}
     )
@@ -9639,6 +9907,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_utc_time()
 
+
+def register_tmdb_tools(mcp: FastMCP):
     @mcp.tool(
         name="tmdb_client_configuration",
         description="Gets the TMDb image configuration options.",
@@ -9649,6 +9919,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.tmdb_client_configuration()
 
+
+def register_trailers_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_trailers",
         description="Finds movies and trailers similar to a given trailer.",
@@ -10058,6 +10330,8 @@ def register_tools(mcp: FastMCP):
             enable_images=enable_images,
         )
 
+
+def register_trickplay_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_trickplay_tile_image",
         description="Gets a trickplay tile image.",
@@ -10097,6 +10371,8 @@ def register_tools(mcp: FastMCP):
             item_id=item_id, width=width, media_source_id=media_source_id
         )
 
+
+def register_tvshows_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_episodes",
         description="Gets episodes for a tv season.",
@@ -10366,6 +10642,8 @@ def register_tools(mcp: FastMCP):
             enable_user_data=enable_user_data,
         )
 
+
+def register_universalaudio_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_universal_audio_stream",
         description="Gets an audio stream.",
@@ -10457,6 +10735,8 @@ def register_tools(mcp: FastMCP):
             enable_redirection=enable_redirection,
         )
 
+
+def register_user_tools(mcp: FastMCP):
     @mcp.tool(name="get_users", description="Gets a list of users.", tags={"User"})
     def get_users_tool(
         is_hidden: Optional[bool] = Field(
@@ -10612,171 +10892,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_public_users()
 
-    @mcp.tool(
-        name="get_intros",
-        description="Gets intros to play before the main media item plays.",
-        tags={"UserLibrary"},
-    )
-    def get_intros_tool(
-        item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-    ) -> Any:
-        """Gets intros to play before the main media item plays."""
-        api = get_client()
-        return api.get_intros(user_id=user_id, item_id=item_id)
 
-    @mcp.tool(
-        name="get_local_trailers",
-        description="Gets local trailers for an item.",
-        tags={"UserLibrary"},
-    )
-    def get_local_trailers_tool(
-        item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-    ) -> Any:
-        """Gets local trailers for an item."""
-        api = get_client()
-        return api.get_local_trailers(user_id=user_id, item_id=item_id)
-
-    @mcp.tool(
-        name="get_special_features",
-        description="Gets special features for an item.",
-        tags={"UserLibrary"},
-    )
-    def get_special_features_tool(
-        item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-    ) -> Any:
-        """Gets special features for an item."""
-        api = get_client()
-        return api.get_special_features(user_id=user_id, item_id=item_id)
-
-    @mcp.tool(
-        name="get_latest_media", description="Gets latest media.", tags={"UserLibrary"}
-    )
-    def get_latest_media_tool(
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        parent_id: Optional[str] = Field(
-            default=None,
-            description="Specify this to localize the search to a specific item or folder. Omit to use the root.",
-        ),
-        fields: Optional[List[Any]] = Field(
-            default=None,
-            description="Optional. Specify additional fields of information to return in the output.",
-        ),
-        include_item_types: Optional[List[Any]] = Field(
-            default=None,
-            description="Optional. If specified, results will be filtered based on item type. This allows multiple, comma delimited.",
-        ),
-        is_played: Optional[bool] = Field(
-            default=None, description="Filter by items that are played, or not."
-        ),
-        enable_images: Optional[bool] = Field(
-            default=None, description="Optional. include image information in output."
-        ),
-        image_type_limit: Optional[int] = Field(
-            default=None,
-            description="Optional. the max number of images to return, per image type.",
-        ),
-        enable_image_types: Optional[List[Any]] = Field(
-            default=None,
-            description="Optional. The image types to include in the output.",
-        ),
-        enable_user_data: Optional[bool] = Field(
-            default=None, description="Optional. include user data."
-        ),
-        limit: Optional[int] = Field(default=None, description="Return item limit."),
-        group_items: Optional[bool] = Field(
-            default=None,
-            description="Whether or not to group items into a parent container.",
-        ),
-    ) -> Any:
-        """Gets latest media."""
-        api = get_client()
-        return api.get_latest_media(
-            user_id=user_id,
-            parent_id=parent_id,
-            fields=fields,
-            include_item_types=include_item_types,
-            is_played=is_played,
-            enable_images=enable_images,
-            image_type_limit=image_type_limit,
-            enable_image_types=enable_image_types,
-            enable_user_data=enable_user_data,
-            limit=limit,
-            group_items=group_items,
-        )
-
-    @mcp.tool(
-        name="get_root_folder",
-        description="Gets the root folder from a user's library.",
-        tags={"UserLibrary"},
-    )
-    def get_root_folder_tool(
-        user_id: Optional[str] = Field(default=None, description="User id.")
-    ) -> Any:
-        """Gets the root folder from a user's library."""
-        api = get_client()
-        return api.get_root_folder(user_id=user_id)
-
-    @mcp.tool(
-        name="mark_favorite_item",
-        description="Marks an item as a favorite.",
-        tags={"UserLibrary"},
-    )
-    def mark_favorite_item_tool(
-        item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-    ) -> Any:
-        """Marks an item as a favorite."""
-        api = get_client()
-        return api.mark_favorite_item(user_id=user_id, item_id=item_id)
-
-    @mcp.tool(
-        name="unmark_favorite_item",
-        description="Unmarks item as a favorite.",
-        tags={"UserLibrary"},
-    )
-    def unmark_favorite_item_tool(
-        item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-    ) -> Any:
-        """Unmarks item as a favorite."""
-        api = get_client()
-        return api.unmark_favorite_item(user_id=user_id, item_id=item_id)
-
-    @mcp.tool(
-        name="delete_user_item_rating",
-        description="Deletes a user's saved personal rating for an item.",
-        tags={"UserLibrary"},
-    )
-    def delete_user_item_rating_tool(
-        item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-    ) -> Any:
-        """Deletes a user's saved personal rating for an item."""
-        api = get_client()
-        return api.delete_user_item_rating(user_id=user_id, item_id=item_id)
-
-    @mcp.tool(
-        name="update_user_item_rating",
-        description="Updates a user's rating for an item.",
-        tags={"UserLibrary"},
-    )
-    def update_user_item_rating_tool(
-        item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        likes: Optional[bool] = Field(
-            default=None,
-            description="Whether this M:Jellyfin.Api.Controllers.UserLibraryController.UpdateUserItemRating(System.Nullable{System.Guid},System.Guid,System.Nullable{System.Boolean}) is likes.",
-        ),
-    ) -> Any:
-        """Updates a user's rating for an item."""
-        api = get_client()
-        return api.update_user_item_rating(
-            user_id=user_id, item_id=item_id, likes=likes
-        )
-
+def register_userviews_tools(mcp: FastMCP):
     @mcp.tool(name="get_user_views", description="Get user views.", tags={"UserViews"})
     def get_user_views_tool(
         user_id: Optional[str] = Field(default=None, description="User id."),
@@ -10812,6 +10929,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.get_grouping_options(user_id=user_id)
 
+
+def register_videoattachments_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_attachment",
         description="Get video attachment.",
@@ -10828,6 +10947,8 @@ def register_tools(mcp: FastMCP):
             video_id=video_id, media_source_id=media_source_id, index=index
         )
 
+
+def register_videos_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_additional_part",
         description="Gets additional parts for a video.",
@@ -11358,6 +11479,8 @@ def register_tools(mcp: FastMCP):
         api = get_client()
         return api.merge_versions(ids=ids)
 
+
+def register_years_tools(mcp: FastMCP):
     @mcp.tool(name="get_years", description="Get years.", tags={"Years"})
     def get_years_tool(
         start_index: Optional[int] = Field(
@@ -11453,6 +11576,7 @@ def mcp_server() -> None:
     This function parses command-line arguments to configure and start the MCP server for Jellyfin API interactions.
     It supports stdio or TCP transport modes and exits on invalid arguments or help requests.
     """
+    load_dotenv(find_dotenv())
     parser = create_mcp_parser()
     parser.description = "Jellyfin MCP Server"
     args = parser.parse_args()
@@ -11755,7 +11879,194 @@ def mcp_server() -> None:
             sys.exit(1)
 
     mcp = FastMCP("Jellyfin", auth=auth)
-    register_tools(mcp)
+    DEFAULT_MISCTOOL = to_boolean(os.getenv("MISCTOOL", "True"))
+    if DEFAULT_MISCTOOL:
+        register_misc_tools(mcp)
+    DEFAULT_ACTIVITYLOGTOOL = to_boolean(os.getenv("ACTIVITYLOGTOOL", "True"))
+    if DEFAULT_ACTIVITYLOGTOOL:
+        register_activitylog_tools(mcp)
+    DEFAULT_APIKEYTOOL = to_boolean(os.getenv("APIKEYTOOL", "True"))
+    if DEFAULT_APIKEYTOOL:
+        register_apikey_tools(mcp)
+    DEFAULT_ARTISTSTOOL = to_boolean(os.getenv("ARTISTSTOOL", "True"))
+    if DEFAULT_ARTISTSTOOL:
+        register_artists_tools(mcp)
+    DEFAULT_AUDIOTOOL = to_boolean(os.getenv("AUDIOTOOL", "True"))
+    if DEFAULT_AUDIOTOOL:
+        register_audio_tools(mcp)
+    DEFAULT_BACKUPTOOL = to_boolean(os.getenv("BACKUPTOOL", "True"))
+    if DEFAULT_BACKUPTOOL:
+        register_backup_tools(mcp)
+    DEFAULT_BRANDINGTOOL = to_boolean(os.getenv("BRANDINGTOOL", "True"))
+    if DEFAULT_BRANDINGTOOL:
+        register_branding_tools(mcp)
+    DEFAULT_CHANNELSTOOL = to_boolean(os.getenv("CHANNELSTOOL", "True"))
+    if DEFAULT_CHANNELSTOOL:
+        register_channels_tools(mcp)
+    DEFAULT_CLIENTLOGTOOL = to_boolean(os.getenv("CLIENTLOGTOOL", "True"))
+    if DEFAULT_CLIENTLOGTOOL:
+        register_clientlog_tools(mcp)
+    DEFAULT_COLLECTIONTOOL = to_boolean(os.getenv("COLLECTIONTOOL", "True"))
+    if DEFAULT_COLLECTIONTOOL:
+        register_collection_tools(mcp)
+    DEFAULT_CONFIGURATIONTOOL = to_boolean(os.getenv("CONFIGURATIONTOOL", "True"))
+    if DEFAULT_CONFIGURATIONTOOL:
+        register_configuration_tools(mcp)
+    DEFAULT_DASHBOARDTOOL = to_boolean(os.getenv("DASHBOARDTOOL", "True"))
+    if DEFAULT_DASHBOARDTOOL:
+        register_dashboard_tools(mcp)
+    DEFAULT_DEVICESTOOL = to_boolean(os.getenv("DEVICESTOOL", "True"))
+    if DEFAULT_DEVICESTOOL:
+        register_devices_tools(mcp)
+    DEFAULT_DISPLAYPREFERENCESTOOL = to_boolean(
+        os.getenv("DISPLAYPREFERENCESTOOL", "True")
+    )
+    if DEFAULT_DISPLAYPREFERENCESTOOL:
+        register_displaypreferences_tools(mcp)
+    DEFAULT_DYNAMICHLSTOOL = to_boolean(os.getenv("DYNAMICHLSTOOL", "True"))
+    if DEFAULT_DYNAMICHLSTOOL:
+        register_dynamichls_tools(mcp)
+    DEFAULT_ENVIRONMENTTOOL = to_boolean(os.getenv("ENVIRONMENTTOOL", "True"))
+    if DEFAULT_ENVIRONMENTTOOL:
+        register_environment_tools(mcp)
+    DEFAULT_FILTERTOOL = to_boolean(os.getenv("FILTERTOOL", "True"))
+    if DEFAULT_FILTERTOOL:
+        register_filter_tools(mcp)
+    DEFAULT_GENRESTOOL = to_boolean(os.getenv("GENRESTOOL", "True"))
+    if DEFAULT_GENRESTOOL:
+        register_genres_tools(mcp)
+    DEFAULT_HLSSEGMENTTOOL = to_boolean(os.getenv("HLSSEGMENTTOOL", "True"))
+    if DEFAULT_HLSSEGMENTTOOL:
+        register_hlssegment_tools(mcp)
+    DEFAULT_IMAGETOOL = to_boolean(os.getenv("IMAGETOOL", "True"))
+    if DEFAULT_IMAGETOOL:
+        register_image_tools(mcp)
+    DEFAULT_INSTANTMIXTOOL = to_boolean(os.getenv("INSTANTMIXTOOL", "True"))
+    if DEFAULT_INSTANTMIXTOOL:
+        register_instantmix_tools(mcp)
+    DEFAULT_ITEMLOOKUPTOOL = to_boolean(os.getenv("ITEMLOOKUPTOOL", "True"))
+    if DEFAULT_ITEMLOOKUPTOOL:
+        register_itemlookup_tools(mcp)
+    DEFAULT_ITEMREFRESHTOOL = to_boolean(os.getenv("ITEMREFRESHTOOL", "True"))
+    if DEFAULT_ITEMREFRESHTOOL:
+        register_itemrefresh_tools(mcp)
+    DEFAULT_ITEMSTOOL = to_boolean(os.getenv("ITEMSTOOL", "True"))
+    if DEFAULT_ITEMSTOOL:
+        register_items_tools(mcp)
+    DEFAULT_LIBRARYTOOL = to_boolean(os.getenv("LIBRARYTOOL", "True"))
+    if DEFAULT_LIBRARYTOOL:
+        register_library_tools(mcp)
+    DEFAULT_ITEMUPDATETOOL = to_boolean(os.getenv("ITEMUPDATETOOL", "True"))
+    if DEFAULT_ITEMUPDATETOOL:
+        register_itemupdate_tools(mcp)
+    DEFAULT_USERLIBRARYTOOL = to_boolean(os.getenv("USERLIBRARYTOOL", "True"))
+    if DEFAULT_USERLIBRARYTOOL:
+        register_userlibrary_tools(mcp)
+    DEFAULT_LIBRARYSTRUCTURETOOL = to_boolean(os.getenv("LIBRARYSTRUCTURETOOL", "True"))
+    if DEFAULT_LIBRARYSTRUCTURETOOL:
+        register_librarystructure_tools(mcp)
+    DEFAULT_LIVETVTOOL = to_boolean(os.getenv("LIVETVTOOL", "True"))
+    if DEFAULT_LIVETVTOOL:
+        register_livetv_tools(mcp)
+    DEFAULT_LOCALIZATIONTOOL = to_boolean(os.getenv("LOCALIZATIONTOOL", "True"))
+    if DEFAULT_LOCALIZATIONTOOL:
+        register_localization_tools(mcp)
+    DEFAULT_LYRICSTOOL = to_boolean(os.getenv("LYRICSTOOL", "True"))
+    if DEFAULT_LYRICSTOOL:
+        register_lyrics_tools(mcp)
+    DEFAULT_MEDIAINFOTOOL = to_boolean(os.getenv("MEDIAINFOTOOL", "True"))
+    if DEFAULT_MEDIAINFOTOOL:
+        register_mediainfo_tools(mcp)
+    DEFAULT_MEDIASEGMENTSTOOL = to_boolean(os.getenv("MEDIASEGMENTSTOOL", "True"))
+    if DEFAULT_MEDIASEGMENTSTOOL:
+        register_mediasegments_tools(mcp)
+    DEFAULT_MOVIESTOOL = to_boolean(os.getenv("MOVIESTOOL", "True"))
+    if DEFAULT_MOVIESTOOL:
+        register_movies_tools(mcp)
+    DEFAULT_MUSICGENRESTOOL = to_boolean(os.getenv("MUSICGENRESTOOL", "True"))
+    if DEFAULT_MUSICGENRESTOOL:
+        register_musicgenres_tools(mcp)
+    DEFAULT_PACKAGETOOL = to_boolean(os.getenv("PACKAGETOOL", "True"))
+    if DEFAULT_PACKAGETOOL:
+        register_package_tools(mcp)
+    DEFAULT_PERSONSTOOL = to_boolean(os.getenv("PERSONSTOOL", "True"))
+    if DEFAULT_PERSONSTOOL:
+        register_persons_tools(mcp)
+    DEFAULT_PLAYLISTSTOOL = to_boolean(os.getenv("PLAYLISTSTOOL", "True"))
+    if DEFAULT_PLAYLISTSTOOL:
+        register_playlists_tools(mcp)
+    DEFAULT_PLAYSTATETOOL = to_boolean(os.getenv("PLAYSTATETOOL", "True"))
+    if DEFAULT_PLAYSTATETOOL:
+        register_playstate_tools(mcp)
+    DEFAULT_PLUGINSTOOL = to_boolean(os.getenv("PLUGINSTOOL", "True"))
+    if DEFAULT_PLUGINSTOOL:
+        register_plugins_tools(mcp)
+    DEFAULT_QUICKCONNECTTOOL = to_boolean(os.getenv("QUICKCONNECTTOOL", "True"))
+    if DEFAULT_QUICKCONNECTTOOL:
+        register_quickconnect_tools(mcp)
+    DEFAULT_REMOTEIMAGETOOL = to_boolean(os.getenv("REMOTEIMAGETOOL", "True"))
+    if DEFAULT_REMOTEIMAGETOOL:
+        register_remoteimage_tools(mcp)
+    DEFAULT_SCHEDULEDTASKSTOOL = to_boolean(os.getenv("SCHEDULEDTASKSTOOL", "True"))
+    if DEFAULT_SCHEDULEDTASKSTOOL:
+        register_scheduledtasks_tools(mcp)
+    DEFAULT_SEARCHTOOL = to_boolean(os.getenv("SEARCHTOOL", "True"))
+    if DEFAULT_SEARCHTOOL:
+        register_search_tools(mcp)
+    DEFAULT_SESSIONTOOL = to_boolean(os.getenv("SESSIONTOOL", "True"))
+    if DEFAULT_SESSIONTOOL:
+        register_session_tools(mcp)
+    DEFAULT_STARTUPTOOL = to_boolean(os.getenv("STARTUPTOOL", "True"))
+    if DEFAULT_STARTUPTOOL:
+        register_startup_tools(mcp)
+    DEFAULT_STUDIOSTOOL = to_boolean(os.getenv("STUDIOSTOOL", "True"))
+    if DEFAULT_STUDIOSTOOL:
+        register_studios_tools(mcp)
+    DEFAULT_SUBTITLETOOL = to_boolean(os.getenv("SUBTITLETOOL", "True"))
+    if DEFAULT_SUBTITLETOOL:
+        register_subtitle_tools(mcp)
+    DEFAULT_SUGGESTIONSTOOL = to_boolean(os.getenv("SUGGESTIONSTOOL", "True"))
+    if DEFAULT_SUGGESTIONSTOOL:
+        register_suggestions_tools(mcp)
+    DEFAULT_SYNCPLAYTOOL = to_boolean(os.getenv("SYNCPLAYTOOL", "True"))
+    if DEFAULT_SYNCPLAYTOOL:
+        register_syncplay_tools(mcp)
+    DEFAULT_SYSTEMTOOL = to_boolean(os.getenv("SYSTEMTOOL", "True"))
+    if DEFAULT_SYSTEMTOOL:
+        register_system_tools(mcp)
+    DEFAULT_TIMESYNCTOOL = to_boolean(os.getenv("TIMESYNCTOOL", "True"))
+    if DEFAULT_TIMESYNCTOOL:
+        register_timesync_tools(mcp)
+    DEFAULT_TMDBTOOL = to_boolean(os.getenv("TMDBTOOL", "True"))
+    if DEFAULT_TMDBTOOL:
+        register_tmdb_tools(mcp)
+    DEFAULT_TRAILERSTOOL = to_boolean(os.getenv("TRAILERSTOOL", "True"))
+    if DEFAULT_TRAILERSTOOL:
+        register_trailers_tools(mcp)
+    DEFAULT_TRICKPLAYTOOL = to_boolean(os.getenv("TRICKPLAYTOOL", "True"))
+    if DEFAULT_TRICKPLAYTOOL:
+        register_trickplay_tools(mcp)
+    DEFAULT_TVSHOWSTOOL = to_boolean(os.getenv("TVSHOWSTOOL", "True"))
+    if DEFAULT_TVSHOWSTOOL:
+        register_tvshows_tools(mcp)
+    DEFAULT_UNIVERSALAUDIOTOOL = to_boolean(os.getenv("UNIVERSALAUDIOTOOL", "True"))
+    if DEFAULT_UNIVERSALAUDIOTOOL:
+        register_universalaudio_tools(mcp)
+    DEFAULT_USERTOOL = to_boolean(os.getenv("USERTOOL", "True"))
+    if DEFAULT_USERTOOL:
+        register_user_tools(mcp)
+    DEFAULT_USERVIEWSTOOL = to_boolean(os.getenv("USERVIEWSTOOL", "True"))
+    if DEFAULT_USERVIEWSTOOL:
+        register_userviews_tools(mcp)
+    DEFAULT_VIDEOATTACHMENTSTOOL = to_boolean(os.getenv("VIDEOATTACHMENTSTOOL", "True"))
+    if DEFAULT_VIDEOATTACHMENTSTOOL:
+        register_videoattachments_tools(mcp)
+    DEFAULT_VIDEOSTOOL = to_boolean(os.getenv("VIDEOSTOOL", "True"))
+    if DEFAULT_VIDEOSTOOL:
+        register_videos_tools(mcp)
+    DEFAULT_YEARSTOOL = to_boolean(os.getenv("YEARSTOOL", "True"))
+    if DEFAULT_YEARSTOOL:
+        register_years_tools(mcp)
     register_prompts(mcp)
 
     for mw in middlewares:
