@@ -1,0 +1,90 @@
+---
+services:
+  jellyfin-mcp:
+    # image: docker.io/knucklessg1/jellyfin:latest
+    build:
+      context: . # Debug
+      dockerfile: debug.Dockerfile
+    container_name: jellyfin-mcp
+    hostname: jellyfin-mcp
+    command: [ "jellyfin-mcp" ]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - "HOST=0.0.0.0"
+      - "PORT=8056"
+      - "TRANSPORT=streamable-http"
+      - "JELLYFIN_INSTANCE=${JELLYFIN_INSTANCE}"
+      - "JELLYFIN_ACCESS_TOKEN=${JELLYFIN_ACCESS_TOKEN}"
+      - "JELLYFIN_VERIFY=${JELLYFIN_VERIFY:-True}" # Optional
+    #      - AUTH_TYPE=oidc-proxy # Optional
+    #      - OIDC_CONFIG_URL=https://provider.com/.well-known/openid-configuration # Optional
+    #      - OIDC_CLIENT_ID=your-client-id # Optional
+    #      - OIDC_CLIENT_SECRET=your-client-secret # Optional
+    #      - OIDC_BASE_URL=https://your-server.com # Optional
+    #      - ALLOWED_CLIENT_REDIRECT_URIS=http://localhost:*,https://*.example.com/* # Optional
+    #      - ENABLE_DELEGATION=True # Optional
+    #      - AUDIENCE=https://yourinstance.jellyfin.com # Optional
+    #      - DELEGATED_SCOPES='api user_impersonation' # Optional
+    #      - EUNOMIA_TYPE=embedded # Optional
+    #      - EUNOMIA_POLICY_FILE=/app/mcp_policies.json # Optional
+    #      - FASTMCP_SERVER_AUTH_JWT_ALGORITHM=HS256 # Optional
+    #      - FASTMCP_SERVER_AUTH_JWT_PUBLIC_KEY=your-shared-secret # Optional
+    #      - FASTMCP_SERVER_AUTH_JWT_REQUIRED_SCOPES=jellyfin.read,jellyfin.write # Optional
+    ports:
+      - "8056:8056"
+    healthcheck:
+      test: [ "CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8056/health')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  jellyfin-agent:
+    # image: docker.io/knucklessg1/jellyfin:latest
+    build:
+      context: . # Debug
+      dockerfile: debug.Dockerfile
+    container_name: jellyfin-agent
+    hostname: jellyfin-agent
+    command: [ "jellyfin-agent" ]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - jellyfin-mcp
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - "HOST=0.0.0.0"
+      - "PORT=9056"
+      # - "MCP_CONFIG=./jellyfin_api/mcp_config.json" # Optionally specify your own file - Default will use MCP_URL in the pre-packaged mcp_config.json
+      - "MCP_URL=http://jellyfin-mcp:8056/mcp"
+      - "PROVIDER=openai"
+      - "LLM_BASE_URL=${LLM_BASE_URL:-http://host.docker.internal:1234/v1}"
+      - "LLM_API_KEY=${LLM_API_KEY:-llama}"
+      - "MODEL_ID=${MODEL_ID:-qwen/qwen3-coder-next}"
+      - "DEBUG=False"
+      - "ENABLE_WEB_UI=True"
+      - "ENABLE_OTEL=True"
+    ports:
+      - "9056:9056"
+    healthcheck:
+      test: [ "CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:9056/health')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
