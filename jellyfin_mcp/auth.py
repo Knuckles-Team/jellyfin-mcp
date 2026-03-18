@@ -4,6 +4,7 @@ import requests
 from agent_utilities.base_utilities import to_boolean
 from fastmcp.utilities.logging import get_logger
 from jellyfin_mcp.jellyfin_api import Api
+from agent_utilities.exceptions import AuthError, UnauthorizedError
 
 local = threading.local()
 logger = get_logger(name="JellyfinAuth")
@@ -52,19 +53,33 @@ def get_client(
             )
             resp.raise_for_status()
             jellyfin_token = resp.json()["access_token"]
-            return Api(base_url=base_url, token=jellyfin_token, verify=verify)
+            try:
+                return Api(base_url=base_url, token=jellyfin_token, verify=verify)
+            except (AuthError, UnauthorizedError) as e:
+                raise RuntimeError(
+                    f"AUTHENTICATION ERROR: The delegated Jellyfin credentials are not valid for '{base_url}'. "
+                    f"Please check your OIDC configuration and permissions. "
+                    f"Error details: {str(e)}"
+                ) from e
         except Exception as e:
             logger.error(f"Delegation failed: {e}")
             raise
 
     if token or (username and password):
-        return Api(
-            base_url=base_url,
-            token=token,
-            username=username,
-            password=password,
-            verify=verify,
-        )
+        try:
+            return Api(
+                base_url=base_url,
+                token=token,
+                username=username,
+                password=password,
+                verify=verify,
+            )
+        except (AuthError, UnauthorizedError) as e:
+            raise RuntimeError(
+                f"AUTHENTICATION ERROR: The Jellyfin credentials provided are not valid for '{base_url}'. "
+                f"Please check your JELLYFIN_API_KEY (or JELLYFIN_USERNAME/JELLYFIN_PASSWORD) and JELLYFIN_URL environment variables. "
+                f"Error details: {str(e)}"
+            ) from e
 
     raise ValueError(
         "No auth method: Provide JELLYFIN_API_KEY, enable delegation, or set JELLYFIN_USERNAME/PASSWORD"
