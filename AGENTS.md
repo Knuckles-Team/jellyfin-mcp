@@ -58,7 +58,7 @@ pre-commit run --all-files
 
 ### File Tree
 ```text
-├── .bumpversion.cfg\n├── .dockerignore\n├── .env\n├── .gitattributes\n├── .github\n│   └── workflows\n│       └── pipeline.yml\n├── .gitignore\n├── .pre-commit-config.yaml\n├── AGENTS.md\n├── Dockerfile\n├── LICENSE\n├── README.md\n├── compose.yml\n├── debug.Dockerfile\n├── jellyfin_mcp\n│   ├── __init__.py\n│   ├── agent\n│   │   ├── AGENTS.md\n│   │   ├── CRON.md\n│   │   ├── HEARTBEAT.md\n│   │   ├── IDENTITY.md\n│   │   ├── MEMORY.md\n│   │   ├── USER.md\n│   │   └── templates.py\n│   ├── agent.py\n│   ├── auth.py\n│   ├── jellyfin_api.py\n│   └── mcp.py\n├── mcp.compose.yml\n├── pyproject.toml\n├── requirements.txt\n└── scripts\n    ├── generate_code.py\n    ├── test_jellyfin_api.py\n    └── validate_a2a_agent.py
+├── .bumpversion.cfg\n├── .dockerignore\n├── .env\n├── .gitattributes\n├── .github\n│   └── workflows\n│       └── pipeline.yml\n├── .gitignore\n├── .pre-commit-config.yaml\n├── AGENTS.md\n├── Dockerfile\n├── LICENSE\n├── README.md\n├── compose.yml\n├── debug.Dockerfile\n├── jellyfin_mcp\n│   ├── __init__.py\n│   ├── agent\n│   │   ├── AGENTS.md\n│   │   ├── CRON.md\n│   │   ├── HEARTBEAT.md\n│   │   ├── IDENTITY.md\n│   │   ├── MEMORY.md\n│   │   ├── USER.md\n│   │   └── templates.py\n│   ├── agent.py\n│   ├── auth.py\n│   ├── api_wrapper.py\n│   └── mcp.py\n├── mcp.compose.yml\n├── pyproject.toml\n├── requirements.txt\n└── scripts\n    ├── generate_code.py\n    ├── test_api_wrapper.py\n    └── validate_a2a_agent.py
 ```
 
 ## Code Style & Conventions
@@ -108,3 +108,22 @@ async def my_tool(param: str) -> str:
 ## When Stuck
 - Propose a plan first before making large changes.
 - Check `agent-utilities` documentation for existing helpers.
+
+
+## Graph Architecture
+
+This agent uses `pydantic-graph` orchestration for intelligent routing and optimal context management.
+
+```mermaid
+---
+title: Jellyfin MCP Graph Agent
+---
+stateDiagram-v2
+  [*] --> RouterNode: User Query
+  RouterNode --> DomainNode: Classified Domain
+  RouterNode --> [*]: Low confidence / Error
+  DomainNode --> [*]: Domain Result
+```
+
+- **RouterNode**: A fast, lightweight LLM (e.g., `gpt-4o-mini`) that classifies the user's query into one of the specialized domains.
+- **DomainNode**: The executor node. For the selected domain, it dynamically sets environment variables to temporarily enable ONLY the tools relevant to that domain, creating a highly focused sub-agent (e.g., `gpt-4o`) to complete the request. This preserves LLM context and prevents tool hallucination.

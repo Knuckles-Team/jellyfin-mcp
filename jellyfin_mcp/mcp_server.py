@@ -13,12 +13,11 @@ from fastmcp import FastMCP
 from fastmcp.utilities.logging import get_logger
 from agent_utilities.mcp_utilities import (
     create_mcp_server,
-    config,
 )
 from jellyfin_mcp.auth import get_client
 
-__version__ = "0.2.47"
-print(f"Jellyfin MCP v{__version__}")
+__version__ = "0.2.48"
+print(f"Jellyfin MCP v{__version__}", file=sys.stderr)
 
 logger = get_logger(name="TokenMiddleware")
 logger.setLevel(logging.DEBUG)
@@ -11557,7 +11556,8 @@ def register_years_tools(mcp: FastMCP):
         return api.get_year(year=year, user_id=user_id)
 
 
-def mcp_server() -> None:
+def get_mcp_instance() -> tuple[Any, Any, Any, Any]:
+    """Initialize and return the MCP instance, args, and middlewares."""
     load_dotenv(find_dotenv())
 
     args, mcp, middlewares = create_mcp_server(
@@ -11758,12 +11758,17 @@ def mcp_server() -> None:
 
     for mw in middlewares:
         mcp.add_middleware(mw)
+    registered_tags = []
+    return mcp, args, middlewares, registered_tags
 
-    print("\nStarting Jellyfin MCP Server")
-    print(f"  Transport: {args.transport.upper()}")
-    print(f"  Auth: {args.auth_type}")
-    print(f"  Delegation: {'ON' if config['enable_delegation'] else 'OFF'}")
-    print(f"  Eunomia: {args.eunomia_type}")
+
+def mcp_server() -> None:
+    mcp, args, middlewares, registered_tags = get_mcp_instance()
+    print(f"{args.name or 'jellyfin-mcp'} MCP v{__version__}", file=sys.stderr)
+    print("\nStarting MCP Server", file=sys.stderr)
+    print(f"  Transport: {args.transport.upper()}", file=sys.stderr)
+    print(f"  Auth: {args.auth_type}", file=sys.stderr)
+    print(f"  Dynamic Tags Loaded: {len(set(registered_tags))}", file=sys.stderr)
 
     if args.transport == "stdio":
         mcp.run(transport="stdio")

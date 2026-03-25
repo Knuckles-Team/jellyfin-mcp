@@ -8,7 +8,7 @@ from typing import List
 __all__: List[str] = []
 
 CORE_MODULES = [
-    "jellyfin_mcp.jellyfin_api",
+    "jellyfin_mcp.api_wrapper",
 ]
 
 OPTIONAL_MODULES = {
