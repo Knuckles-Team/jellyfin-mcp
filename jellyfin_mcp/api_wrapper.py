@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-               
+
 
 import requests
 from typing import Dict, List, Optional, Any
@@ -24,9 +24,8 @@ class Api:
         if token:
             self._session.headers.update({"X-Emby-Token": token})
 
-                                                    
         try:
-                                                                     
+
             response = self._session.get(urljoin(self.base_url, "/System/Info"))
             if response.status_code == 401:
                 from agent_utilities.exceptions import AuthError
@@ -44,8 +43,7 @@ class Api:
         except Exception as e:
             if isinstance(e, (AuthError, UnauthorizedError)):
                 raise e
-                                                                                     
-                                                                                           
+
             pass
 
     def request(
