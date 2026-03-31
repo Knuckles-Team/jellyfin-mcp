@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jellyfin-mcp"
-version = "0.2.49"
+version = "0.2.50"
 description = "Jellyfin MCP Server for Agentic AI!"
 readme = "README.md"
 authors = [{ name = "Audel Rouhi", email = "knucklessg1@gmail.com" }]
@@ -28,7 +28,6 @@ all = [
 
 [project.scripts]
 jellyfin-mcp = "jellyfin_mcp.mcp_server:mcp_server"
-jellyfin-agent = "jellyfin_mcp.agent_server:agent_server"
 
 [tool.setuptools.packages.find]
 where = ["."]

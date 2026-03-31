@@ -24,7 +24,7 @@ services:
       - "TRANSPORT=streamable-http"
       - "JELLYFIN_INSTANCE=${JELLYFIN_INSTANCE}"
       - "JELLYFIN_ACCESS_TOKEN=${JELLYFIN_ACCESS_TOKEN}"
-      - "JELLYFIN_VERIFY=${JELLYFIN_VERIFY:-True}" # Optional
+      - "JELLYFIN_SSL_VERIFY=${JELLYFIN_SSL_VERIFY:-True}" # Optional
     #      - AUTH_TYPE=oidc-proxy # Optional
     #      - OIDC_CONFIG_URL=https://provider.com/.well-known/openid-configuration # Optional
     #      - OIDC_CLIENT_ID=your-client-id # Optional

@@ -2,7 +2,7 @@ import os
 import sys
 import json
 
-# Add the current directory to sys.path so we can import the module
+                                                                   
 sys.path.append(os.getcwd())
 
 from jellyfin_mcp.jellyfin_api import Api
@@ -42,7 +42,7 @@ def main():
     try:
         users = api.get_users()
         print(f"Successfully retrieved {len(users)} users.")
-        # print first user to see structure
+                                           
         if len(users) > 0:
             print(f"First user sample:\n{json.dumps(users[0], indent=2)}")
 

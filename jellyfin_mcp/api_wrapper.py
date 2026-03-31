@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# coding: utf-8
+               
 
 import requests
 from typing import Dict, List, Optional, Any
@@ -24,9 +24,9 @@ class Api:
         if token:
             self._session.headers.update({"X-Emby-Token": token})
 
-        # Validate credentials during initialization
+                                                    
         try:
-            # Using /System/Info as a lightweight validation endpoint
+                                                                     
             response = self._session.get(urljoin(self.base_url, "/System/Info"))
             if response.status_code == 401:
                 from agent_utilities.exceptions import AuthError
@@ -44,8 +44,8 @@ class Api:
         except Exception as e:
             if isinstance(e, (AuthError, UnauthorizedError)):
                 raise e
-            # For other errors (connection, etc.), we don't necessarily want to block
-            # if the server is temporarily down, but credential errors should be immediate.
+                                                                                     
+                                                                                           
             pass
 
     def request(

@@ -258,7 +258,7 @@ def main():
     print(f"Generated {api_file}")
 
     mcp_code = generate_mcp_code(spec)
-    mcp_file = root / "jellyfin_mcp" / "jellyfin_mcp.py"
+    mcp_file = root / "jellyfin_mcp" / "jellyfin_mcp_server.py"
     with open(mcp_file, "w") as f:
         f.write(mcp_code)
     print(f"Generated {mcp_file}")
