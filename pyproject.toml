@@ -28,6 +28,7 @@ all = [
 
 [project.scripts]
 jellyfin-mcp = "jellyfin_mcp.mcp_server:mcp_server"
+jellyfin-agent = "jellyfin_mcp.agent_server:agent_server"
 
 [tool.setuptools.packages.find]
 where = ["."]
