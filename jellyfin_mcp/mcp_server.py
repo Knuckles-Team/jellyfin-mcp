@@ -15,19 +15,20 @@ with warnings.catch_warnings():
 warnings.filterwarnings("ignore", message=".*urllib3.*or chardet.*")
 warnings.filterwarnings("ignore", message=".*urllib3.*or charset_normalizer.*")
 
-from dotenv import load_dotenv, find_dotenv
-from agent_utilities.base_utilities import to_boolean
+import logging
 import os
 import sys
-import logging
-from typing import Optional, List, Dict, Any
+from typing import Any
 
-from pydantic import Field
-from fastmcp import FastMCP
-from fastmcp.utilities.logging import get_logger
+from agent_utilities.base_utilities import to_boolean
 from agent_utilities.mcp_utilities import (
     create_mcp_server,
 )
+from dotenv import find_dotenv, load_dotenv
+from fastmcp import FastMCP
+from fastmcp.utilities.logging import get_logger
+from pydantic import Field
+
 from jellyfin_mcp.auth import get_client
 
 __version__ = "0.2.56"
@@ -55,7 +56,7 @@ def register_misc_tools(mcp: FastMCP):
     pass
     pass
 
-    async def health_check(request: Any) -> Dict:
+    async def health_check(request: Any) -> dict:
         return {"status": "OK"}
 
 
@@ -66,18 +67,18 @@ def register_activitylog_tools(mcp: FastMCP):
         tags={"ActivityLog"},
     )
     def get_log_entries_tool(
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        min_date: Optional[str] = Field(
+        min_date: str | None = Field(
             default=None, description="Optional. The minimum date. Format = ISO."
         ),
-        has_user_id: Optional[bool] = Field(
+        has_user_id: bool | None = Field(
             default=None,
             description="Optional. Filter log entries if it has user id, or not.",
         ),
@@ -101,9 +102,9 @@ def register_apikey_tools(mcp: FastMCP):
 
     @mcp.tool(name="create_key", description="Create a new api key.", tags={"ApiKey"})
     def create_key_tool(
-        app: Optional[str] = Field(
+        app: str | None = Field(
             default=None, description="Name of the app using the authentication key."
-        )
+        ),
     ) -> Any:
         """Create a new api key."""
         api = get_client()
@@ -125,122 +126,122 @@ def register_artists_tools(mcp: FastMCP):
         tags={"Artists"},
     )
     def get_artists_tool(
-        min_community_rating: Optional[float] = Field(
+        min_community_rating: float | None = Field(
             default=None, description="Optional filter by minimum community rating."
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        search_term: Optional[str] = Field(
+        search_term: str | None = Field(
             default=None, description="Optional. Search term."
         ),
-        parent_id: Optional[str] = Field(
+        parent_id: str | None = Field(
             default=None,
             description="Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        exclude_item_types: Optional[List[Any]] = Field(
+        exclude_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered out based on item type. This allows multiple, comma delimited.",
         ),
-        include_item_types: Optional[List[Any]] = Field(
+        include_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on item type. This allows multiple, comma delimited.",
         ),
-        filters: Optional[List[Any]] = Field(
+        filters: list[Any] | None = Field(
             default=None, description="Optional. Specify additional filters to apply."
         ),
-        is_favorite: Optional[bool] = Field(
+        is_favorite: bool | None = Field(
             default=None,
             description="Optional filter by items that are marked as favorite, or not.",
         ),
-        media_types: Optional[List[Any]] = Field(
+        media_types: list[Any] | None = Field(
             default=None,
             description="Optional filter by MediaType. Allows multiple, comma delimited.",
         ),
-        genres: Optional[List[Any]] = Field(
+        genres: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on genre. This allows multiple, pipe delimited.",
         ),
-        genre_ids: Optional[List[Any]] = Field(
+        genre_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on genre id. This allows multiple, pipe delimited.",
         ),
-        official_ratings: Optional[List[Any]] = Field(
+        official_ratings: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on OfficialRating. This allows multiple, pipe delimited.",
         ),
-        tags: Optional[List[Any]] = Field(
+        tags: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on tag. This allows multiple, pipe delimited.",
         ),
-        years: Optional[List[Any]] = Field(
+        years: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on production year. This allows multiple, comma delimited.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional, include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional, the max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        person: Optional[str] = Field(
+        person: str | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified person.",
         ),
-        person_ids: Optional[List[Any]] = Field(
+        person_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified person ids.",
         ),
-        person_types: Optional[List[Any]] = Field(
+        person_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, along with Person, results will be filtered to include only those containing the specified person and PersonType. Allows multiple, comma-delimited.",
         ),
-        studios: Optional[List[Any]] = Field(
+        studios: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on studio. This allows multiple, pipe delimited.",
         ),
-        studio_ids: Optional[List[Any]] = Field(
+        studio_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on studio id. This allows multiple, pipe delimited.",
         ),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        name_starts_with_or_greater: Optional[str] = Field(
+        user_id: str | None = Field(default=None, description="User id."),
+        name_starts_with_or_greater: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally or greater than a given input string.",
         ),
-        name_starts_with: Optional[str] = Field(
+        name_starts_with: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally than a given input string.",
         ),
-        name_less_than: Optional[str] = Field(
+        name_less_than: str | None = Field(
             default=None,
             description="Optional filter by items whose name is equally or lesser than a given input string.",
         ),
-        sort_by: Optional[List[Any]] = Field(
+        sort_by: list[Any] | None = Field(
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited.",
         ),
-        sort_order: Optional[List[Any]] = Field(
+        sort_order: list[Any] | None = Field(
             default=None, description="Sort Order - Ascending,Descending."
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional, include image information in output."
         ),
-        enable_total_record_count: Optional[bool] = Field(
+        enable_total_record_count: bool | None = Field(
             default=None, description="Total record count."
         ),
     ) -> Any:
@@ -288,7 +289,7 @@ def register_artists_tools(mcp: FastMCP):
     )
     def get_artist_by_name_tool(
         name: str = Field(description="Studio name."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
@@ -303,122 +304,122 @@ def register_artists_tools(mcp: FastMCP):
         tags={"Artists"},
     )
     def get_album_artists_tool(
-        min_community_rating: Optional[float] = Field(
+        min_community_rating: float | None = Field(
             default=None, description="Optional filter by minimum community rating."
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        search_term: Optional[str] = Field(
+        search_term: str | None = Field(
             default=None, description="Optional. Search term."
         ),
-        parent_id: Optional[str] = Field(
+        parent_id: str | None = Field(
             default=None,
             description="Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        exclude_item_types: Optional[List[Any]] = Field(
+        exclude_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered out based on item type. This allows multiple, comma delimited.",
         ),
-        include_item_types: Optional[List[Any]] = Field(
+        include_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on item type. This allows multiple, comma delimited.",
         ),
-        filters: Optional[List[Any]] = Field(
+        filters: list[Any] | None = Field(
             default=None, description="Optional. Specify additional filters to apply."
         ),
-        is_favorite: Optional[bool] = Field(
+        is_favorite: bool | None = Field(
             default=None,
             description="Optional filter by items that are marked as favorite, or not.",
         ),
-        media_types: Optional[List[Any]] = Field(
+        media_types: list[Any] | None = Field(
             default=None,
             description="Optional filter by MediaType. Allows multiple, comma delimited.",
         ),
-        genres: Optional[List[Any]] = Field(
+        genres: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on genre. This allows multiple, pipe delimited.",
         ),
-        genre_ids: Optional[List[Any]] = Field(
+        genre_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on genre id. This allows multiple, pipe delimited.",
         ),
-        official_ratings: Optional[List[Any]] = Field(
+        official_ratings: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on OfficialRating. This allows multiple, pipe delimited.",
         ),
-        tags: Optional[List[Any]] = Field(
+        tags: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on tag. This allows multiple, pipe delimited.",
         ),
-        years: Optional[List[Any]] = Field(
+        years: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on production year. This allows multiple, comma delimited.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional, include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional, the max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        person: Optional[str] = Field(
+        person: str | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified person.",
         ),
-        person_ids: Optional[List[Any]] = Field(
+        person_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified person ids.",
         ),
-        person_types: Optional[List[Any]] = Field(
+        person_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, along with Person, results will be filtered to include only those containing the specified person and PersonType. Allows multiple, comma-delimited.",
         ),
-        studios: Optional[List[Any]] = Field(
+        studios: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on studio. This allows multiple, pipe delimited.",
         ),
-        studio_ids: Optional[List[Any]] = Field(
+        studio_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on studio id. This allows multiple, pipe delimited.",
         ),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        name_starts_with_or_greater: Optional[str] = Field(
+        user_id: str | None = Field(default=None, description="User id."),
+        name_starts_with_or_greater: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally or greater than a given input string.",
         ),
-        name_starts_with: Optional[str] = Field(
+        name_starts_with: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally than a given input string.",
         ),
-        name_less_than: Optional[str] = Field(
+        name_less_than: str | None = Field(
             default=None,
             description="Optional filter by items whose name is equally or lesser than a given input string.",
         ),
-        sort_by: Optional[List[Any]] = Field(
+        sort_by: list[Any] | None = Field(
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited.",
         ),
-        sort_order: Optional[List[Any]] = Field(
+        sort_order: list[Any] | None = Field(
             default=None, description="Sort Order - Ascending,Descending."
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional, include image information in output."
         ),
-        enable_total_record_count: Optional[bool] = Field(
+        enable_total_record_count: bool | None = Field(
             default=None, description="Total record count."
         ),
     ) -> Any:
@@ -466,175 +467,173 @@ def register_audio_tools(mcp: FastMCP):
     )
     def get_audio_stream_tool(
         item_id: str = Field(description="The item id."),
-        container: Optional[str] = Field(
-            default=None, description="The audio container."
-        ),
-        static: Optional[bool] = Field(
+        container: str | None = Field(default=None, description="The audio container."),
+        static: bool | None = Field(
             default=None,
             description="Optional. If true, the original file will be streamed statically without any encoding. Use either no url extension or the original file extension. true/false.",
         ),
-        params: Optional[str] = Field(
+        params: str | None = Field(
             default=None, description="The streaming parameters."
         ),
-        tag: Optional[str] = Field(default=None, description="The tag."),
-        device_profile_id: Optional[str] = Field(
+        tag: str | None = Field(default=None, description="The tag."),
+        device_profile_id: str | None = Field(
             default=None, description="Optional. The dlna device profile id to utilize."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        segment_container: Optional[str] = Field(
+        segment_container: str | None = Field(
             default=None, description="The segment container."
         ),
-        segment_length: Optional[int] = Field(
+        segment_length: int | None = Field(
             default=None, description="The segment length."
         ),
-        min_segments: Optional[int] = Field(
+        min_segments: int | None = Field(
             default=None, description="The minimum number of segments."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if playing an alternate version.",
         ),
-        device_id: Optional[str] = Field(
+        device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
         ),
-        audio_codec: Optional[str] = Field(
+        audio_codec: str | None = Field(
             default=None,
             description="Optional. Specify an audio codec to encode to, e.g. mp3. If omitted the server will auto-select using the url's extension.",
         ),
-        enable_auto_stream_copy: Optional[bool] = Field(
+        enable_auto_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow automatic stream copy if requested values match the original source. Defaults to true.",
         ),
-        allow_video_stream_copy: Optional[bool] = Field(
+        allow_video_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the video stream url.",
         ),
-        allow_audio_stream_copy: Optional[bool] = Field(
+        allow_audio_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the audio stream url.",
         ),
-        break_on_non_key_frames: Optional[bool] = Field(
+        break_on_non_key_frames: bool | None = Field(
             default=None, description="Optional. Whether to break on non key frames."
         ),
-        audio_sample_rate: Optional[int] = Field(
+        audio_sample_rate: int | None = Field(
             default=None,
             description="Optional. Specify a specific audio sample rate, e.g. 44100.",
         ),
-        max_audio_bit_depth: Optional[int] = Field(
+        max_audio_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum audio bit depth."
         ),
-        audio_bit_rate: Optional[int] = Field(
+        audio_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify an audio bitrate to encode to, e.g. 128000. If omitted this will be left to encoder defaults.",
         ),
-        audio_channels: Optional[int] = Field(
+        audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a specific number of audio channels to encode to, e.g. 2.",
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a maximum number of audio channels to encode to, e.g. 2.",
         ),
-        profile: Optional[str] = Field(
+        profile: str | None = Field(
             default=None,
             description="Optional. Specify a specific an encoder profile (varies by encoder), e.g. main, baseline, high.",
         ),
-        level: Optional[str] = Field(
+        level: str | None = Field(
             default=None,
             description="Optional. Specify a level for the encoder profile (varies by encoder), e.g. 3, 3.1.",
         ),
-        framerate: Optional[float] = Field(
+        framerate: float | None = Field(
             default=None,
             description="Optional. A specific video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        max_framerate: Optional[float] = Field(
+        max_framerate: float | None = Field(
             default=None,
             description="Optional. A specific maximum video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        copy_timestamps: Optional[bool] = Field(
+        copy_timestamps: bool | None = Field(
             default=None,
             description="Whether or not to copy timestamps when transcoding with an offset. Defaults to false.",
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None,
             description="Optional. Specify a starting offset, in ticks. 1 tick = 10000 ms.",
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None,
             description="Optional. The fixed horizontal resolution of the encoded video.",
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None,
             description="Optional. The fixed vertical resolution of the encoded video.",
         ),
-        video_bit_rate: Optional[int] = Field(
+        video_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify a video bitrate to encode to, e.g. 500000. If omitted this will be left to encoder defaults.",
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the subtitle stream to use. If omitted no subtitles will be used.",
         ),
-        subtitle_method: Optional[str] = Field(
+        subtitle_method: str | None = Field(
             default=None, description="Optional. Specify the subtitle delivery method."
         ),
-        max_ref_frames: Optional[int] = Field(default=None, description="Optional."),
-        max_video_bit_depth: Optional[int] = Field(
+        max_ref_frames: int | None = Field(default=None, description="Optional."),
+        max_video_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum video bit depth."
         ),
-        require_avc: Optional[bool] = Field(
+        require_avc: bool | None = Field(
             default=None, description="Optional. Whether to require avc."
         ),
-        de_interlace: Optional[bool] = Field(
+        de_interlace: bool | None = Field(
             default=None, description="Optional. Whether to deinterlace the video."
         ),
-        require_non_anamorphic: Optional[bool] = Field(
+        require_non_anamorphic: bool | None = Field(
             default=None,
             description="Optional. Whether to require a non anamorphic stream.",
         ),
-        transcoding_max_audio_channels: Optional[int] = Field(
+        transcoding_max_audio_channels: int | None = Field(
             default=None,
             description="Optional. The maximum number of audio channels to transcode.",
         ),
-        cpu_core_limit: Optional[int] = Field(
+        cpu_core_limit: int | None = Field(
             default=None,
             description="Optional. The limit of how many cpu cores to use.",
         ),
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        enable_mpegts_m2_ts_mode: Optional[bool] = Field(
+        enable_mpegts_m2_ts_mode: bool | None = Field(
             default=None, description="Optional. Whether to enable the MpegtsM2Ts mode."
         ),
-        video_codec: Optional[str] = Field(
+        video_codec: str | None = Field(
             default=None,
             description="Optional. Specify a video codec to encode to, e.g. h264. If omitted the server will auto-select using the url's extension.",
         ),
-        subtitle_codec: Optional[str] = Field(
+        subtitle_codec: str | None = Field(
             default=None, description="Optional. Specify a subtitle codec to encode to."
         ),
-        transcode_reasons: Optional[str] = Field(
+        transcode_reasons: str | None = Field(
             default=None, description="Optional. The transcoding reason."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the audio stream to use. If omitted the first audio stream will be used.",
         ),
-        video_stream_index: Optional[int] = Field(
+        video_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the video stream to use. If omitted the first video stream will be used.",
         ),
-        context: Optional[str] = Field(
+        context: str | None = Field(
             default=None,
             description="Optional. The MediaBrowser.Model.Dlna.EncodingContext.",
         ),
-        stream_options: Optional[Dict[str, Any]] = Field(
+        stream_options: dict[str, Any] | None = Field(
             default=None, description="Optional. The streaming options."
         ),
-        enable_audio_vbr_encoding: Optional[bool] = Field(
+        enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
     ) -> Any:
@@ -701,172 +700,172 @@ def register_audio_tools(mcp: FastMCP):
     def get_audio_stream_by_container_tool(
         item_id: str = Field(description="The item id."),
         container: str = Field(description="The audio container."),
-        static: Optional[bool] = Field(
+        static: bool | None = Field(
             default=None,
             description="Optional. If true, the original file will be streamed statically without any encoding. Use either no url extension or the original file extension. true/false.",
         ),
-        params: Optional[str] = Field(
+        params: str | None = Field(
             default=None, description="The streaming parameters."
         ),
-        tag: Optional[str] = Field(default=None, description="The tag."),
-        device_profile_id: Optional[str] = Field(
+        tag: str | None = Field(default=None, description="The tag."),
+        device_profile_id: str | None = Field(
             default=None, description="Optional. The dlna device profile id to utilize."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        segment_container: Optional[str] = Field(
+        segment_container: str | None = Field(
             default=None, description="The segment container."
         ),
-        segment_length: Optional[int] = Field(
+        segment_length: int | None = Field(
             default=None, description="The segment length."
         ),
-        min_segments: Optional[int] = Field(
+        min_segments: int | None = Field(
             default=None, description="The minimum number of segments."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if playing an alternate version.",
         ),
-        device_id: Optional[str] = Field(
+        device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
         ),
-        audio_codec: Optional[str] = Field(
+        audio_codec: str | None = Field(
             default=None,
             description="Optional. Specify an audio codec to encode to, e.g. mp3. If omitted the server will auto-select using the url's extension.",
         ),
-        enable_auto_stream_copy: Optional[bool] = Field(
+        enable_auto_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow automatic stream copy if requested values match the original source. Defaults to true.",
         ),
-        allow_video_stream_copy: Optional[bool] = Field(
+        allow_video_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the video stream url.",
         ),
-        allow_audio_stream_copy: Optional[bool] = Field(
+        allow_audio_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the audio stream url.",
         ),
-        break_on_non_key_frames: Optional[bool] = Field(
+        break_on_non_key_frames: bool | None = Field(
             default=None, description="Optional. Whether to break on non key frames."
         ),
-        audio_sample_rate: Optional[int] = Field(
+        audio_sample_rate: int | None = Field(
             default=None,
             description="Optional. Specify a specific audio sample rate, e.g. 44100.",
         ),
-        max_audio_bit_depth: Optional[int] = Field(
+        max_audio_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum audio bit depth."
         ),
-        audio_bit_rate: Optional[int] = Field(
+        audio_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify an audio bitrate to encode to, e.g. 128000. If omitted this will be left to encoder defaults.",
         ),
-        audio_channels: Optional[int] = Field(
+        audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a specific number of audio channels to encode to, e.g. 2.",
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a maximum number of audio channels to encode to, e.g. 2.",
         ),
-        profile: Optional[str] = Field(
+        profile: str | None = Field(
             default=None,
             description="Optional. Specify a specific an encoder profile (varies by encoder), e.g. main, baseline, high.",
         ),
-        level: Optional[str] = Field(
+        level: str | None = Field(
             default=None,
             description="Optional. Specify a level for the encoder profile (varies by encoder), e.g. 3, 3.1.",
         ),
-        framerate: Optional[float] = Field(
+        framerate: float | None = Field(
             default=None,
             description="Optional. A specific video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        max_framerate: Optional[float] = Field(
+        max_framerate: float | None = Field(
             default=None,
             description="Optional. A specific maximum video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        copy_timestamps: Optional[bool] = Field(
+        copy_timestamps: bool | None = Field(
             default=None,
             description="Whether or not to copy timestamps when transcoding with an offset. Defaults to false.",
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None,
             description="Optional. Specify a starting offset, in ticks. 1 tick = 10000 ms.",
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None,
             description="Optional. The fixed horizontal resolution of the encoded video.",
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None,
             description="Optional. The fixed vertical resolution of the encoded video.",
         ),
-        video_bit_rate: Optional[int] = Field(
+        video_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify a video bitrate to encode to, e.g. 500000. If omitted this will be left to encoder defaults.",
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the subtitle stream to use. If omitted no subtitles will be used.",
         ),
-        subtitle_method: Optional[str] = Field(
+        subtitle_method: str | None = Field(
             default=None, description="Optional. Specify the subtitle delivery method."
         ),
-        max_ref_frames: Optional[int] = Field(default=None, description="Optional."),
-        max_video_bit_depth: Optional[int] = Field(
+        max_ref_frames: int | None = Field(default=None, description="Optional."),
+        max_video_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum video bit depth."
         ),
-        require_avc: Optional[bool] = Field(
+        require_avc: bool | None = Field(
             default=None, description="Optional. Whether to require avc."
         ),
-        de_interlace: Optional[bool] = Field(
+        de_interlace: bool | None = Field(
             default=None, description="Optional. Whether to deinterlace the video."
         ),
-        require_non_anamorphic: Optional[bool] = Field(
+        require_non_anamorphic: bool | None = Field(
             default=None,
             description="Optional. Whether to require a non anamorphic stream.",
         ),
-        transcoding_max_audio_channels: Optional[int] = Field(
+        transcoding_max_audio_channels: int | None = Field(
             default=None,
             description="Optional. The maximum number of audio channels to transcode.",
         ),
-        cpu_core_limit: Optional[int] = Field(
+        cpu_core_limit: int | None = Field(
             default=None,
             description="Optional. The limit of how many cpu cores to use.",
         ),
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        enable_mpegts_m2_ts_mode: Optional[bool] = Field(
+        enable_mpegts_m2_ts_mode: bool | None = Field(
             default=None, description="Optional. Whether to enable the MpegtsM2Ts mode."
         ),
-        video_codec: Optional[str] = Field(
+        video_codec: str | None = Field(
             default=None,
             description="Optional. Specify a video codec to encode to, e.g. h264. If omitted the server will auto-select using the url's extension.",
         ),
-        subtitle_codec: Optional[str] = Field(
+        subtitle_codec: str | None = Field(
             default=None, description="Optional. Specify a subtitle codec to encode to."
         ),
-        transcode_reasons: Optional[str] = Field(
+        transcode_reasons: str | None = Field(
             default=None, description="Optional. The transcoding reason."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the audio stream to use. If omitted the first audio stream will be used.",
         ),
-        video_stream_index: Optional[int] = Field(
+        video_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the video stream to use. If omitted the first video stream will be used.",
         ),
-        context: Optional[str] = Field(
+        context: str | None = Field(
             default=None,
             description="Optional. The MediaBrowser.Model.Dlna.EncodingContext.",
         ),
-        stream_options: Optional[Dict[str, Any]] = Field(
+        stream_options: dict[str, Any] | None = Field(
             default=None, description="Optional. The streaming options."
         ),
-        enable_audio_vbr_encoding: Optional[bool] = Field(
+        enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
     ) -> Any:
@@ -941,7 +940,7 @@ def register_backup_tools(mcp: FastMCP):
         name="create_backup", description="Creates a new Backup.", tags={"Backup"}
     )
     def create_backup_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Creates a new Backup."""
         api = get_client()
@@ -953,9 +952,9 @@ def register_backup_tools(mcp: FastMCP):
         tags={"Backup"},
     )
     def get_backup_tool(
-        path: Optional[str] = Field(
+        path: str | None = Field(
             default=None, description="The data to start a restore process."
-        )
+        ),
     ) -> Any:
         """Gets the descriptor from an existing archive is present."""
         api = get_client()
@@ -967,7 +966,7 @@ def register_backup_tools(mcp: FastMCP):
         tags={"Backup"},
     )
     def start_restore_backup_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Restores to a backup by restarting the server and applying the backup."""
         api = get_client()
@@ -1007,27 +1006,27 @@ def register_channels_tools(mcp: FastMCP):
         name="get_channels", description="Gets available channels.", tags={"Channels"}
     )
     def get_channels_tool(
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="User Id to filter by. Use System.Guid.Empty to not filter by user.",
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        supports_latest_items: Optional[bool] = Field(
+        supports_latest_items: bool | None = Field(
             default=None,
             description="Optional. Filter by channels that support getting latest items.",
         ),
-        supports_media_deletion: Optional[bool] = Field(
+        supports_media_deletion: bool | None = Field(
             default=None,
             description="Optional. Filter by channels that support media deletion.",
         ),
-        is_favorite: Optional[bool] = Field(
+        is_favorite: bool | None = Field(
             default=None, description="Optional. Filter by channels that are favorite."
         ),
     ) -> Any:
@@ -1059,29 +1058,27 @@ def register_channels_tools(mcp: FastMCP):
     )
     def get_channel_items_tool(
         channel_id: str = Field(description="Channel Id."),
-        folder_id: Optional[str] = Field(
-            default=None, description="Optional. Folder Id."
-        ),
-        user_id: Optional[str] = Field(default=None, description="Optional. User Id."),
-        start_index: Optional[int] = Field(
+        folder_id: str | None = Field(default=None, description="Optional. Folder Id."),
+        user_id: str | None = Field(default=None, description="Optional. User Id."),
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        sort_order: Optional[List[Any]] = Field(
+        sort_order: list[Any] | None = Field(
             default=None, description="Optional. Sort Order - Ascending,Descending."
         ),
-        filters: Optional[List[Any]] = Field(
+        filters: list[Any] | None = Field(
             default=None, description="Optional. Specify additional filters to apply."
         ),
-        sort_by: Optional[List[Any]] = Field(
+        sort_by: list[Any] | None = Field(
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited. Options: Album, AlbumArtist, Artist, Budget, CommunityRating, CriticRating, DateCreated, DatePlayed, PlayCount, PremiereDate, ProductionYear, SortName, Random, Revenue, Runtime.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
@@ -1116,23 +1113,23 @@ def register_channels_tools(mcp: FastMCP):
         tags={"Channels"},
     )
     def get_latest_channel_items_tool(
-        user_id: Optional[str] = Field(default=None, description="Optional. User Id."),
-        start_index: Optional[int] = Field(
+        user_id: str | None = Field(default=None, description="Optional. User Id."),
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        filters: Optional[List[Any]] = Field(
+        filters: list[Any] | None = Field(
             default=None, description="Optional. Specify additional filters to apply."
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        channel_ids: Optional[List[Any]] = Field(
+        channel_ids: list[Any] | None = Field(
             default=None,
             description="Optional. Specify one or more channel id's, comma delimited.",
         ),
@@ -1152,7 +1149,7 @@ def register_channels_tools(mcp: FastMCP):
 def register_clientlog_tools(mcp: FastMCP):
     @mcp.tool(name="log_file", description="Upload a document.", tags={"ClientLog"})
     def log_file_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Upload a document."""
         api = get_client()
@@ -1166,17 +1163,17 @@ def register_collection_tools(mcp: FastMCP):
         tags={"Collection"},
     )
     def create_collection_tool(
-        name: Optional[str] = Field(
+        name: str | None = Field(
             default=None, description="The name of the collection."
         ),
-        ids: Optional[List[Any]] = Field(
+        ids: list[Any] | None = Field(
             default=None, description="Item Ids to add to the collection."
         ),
-        parent_id: Optional[str] = Field(
+        parent_id: str | None = Field(
             default=None,
             description="Optional. Create the collection within a specific folder.",
         ),
-        is_locked: Optional[bool] = Field(
+        is_locked: bool | None = Field(
             default=None, description="Whether or not to lock the new collection."
         ),
     ) -> Any:
@@ -1193,7 +1190,7 @@ def register_collection_tools(mcp: FastMCP):
     )
     def add_to_collection_tool(
         collection_id: str = Field(description="The collection id."),
-        ids: Optional[List[Any]] = Field(
+        ids: list[Any] | None = Field(
             default=None, description="Item ids, comma delimited."
         ),
     ) -> Any:
@@ -1208,7 +1205,7 @@ def register_collection_tools(mcp: FastMCP):
     )
     def remove_from_collection_tool(
         collection_id: str = Field(description="The collection id."),
-        ids: Optional[List[Any]] = Field(
+        ids: list[Any] | None = Field(
             default=None, description="Item ids, comma delimited."
         ),
     ) -> Any:
@@ -1234,7 +1231,7 @@ def register_configuration_tools(mcp: FastMCP):
         tags={"Configuration"},
     )
     def update_configuration_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Updates application configuration."""
         api = get_client()
@@ -1259,9 +1256,7 @@ def register_configuration_tools(mcp: FastMCP):
     )
     def update_named_configuration_tool(
         key: str = Field(description="Configuration key."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Updates named configuration."""
         api = get_client()
@@ -1273,7 +1268,7 @@ def register_configuration_tools(mcp: FastMCP):
         tags={"Configuration"},
     )
     def update_branding_configuration_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Updates branding configuration."""
         api = get_client()
@@ -1297,7 +1292,7 @@ def register_dashboard_tools(mcp: FastMCP):
         tags={"Dashboard"},
     )
     def get_dashboard_configuration_page_tool(
-        name: Optional[str] = Field(default=None, description="The name of the page.")
+        name: str | None = Field(default=None, description="The name of the page."),
     ) -> Any:
         """Gets a dashboard configuration page."""
         api = get_client()
@@ -1309,9 +1304,9 @@ def register_dashboard_tools(mcp: FastMCP):
         tags={"Dashboard"},
     )
     def get_configuration_pages_tool(
-        enable_in_main_menu: Optional[bool] = Field(
+        enable_in_main_menu: bool | None = Field(
             default=None, description="Whether to enable in the main menu."
-        )
+        ),
     ) -> Any:
         """Gets the configuration pages."""
         api = get_client()
@@ -1321,9 +1316,9 @@ def register_dashboard_tools(mcp: FastMCP):
 def register_devices_tools(mcp: FastMCP):
     @mcp.tool(name="get_devices", description="Get Devices.", tags={"Devices"})
     def get_devices_tool(
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None, description="Gets or sets the user identifier."
-        )
+        ),
     ) -> Any:
         """Get Devices."""
         api = get_client()
@@ -1331,7 +1326,7 @@ def register_devices_tools(mcp: FastMCP):
 
     @mcp.tool(name="delete_device", description="Deletes a device.", tags={"Devices"})
     def delete_device_tool(
-        id: Optional[str] = Field(default=None, description="Device Id.")
+        id: str | None = Field(default=None, description="Device Id."),
     ) -> Any:
         """Deletes a device."""
         api = get_client()
@@ -1341,7 +1336,7 @@ def register_devices_tools(mcp: FastMCP):
         name="get_device_info", description="Get info for a device.", tags={"Devices"}
     )
     def get_device_info_tool(
-        id: Optional[str] = Field(default=None, description="Device Id.")
+        id: str | None = Field(default=None, description="Device Id."),
     ) -> Any:
         """Get info for a device."""
         api = get_client()
@@ -1353,7 +1348,7 @@ def register_devices_tools(mcp: FastMCP):
         tags={"Devices"},
     )
     def get_device_options_tool(
-        id: Optional[str] = Field(default=None, description="Device Id.")
+        id: str | None = Field(default=None, description="Device Id."),
     ) -> Any:
         """Get options for a device."""
         api = get_client()
@@ -1365,10 +1360,8 @@ def register_devices_tools(mcp: FastMCP):
         tags={"Devices"},
     )
     def update_device_options_tool(
-        id: Optional[str] = Field(default=None, description="Device Id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        id: str | None = Field(default=None, description="Device Id."),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Update device options."""
         api = get_client()
@@ -1383,8 +1376,8 @@ def register_displaypreferences_tools(mcp: FastMCP):
     )
     def get_display_preferences_tool(
         display_preferences_id: str = Field(description="Display preferences id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        client: Optional[str] = Field(default=None, description="Client."),
+        user_id: str | None = Field(default=None, description="User id."),
+        client: str | None = Field(default=None, description="Client."),
     ) -> Any:
         """Get Display Preferences."""
         api = get_client()
@@ -1401,11 +1394,9 @@ def register_displaypreferences_tools(mcp: FastMCP):
     )
     def update_display_preferences_tool(
         display_preferences_id: str = Field(description="Display preferences id."),
-        user_id: Optional[str] = Field(default=None, description="User Id."),
-        client: Optional[str] = Field(default=None, description="Client."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        user_id: str | None = Field(default=None, description="User Id."),
+        client: str | None = Field(default=None, description="Client."),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Update Display Preferences."""
         api = get_client()
@@ -1430,181 +1421,181 @@ def register_dynamichls_tools(mcp: FastMCP):
         container: str = Field(
             description="The video container. Possible values are: ts, webm, asf, wmv, ogv, mp4, m4v, mkv, mpeg, mpg, avi, 3gp, wmv, wtv, m2ts, mov, iso, flv."
         ),
-        runtime_ticks: Optional[int] = Field(
+        runtime_ticks: int | None = Field(
             default=None, description="The position of the requested segment in ticks."
         ),
-        actual_segment_length_ticks: Optional[int] = Field(
+        actual_segment_length_ticks: int | None = Field(
             default=None, description="The length of the requested segment in ticks."
         ),
-        static: Optional[bool] = Field(
+        static: bool | None = Field(
             default=None,
             description="Optional. If true, the original file will be streamed statically without any encoding. Use either no url extension or the original file extension. true/false.",
         ),
-        params: Optional[str] = Field(
+        params: str | None = Field(
             default=None, description="The streaming parameters."
         ),
-        tag: Optional[str] = Field(default=None, description="The tag."),
-        device_profile_id: Optional[str] = Field(
+        tag: str | None = Field(default=None, description="The tag."),
+        device_profile_id: str | None = Field(
             default=None, description="Optional. The dlna device profile id to utilize."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        segment_container: Optional[str] = Field(
+        segment_container: str | None = Field(
             default=None, description="The segment container."
         ),
-        segment_length: Optional[int] = Field(
+        segment_length: int | None = Field(
             default=None, description="The segment length."
         ),
-        min_segments: Optional[int] = Field(
+        min_segments: int | None = Field(
             default=None, description="The minimum number of segments."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if playing an alternate version.",
         ),
-        device_id: Optional[str] = Field(
+        device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
         ),
-        audio_codec: Optional[str] = Field(
+        audio_codec: str | None = Field(
             default=None,
             description="Optional. Specify an audio codec to encode to, e.g. mp3.",
         ),
-        enable_auto_stream_copy: Optional[bool] = Field(
+        enable_auto_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow automatic stream copy if requested values match the original source. Defaults to true.",
         ),
-        allow_video_stream_copy: Optional[bool] = Field(
+        allow_video_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the video stream url.",
         ),
-        allow_audio_stream_copy: Optional[bool] = Field(
+        allow_audio_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the audio stream url.",
         ),
-        break_on_non_key_frames: Optional[bool] = Field(
+        break_on_non_key_frames: bool | None = Field(
             default=None, description="Optional. Whether to break on non key frames."
         ),
-        audio_sample_rate: Optional[int] = Field(
+        audio_sample_rate: int | None = Field(
             default=None,
             description="Optional. Specify a specific audio sample rate, e.g. 44100.",
         ),
-        max_audio_bit_depth: Optional[int] = Field(
+        max_audio_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum audio bit depth."
         ),
-        max_streaming_bitrate: Optional[int] = Field(
+        max_streaming_bitrate: int | None = Field(
             default=None, description="Optional. The maximum streaming bitrate."
         ),
-        audio_bit_rate: Optional[int] = Field(
+        audio_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify an audio bitrate to encode to, e.g. 128000. If omitted this will be left to encoder defaults.",
         ),
-        audio_channels: Optional[int] = Field(
+        audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a specific number of audio channels to encode to, e.g. 2.",
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a maximum number of audio channels to encode to, e.g. 2.",
         ),
-        profile: Optional[str] = Field(
+        profile: str | None = Field(
             default=None,
             description="Optional. Specify a specific an encoder profile (varies by encoder), e.g. main, baseline, high.",
         ),
-        level: Optional[str] = Field(
+        level: str | None = Field(
             default=None,
             description="Optional. Specify a level for the encoder profile (varies by encoder), e.g. 3, 3.1.",
         ),
-        framerate: Optional[float] = Field(
+        framerate: float | None = Field(
             default=None,
             description="Optional. A specific video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        max_framerate: Optional[float] = Field(
+        max_framerate: float | None = Field(
             default=None,
             description="Optional. A specific maximum video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        copy_timestamps: Optional[bool] = Field(
+        copy_timestamps: bool | None = Field(
             default=None,
             description="Whether or not to copy timestamps when transcoding with an offset. Defaults to false.",
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None,
             description="Optional. Specify a starting offset, in ticks. 1 tick = 10000 ms.",
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None,
             description="Optional. The fixed horizontal resolution of the encoded video.",
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None,
             description="Optional. The fixed vertical resolution of the encoded video.",
         ),
-        video_bit_rate: Optional[int] = Field(
+        video_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify a video bitrate to encode to, e.g. 500000. If omitted this will be left to encoder defaults.",
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the subtitle stream to use. If omitted no subtitles will be used.",
         ),
-        subtitle_method: Optional[str] = Field(
+        subtitle_method: str | None = Field(
             default=None, description="Optional. Specify the subtitle delivery method."
         ),
-        max_ref_frames: Optional[int] = Field(default=None, description="Optional."),
-        max_video_bit_depth: Optional[int] = Field(
+        max_ref_frames: int | None = Field(default=None, description="Optional."),
+        max_video_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum video bit depth."
         ),
-        require_avc: Optional[bool] = Field(
+        require_avc: bool | None = Field(
             default=None, description="Optional. Whether to require avc."
         ),
-        de_interlace: Optional[bool] = Field(
+        de_interlace: bool | None = Field(
             default=None, description="Optional. Whether to deinterlace the video."
         ),
-        require_non_anamorphic: Optional[bool] = Field(
+        require_non_anamorphic: bool | None = Field(
             default=None,
             description="Optional. Whether to require a non anamorphic stream.",
         ),
-        transcoding_max_audio_channels: Optional[int] = Field(
+        transcoding_max_audio_channels: int | None = Field(
             default=None,
             description="Optional. The maximum number of audio channels to transcode.",
         ),
-        cpu_core_limit: Optional[int] = Field(
+        cpu_core_limit: int | None = Field(
             default=None,
             description="Optional. The limit of how many cpu cores to use.",
         ),
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        enable_mpegts_m2_ts_mode: Optional[bool] = Field(
+        enable_mpegts_m2_ts_mode: bool | None = Field(
             default=None, description="Optional. Whether to enable the MpegtsM2Ts mode."
         ),
-        video_codec: Optional[str] = Field(
+        video_codec: str | None = Field(
             default=None,
             description="Optional. Specify a video codec to encode to, e.g. h264.",
         ),
-        subtitle_codec: Optional[str] = Field(
+        subtitle_codec: str | None = Field(
             default=None, description="Optional. Specify a subtitle codec to encode to."
         ),
-        transcode_reasons: Optional[str] = Field(
+        transcode_reasons: str | None = Field(
             default=None, description="Optional. The transcoding reason."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the audio stream to use. If omitted the first audio stream will be used.",
         ),
-        video_stream_index: Optional[int] = Field(
+        video_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the video stream to use. If omitted the first video stream will be used.",
         ),
-        context: Optional[str] = Field(
+        context: str | None = Field(
             default=None,
             description="Optional. The MediaBrowser.Model.Dlna.EncodingContext.",
         ),
-        stream_options: Optional[Dict[str, Any]] = Field(
+        stream_options: dict[str, Any] | None = Field(
             default=None, description="Optional. The streaming options."
         ),
-        enable_audio_vbr_encoding: Optional[bool] = Field(
+        enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
     ) -> Any:
@@ -1675,175 +1666,175 @@ def register_dynamichls_tools(mcp: FastMCP):
     )
     def get_variant_hls_audio_playlist_tool(
         item_id: str = Field(description="The item id."),
-        static: Optional[bool] = Field(
+        static: bool | None = Field(
             default=None,
             description="Optional. If true, the original file will be streamed statically without any encoding. Use either no url extension or the original file extension. true/false.",
         ),
-        params: Optional[str] = Field(
+        params: str | None = Field(
             default=None, description="The streaming parameters."
         ),
-        tag: Optional[str] = Field(default=None, description="The tag."),
-        device_profile_id: Optional[str] = Field(
+        tag: str | None = Field(default=None, description="The tag."),
+        device_profile_id: str | None = Field(
             default=None, description="Optional. The dlna device profile id to utilize."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        segment_container: Optional[str] = Field(
+        segment_container: str | None = Field(
             default=None, description="The segment container."
         ),
-        segment_length: Optional[int] = Field(
+        segment_length: int | None = Field(
             default=None, description="The segment length."
         ),
-        min_segments: Optional[int] = Field(
+        min_segments: int | None = Field(
             default=None, description="The minimum number of segments."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if playing an alternate version.",
         ),
-        device_id: Optional[str] = Field(
+        device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
         ),
-        audio_codec: Optional[str] = Field(
+        audio_codec: str | None = Field(
             default=None,
             description="Optional. Specify an audio codec to encode to, e.g. mp3.",
         ),
-        enable_auto_stream_copy: Optional[bool] = Field(
+        enable_auto_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow automatic stream copy if requested values match the original source. Defaults to true.",
         ),
-        allow_video_stream_copy: Optional[bool] = Field(
+        allow_video_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the video stream url.",
         ),
-        allow_audio_stream_copy: Optional[bool] = Field(
+        allow_audio_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the audio stream url.",
         ),
-        break_on_non_key_frames: Optional[bool] = Field(
+        break_on_non_key_frames: bool | None = Field(
             default=None, description="Optional. Whether to break on non key frames."
         ),
-        audio_sample_rate: Optional[int] = Field(
+        audio_sample_rate: int | None = Field(
             default=None,
             description="Optional. Specify a specific audio sample rate, e.g. 44100.",
         ),
-        max_audio_bit_depth: Optional[int] = Field(
+        max_audio_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum audio bit depth."
         ),
-        max_streaming_bitrate: Optional[int] = Field(
+        max_streaming_bitrate: int | None = Field(
             default=None, description="Optional. The maximum streaming bitrate."
         ),
-        audio_bit_rate: Optional[int] = Field(
+        audio_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify an audio bitrate to encode to, e.g. 128000. If omitted this will be left to encoder defaults.",
         ),
-        audio_channels: Optional[int] = Field(
+        audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a specific number of audio channels to encode to, e.g. 2.",
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a maximum number of audio channels to encode to, e.g. 2.",
         ),
-        profile: Optional[str] = Field(
+        profile: str | None = Field(
             default=None,
             description="Optional. Specify a specific an encoder profile (varies by encoder), e.g. main, baseline, high.",
         ),
-        level: Optional[str] = Field(
+        level: str | None = Field(
             default=None,
             description="Optional. Specify a level for the encoder profile (varies by encoder), e.g. 3, 3.1.",
         ),
-        framerate: Optional[float] = Field(
+        framerate: float | None = Field(
             default=None,
             description="Optional. A specific video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        max_framerate: Optional[float] = Field(
+        max_framerate: float | None = Field(
             default=None,
             description="Optional. A specific maximum video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        copy_timestamps: Optional[bool] = Field(
+        copy_timestamps: bool | None = Field(
             default=None,
             description="Whether or not to copy timestamps when transcoding with an offset. Defaults to false.",
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None,
             description="Optional. Specify a starting offset, in ticks. 1 tick = 10000 ms.",
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None,
             description="Optional. The fixed horizontal resolution of the encoded video.",
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None,
             description="Optional. The fixed vertical resolution of the encoded video.",
         ),
-        video_bit_rate: Optional[int] = Field(
+        video_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify a video bitrate to encode to, e.g. 500000. If omitted this will be left to encoder defaults.",
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the subtitle stream to use. If omitted no subtitles will be used.",
         ),
-        subtitle_method: Optional[str] = Field(
+        subtitle_method: str | None = Field(
             default=None, description="Optional. Specify the subtitle delivery method."
         ),
-        max_ref_frames: Optional[int] = Field(default=None, description="Optional."),
-        max_video_bit_depth: Optional[int] = Field(
+        max_ref_frames: int | None = Field(default=None, description="Optional."),
+        max_video_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum video bit depth."
         ),
-        require_avc: Optional[bool] = Field(
+        require_avc: bool | None = Field(
             default=None, description="Optional. Whether to require avc."
         ),
-        de_interlace: Optional[bool] = Field(
+        de_interlace: bool | None = Field(
             default=None, description="Optional. Whether to deinterlace the video."
         ),
-        require_non_anamorphic: Optional[bool] = Field(
+        require_non_anamorphic: bool | None = Field(
             default=None,
             description="Optional. Whether to require a non anamorphic stream.",
         ),
-        transcoding_max_audio_channels: Optional[int] = Field(
+        transcoding_max_audio_channels: int | None = Field(
             default=None,
             description="Optional. The maximum number of audio channels to transcode.",
         ),
-        cpu_core_limit: Optional[int] = Field(
+        cpu_core_limit: int | None = Field(
             default=None,
             description="Optional. The limit of how many cpu cores to use.",
         ),
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        enable_mpegts_m2_ts_mode: Optional[bool] = Field(
+        enable_mpegts_m2_ts_mode: bool | None = Field(
             default=None, description="Optional. Whether to enable the MpegtsM2Ts mode."
         ),
-        video_codec: Optional[str] = Field(
+        video_codec: str | None = Field(
             default=None,
             description="Optional. Specify a video codec to encode to, e.g. h264.",
         ),
-        subtitle_codec: Optional[str] = Field(
+        subtitle_codec: str | None = Field(
             default=None, description="Optional. Specify a subtitle codec to encode to."
         ),
-        transcode_reasons: Optional[str] = Field(
+        transcode_reasons: str | None = Field(
             default=None, description="Optional. The transcoding reason."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the audio stream to use. If omitted the first audio stream will be used.",
         ),
-        video_stream_index: Optional[int] = Field(
+        video_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the video stream to use. If omitted the first video stream will be used.",
         ),
-        context: Optional[str] = Field(
+        context: str | None = Field(
             default=None,
             description="Optional. The MediaBrowser.Model.Dlna.EncodingContext.",
         ),
-        stream_options: Optional[Dict[str, Any]] = Field(
+        stream_options: dict[str, Any] | None = Field(
             default=None, description="Optional. The streaming options."
         ),
-        enable_audio_vbr_encoding: Optional[bool] = Field(
+        enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
     ) -> Any:
@@ -1909,178 +1900,178 @@ def register_dynamichls_tools(mcp: FastMCP):
     )
     def get_master_hls_audio_playlist_tool(
         item_id: str = Field(description="The item id."),
-        static: Optional[bool] = Field(
+        static: bool | None = Field(
             default=None,
             description="Optional. If true, the original file will be streamed statically without any encoding. Use either no url extension or the original file extension. true/false.",
         ),
-        params: Optional[str] = Field(
+        params: str | None = Field(
             default=None, description="The streaming parameters."
         ),
-        tag: Optional[str] = Field(default=None, description="The tag."),
-        device_profile_id: Optional[str] = Field(
+        tag: str | None = Field(default=None, description="The tag."),
+        device_profile_id: str | None = Field(
             default=None, description="Optional. The dlna device profile id to utilize."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        segment_container: Optional[str] = Field(
+        segment_container: str | None = Field(
             default=None, description="The segment container."
         ),
-        segment_length: Optional[int] = Field(
+        segment_length: int | None = Field(
             default=None, description="The segment length."
         ),
-        min_segments: Optional[int] = Field(
+        min_segments: int | None = Field(
             default=None, description="The minimum number of segments."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if playing an alternate version.",
         ),
-        device_id: Optional[str] = Field(
+        device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
         ),
-        audio_codec: Optional[str] = Field(
+        audio_codec: str | None = Field(
             default=None,
             description="Optional. Specify an audio codec to encode to, e.g. mp3.",
         ),
-        enable_auto_stream_copy: Optional[bool] = Field(
+        enable_auto_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow automatic stream copy if requested values match the original source. Defaults to true.",
         ),
-        allow_video_stream_copy: Optional[bool] = Field(
+        allow_video_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the video stream url.",
         ),
-        allow_audio_stream_copy: Optional[bool] = Field(
+        allow_audio_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the audio stream url.",
         ),
-        break_on_non_key_frames: Optional[bool] = Field(
+        break_on_non_key_frames: bool | None = Field(
             default=None, description="Optional. Whether to break on non key frames."
         ),
-        audio_sample_rate: Optional[int] = Field(
+        audio_sample_rate: int | None = Field(
             default=None,
             description="Optional. Specify a specific audio sample rate, e.g. 44100.",
         ),
-        max_audio_bit_depth: Optional[int] = Field(
+        max_audio_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum audio bit depth."
         ),
-        max_streaming_bitrate: Optional[int] = Field(
+        max_streaming_bitrate: int | None = Field(
             default=None, description="Optional. The maximum streaming bitrate."
         ),
-        audio_bit_rate: Optional[int] = Field(
+        audio_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify an audio bitrate to encode to, e.g. 128000. If omitted this will be left to encoder defaults.",
         ),
-        audio_channels: Optional[int] = Field(
+        audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a specific number of audio channels to encode to, e.g. 2.",
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a maximum number of audio channels to encode to, e.g. 2.",
         ),
-        profile: Optional[str] = Field(
+        profile: str | None = Field(
             default=None,
             description="Optional. Specify a specific an encoder profile (varies by encoder), e.g. main, baseline, high.",
         ),
-        level: Optional[str] = Field(
+        level: str | None = Field(
             default=None,
             description="Optional. Specify a level for the encoder profile (varies by encoder), e.g. 3, 3.1.",
         ),
-        framerate: Optional[float] = Field(
+        framerate: float | None = Field(
             default=None,
             description="Optional. A specific video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        max_framerate: Optional[float] = Field(
+        max_framerate: float | None = Field(
             default=None,
             description="Optional. A specific maximum video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        copy_timestamps: Optional[bool] = Field(
+        copy_timestamps: bool | None = Field(
             default=None,
             description="Whether or not to copy timestamps when transcoding with an offset. Defaults to false.",
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None,
             description="Optional. Specify a starting offset, in ticks. 1 tick = 10000 ms.",
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None,
             description="Optional. The fixed horizontal resolution of the encoded video.",
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None,
             description="Optional. The fixed vertical resolution of the encoded video.",
         ),
-        video_bit_rate: Optional[int] = Field(
+        video_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify a video bitrate to encode to, e.g. 500000. If omitted this will be left to encoder defaults.",
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the subtitle stream to use. If omitted no subtitles will be used.",
         ),
-        subtitle_method: Optional[str] = Field(
+        subtitle_method: str | None = Field(
             default=None, description="Optional. Specify the subtitle delivery method."
         ),
-        max_ref_frames: Optional[int] = Field(default=None, description="Optional."),
-        max_video_bit_depth: Optional[int] = Field(
+        max_ref_frames: int | None = Field(default=None, description="Optional."),
+        max_video_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum video bit depth."
         ),
-        require_avc: Optional[bool] = Field(
+        require_avc: bool | None = Field(
             default=None, description="Optional. Whether to require avc."
         ),
-        de_interlace: Optional[bool] = Field(
+        de_interlace: bool | None = Field(
             default=None, description="Optional. Whether to deinterlace the video."
         ),
-        require_non_anamorphic: Optional[bool] = Field(
+        require_non_anamorphic: bool | None = Field(
             default=None,
             description="Optional. Whether to require a non anamorphic stream.",
         ),
-        transcoding_max_audio_channels: Optional[int] = Field(
+        transcoding_max_audio_channels: int | None = Field(
             default=None,
             description="Optional. The maximum number of audio channels to transcode.",
         ),
-        cpu_core_limit: Optional[int] = Field(
+        cpu_core_limit: int | None = Field(
             default=None,
             description="Optional. The limit of how many cpu cores to use.",
         ),
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        enable_mpegts_m2_ts_mode: Optional[bool] = Field(
+        enable_mpegts_m2_ts_mode: bool | None = Field(
             default=None, description="Optional. Whether to enable the MpegtsM2Ts mode."
         ),
-        video_codec: Optional[str] = Field(
+        video_codec: str | None = Field(
             default=None,
             description="Optional. Specify a video codec to encode to, e.g. h264.",
         ),
-        subtitle_codec: Optional[str] = Field(
+        subtitle_codec: str | None = Field(
             default=None, description="Optional. Specify a subtitle codec to encode to."
         ),
-        transcode_reasons: Optional[str] = Field(
+        transcode_reasons: str | None = Field(
             default=None, description="Optional. The transcoding reason."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the audio stream to use. If omitted the first audio stream will be used.",
         ),
-        video_stream_index: Optional[int] = Field(
+        video_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the video stream to use. If omitted the first video stream will be used.",
         ),
-        context: Optional[str] = Field(
+        context: str | None = Field(
             default=None,
             description="Optional. The MediaBrowser.Model.Dlna.EncodingContext.",
         ),
-        stream_options: Optional[Dict[str, Any]] = Field(
+        stream_options: dict[str, Any] | None = Field(
             default=None, description="Optional. The streaming options."
         ),
-        enable_adaptive_bitrate_streaming: Optional[bool] = Field(
+        enable_adaptive_bitrate_streaming: bool | None = Field(
             default=None, description="Enable adaptive bitrate streaming."
         ),
-        enable_audio_vbr_encoding: Optional[bool] = Field(
+        enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
     ) -> Any:
@@ -2152,189 +2143,189 @@ def register_dynamichls_tools(mcp: FastMCP):
         container: str = Field(
             description="The video container. Possible values are: ts, webm, asf, wmv, ogv, mp4, m4v, mkv, mpeg, mpg, avi, 3gp, wmv, wtv, m2ts, mov, iso, flv."
         ),
-        runtime_ticks: Optional[int] = Field(
+        runtime_ticks: int | None = Field(
             default=None, description="The position of the requested segment in ticks."
         ),
-        actual_segment_length_ticks: Optional[int] = Field(
+        actual_segment_length_ticks: int | None = Field(
             default=None, description="The length of the requested segment in ticks."
         ),
-        static: Optional[bool] = Field(
+        static: bool | None = Field(
             default=None,
             description="Optional. If true, the original file will be streamed statically without any encoding. Use either no url extension or the original file extension. true/false.",
         ),
-        params: Optional[str] = Field(
+        params: str | None = Field(
             default=None, description="The streaming parameters."
         ),
-        tag: Optional[str] = Field(default=None, description="The tag."),
-        device_profile_id: Optional[str] = Field(
+        tag: str | None = Field(default=None, description="The tag."),
+        device_profile_id: str | None = Field(
             default=None, description="Optional. The dlna device profile id to utilize."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        segment_container: Optional[str] = Field(
+        segment_container: str | None = Field(
             default=None, description="The segment container."
         ),
-        segment_length: Optional[int] = Field(
+        segment_length: int | None = Field(
             default=None, description="The desired segment length."
         ),
-        min_segments: Optional[int] = Field(
+        min_segments: int | None = Field(
             default=None, description="The minimum number of segments."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if playing an alternate version.",
         ),
-        device_id: Optional[str] = Field(
+        device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
         ),
-        audio_codec: Optional[str] = Field(
+        audio_codec: str | None = Field(
             default=None,
             description="Optional. Specify an audio codec to encode to, e.g. mp3.",
         ),
-        enable_auto_stream_copy: Optional[bool] = Field(
+        enable_auto_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow automatic stream copy if requested values match the original source. Defaults to true.",
         ),
-        allow_video_stream_copy: Optional[bool] = Field(
+        allow_video_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the video stream url.",
         ),
-        allow_audio_stream_copy: Optional[bool] = Field(
+        allow_audio_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the audio stream url.",
         ),
-        break_on_non_key_frames: Optional[bool] = Field(
+        break_on_non_key_frames: bool | None = Field(
             default=None, description="Optional. Whether to break on non key frames."
         ),
-        audio_sample_rate: Optional[int] = Field(
+        audio_sample_rate: int | None = Field(
             default=None,
             description="Optional. Specify a specific audio sample rate, e.g. 44100.",
         ),
-        max_audio_bit_depth: Optional[int] = Field(
+        max_audio_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum audio bit depth."
         ),
-        audio_bit_rate: Optional[int] = Field(
+        audio_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify an audio bitrate to encode to, e.g. 128000. If omitted this will be left to encoder defaults.",
         ),
-        audio_channels: Optional[int] = Field(
+        audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a specific number of audio channels to encode to, e.g. 2.",
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a maximum number of audio channels to encode to, e.g. 2.",
         ),
-        profile: Optional[str] = Field(
+        profile: str | None = Field(
             default=None,
             description="Optional. Specify a specific an encoder profile (varies by encoder), e.g. main, baseline, high.",
         ),
-        level: Optional[str] = Field(
+        level: str | None = Field(
             default=None,
             description="Optional. Specify a level for the encoder profile (varies by encoder), e.g. 3, 3.1.",
         ),
-        framerate: Optional[float] = Field(
+        framerate: float | None = Field(
             default=None,
             description="Optional. A specific video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        max_framerate: Optional[float] = Field(
+        max_framerate: float | None = Field(
             default=None,
             description="Optional. A specific maximum video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        copy_timestamps: Optional[bool] = Field(
+        copy_timestamps: bool | None = Field(
             default=None,
             description="Whether or not to copy timestamps when transcoding with an offset. Defaults to false.",
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None,
             description="Optional. Specify a starting offset, in ticks. 1 tick = 10000 ms.",
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None,
             description="Optional. The fixed horizontal resolution of the encoded video.",
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None,
             description="Optional. The fixed vertical resolution of the encoded video.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None,
             description="Optional. The maximum horizontal resolution of the encoded video.",
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None,
             description="Optional. The maximum vertical resolution of the encoded video.",
         ),
-        video_bit_rate: Optional[int] = Field(
+        video_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify a video bitrate to encode to, e.g. 500000. If omitted this will be left to encoder defaults.",
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the subtitle stream to use. If omitted no subtitles will be used.",
         ),
-        subtitle_method: Optional[str] = Field(
+        subtitle_method: str | None = Field(
             default=None, description="Optional. Specify the subtitle delivery method."
         ),
-        max_ref_frames: Optional[int] = Field(default=None, description="Optional."),
-        max_video_bit_depth: Optional[int] = Field(
+        max_ref_frames: int | None = Field(default=None, description="Optional."),
+        max_video_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum video bit depth."
         ),
-        require_avc: Optional[bool] = Field(
+        require_avc: bool | None = Field(
             default=None, description="Optional. Whether to require avc."
         ),
-        de_interlace: Optional[bool] = Field(
+        de_interlace: bool | None = Field(
             default=None, description="Optional. Whether to deinterlace the video."
         ),
-        require_non_anamorphic: Optional[bool] = Field(
+        require_non_anamorphic: bool | None = Field(
             default=None,
             description="Optional. Whether to require a non anamorphic stream.",
         ),
-        transcoding_max_audio_channels: Optional[int] = Field(
+        transcoding_max_audio_channels: int | None = Field(
             default=None,
             description="Optional. The maximum number of audio channels to transcode.",
         ),
-        cpu_core_limit: Optional[int] = Field(
+        cpu_core_limit: int | None = Field(
             default=None,
             description="Optional. The limit of how many cpu cores to use.",
         ),
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        enable_mpegts_m2_ts_mode: Optional[bool] = Field(
+        enable_mpegts_m2_ts_mode: bool | None = Field(
             default=None, description="Optional. Whether to enable the MpegtsM2Ts mode."
         ),
-        video_codec: Optional[str] = Field(
+        video_codec: str | None = Field(
             default=None,
             description="Optional. Specify a video codec to encode to, e.g. h264.",
         ),
-        subtitle_codec: Optional[str] = Field(
+        subtitle_codec: str | None = Field(
             default=None, description="Optional. Specify a subtitle codec to encode to."
         ),
-        transcode_reasons: Optional[str] = Field(
+        transcode_reasons: str | None = Field(
             default=None, description="Optional. The transcoding reason."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the audio stream to use. If omitted the first audio stream will be used.",
         ),
-        video_stream_index: Optional[int] = Field(
+        video_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the video stream to use. If omitted the first video stream will be used.",
         ),
-        context: Optional[str] = Field(
+        context: str | None = Field(
             default=None,
             description="Optional. The MediaBrowser.Model.Dlna.EncodingContext.",
         ),
-        stream_options: Optional[Dict[str, Any]] = Field(
+        stream_options: dict[str, Any] | None = Field(
             default=None, description="Optional. The streaming options."
         ),
-        enable_audio_vbr_encoding: Optional[bool] = Field(
+        enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
-        always_burn_in_subtitle_when_transcoding: Optional[bool] = Field(
+        always_burn_in_subtitle_when_transcoding: bool | None = Field(
             default=None,
             description="Whether to always burn in subtitles when transcoding.",
         ),
@@ -2408,188 +2399,186 @@ def register_dynamichls_tools(mcp: FastMCP):
     )
     def get_live_hls_stream_tool(
         item_id: str = Field(description="The item id."),
-        container: Optional[str] = Field(
-            default=None, description="The audio container."
-        ),
-        static: Optional[bool] = Field(
+        container: str | None = Field(default=None, description="The audio container."),
+        static: bool | None = Field(
             default=None,
             description="Optional. If true, the original file will be streamed statically without any encoding. Use either no url extension or the original file extension. true/false.",
         ),
-        params: Optional[str] = Field(
+        params: str | None = Field(
             default=None, description="The streaming parameters."
         ),
-        tag: Optional[str] = Field(default=None, description="The tag."),
-        device_profile_id: Optional[str] = Field(
+        tag: str | None = Field(default=None, description="The tag."),
+        device_profile_id: str | None = Field(
             default=None, description="Optional. The dlna device profile id to utilize."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        segment_container: Optional[str] = Field(
+        segment_container: str | None = Field(
             default=None, description="The segment container."
         ),
-        segment_length: Optional[int] = Field(
+        segment_length: int | None = Field(
             default=None, description="The segment length."
         ),
-        min_segments: Optional[int] = Field(
+        min_segments: int | None = Field(
             default=None, description="The minimum number of segments."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if playing an alternate version.",
         ),
-        device_id: Optional[str] = Field(
+        device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
         ),
-        audio_codec: Optional[str] = Field(
+        audio_codec: str | None = Field(
             default=None,
             description="Optional. Specify an audio codec to encode to, e.g. mp3.",
         ),
-        enable_auto_stream_copy: Optional[bool] = Field(
+        enable_auto_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow automatic stream copy if requested values match the original source. Defaults to true.",
         ),
-        allow_video_stream_copy: Optional[bool] = Field(
+        allow_video_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the video stream url.",
         ),
-        allow_audio_stream_copy: Optional[bool] = Field(
+        allow_audio_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the audio stream url.",
         ),
-        break_on_non_key_frames: Optional[bool] = Field(
+        break_on_non_key_frames: bool | None = Field(
             default=None, description="Optional. Whether to break on non key frames."
         ),
-        audio_sample_rate: Optional[int] = Field(
+        audio_sample_rate: int | None = Field(
             default=None,
             description="Optional. Specify a specific audio sample rate, e.g. 44100.",
         ),
-        max_audio_bit_depth: Optional[int] = Field(
+        max_audio_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum audio bit depth."
         ),
-        audio_bit_rate: Optional[int] = Field(
+        audio_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify an audio bitrate to encode to, e.g. 128000. If omitted this will be left to encoder defaults.",
         ),
-        audio_channels: Optional[int] = Field(
+        audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a specific number of audio channels to encode to, e.g. 2.",
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a maximum number of audio channels to encode to, e.g. 2.",
         ),
-        profile: Optional[str] = Field(
+        profile: str | None = Field(
             default=None,
             description="Optional. Specify a specific an encoder profile (varies by encoder), e.g. main, baseline, high.",
         ),
-        level: Optional[str] = Field(
+        level: str | None = Field(
             default=None,
             description="Optional. Specify a level for the encoder profile (varies by encoder), e.g. 3, 3.1.",
         ),
-        framerate: Optional[float] = Field(
+        framerate: float | None = Field(
             default=None,
             description="Optional. A specific video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        max_framerate: Optional[float] = Field(
+        max_framerate: float | None = Field(
             default=None,
             description="Optional. A specific maximum video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        copy_timestamps: Optional[bool] = Field(
+        copy_timestamps: bool | None = Field(
             default=None,
             description="Whether or not to copy timestamps when transcoding with an offset. Defaults to false.",
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None,
             description="Optional. Specify a starting offset, in ticks. 1 tick = 10000 ms.",
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None,
             description="Optional. The fixed horizontal resolution of the encoded video.",
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None,
             description="Optional. The fixed vertical resolution of the encoded video.",
         ),
-        video_bit_rate: Optional[int] = Field(
+        video_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify a video bitrate to encode to, e.g. 500000. If omitted this will be left to encoder defaults.",
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the subtitle stream to use. If omitted no subtitles will be used.",
         ),
-        subtitle_method: Optional[str] = Field(
+        subtitle_method: str | None = Field(
             default=None, description="Optional. Specify the subtitle delivery method."
         ),
-        max_ref_frames: Optional[int] = Field(default=None, description="Optional."),
-        max_video_bit_depth: Optional[int] = Field(
+        max_ref_frames: int | None = Field(default=None, description="Optional."),
+        max_video_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum video bit depth."
         ),
-        require_avc: Optional[bool] = Field(
+        require_avc: bool | None = Field(
             default=None, description="Optional. Whether to require avc."
         ),
-        de_interlace: Optional[bool] = Field(
+        de_interlace: bool | None = Field(
             default=None, description="Optional. Whether to deinterlace the video."
         ),
-        require_non_anamorphic: Optional[bool] = Field(
+        require_non_anamorphic: bool | None = Field(
             default=None,
             description="Optional. Whether to require a non anamorphic stream.",
         ),
-        transcoding_max_audio_channels: Optional[int] = Field(
+        transcoding_max_audio_channels: int | None = Field(
             default=None,
             description="Optional. The maximum number of audio channels to transcode.",
         ),
-        cpu_core_limit: Optional[int] = Field(
+        cpu_core_limit: int | None = Field(
             default=None,
             description="Optional. The limit of how many cpu cores to use.",
         ),
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        enable_mpegts_m2_ts_mode: Optional[bool] = Field(
+        enable_mpegts_m2_ts_mode: bool | None = Field(
             default=None, description="Optional. Whether to enable the MpegtsM2Ts mode."
         ),
-        video_codec: Optional[str] = Field(
+        video_codec: str | None = Field(
             default=None,
             description="Optional. Specify a video codec to encode to, e.g. h264.",
         ),
-        subtitle_codec: Optional[str] = Field(
+        subtitle_codec: str | None = Field(
             default=None, description="Optional. Specify a subtitle codec to encode to."
         ),
-        transcode_reasons: Optional[str] = Field(
+        transcode_reasons: str | None = Field(
             default=None, description="Optional. The transcoding reason."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the audio stream to use. If omitted the first audio stream will be used.",
         ),
-        video_stream_index: Optional[int] = Field(
+        video_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the video stream to use. If omitted the first video stream will be used.",
         ),
-        context: Optional[str] = Field(
+        context: str | None = Field(
             default=None,
             description="Optional. The MediaBrowser.Model.Dlna.EncodingContext.",
         ),
-        stream_options: Optional[Dict[str, Any]] = Field(
+        stream_options: dict[str, Any] | None = Field(
             default=None, description="Optional. The streaming options."
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None, description="Optional. The max width."
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None, description="Optional. The max height."
         ),
-        enable_subtitles_in_manifest: Optional[bool] = Field(
+        enable_subtitles_in_manifest: bool | None = Field(
             default=None,
             description="Optional. Whether to enable subtitles in the manifest.",
         ),
-        enable_audio_vbr_encoding: Optional[bool] = Field(
+        enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
-        always_burn_in_subtitle_when_transcoding: Optional[bool] = Field(
+        always_burn_in_subtitle_when_transcoding: bool | None = Field(
             default=None,
             description="Whether to always burn in subtitles when transcoding.",
         ),
@@ -2660,183 +2649,183 @@ def register_dynamichls_tools(mcp: FastMCP):
     )
     def get_variant_hls_video_playlist_tool(
         item_id: str = Field(description="The item id."),
-        static: Optional[bool] = Field(
+        static: bool | None = Field(
             default=None,
             description="Optional. If true, the original file will be streamed statically without any encoding. Use either no url extension or the original file extension. true/false.",
         ),
-        params: Optional[str] = Field(
+        params: str | None = Field(
             default=None, description="The streaming parameters."
         ),
-        tag: Optional[str] = Field(default=None, description="The tag."),
-        device_profile_id: Optional[str] = Field(
+        tag: str | None = Field(default=None, description="The tag."),
+        device_profile_id: str | None = Field(
             default=None, description="Optional. The dlna device profile id to utilize."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        segment_container: Optional[str] = Field(
+        segment_container: str | None = Field(
             default=None, description="The segment container."
         ),
-        segment_length: Optional[int] = Field(
+        segment_length: int | None = Field(
             default=None, description="The segment length."
         ),
-        min_segments: Optional[int] = Field(
+        min_segments: int | None = Field(
             default=None, description="The minimum number of segments."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if playing an alternate version.",
         ),
-        device_id: Optional[str] = Field(
+        device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
         ),
-        audio_codec: Optional[str] = Field(
+        audio_codec: str | None = Field(
             default=None,
             description="Optional. Specify an audio codec to encode to, e.g. mp3.",
         ),
-        enable_auto_stream_copy: Optional[bool] = Field(
+        enable_auto_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow automatic stream copy if requested values match the original source. Defaults to true.",
         ),
-        allow_video_stream_copy: Optional[bool] = Field(
+        allow_video_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the video stream url.",
         ),
-        allow_audio_stream_copy: Optional[bool] = Field(
+        allow_audio_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the audio stream url.",
         ),
-        break_on_non_key_frames: Optional[bool] = Field(
+        break_on_non_key_frames: bool | None = Field(
             default=None, description="Optional. Whether to break on non key frames."
         ),
-        audio_sample_rate: Optional[int] = Field(
+        audio_sample_rate: int | None = Field(
             default=None,
             description="Optional. Specify a specific audio sample rate, e.g. 44100.",
         ),
-        max_audio_bit_depth: Optional[int] = Field(
+        max_audio_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum audio bit depth."
         ),
-        audio_bit_rate: Optional[int] = Field(
+        audio_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify an audio bitrate to encode to, e.g. 128000. If omitted this will be left to encoder defaults.",
         ),
-        audio_channels: Optional[int] = Field(
+        audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a specific number of audio channels to encode to, e.g. 2.",
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a maximum number of audio channels to encode to, e.g. 2.",
         ),
-        profile: Optional[str] = Field(
+        profile: str | None = Field(
             default=None,
             description="Optional. Specify a specific an encoder profile (varies by encoder), e.g. main, baseline, high.",
         ),
-        level: Optional[str] = Field(
+        level: str | None = Field(
             default=None,
             description="Optional. Specify a level for the encoder profile (varies by encoder), e.g. 3, 3.1.",
         ),
-        framerate: Optional[float] = Field(
+        framerate: float | None = Field(
             default=None,
             description="Optional. A specific video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        max_framerate: Optional[float] = Field(
+        max_framerate: float | None = Field(
             default=None,
             description="Optional. A specific maximum video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        copy_timestamps: Optional[bool] = Field(
+        copy_timestamps: bool | None = Field(
             default=None,
             description="Whether or not to copy timestamps when transcoding with an offset. Defaults to false.",
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None,
             description="Optional. Specify a starting offset, in ticks. 1 tick = 10000 ms.",
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None,
             description="Optional. The fixed horizontal resolution of the encoded video.",
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None,
             description="Optional. The fixed vertical resolution of the encoded video.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None,
             description="Optional. The maximum horizontal resolution of the encoded video.",
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None,
             description="Optional. The maximum vertical resolution of the encoded video.",
         ),
-        video_bit_rate: Optional[int] = Field(
+        video_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify a video bitrate to encode to, e.g. 500000. If omitted this will be left to encoder defaults.",
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the subtitle stream to use. If omitted no subtitles will be used.",
         ),
-        subtitle_method: Optional[str] = Field(
+        subtitle_method: str | None = Field(
             default=None, description="Optional. Specify the subtitle delivery method."
         ),
-        max_ref_frames: Optional[int] = Field(default=None, description="Optional."),
-        max_video_bit_depth: Optional[int] = Field(
+        max_ref_frames: int | None = Field(default=None, description="Optional."),
+        max_video_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum video bit depth."
         ),
-        require_avc: Optional[bool] = Field(
+        require_avc: bool | None = Field(
             default=None, description="Optional. Whether to require avc."
         ),
-        de_interlace: Optional[bool] = Field(
+        de_interlace: bool | None = Field(
             default=None, description="Optional. Whether to deinterlace the video."
         ),
-        require_non_anamorphic: Optional[bool] = Field(
+        require_non_anamorphic: bool | None = Field(
             default=None,
             description="Optional. Whether to require a non anamorphic stream.",
         ),
-        transcoding_max_audio_channels: Optional[int] = Field(
+        transcoding_max_audio_channels: int | None = Field(
             default=None,
             description="Optional. The maximum number of audio channels to transcode.",
         ),
-        cpu_core_limit: Optional[int] = Field(
+        cpu_core_limit: int | None = Field(
             default=None,
             description="Optional. The limit of how many cpu cores to use.",
         ),
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        enable_mpegts_m2_ts_mode: Optional[bool] = Field(
+        enable_mpegts_m2_ts_mode: bool | None = Field(
             default=None, description="Optional. Whether to enable the MpegtsM2Ts mode."
         ),
-        video_codec: Optional[str] = Field(
+        video_codec: str | None = Field(
             default=None,
             description="Optional. Specify a video codec to encode to, e.g. h264.",
         ),
-        subtitle_codec: Optional[str] = Field(
+        subtitle_codec: str | None = Field(
             default=None, description="Optional. Specify a subtitle codec to encode to."
         ),
-        transcode_reasons: Optional[str] = Field(
+        transcode_reasons: str | None = Field(
             default=None, description="Optional. The transcoding reason."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the audio stream to use. If omitted the first audio stream will be used.",
         ),
-        video_stream_index: Optional[int] = Field(
+        video_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the video stream to use. If omitted the first video stream will be used.",
         ),
-        context: Optional[str] = Field(
+        context: str | None = Field(
             default=None,
             description="Optional. The MediaBrowser.Model.Dlna.EncodingContext.",
         ),
-        stream_options: Optional[Dict[str, Any]] = Field(
+        stream_options: dict[str, Any] | None = Field(
             default=None, description="Optional. The streaming options."
         ),
-        enable_audio_vbr_encoding: Optional[bool] = Field(
+        enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
-        always_burn_in_subtitle_when_transcoding: Optional[bool] = Field(
+        always_burn_in_subtitle_when_transcoding: bool | None = Field(
             default=None,
             description="Whether to always burn in subtitles when transcoding.",
         ),
@@ -2905,190 +2894,190 @@ def register_dynamichls_tools(mcp: FastMCP):
     )
     def get_master_hls_video_playlist_tool(
         item_id: str = Field(description="The item id."),
-        static: Optional[bool] = Field(
+        static: bool | None = Field(
             default=None,
             description="Optional. If true, the original file will be streamed statically without any encoding. Use either no url extension or the original file extension. true/false.",
         ),
-        params: Optional[str] = Field(
+        params: str | None = Field(
             default=None, description="The streaming parameters."
         ),
-        tag: Optional[str] = Field(default=None, description="The tag."),
-        device_profile_id: Optional[str] = Field(
+        tag: str | None = Field(default=None, description="The tag."),
+        device_profile_id: str | None = Field(
             default=None, description="Optional. The dlna device profile id to utilize."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        segment_container: Optional[str] = Field(
+        segment_container: str | None = Field(
             default=None, description="The segment container."
         ),
-        segment_length: Optional[int] = Field(
+        segment_length: int | None = Field(
             default=None, description="The segment length."
         ),
-        min_segments: Optional[int] = Field(
+        min_segments: int | None = Field(
             default=None, description="The minimum number of segments."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if playing an alternate version.",
         ),
-        device_id: Optional[str] = Field(
+        device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
         ),
-        audio_codec: Optional[str] = Field(
+        audio_codec: str | None = Field(
             default=None,
             description="Optional. Specify an audio codec to encode to, e.g. mp3.",
         ),
-        enable_auto_stream_copy: Optional[bool] = Field(
+        enable_auto_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow automatic stream copy if requested values match the original source. Defaults to true.",
         ),
-        allow_video_stream_copy: Optional[bool] = Field(
+        allow_video_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the video stream url.",
         ),
-        allow_audio_stream_copy: Optional[bool] = Field(
+        allow_audio_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the audio stream url.",
         ),
-        break_on_non_key_frames: Optional[bool] = Field(
+        break_on_non_key_frames: bool | None = Field(
             default=None, description="Optional. Whether to break on non key frames."
         ),
-        audio_sample_rate: Optional[int] = Field(
+        audio_sample_rate: int | None = Field(
             default=None,
             description="Optional. Specify a specific audio sample rate, e.g. 44100.",
         ),
-        max_audio_bit_depth: Optional[int] = Field(
+        max_audio_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum audio bit depth."
         ),
-        audio_bit_rate: Optional[int] = Field(
+        audio_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify an audio bitrate to encode to, e.g. 128000. If omitted this will be left to encoder defaults.",
         ),
-        audio_channels: Optional[int] = Field(
+        audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a specific number of audio channels to encode to, e.g. 2.",
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a maximum number of audio channels to encode to, e.g. 2.",
         ),
-        profile: Optional[str] = Field(
+        profile: str | None = Field(
             default=None,
             description="Optional. Specify a specific an encoder profile (varies by encoder), e.g. main, baseline, high.",
         ),
-        level: Optional[str] = Field(
+        level: str | None = Field(
             default=None,
             description="Optional. Specify a level for the encoder profile (varies by encoder), e.g. 3, 3.1.",
         ),
-        framerate: Optional[float] = Field(
+        framerate: float | None = Field(
             default=None,
             description="Optional. A specific video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        max_framerate: Optional[float] = Field(
+        max_framerate: float | None = Field(
             default=None,
             description="Optional. A specific maximum video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        copy_timestamps: Optional[bool] = Field(
+        copy_timestamps: bool | None = Field(
             default=None,
             description="Whether or not to copy timestamps when transcoding with an offset. Defaults to false.",
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None,
             description="Optional. Specify a starting offset, in ticks. 1 tick = 10000 ms.",
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None,
             description="Optional. The fixed horizontal resolution of the encoded video.",
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None,
             description="Optional. The fixed vertical resolution of the encoded video.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None,
             description="Optional. The maximum horizontal resolution of the encoded video.",
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None,
             description="Optional. The maximum vertical resolution of the encoded video.",
         ),
-        video_bit_rate: Optional[int] = Field(
+        video_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify a video bitrate to encode to, e.g. 500000. If omitted this will be left to encoder defaults.",
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the subtitle stream to use. If omitted no subtitles will be used.",
         ),
-        subtitle_method: Optional[str] = Field(
+        subtitle_method: str | None = Field(
             default=None, description="Optional. Specify the subtitle delivery method."
         ),
-        max_ref_frames: Optional[int] = Field(default=None, description="Optional."),
-        max_video_bit_depth: Optional[int] = Field(
+        max_ref_frames: int | None = Field(default=None, description="Optional."),
+        max_video_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum video bit depth."
         ),
-        require_avc: Optional[bool] = Field(
+        require_avc: bool | None = Field(
             default=None, description="Optional. Whether to require avc."
         ),
-        de_interlace: Optional[bool] = Field(
+        de_interlace: bool | None = Field(
             default=None, description="Optional. Whether to deinterlace the video."
         ),
-        require_non_anamorphic: Optional[bool] = Field(
+        require_non_anamorphic: bool | None = Field(
             default=None,
             description="Optional. Whether to require a non anamorphic stream.",
         ),
-        transcoding_max_audio_channels: Optional[int] = Field(
+        transcoding_max_audio_channels: int | None = Field(
             default=None,
             description="Optional. The maximum number of audio channels to transcode.",
         ),
-        cpu_core_limit: Optional[int] = Field(
+        cpu_core_limit: int | None = Field(
             default=None,
             description="Optional. The limit of how many cpu cores to use.",
         ),
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        enable_mpegts_m2_ts_mode: Optional[bool] = Field(
+        enable_mpegts_m2_ts_mode: bool | None = Field(
             default=None, description="Optional. Whether to enable the MpegtsM2Ts mode."
         ),
-        video_codec: Optional[str] = Field(
+        video_codec: str | None = Field(
             default=None,
             description="Optional. Specify a video codec to encode to, e.g. h264.",
         ),
-        subtitle_codec: Optional[str] = Field(
+        subtitle_codec: str | None = Field(
             default=None, description="Optional. Specify a subtitle codec to encode to."
         ),
-        transcode_reasons: Optional[str] = Field(
+        transcode_reasons: str | None = Field(
             default=None, description="Optional. The transcoding reason."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the audio stream to use. If omitted the first audio stream will be used.",
         ),
-        video_stream_index: Optional[int] = Field(
+        video_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the video stream to use. If omitted the first video stream will be used.",
         ),
-        context: Optional[str] = Field(
+        context: str | None = Field(
             default=None,
             description="Optional. The MediaBrowser.Model.Dlna.EncodingContext.",
         ),
-        stream_options: Optional[Dict[str, Any]] = Field(
+        stream_options: dict[str, Any] | None = Field(
             default=None, description="Optional. The streaming options."
         ),
-        enable_adaptive_bitrate_streaming: Optional[bool] = Field(
+        enable_adaptive_bitrate_streaming: bool | None = Field(
             default=None, description="Enable adaptive bitrate streaming."
         ),
-        enable_trickplay: Optional[bool] = Field(
+        enable_trickplay: bool | None = Field(
             default=None,
             description="Enable trickplay image playlists being added to master playlist.",
         ),
-        enable_audio_vbr_encoding: Optional[bool] = Field(
+        enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Whether to enable Audio Encoding."
         ),
-        always_burn_in_subtitle_when_transcoding: Optional[bool] = Field(
+        always_burn_in_subtitle_when_transcoding: bool | None = Field(
             default=None,
             description="Whether to always burn in subtitles when transcoding.",
         ),
@@ -3170,12 +3159,12 @@ def register_environment_tools(mcp: FastMCP):
         tags={"Environment"},
     )
     def get_directory_contents_tool(
-        path: Optional[str] = Field(default=None, description="The path."),
-        include_files: Optional[bool] = Field(
+        path: str | None = Field(default=None, description="The path."),
+        include_files: bool | None = Field(
             default=None,
             description="An optional filter to include or exclude files from the results. true/false.",
         ),
-        include_directories: Optional[bool] = Field(
+        include_directories: bool | None = Field(
             default=None,
             description="An optional filter to include or exclude folders from the results. true/false.",
         ),
@@ -3214,7 +3203,7 @@ def register_environment_tools(mcp: FastMCP):
         tags={"Environment"},
     )
     def get_parent_path_tool(
-        path: Optional[str] = Field(default=None, description="The path.")
+        path: str | None = Field(default=None, description="The path."),
     ) -> Any:
         """Gets the parent path of a given path."""
         api = get_client()
@@ -3222,7 +3211,7 @@ def register_environment_tools(mcp: FastMCP):
 
     @mcp.tool(name="validate_path", description="Validates path.", tags={"Environment"})
     def validate_path_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Validates path."""
         api = get_client()
@@ -3236,15 +3225,13 @@ def register_filter_tools(mcp: FastMCP):
         tags={"Filter"},
     )
     def get_query_filters_legacy_tool(
-        user_id: Optional[str] = Field(default=None, description="Optional. User id."),
-        parent_id: Optional[str] = Field(
-            default=None, description="Optional. Parent id."
-        ),
-        include_item_types: Optional[List[Any]] = Field(
+        user_id: str | None = Field(default=None, description="Optional. User id."),
+        parent_id: str | None = Field(default=None, description="Optional. Parent id."),
+        include_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on item type. This allows multiple, comma delimited.",
         ),
-        media_types: Optional[List[Any]] = Field(
+        media_types: list[Any] | None = Field(
             default=None,
             description="Optional. Filter by MediaType. Allows multiple, comma delimited.",
         ),
@@ -3262,34 +3249,34 @@ def register_filter_tools(mcp: FastMCP):
         name="get_query_filters", description="Gets query filters.", tags={"Filter"}
     )
     def get_query_filters_tool(
-        user_id: Optional[str] = Field(default=None, description="Optional. User id."),
-        parent_id: Optional[str] = Field(
+        user_id: str | None = Field(default=None, description="Optional. User id."),
+        parent_id: str | None = Field(
             default=None,
             description="Optional. Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        include_item_types: Optional[List[Any]] = Field(
+        include_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on item type. This allows multiple, comma delimited.",
         ),
-        is_airing: Optional[bool] = Field(
+        is_airing: bool | None = Field(
             default=None, description="Optional. Is item airing."
         ),
-        is_movie: Optional[bool] = Field(
+        is_movie: bool | None = Field(
             default=None, description="Optional. Is item movie."
         ),
-        is_sports: Optional[bool] = Field(
+        is_sports: bool | None = Field(
             default=None, description="Optional. Is item sports."
         ),
-        is_kids: Optional[bool] = Field(
+        is_kids: bool | None = Field(
             default=None, description="Optional. Is item kids."
         ),
-        is_news: Optional[bool] = Field(
+        is_news: bool | None = Field(
             default=None, description="Optional. Is item news."
         ),
-        is_series: Optional[bool] = Field(
+        is_series: bool | None = Field(
             default=None, description="Optional. Is item series."
         ),
-        recursive: Optional[bool] = Field(
+        recursive: bool | None = Field(
             default=None, description="Optional. Search recursive."
         ),
     ) -> Any:
@@ -3316,69 +3303,67 @@ def register_genres_tools(mcp: FastMCP):
         tags={"Genres"},
     )
     def get_genres_tool(
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        search_term: Optional[str] = Field(
-            default=None, description="The search term."
-        ),
-        parent_id: Optional[str] = Field(
+        search_term: str | None = Field(default=None, description="The search term."),
+        parent_id: str | None = Field(
             default=None,
             description="Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        exclude_item_types: Optional[List[Any]] = Field(
+        exclude_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered out based on item type. This allows multiple, comma delimited.",
         ),
-        include_item_types: Optional[List[Any]] = Field(
+        include_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered in based on item type. This allows multiple, comma delimited.",
         ),
-        is_favorite: Optional[bool] = Field(
+        is_favorite: bool | None = Field(
             default=None,
             description="Optional filter by items that are marked as favorite, or not.",
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional, the max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        name_starts_with_or_greater: Optional[str] = Field(
+        user_id: str | None = Field(default=None, description="User id."),
+        name_starts_with_or_greater: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally or greater than a given input string.",
         ),
-        name_starts_with: Optional[str] = Field(
+        name_starts_with: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally than a given input string.",
         ),
-        name_less_than: Optional[str] = Field(
+        name_less_than: str | None = Field(
             default=None,
             description="Optional filter by items whose name is equally or lesser than a given input string.",
         ),
-        sort_by: Optional[List[Any]] = Field(
+        sort_by: list[Any] | None = Field(
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited.",
         ),
-        sort_order: Optional[List[Any]] = Field(
+        sort_order: list[Any] | None = Field(
             default=None, description="Sort Order - Ascending,Descending."
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional, include image information in output."
         ),
-        enable_total_record_count: Optional[bool] = Field(
+        enable_total_record_count: bool | None = Field(
             default=None, description="Optional. Include total record count."
         ),
     ) -> Any:
@@ -3408,7 +3393,7 @@ def register_genres_tools(mcp: FastMCP):
     @mcp.tool(name="get_genre", description="Gets a genre, by name.", tags={"Genres"})
     def get_genre_tool(
         genre_name: str = Field(description="The genre name."),
-        user_id: Optional[str] = Field(default=None, description="The user id."),
+        user_id: str | None = Field(default=None, description="The user id."),
     ) -> Any:
         """Gets a genre, by name."""
         api = get_client()
@@ -3485,11 +3470,11 @@ def register_hlssegment_tools(mcp: FastMCP):
         tags={"HlsSegment"},
     )
     def stop_encoding_process_tool(
-        device_id: Optional[str] = Field(
+        device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
     ) -> Any:
@@ -3508,49 +3493,49 @@ def register_image_tools(mcp: FastMCP):
         name: str = Field(description="Artist name."),
         image_type: str = Field(description="Image type."),
         image_index: int = Field(description="Image index."),
-        tag: Optional[str] = Field(
+        tag: str | None = Field(
             default=None,
             description="Optional. Supply the cache tag from the item object to receive strong caching headers.",
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None,
             description="Determines the output format of the image - original,gif,jpg,png.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None, description="The maximum image width to return."
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None, description="The maximum image height to return."
         ),
-        percent_played: Optional[float] = Field(
+        percent_played: float | None = Field(
             default=None,
             description="Optional. Percent to render for the percent played overlay.",
         ),
-        unplayed_count: Optional[int] = Field(
+        unplayed_count: int | None = Field(
             default=None, description="Optional. Unplayed count overlay to render."
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None, description="The fixed image width to return."
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None, description="The fixed image height to return."
         ),
-        quality: Optional[int] = Field(
+        quality: int | None = Field(
             default=None,
             description="Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.",
         ),
-        fill_width: Optional[int] = Field(
+        fill_width: int | None = Field(
             default=None, description="Width of box to fill."
         ),
-        fill_height: Optional[int] = Field(
+        fill_height: int | None = Field(
             default=None, description="Height of box to fill."
         ),
-        blur: Optional[int] = Field(default=None, description="Optional. Blur image."),
-        background_color: Optional[str] = Field(
+        blur: int | None = Field(default=None, description="Optional. Blur image."),
+        background_color: str | None = Field(
             default=None,
             description="Optional. Apply a background color for transparent images.",
         ),
-        foreground_layer: Optional[str] = Field(
+        foreground_layer: str | None = Field(
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
@@ -3583,11 +3568,11 @@ def register_image_tools(mcp: FastMCP):
         tags={"Image"},
     )
     def get_splashscreen_tool(
-        tag: Optional[str] = Field(
+        tag: str | None = Field(
             default=None,
             description="Supply the cache tag from the item object to receive strong caching headers.",
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None,
             description="Determines the output format of the image - original,gif,jpg,png.",
         ),
@@ -3602,7 +3587,7 @@ def register_image_tools(mcp: FastMCP):
         tags={"Image"},
     )
     def upload_custom_splashscreen_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Uploads a custom splashscreen. The body is expected to the image contents base64 encoded."""
         api = get_client()
@@ -3624,53 +3609,53 @@ def register_image_tools(mcp: FastMCP):
     def get_genre_image_tool(
         name: str = Field(description="Genre name."),
         image_type: str = Field(description="Image type."),
-        tag: Optional[str] = Field(
+        tag: str | None = Field(
             default=None,
             description="Optional. Supply the cache tag from the item object to receive strong caching headers.",
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None,
             description="Determines the output format of the image - original,gif,jpg,png.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None, description="The maximum image width to return."
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None, description="The maximum image height to return."
         ),
-        percent_played: Optional[float] = Field(
+        percent_played: float | None = Field(
             default=None,
             description="Optional. Percent to render for the percent played overlay.",
         ),
-        unplayed_count: Optional[int] = Field(
+        unplayed_count: int | None = Field(
             default=None, description="Optional. Unplayed count overlay to render."
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None, description="The fixed image width to return."
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None, description="The fixed image height to return."
         ),
-        quality: Optional[int] = Field(
+        quality: int | None = Field(
             default=None,
             description="Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.",
         ),
-        fill_width: Optional[int] = Field(
+        fill_width: int | None = Field(
             default=None, description="Width of box to fill."
         ),
-        fill_height: Optional[int] = Field(
+        fill_height: int | None = Field(
             default=None, description="Height of box to fill."
         ),
-        blur: Optional[int] = Field(default=None, description="Optional. Blur image."),
-        background_color: Optional[str] = Field(
+        blur: int | None = Field(default=None, description="Optional. Blur image."),
+        background_color: str | None = Field(
             default=None,
             description="Optional. Apply a background color for transparent images.",
         ),
-        foreground_layer: Optional[str] = Field(
+        foreground_layer: str | None = Field(
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
-        image_index: Optional[int] = Field(default=None, description="Image index."),
+        image_index: int | None = Field(default=None, description="Image index."),
     ) -> Any:
         """Get genre image by name."""
         api = get_client()
@@ -3703,49 +3688,49 @@ def register_image_tools(mcp: FastMCP):
         name: str = Field(description="Genre name."),
         image_type: str = Field(description="Image type."),
         image_index: int = Field(description="Image index."),
-        tag: Optional[str] = Field(
+        tag: str | None = Field(
             default=None,
             description="Optional. Supply the cache tag from the item object to receive strong caching headers.",
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None,
             description="Determines the output format of the image - original,gif,jpg,png.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None, description="The maximum image width to return."
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None, description="The maximum image height to return."
         ),
-        percent_played: Optional[float] = Field(
+        percent_played: float | None = Field(
             default=None,
             description="Optional. Percent to render for the percent played overlay.",
         ),
-        unplayed_count: Optional[int] = Field(
+        unplayed_count: int | None = Field(
             default=None, description="Optional. Unplayed count overlay to render."
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None, description="The fixed image width to return."
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None, description="The fixed image height to return."
         ),
-        quality: Optional[int] = Field(
+        quality: int | None = Field(
             default=None,
             description="Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.",
         ),
-        fill_width: Optional[int] = Field(
+        fill_width: int | None = Field(
             default=None, description="Width of box to fill."
         ),
-        fill_height: Optional[int] = Field(
+        fill_height: int | None = Field(
             default=None, description="Height of box to fill."
         ),
-        blur: Optional[int] = Field(default=None, description="Optional. Blur image."),
-        background_color: Optional[str] = Field(
+        blur: int | None = Field(default=None, description="Optional. Blur image."),
+        background_color: str | None = Field(
             default=None,
             description="Optional. Apply a background color for transparent images.",
         ),
-        foreground_layer: Optional[str] = Field(
+        foreground_layer: str | None = Field(
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
@@ -3786,9 +3771,7 @@ def register_image_tools(mcp: FastMCP):
     def delete_item_image_tool(
         item_id: str = Field(description="Item id."),
         image_type: str = Field(description="Image type."),
-        image_index: Optional[int] = Field(
-            default=None, description="The image index."
-        ),
+        image_index: int | None = Field(default=None, description="The image index."),
     ) -> Any:
         """Delete an item's image."""
         api = get_client()
@@ -3800,9 +3783,7 @@ def register_image_tools(mcp: FastMCP):
     def set_item_image_tool(
         item_id: str = Field(description="Item id."),
         image_type: str = Field(description="Image type."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Set item image."""
         api = get_client()
@@ -3814,53 +3795,53 @@ def register_image_tools(mcp: FastMCP):
     def get_item_image_tool(
         item_id: str = Field(description="Item id."),
         image_type: str = Field(description="Image type."),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None, description="The maximum image width to return."
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None, description="The maximum image height to return."
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None, description="The fixed image width to return."
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None, description="The fixed image height to return."
         ),
-        quality: Optional[int] = Field(
+        quality: int | None = Field(
             default=None,
             description="Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.",
         ),
-        fill_width: Optional[int] = Field(
+        fill_width: int | None = Field(
             default=None, description="Width of box to fill."
         ),
-        fill_height: Optional[int] = Field(
+        fill_height: int | None = Field(
             default=None, description="Height of box to fill."
         ),
-        tag: Optional[str] = Field(
+        tag: str | None = Field(
             default=None,
             description="Optional. Supply the cache tag from the item object to receive strong caching headers.",
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None,
             description="Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.",
         ),
-        percent_played: Optional[float] = Field(
+        percent_played: float | None = Field(
             default=None,
             description="Optional. Percent to render for the percent played overlay.",
         ),
-        unplayed_count: Optional[int] = Field(
+        unplayed_count: int | None = Field(
             default=None, description="Optional. Unplayed count overlay to render."
         ),
-        blur: Optional[int] = Field(default=None, description="Optional. Blur image."),
-        background_color: Optional[str] = Field(
+        blur: int | None = Field(default=None, description="Optional. Blur image."),
+        background_color: str | None = Field(
             default=None,
             description="Optional. Apply a background color for transparent images.",
         ),
-        foreground_layer: Optional[str] = Field(
+        foreground_layer: str | None = Field(
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
-        image_index: Optional[int] = Field(default=None, description="Image index."),
+        image_index: int | None = Field(default=None, description="Image index."),
     ) -> Any:
         """Gets the item's image."""
         api = get_client()
@@ -3907,9 +3888,7 @@ def register_image_tools(mcp: FastMCP):
         item_id: str = Field(description="Item id."),
         image_type: str = Field(description="Image type."),
         image_index: int = Field(description="(Unused) Image index."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Set item image."""
         api = get_client()
@@ -3926,49 +3905,49 @@ def register_image_tools(mcp: FastMCP):
         item_id: str = Field(description="Item id."),
         image_type: str = Field(description="Image type."),
         image_index: int = Field(description="Image index."),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None, description="The maximum image width to return."
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None, description="The maximum image height to return."
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None, description="The fixed image width to return."
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None, description="The fixed image height to return."
         ),
-        quality: Optional[int] = Field(
+        quality: int | None = Field(
             default=None,
             description="Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.",
         ),
-        fill_width: Optional[int] = Field(
+        fill_width: int | None = Field(
             default=None, description="Width of box to fill."
         ),
-        fill_height: Optional[int] = Field(
+        fill_height: int | None = Field(
             default=None, description="Height of box to fill."
         ),
-        tag: Optional[str] = Field(
+        tag: str | None = Field(
             default=None,
             description="Optional. Supply the cache tag from the item object to receive strong caching headers.",
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None,
             description="Optional. The MediaBrowser.Model.Drawing.ImageFormat of the returned image.",
         ),
-        percent_played: Optional[float] = Field(
+        percent_played: float | None = Field(
             default=None,
             description="Optional. Percent to render for the percent played overlay.",
         ),
-        unplayed_count: Optional[int] = Field(
+        unplayed_count: int | None = Field(
             default=None, description="Optional. Unplayed count overlay to render."
         ),
-        blur: Optional[int] = Field(default=None, description="Optional. Blur image."),
-        background_color: Optional[str] = Field(
+        blur: int | None = Field(default=None, description="Optional. Blur image."),
+        background_color: str | None = Field(
             default=None,
             description="Optional. Apply a background color for transparent images.",
         ),
-        foreground_layer: Optional[str] = Field(
+        foreground_layer: str | None = Field(
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
@@ -4016,28 +3995,28 @@ def register_image_tools(mcp: FastMCP):
             description="Optional. Unplayed count overlay to render."
         ),
         image_index: int = Field(description="Image index."),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None, description="The fixed image width to return."
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None, description="The fixed image height to return."
         ),
-        quality: Optional[int] = Field(
+        quality: int | None = Field(
             default=None,
             description="Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.",
         ),
-        fill_width: Optional[int] = Field(
+        fill_width: int | None = Field(
             default=None, description="Width of box to fill."
         ),
-        fill_height: Optional[int] = Field(
+        fill_height: int | None = Field(
             default=None, description="Height of box to fill."
         ),
-        blur: Optional[int] = Field(default=None, description="Optional. Blur image."),
-        background_color: Optional[str] = Field(
+        blur: int | None = Field(default=None, description="Optional. Blur image."),
+        background_color: str | None = Field(
             default=None,
             description="Optional. Apply a background color for transparent images.",
         ),
-        foreground_layer: Optional[str] = Field(
+        foreground_layer: str | None = Field(
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
@@ -4073,7 +4052,7 @@ def register_image_tools(mcp: FastMCP):
         item_id: str = Field(description="Item id."),
         image_type: str = Field(description="Image type."),
         image_index: int = Field(description="Old image index."),
-        new_index: Optional[int] = Field(default=None, description="New image index."),
+        new_index: int | None = Field(default=None, description="New image index."),
     ) -> Any:
         """Updates the index for an item image."""
         api = get_client()
@@ -4092,53 +4071,53 @@ def register_image_tools(mcp: FastMCP):
     def get_music_genre_image_tool(
         name: str = Field(description="Music genre name."),
         image_type: str = Field(description="Image type."),
-        tag: Optional[str] = Field(
+        tag: str | None = Field(
             default=None,
             description="Optional. Supply the cache tag from the item object to receive strong caching headers.",
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None,
             description="Determines the output format of the image - original,gif,jpg,png.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None, description="The maximum image width to return."
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None, description="The maximum image height to return."
         ),
-        percent_played: Optional[float] = Field(
+        percent_played: float | None = Field(
             default=None,
             description="Optional. Percent to render for the percent played overlay.",
         ),
-        unplayed_count: Optional[int] = Field(
+        unplayed_count: int | None = Field(
             default=None, description="Optional. Unplayed count overlay to render."
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None, description="The fixed image width to return."
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None, description="The fixed image height to return."
         ),
-        quality: Optional[int] = Field(
+        quality: int | None = Field(
             default=None,
             description="Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.",
         ),
-        fill_width: Optional[int] = Field(
+        fill_width: int | None = Field(
             default=None, description="Width of box to fill."
         ),
-        fill_height: Optional[int] = Field(
+        fill_height: int | None = Field(
             default=None, description="Height of box to fill."
         ),
-        blur: Optional[int] = Field(default=None, description="Optional. Blur image."),
-        background_color: Optional[str] = Field(
+        blur: int | None = Field(default=None, description="Optional. Blur image."),
+        background_color: str | None = Field(
             default=None,
             description="Optional. Apply a background color for transparent images.",
         ),
-        foreground_layer: Optional[str] = Field(
+        foreground_layer: str | None = Field(
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
-        image_index: Optional[int] = Field(default=None, description="Image index."),
+        image_index: int | None = Field(default=None, description="Image index."),
     ) -> Any:
         """Get music genre image by name."""
         api = get_client()
@@ -4171,49 +4150,49 @@ def register_image_tools(mcp: FastMCP):
         name: str = Field(description="Music genre name."),
         image_type: str = Field(description="Image type."),
         image_index: int = Field(description="Image index."),
-        tag: Optional[str] = Field(
+        tag: str | None = Field(
             default=None,
             description="Optional. Supply the cache tag from the item object to receive strong caching headers.",
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None,
             description="Determines the output format of the image - original,gif,jpg,png.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None, description="The maximum image width to return."
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None, description="The maximum image height to return."
         ),
-        percent_played: Optional[float] = Field(
+        percent_played: float | None = Field(
             default=None,
             description="Optional. Percent to render for the percent played overlay.",
         ),
-        unplayed_count: Optional[int] = Field(
+        unplayed_count: int | None = Field(
             default=None, description="Optional. Unplayed count overlay to render."
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None, description="The fixed image width to return."
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None, description="The fixed image height to return."
         ),
-        quality: Optional[int] = Field(
+        quality: int | None = Field(
             default=None,
             description="Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.",
         ),
-        fill_width: Optional[int] = Field(
+        fill_width: int | None = Field(
             default=None, description="Width of box to fill."
         ),
-        fill_height: Optional[int] = Field(
+        fill_height: int | None = Field(
             default=None, description="Height of box to fill."
         ),
-        blur: Optional[int] = Field(default=None, description="Optional. Blur image."),
-        background_color: Optional[str] = Field(
+        blur: int | None = Field(default=None, description="Optional. Blur image."),
+        background_color: str | None = Field(
             default=None,
             description="Optional. Apply a background color for transparent images.",
         ),
-        foreground_layer: Optional[str] = Field(
+        foreground_layer: str | None = Field(
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
@@ -4246,53 +4225,53 @@ def register_image_tools(mcp: FastMCP):
     def get_person_image_tool(
         name: str = Field(description="Person name."),
         image_type: str = Field(description="Image type."),
-        tag: Optional[str] = Field(
+        tag: str | None = Field(
             default=None,
             description="Optional. Supply the cache tag from the item object to receive strong caching headers.",
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None,
             description="Determines the output format of the image - original,gif,jpg,png.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None, description="The maximum image width to return."
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None, description="The maximum image height to return."
         ),
-        percent_played: Optional[float] = Field(
+        percent_played: float | None = Field(
             default=None,
             description="Optional. Percent to render for the percent played overlay.",
         ),
-        unplayed_count: Optional[int] = Field(
+        unplayed_count: int | None = Field(
             default=None, description="Optional. Unplayed count overlay to render."
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None, description="The fixed image width to return."
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None, description="The fixed image height to return."
         ),
-        quality: Optional[int] = Field(
+        quality: int | None = Field(
             default=None,
             description="Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.",
         ),
-        fill_width: Optional[int] = Field(
+        fill_width: int | None = Field(
             default=None, description="Width of box to fill."
         ),
-        fill_height: Optional[int] = Field(
+        fill_height: int | None = Field(
             default=None, description="Height of box to fill."
         ),
-        blur: Optional[int] = Field(default=None, description="Optional. Blur image."),
-        background_color: Optional[str] = Field(
+        blur: int | None = Field(default=None, description="Optional. Blur image."),
+        background_color: str | None = Field(
             default=None,
             description="Optional. Apply a background color for transparent images.",
         ),
-        foreground_layer: Optional[str] = Field(
+        foreground_layer: str | None = Field(
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
-        image_index: Optional[int] = Field(default=None, description="Image index."),
+        image_index: int | None = Field(default=None, description="Image index."),
     ) -> Any:
         """Get person image by name."""
         api = get_client()
@@ -4325,49 +4304,49 @@ def register_image_tools(mcp: FastMCP):
         name: str = Field(description="Person name."),
         image_type: str = Field(description="Image type."),
         image_index: int = Field(description="Image index."),
-        tag: Optional[str] = Field(
+        tag: str | None = Field(
             default=None,
             description="Optional. Supply the cache tag from the item object to receive strong caching headers.",
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None,
             description="Determines the output format of the image - original,gif,jpg,png.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None, description="The maximum image width to return."
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None, description="The maximum image height to return."
         ),
-        percent_played: Optional[float] = Field(
+        percent_played: float | None = Field(
             default=None,
             description="Optional. Percent to render for the percent played overlay.",
         ),
-        unplayed_count: Optional[int] = Field(
+        unplayed_count: int | None = Field(
             default=None, description="Optional. Unplayed count overlay to render."
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None, description="The fixed image width to return."
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None, description="The fixed image height to return."
         ),
-        quality: Optional[int] = Field(
+        quality: int | None = Field(
             default=None,
             description="Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.",
         ),
-        fill_width: Optional[int] = Field(
+        fill_width: int | None = Field(
             default=None, description="Width of box to fill."
         ),
-        fill_height: Optional[int] = Field(
+        fill_height: int | None = Field(
             default=None, description="Height of box to fill."
         ),
-        blur: Optional[int] = Field(default=None, description="Optional. Blur image."),
-        background_color: Optional[str] = Field(
+        blur: int | None = Field(default=None, description="Optional. Blur image."),
+        background_color: str | None = Field(
             default=None,
             description="Optional. Apply a background color for transparent images.",
         ),
-        foreground_layer: Optional[str] = Field(
+        foreground_layer: str | None = Field(
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
@@ -4400,53 +4379,53 @@ def register_image_tools(mcp: FastMCP):
     def get_studio_image_tool(
         name: str = Field(description="Studio name."),
         image_type: str = Field(description="Image type."),
-        tag: Optional[str] = Field(
+        tag: str | None = Field(
             default=None,
             description="Optional. Supply the cache tag from the item object to receive strong caching headers.",
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None,
             description="Determines the output format of the image - original,gif,jpg,png.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None, description="The maximum image width to return."
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None, description="The maximum image height to return."
         ),
-        percent_played: Optional[float] = Field(
+        percent_played: float | None = Field(
             default=None,
             description="Optional. Percent to render for the percent played overlay.",
         ),
-        unplayed_count: Optional[int] = Field(
+        unplayed_count: int | None = Field(
             default=None, description="Optional. Unplayed count overlay to render."
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None, description="The fixed image width to return."
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None, description="The fixed image height to return."
         ),
-        quality: Optional[int] = Field(
+        quality: int | None = Field(
             default=None,
             description="Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.",
         ),
-        fill_width: Optional[int] = Field(
+        fill_width: int | None = Field(
             default=None, description="Width of box to fill."
         ),
-        fill_height: Optional[int] = Field(
+        fill_height: int | None = Field(
             default=None, description="Height of box to fill."
         ),
-        blur: Optional[int] = Field(default=None, description="Optional. Blur image."),
-        background_color: Optional[str] = Field(
+        blur: int | None = Field(default=None, description="Optional. Blur image."),
+        background_color: str | None = Field(
             default=None,
             description="Optional. Apply a background color for transparent images.",
         ),
-        foreground_layer: Optional[str] = Field(
+        foreground_layer: str | None = Field(
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
-        image_index: Optional[int] = Field(default=None, description="Image index."),
+        image_index: int | None = Field(default=None, description="Image index."),
     ) -> Any:
         """Get studio image by name."""
         api = get_client()
@@ -4479,49 +4458,49 @@ def register_image_tools(mcp: FastMCP):
         name: str = Field(description="Studio name."),
         image_type: str = Field(description="Image type."),
         image_index: int = Field(description="Image index."),
-        tag: Optional[str] = Field(
+        tag: str | None = Field(
             default=None,
             description="Optional. Supply the cache tag from the item object to receive strong caching headers.",
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None,
             description="Determines the output format of the image - original,gif,jpg,png.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None, description="The maximum image width to return."
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None, description="The maximum image height to return."
         ),
-        percent_played: Optional[float] = Field(
+        percent_played: float | None = Field(
             default=None,
             description="Optional. Percent to render for the percent played overlay.",
         ),
-        unplayed_count: Optional[int] = Field(
+        unplayed_count: int | None = Field(
             default=None, description="Optional. Unplayed count overlay to render."
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None, description="The fixed image width to return."
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None, description="The fixed image height to return."
         ),
-        quality: Optional[int] = Field(
+        quality: int | None = Field(
             default=None,
             description="Optional. Quality setting, from 0-100. Defaults to 90 and should suffice in most cases.",
         ),
-        fill_width: Optional[int] = Field(
+        fill_width: int | None = Field(
             default=None, description="Width of box to fill."
         ),
-        fill_height: Optional[int] = Field(
+        fill_height: int | None = Field(
             default=None, description="Height of box to fill."
         ),
-        blur: Optional[int] = Field(default=None, description="Optional. Blur image."),
-        background_color: Optional[str] = Field(
+        blur: int | None = Field(default=None, description="Optional. Blur image."),
+        background_color: str | None = Field(
             default=None,
             description="Optional. Apply a background color for transparent images.",
         ),
-        foreground_layer: Optional[str] = Field(
+        foreground_layer: str | None = Field(
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
@@ -4552,10 +4531,8 @@ def register_image_tools(mcp: FastMCP):
         name="post_user_image", description="Sets the user image.", tags={"Image"}
     )
     def post_user_image_tool(
-        user_id: Optional[str] = Field(default=None, description="User Id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        user_id: str | None = Field(default=None, description="User Id."),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Sets the user image."""
         api = get_client()
@@ -4565,7 +4542,7 @@ def register_image_tools(mcp: FastMCP):
         name="delete_user_image", description="Delete the user's image.", tags={"Image"}
     )
     def delete_user_image_tool(
-        user_id: Optional[str] = Field(default=None, description="User Id.")
+        user_id: str | None = Field(default=None, description="User Id."),
     ) -> Any:
         """Delete the user's image."""
         api = get_client()
@@ -4575,12 +4552,12 @@ def register_image_tools(mcp: FastMCP):
         name="get_user_image", description="Get user profile image.", tags={"Image"}
     )
     def get_user_image_tool(
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        tag: Optional[str] = Field(
+        user_id: str | None = Field(default=None, description="User id."),
+        tag: str | None = Field(
             default=None,
             description="Optional. Supply the cache tag from the item object to receive strong caching headers.",
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None,
             description="Determines the output format of the image - original,gif,jpg,png.",
         ),
@@ -4598,29 +4575,29 @@ def register_instantmix_tools(mcp: FastMCP):
     )
     def get_instant_mix_from_album_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
@@ -4645,29 +4622,29 @@ def register_instantmix_tools(mcp: FastMCP):
     )
     def get_instant_mix_from_artists_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
@@ -4691,30 +4668,30 @@ def register_instantmix_tools(mcp: FastMCP):
         tags={"InstantMix"},
     )
     def get_instant_mix_from_artists2_tool(
-        id: Optional[str] = Field(default=None, description="The item id."),
-        user_id: Optional[str] = Field(
+        id: str | None = Field(default=None, description="The item id."),
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
@@ -4739,29 +4716,29 @@ def register_instantmix_tools(mcp: FastMCP):
     )
     def get_instant_mix_from_item_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
@@ -4786,29 +4763,29 @@ def register_instantmix_tools(mcp: FastMCP):
     )
     def get_instant_mix_from_music_genre_by_name_tool(
         name: str = Field(description="The genre name."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
@@ -4832,30 +4809,30 @@ def register_instantmix_tools(mcp: FastMCP):
         tags={"InstantMix"},
     )
     def get_instant_mix_from_music_genre_by_id_tool(
-        id: Optional[str] = Field(default=None, description="The item id."),
-        user_id: Optional[str] = Field(
+        id: str | None = Field(default=None, description="The item id."),
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
@@ -4880,29 +4857,29 @@ def register_instantmix_tools(mcp: FastMCP):
     )
     def get_instant_mix_from_playlist_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
@@ -4927,29 +4904,29 @@ def register_instantmix_tools(mcp: FastMCP):
     )
     def get_instant_mix_from_song_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
@@ -4986,13 +4963,11 @@ def register_itemlookup_tools(mcp: FastMCP):
     )
     def apply_search_criteria_tool(
         item_id: str = Field(description="Item id."),
-        replace_all_images: Optional[bool] = Field(
+        replace_all_images: bool | None = Field(
             default=None,
             description="Optional. Whether or not to replace all images. Default: True.",
         ),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Applies search criteria to an item and refreshes metadata."""
         api = get_client()
@@ -5006,7 +4981,7 @@ def register_itemlookup_tools(mcp: FastMCP):
         tags={"ItemLookup"},
     )
     def get_book_remote_search_results_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Get book remote search."""
         api = get_client()
@@ -5018,7 +4993,7 @@ def register_itemlookup_tools(mcp: FastMCP):
         tags={"ItemLookup"},
     )
     def get_box_set_remote_search_results_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Get box set remote search."""
         api = get_client()
@@ -5030,7 +5005,7 @@ def register_itemlookup_tools(mcp: FastMCP):
         tags={"ItemLookup"},
     )
     def get_movie_remote_search_results_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Get movie remote search."""
         api = get_client()
@@ -5042,7 +5017,7 @@ def register_itemlookup_tools(mcp: FastMCP):
         tags={"ItemLookup"},
     )
     def get_music_album_remote_search_results_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Get music album remote search."""
         api = get_client()
@@ -5054,7 +5029,7 @@ def register_itemlookup_tools(mcp: FastMCP):
         tags={"ItemLookup"},
     )
     def get_music_artist_remote_search_results_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Get music artist remote search."""
         api = get_client()
@@ -5066,7 +5041,7 @@ def register_itemlookup_tools(mcp: FastMCP):
         tags={"ItemLookup"},
     )
     def get_music_video_remote_search_results_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Get music video remote search."""
         api = get_client()
@@ -5078,7 +5053,7 @@ def register_itemlookup_tools(mcp: FastMCP):
         tags={"ItemLookup"},
     )
     def get_person_remote_search_results_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Get person remote search."""
         api = get_client()
@@ -5090,7 +5065,7 @@ def register_itemlookup_tools(mcp: FastMCP):
         tags={"ItemLookup"},
     )
     def get_series_remote_search_results_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Get series remote search."""
         api = get_client()
@@ -5102,7 +5077,7 @@ def register_itemlookup_tools(mcp: FastMCP):
         tags={"ItemLookup"},
     )
     def get_trailer_remote_search_results_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Get trailer remote search."""
         api = get_client()
@@ -5117,21 +5092,21 @@ def register_itemrefresh_tools(mcp: FastMCP):
     )
     def refresh_item_tool(
         item_id: str = Field(description="Item id."),
-        metadata_refresh_mode: Optional[str] = Field(
+        metadata_refresh_mode: str | None = Field(
             default=None, description="(Optional) Specifies the metadata refresh mode."
         ),
-        image_refresh_mode: Optional[str] = Field(
+        image_refresh_mode: str | None = Field(
             default=None, description="(Optional) Specifies the image refresh mode."
         ),
-        replace_all_metadata: Optional[bool] = Field(
+        replace_all_metadata: bool | None = Field(
             default=None,
             description="(Optional) Determines if metadata should be replaced. Only applicable if mode is FullRefresh.",
         ),
-        replace_all_images: Optional[bool] = Field(
+        replace_all_images: bool | None = Field(
             default=None,
             description="(Optional) Determines if images should be replaced. Only applicable if mode is FullRefresh.",
         ),
-        regenerate_trickplay: Optional[bool] = Field(
+        regenerate_trickplay: bool | None = Field(
             default=None,
             description="(Optional) Determines if trickplay images should be replaced. Only applicable if mode is FullRefresh.",
         ),
@@ -5153,324 +5128,324 @@ def register_items_tools(mcp: FastMCP):
         name="get_items", description="Gets items based on a query.", tags={"Items"}
     )
     def get_items_tool(
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="The user id supplied as query parameter; this is required when not using an API key.",
         ),
-        max_official_rating: Optional[str] = Field(
+        max_official_rating: str | None = Field(
             default=None,
             description="Optional filter by maximum official rating (PG, PG-13, TV-MA, etc).",
         ),
-        has_theme_song: Optional[bool] = Field(
+        has_theme_song: bool | None = Field(
             default=None, description="Optional filter by items with theme songs."
         ),
-        has_theme_video: Optional[bool] = Field(
+        has_theme_video: bool | None = Field(
             default=None, description="Optional filter by items with theme videos."
         ),
-        has_subtitles: Optional[bool] = Field(
+        has_subtitles: bool | None = Field(
             default=None, description="Optional filter by items with subtitles."
         ),
-        has_special_feature: Optional[bool] = Field(
+        has_special_feature: bool | None = Field(
             default=None, description="Optional filter by items with special features."
         ),
-        has_trailer: Optional[bool] = Field(
+        has_trailer: bool | None = Field(
             default=None, description="Optional filter by items with trailers."
         ),
-        adjacent_to: Optional[str] = Field(
+        adjacent_to: str | None = Field(
             default=None,
             description="Optional. Return items that are siblings of a supplied item.",
         ),
-        index_number: Optional[int] = Field(
+        index_number: int | None = Field(
             default=None, description="Optional filter by index number."
         ),
-        parent_index_number: Optional[int] = Field(
+        parent_index_number: int | None = Field(
             default=None, description="Optional filter by parent index number."
         ),
-        has_parental_rating: Optional[bool] = Field(
+        has_parental_rating: bool | None = Field(
             default=None,
             description="Optional filter by items that have or do not have a parental rating.",
         ),
-        is_hd: Optional[bool] = Field(
+        is_hd: bool | None = Field(
             default=None, description="Optional filter by items that are HD or not."
         ),
-        is4_k: Optional[bool] = Field(
+        is4_k: bool | None = Field(
             default=None, description="Optional filter by items that are 4K or not."
         ),
-        location_types: Optional[List[Any]] = Field(
+        location_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on LocationType. This allows multiple, comma delimited.",
         ),
-        exclude_location_types: Optional[List[Any]] = Field(
+        exclude_location_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on the LocationType. This allows multiple, comma delimited.",
         ),
-        is_missing: Optional[bool] = Field(
+        is_missing: bool | None = Field(
             default=None,
             description="Optional filter by items that are missing episodes or not.",
         ),
-        is_unaired: Optional[bool] = Field(
+        is_unaired: bool | None = Field(
             default=None,
             description="Optional filter by items that are unaired episodes or not.",
         ),
-        min_community_rating: Optional[float] = Field(
+        min_community_rating: float | None = Field(
             default=None, description="Optional filter by minimum community rating."
         ),
-        min_critic_rating: Optional[float] = Field(
+        min_critic_rating: float | None = Field(
             default=None, description="Optional filter by minimum critic rating."
         ),
-        min_premiere_date: Optional[str] = Field(
+        min_premiere_date: str | None = Field(
             default=None,
             description="Optional. The minimum premiere date. Format = ISO.",
         ),
-        min_date_last_saved: Optional[str] = Field(
+        min_date_last_saved: str | None = Field(
             default=None,
             description="Optional. The minimum last saved date. Format = ISO.",
         ),
-        min_date_last_saved_for_user: Optional[str] = Field(
+        min_date_last_saved_for_user: str | None = Field(
             default=None,
             description="Optional. The minimum last saved date for the current user. Format = ISO.",
         ),
-        max_premiere_date: Optional[str] = Field(
+        max_premiere_date: str | None = Field(
             default=None,
             description="Optional. The maximum premiere date. Format = ISO.",
         ),
-        has_overview: Optional[bool] = Field(
+        has_overview: bool | None = Field(
             default=None,
             description="Optional filter by items that have an overview or not.",
         ),
-        has_imdb_id: Optional[bool] = Field(
+        has_imdb_id: bool | None = Field(
             default=None,
             description="Optional filter by items that have an IMDb id or not.",
         ),
-        has_tmdb_id: Optional[bool] = Field(
+        has_tmdb_id: bool | None = Field(
             default=None,
             description="Optional filter by items that have a TMDb id or not.",
         ),
-        has_tvdb_id: Optional[bool] = Field(
+        has_tvdb_id: bool | None = Field(
             default=None,
             description="Optional filter by items that have a TVDb id or not.",
         ),
-        is_movie: Optional[bool] = Field(
+        is_movie: bool | None = Field(
             default=None, description="Optional filter for live tv movies."
         ),
-        is_series: Optional[bool] = Field(
+        is_series: bool | None = Field(
             default=None, description="Optional filter for live tv series."
         ),
-        is_news: Optional[bool] = Field(
+        is_news: bool | None = Field(
             default=None, description="Optional filter for live tv news."
         ),
-        is_kids: Optional[bool] = Field(
+        is_kids: bool | None = Field(
             default=None, description="Optional filter for live tv kids."
         ),
-        is_sports: Optional[bool] = Field(
+        is_sports: bool | None = Field(
             default=None, description="Optional filter for live tv sports."
         ),
-        exclude_item_ids: Optional[List[Any]] = Field(
+        exclude_item_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered by excluding item ids. This allows multiple, comma delimited.",
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        recursive: Optional[bool] = Field(
+        recursive: bool | None = Field(
             default=None,
             description="When searching within folders, this determines whether or not the search will be recursive. true/false.",
         ),
-        search_term: Optional[str] = Field(
+        search_term: str | None = Field(
             default=None, description="Optional. Filter based on a search term."
         ),
-        sort_order: Optional[List[Any]] = Field(
+        sort_order: list[Any] | None = Field(
             default=None, description="Sort Order - Ascending, Descending."
         ),
-        parent_id: Optional[str] = Field(
+        parent_id: str | None = Field(
             default=None,
             description="Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines.",
         ),
-        exclude_item_types: Optional[List[Any]] = Field(
+        exclude_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on item type. This allows multiple, comma delimited.",
         ),
-        include_item_types: Optional[List[Any]] = Field(
+        include_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on the item type. This allows multiple, comma delimited.",
         ),
-        filters: Optional[List[Any]] = Field(
+        filters: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional filters to apply. This allows multiple, comma delimited. Options: IsFolder, IsNotFolder, IsUnplayed, IsPlayed, IsFavorite, IsResumable, Likes, Dislikes.",
         ),
-        is_favorite: Optional[bool] = Field(
+        is_favorite: bool | None = Field(
             default=None,
             description="Optional filter by items that are marked as favorite, or not.",
         ),
-        media_types: Optional[List[Any]] = Field(
+        media_types: list[Any] | None = Field(
             default=None,
             description="Optional filter by MediaType. Allows multiple, comma delimited.",
         ),
-        image_types: Optional[List[Any]] = Field(
+        image_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on those containing image types. This allows multiple, comma delimited.",
         ),
-        sort_by: Optional[List[Any]] = Field(
+        sort_by: list[Any] | None = Field(
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited. Options: Album, AlbumArtist, Artist, Budget, CommunityRating, CriticRating, DateCreated, DatePlayed, PlayCount, PremiereDate, ProductionYear, SortName, Random, Revenue, Runtime.",
         ),
-        is_played: Optional[bool] = Field(
+        is_played: bool | None = Field(
             default=None,
             description="Optional filter by items that are played, or not.",
         ),
-        genres: Optional[List[Any]] = Field(
+        genres: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on genre. This allows multiple, pipe delimited.",
         ),
-        official_ratings: Optional[List[Any]] = Field(
+        official_ratings: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on OfficialRating. This allows multiple, pipe delimited.",
         ),
-        tags: Optional[List[Any]] = Field(
+        tags: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on tag. This allows multiple, pipe delimited.",
         ),
-        years: Optional[List[Any]] = Field(
+        years: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on production year. This allows multiple, comma delimited.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional, include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional, the max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        person: Optional[str] = Field(
+        person: str | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified person.",
         ),
-        person_ids: Optional[List[Any]] = Field(
+        person_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified person id.",
         ),
-        person_types: Optional[List[Any]] = Field(
+        person_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, along with Person, results will be filtered to include only those containing the specified person and PersonType. Allows multiple, comma-delimited.",
         ),
-        studios: Optional[List[Any]] = Field(
+        studios: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on studio. This allows multiple, pipe delimited.",
         ),
-        artists: Optional[List[Any]] = Field(
+        artists: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on artists. This allows multiple, pipe delimited.",
         ),
-        exclude_artist_ids: Optional[List[Any]] = Field(
+        exclude_artist_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on artist id. This allows multiple, pipe delimited.",
         ),
-        artist_ids: Optional[List[Any]] = Field(
+        artist_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified artist id.",
         ),
-        album_artist_ids: Optional[List[Any]] = Field(
+        album_artist_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified album artist id.",
         ),
-        contributing_artist_ids: Optional[List[Any]] = Field(
+        contributing_artist_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified contributing artist id.",
         ),
-        albums: Optional[List[Any]] = Field(
+        albums: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on album. This allows multiple, pipe delimited.",
         ),
-        album_ids: Optional[List[Any]] = Field(
+        album_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on album id. This allows multiple, pipe delimited.",
         ),
-        ids: Optional[List[Any]] = Field(
+        ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specific items are needed, specify a list of item id's to retrieve. This allows multiple, comma delimited.",
         ),
-        video_types: Optional[List[Any]] = Field(
+        video_types: list[Any] | None = Field(
             default=None,
             description="Optional filter by VideoType (videofile, dvd, bluray, iso). Allows multiple, comma delimited.",
         ),
-        min_official_rating: Optional[str] = Field(
+        min_official_rating: str | None = Field(
             default=None,
             description="Optional filter by minimum official rating (PG, PG-13, TV-MA, etc).",
         ),
-        is_locked: Optional[bool] = Field(
+        is_locked: bool | None = Field(
             default=None, description="Optional filter by items that are locked."
         ),
-        is_place_holder: Optional[bool] = Field(
+        is_place_holder: bool | None = Field(
             default=None, description="Optional filter by items that are placeholders."
         ),
-        has_official_rating: Optional[bool] = Field(
+        has_official_rating: bool | None = Field(
             default=None,
             description="Optional filter by items that have official ratings.",
         ),
-        collapse_box_set_items: Optional[bool] = Field(
+        collapse_box_set_items: bool | None = Field(
             default=None,
             description="Whether or not to hide items behind their boxsets.",
         ),
-        min_width: Optional[int] = Field(
+        min_width: int | None = Field(
             default=None,
             description="Optional. Filter by the minimum width of the item.",
         ),
-        min_height: Optional[int] = Field(
+        min_height: int | None = Field(
             default=None,
             description="Optional. Filter by the minimum height of the item.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None,
             description="Optional. Filter by the maximum width of the item.",
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None,
             description="Optional. Filter by the maximum height of the item.",
         ),
-        is3_d: Optional[bool] = Field(
+        is3_d: bool | None = Field(
             default=None, description="Optional filter by items that are 3D, or not."
         ),
-        series_status: Optional[List[Any]] = Field(
+        series_status: list[Any] | None = Field(
             default=None,
             description="Optional filter by Series Status. Allows multiple, comma delimited.",
         ),
-        name_starts_with_or_greater: Optional[str] = Field(
+        name_starts_with_or_greater: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally or greater than a given input string.",
         ),
-        name_starts_with: Optional[str] = Field(
+        name_starts_with: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally than a given input string.",
         ),
-        name_less_than: Optional[str] = Field(
+        name_less_than: str | None = Field(
             default=None,
             description="Optional filter by items whose name is equally or lesser than a given input string.",
         ),
-        studio_ids: Optional[List[Any]] = Field(
+        studio_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on studio id. This allows multiple, pipe delimited.",
         ),
-        genre_ids: Optional[List[Any]] = Field(
+        genre_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on genre id. This allows multiple, pipe delimited.",
         ),
-        enable_total_record_count: Optional[bool] = Field(
+        enable_total_record_count: bool | None = Field(
             default=None, description="Optional. Enable the total record count."
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional, include image information in output."
         ),
     ) -> Any:
@@ -5570,7 +5545,7 @@ def register_items_tools(mcp: FastMCP):
     )
     def get_item_user_data_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(default=None, description="The user id."),
+        user_id: str | None = Field(default=None, description="The user id."),
     ) -> Any:
         """Get Item User Data."""
         api = get_client()
@@ -5583,10 +5558,8 @@ def register_items_tools(mcp: FastMCP):
     )
     def update_item_user_data_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(default=None, description="The user id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        user_id: str | None = Field(default=None, description="The user id."),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Update Item User Data."""
         api = get_client()
@@ -5598,52 +5571,48 @@ def register_items_tools(mcp: FastMCP):
         tags={"Items"},
     )
     def get_resume_items_tool(
-        user_id: Optional[str] = Field(default=None, description="The user id."),
-        start_index: Optional[int] = Field(
-            default=None, description="The start index."
-        ),
-        limit: Optional[int] = Field(default=None, description="The item limit."),
-        search_term: Optional[str] = Field(
-            default=None, description="The search term."
-        ),
-        parent_id: Optional[str] = Field(
+        user_id: str | None = Field(default=None, description="The user id."),
+        start_index: int | None = Field(default=None, description="The start index."),
+        limit: int | None = Field(default=None, description="The item limit."),
+        search_term: str | None = Field(default=None, description="The search term."),
+        parent_id: str | None = Field(
             default=None,
             description="Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines.",
         ),
-        media_types: Optional[List[Any]] = Field(
+        media_types: list[Any] | None = Field(
             default=None,
             description="Optional. Filter by MediaType. Allows multiple, comma delimited.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        exclude_item_types: Optional[List[Any]] = Field(
+        exclude_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on item type. This allows multiple, comma delimited.",
         ),
-        include_item_types: Optional[List[Any]] = Field(
+        include_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on the item type. This allows multiple, comma delimited.",
         ),
-        enable_total_record_count: Optional[bool] = Field(
+        enable_total_record_count: bool | None = Field(
             default=None, description="Optional. Enable the total record count."
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        exclude_active_sessions: Optional[bool] = Field(
+        exclude_active_sessions: bool | None = Field(
             default=None,
             description="Optional. Whether to exclude the currently active sessions.",
         ),
@@ -5676,7 +5645,7 @@ def register_library_tools(mcp: FastMCP):
         tags={"Library"},
     )
     def delete_items_tool(
-        ids: Optional[List[Any]] = Field(default=None, description="The item ids.")
+        ids: list[Any] | None = Field(default=None, description="The item ids."),
     ) -> Any:
         """Deletes items from the library and filesystem."""
         api = get_client()
@@ -5697,18 +5666,18 @@ def register_library_tools(mcp: FastMCP):
     )
     def get_similar_albums_tool(
         item_id: str = Field(description="The item id."),
-        exclude_artist_ids: Optional[List[Any]] = Field(
+        exclude_artist_ids: list[Any] | None = Field(
             default=None, description="Exclude artist ids."
         ),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
         ),
@@ -5728,18 +5697,18 @@ def register_library_tools(mcp: FastMCP):
     )
     def get_similar_artists_tool(
         item_id: str = Field(description="The item id."),
-        exclude_artist_ids: Optional[List[Any]] = Field(
+        exclude_artist_ids: list[Any] | None = Field(
             default=None, description="Exclude artist ids."
         ),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
         ),
@@ -5761,7 +5730,7 @@ def register_library_tools(mcp: FastMCP):
     )
     def get_ancestors_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
@@ -5803,18 +5772,18 @@ def register_library_tools(mcp: FastMCP):
     )
     def get_similar_items_tool(
         item_id: str = Field(description="The item id."),
-        exclude_artist_ids: Optional[List[Any]] = Field(
+        exclude_artist_ids: list[Any] | None = Field(
             default=None, description="Exclude artist ids."
         ),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
         ),
@@ -5836,19 +5805,19 @@ def register_library_tools(mcp: FastMCP):
     )
     def get_theme_media_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        inherit_from_parent: Optional[bool] = Field(
+        inherit_from_parent: bool | None = Field(
             default=None,
             description="Optional. Determines whether or not parent items should be searched for theme media.",
         ),
-        sort_by: Optional[List[Any]] = Field(
+        sort_by: list[Any] | None = Field(
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited. Options: Album, AlbumArtist, Artist, Budget, CommunityRating, CriticRating, DateCreated, DatePlayed, PlayCount, PremiereDate, ProductionYear, SortName, Random, Revenue, Runtime.",
         ),
-        sort_order: Optional[List[Any]] = Field(
+        sort_order: list[Any] | None = Field(
             default=None, description="Optional. Sort Order - Ascending, Descending."
         ),
     ) -> Any:
@@ -5869,19 +5838,19 @@ def register_library_tools(mcp: FastMCP):
     )
     def get_theme_songs_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        inherit_from_parent: Optional[bool] = Field(
+        inherit_from_parent: bool | None = Field(
             default=None,
             description="Optional. Determines whether or not parent items should be searched for theme media.",
         ),
-        sort_by: Optional[List[Any]] = Field(
+        sort_by: list[Any] | None = Field(
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited. Options: Album, AlbumArtist, Artist, Budget, CommunityRating, CriticRating, DateCreated, DatePlayed, PlayCount, PremiereDate, ProductionYear, SortName, Random, Revenue, Runtime.",
         ),
-        sort_order: Optional[List[Any]] = Field(
+        sort_order: list[Any] | None = Field(
             default=None, description="Optional. Sort Order - Ascending, Descending."
         ),
     ) -> Any:
@@ -5902,19 +5871,19 @@ def register_library_tools(mcp: FastMCP):
     )
     def get_theme_videos_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        inherit_from_parent: Optional[bool] = Field(
+        inherit_from_parent: bool | None = Field(
             default=None,
             description="Optional. Determines whether or not parent items should be searched for theme media.",
         ),
-        sort_by: Optional[List[Any]] = Field(
+        sort_by: list[Any] | None = Field(
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited. Options: Album, AlbumArtist, Artist, Budget, CommunityRating, CriticRating, DateCreated, DatePlayed, PlayCount, PremiereDate, ProductionYear, SortName, Random, Revenue, Runtime.",
         ),
-        sort_order: Optional[List[Any]] = Field(
+        sort_order: list[Any] | None = Field(
             default=None, description="Optional. Sort Order - Ascending, Descending."
         ),
     ) -> Any:
@@ -5930,11 +5899,11 @@ def register_library_tools(mcp: FastMCP):
 
     @mcp.tool(name="get_item_counts", description="Get item counts.", tags={"Library"})
     def get_item_counts_tool(
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Get counts from a specific user's library.",
         ),
-        is_favorite: Optional[bool] = Field(
+        is_favorite: bool | None = Field(
             default=None, description="Optional. Get counts of favorite items."
         ),
     ) -> Any:
@@ -5948,10 +5917,10 @@ def register_library_tools(mcp: FastMCP):
         tags={"Library"},
     )
     def get_library_options_info_tool(
-        library_content_type: Optional[str] = Field(
+        library_content_type: str | None = Field(
             default=None, description="Library content type."
         ),
-        is_new_library: Optional[bool] = Field(
+        is_new_library: bool | None = Field(
             default=None, description="Whether this is a new library."
         ),
     ) -> Any:
@@ -5967,7 +5936,7 @@ def register_library_tools(mcp: FastMCP):
         tags={"Library"},
     )
     def post_updated_media_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Reports that new movies have been added by an external source."""
         api = get_client()
@@ -5979,10 +5948,10 @@ def register_library_tools(mcp: FastMCP):
         tags={"Library"},
     )
     def get_media_folders_tool(
-        is_hidden: Optional[bool] = Field(
+        is_hidden: bool | None = Field(
             default=None,
             description="Optional. Filter by folders that are marked hidden, or not.",
-        )
+        ),
     ) -> Any:
         """Gets all user media folders."""
         api = get_client()
@@ -5994,8 +5963,8 @@ def register_library_tools(mcp: FastMCP):
         tags={"Library"},
     )
     def post_added_movies_tool(
-        tmdb_id: Optional[str] = Field(default=None, description="The tmdbId."),
-        imdb_id: Optional[str] = Field(default=None, description="The imdbId."),
+        tmdb_id: str | None = Field(default=None, description="The tmdbId."),
+        imdb_id: str | None = Field(default=None, description="The imdbId."),
     ) -> Any:
         """Reports that new movies have been added by an external source."""
         api = get_client()
@@ -6007,8 +5976,8 @@ def register_library_tools(mcp: FastMCP):
         tags={"Library"},
     )
     def post_updated_movies_tool(
-        tmdb_id: Optional[str] = Field(default=None, description="The tmdbId."),
-        imdb_id: Optional[str] = Field(default=None, description="The imdbId."),
+        tmdb_id: str | None = Field(default=None, description="The tmdbId."),
+        imdb_id: str | None = Field(default=None, description="The imdbId."),
     ) -> Any:
         """Reports that new movies have been added by an external source."""
         api = get_client()
@@ -6038,7 +6007,7 @@ def register_library_tools(mcp: FastMCP):
         tags={"Library"},
     )
     def post_added_series_tool(
-        tvdb_id: Optional[str] = Field(default=None, description="The tvdbId.")
+        tvdb_id: str | None = Field(default=None, description="The tvdbId."),
     ) -> Any:
         """Reports that new episodes of a series have been added by an external source."""
         api = get_client()
@@ -6050,7 +6019,7 @@ def register_library_tools(mcp: FastMCP):
         tags={"Library"},
     )
     def post_updated_series_tool(
-        tvdb_id: Optional[str] = Field(default=None, description="The tvdbId.")
+        tvdb_id: str | None = Field(default=None, description="The tvdbId."),
     ) -> Any:
         """Reports that new episodes of a series have been added by an external source."""
         api = get_client()
@@ -6061,18 +6030,18 @@ def register_library_tools(mcp: FastMCP):
     )
     def get_similar_movies_tool(
         item_id: str = Field(description="The item id."),
-        exclude_artist_ids: Optional[List[Any]] = Field(
+        exclude_artist_ids: list[Any] | None = Field(
             default=None, description="Exclude artist ids."
         ),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
         ),
@@ -6092,18 +6061,18 @@ def register_library_tools(mcp: FastMCP):
     )
     def get_similar_shows_tool(
         item_id: str = Field(description="The item id."),
-        exclude_artist_ids: Optional[List[Any]] = Field(
+        exclude_artist_ids: list[Any] | None = Field(
             default=None, description="Exclude artist ids."
         ),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
         ),
@@ -6123,18 +6092,18 @@ def register_library_tools(mcp: FastMCP):
     )
     def get_similar_trailers_tool(
         item_id: str = Field(description="The item id."),
-        exclude_artist_ids: Optional[List[Any]] = Field(
+        exclude_artist_ids: list[Any] | None = Field(
             default=None, description="Exclude artist ids."
         ),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
         ),
@@ -6154,9 +6123,7 @@ def register_itemupdate_tools(mcp: FastMCP):
     @mcp.tool(name="update_item", description="Updates an item.", tags={"ItemUpdate"})
     def update_item_tool(
         item_id: str = Field(description="The item id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Updates an item."""
         api = get_client()
@@ -6169,7 +6136,7 @@ def register_itemupdate_tools(mcp: FastMCP):
     )
     def update_item_content_type_tool(
         item_id: str = Field(description="The item id."),
-        content_type: Optional[str] = Field(
+        content_type: str | None = Field(
             default=None, description="The content type of the item."
         ),
     ) -> Any:
@@ -6198,7 +6165,7 @@ def register_userlibrary_tools(mcp: FastMCP):
     )
     def get_item_tool(
         item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
+        user_id: str | None = Field(default=None, description="User id."),
     ) -> Any:
         """Gets an item from a user's library."""
         api = get_client()
@@ -6211,7 +6178,7 @@ def register_userlibrary_tools(mcp: FastMCP):
     )
     def get_intros_tool(
         item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
+        user_id: str | None = Field(default=None, description="User id."),
     ) -> Any:
         """Gets intros to play before the main media item plays."""
         api = get_client()
@@ -6224,7 +6191,7 @@ def register_userlibrary_tools(mcp: FastMCP):
     )
     def get_local_trailers_tool(
         item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
+        user_id: str | None = Field(default=None, description="User id."),
     ) -> Any:
         """Gets local trailers for an item."""
         api = get_client()
@@ -6237,7 +6204,7 @@ def register_userlibrary_tools(mcp: FastMCP):
     )
     def get_special_features_tool(
         item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
+        user_id: str | None = Field(default=None, description="User id."),
     ) -> Any:
         """Gets special features for an item."""
         api = get_client()
@@ -6247,38 +6214,38 @@ def register_userlibrary_tools(mcp: FastMCP):
         name="get_latest_media", description="Gets latest media.", tags={"UserLibrary"}
     )
     def get_latest_media_tool(
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        parent_id: Optional[str] = Field(
+        user_id: str | None = Field(default=None, description="User id."),
+        parent_id: str | None = Field(
             default=None,
             description="Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        include_item_types: Optional[List[Any]] = Field(
+        include_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on item type. This allows multiple, comma delimited.",
         ),
-        is_played: Optional[bool] = Field(
+        is_played: bool | None = Field(
             default=None, description="Filter by items that are played, or not."
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. include image information in output."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. the max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. include user data."
         ),
-        limit: Optional[int] = Field(default=None, description="Return item limit."),
-        group_items: Optional[bool] = Field(
+        limit: int | None = Field(default=None, description="Return item limit."),
+        group_items: bool | None = Field(
             default=None,
             description="Whether or not to group items into a parent container.",
         ),
@@ -6305,7 +6272,7 @@ def register_userlibrary_tools(mcp: FastMCP):
         tags={"UserLibrary"},
     )
     def get_root_folder_tool(
-        user_id: Optional[str] = Field(default=None, description="User id.")
+        user_id: str | None = Field(default=None, description="User id."),
     ) -> Any:
         """Gets the root folder from a user's library."""
         api = get_client()
@@ -6318,7 +6285,7 @@ def register_userlibrary_tools(mcp: FastMCP):
     )
     def mark_favorite_item_tool(
         item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
+        user_id: str | None = Field(default=None, description="User id."),
     ) -> Any:
         """Marks an item as a favorite."""
         api = get_client()
@@ -6331,7 +6298,7 @@ def register_userlibrary_tools(mcp: FastMCP):
     )
     def unmark_favorite_item_tool(
         item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
+        user_id: str | None = Field(default=None, description="User id."),
     ) -> Any:
         """Unmarks item as a favorite."""
         api = get_client()
@@ -6344,7 +6311,7 @@ def register_userlibrary_tools(mcp: FastMCP):
     )
     def delete_user_item_rating_tool(
         item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
+        user_id: str | None = Field(default=None, description="User id."),
     ) -> Any:
         """Deletes a user's saved personal rating for an item."""
         api = get_client()
@@ -6357,8 +6324,8 @@ def register_userlibrary_tools(mcp: FastMCP):
     )
     def update_user_item_rating_tool(
         item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        likes: Optional[bool] = Field(
+        user_id: str | None = Field(default=None, description="User id."),
+        likes: bool | None = Field(
             default=None,
             description="Whether this M:Jellyfin.Api.Controllers.UserLibraryController.UpdateUserItemRating(System.Nullable{System.Guid},System.Guid,System.Nullable{System.Boolean}) is likes.",
         ),
@@ -6387,21 +6354,19 @@ def register_librarystructure_tools(mcp: FastMCP):
         tags={"LibraryStructure"},
     )
     def add_virtual_folder_tool(
-        name: Optional[str] = Field(
+        name: str | None = Field(
             default=None, description="The name of the virtual folder."
         ),
-        collection_type: Optional[str] = Field(
+        collection_type: str | None = Field(
             default=None, description="The type of the collection."
         ),
-        paths: Optional[List[Any]] = Field(
+        paths: list[Any] | None = Field(
             default=None, description="The paths of the virtual folder."
         ),
-        refresh_library: Optional[bool] = Field(
+        refresh_library: bool | None = Field(
             default=None, description="Whether to refresh the library."
         ),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Adds a virtual folder."""
         api = get_client()
@@ -6419,10 +6384,8 @@ def register_librarystructure_tools(mcp: FastMCP):
         tags={"LibraryStructure"},
     )
     def remove_virtual_folder_tool(
-        name: Optional[str] = Field(
-            default=None, description="The name of the folder."
-        ),
-        refresh_library: Optional[bool] = Field(
+        name: str | None = Field(default=None, description="The name of the folder."),
+        refresh_library: bool | None = Field(
             default=None, description="Whether to refresh the library."
         ),
     ) -> Any:
@@ -6436,7 +6399,7 @@ def register_librarystructure_tools(mcp: FastMCP):
         tags={"LibraryStructure"},
     )
     def update_library_options_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Update library options."""
         api = get_client()
@@ -6448,11 +6411,11 @@ def register_librarystructure_tools(mcp: FastMCP):
         tags={"LibraryStructure"},
     )
     def rename_virtual_folder_tool(
-        name: Optional[str] = Field(
+        name: str | None = Field(
             default=None, description="The name of the virtual folder."
         ),
-        new_name: Optional[str] = Field(default=None, description="The new name."),
-        refresh_library: Optional[bool] = Field(
+        new_name: str | None = Field(default=None, description="The new name."),
+        refresh_library: bool | None = Field(
             default=None, description="Whether to refresh the library."
         ),
     ) -> Any:
@@ -6468,12 +6431,10 @@ def register_librarystructure_tools(mcp: FastMCP):
         tags={"LibraryStructure"},
     )
     def add_media_path_tool(
-        refresh_library: Optional[bool] = Field(
+        refresh_library: bool | None = Field(
             default=None, description="Whether to refresh the library."
         ),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Add a media path to a library."""
         api = get_client()
@@ -6485,11 +6446,9 @@ def register_librarystructure_tools(mcp: FastMCP):
         tags={"LibraryStructure"},
     )
     def remove_media_path_tool(
-        name: Optional[str] = Field(
-            default=None, description="The name of the library."
-        ),
-        path: Optional[str] = Field(default=None, description="The path to remove."),
-        refresh_library: Optional[bool] = Field(
+        name: str | None = Field(default=None, description="The name of the library."),
+        path: str | None = Field(default=None, description="The path to remove."),
+        refresh_library: bool | None = Field(
             default=None, description="Whether to refresh the library."
         ),
     ) -> Any:
@@ -6505,7 +6464,7 @@ def register_librarystructure_tools(mcp: FastMCP):
         tags={"LibraryStructure"},
     )
     def update_media_path_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Updates a media path."""
         api = get_client()
@@ -6519,7 +6478,7 @@ def register_livetv_tools(mcp: FastMCP):
         tags={"LiveTv"},
     )
     def get_channel_mapping_options_tool(
-        provider_id: Optional[str] = Field(default=None, description="Provider id.")
+        provider_id: str | None = Field(default=None, description="Provider id."),
     ) -> Any:
         """Get channel mapping options."""
         api = get_client()
@@ -6529,7 +6488,7 @@ def register_livetv_tools(mcp: FastMCP):
         name="set_channel_mapping", description="Set channel mappings.", tags={"LiveTv"}
     )
     def set_channel_mapping_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Set channel mappings."""
         api = get_client()
@@ -6541,76 +6500,76 @@ def register_livetv_tools(mcp: FastMCP):
         tags={"LiveTv"},
     )
     def get_live_tv_channels_tool(
-        type: Optional[str] = Field(
+        type: str | None = Field(
             default=None, description="Optional. Filter by channel type."
         ),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None, description="Optional. Filter by user and attach user data."
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        is_movie: Optional[bool] = Field(
+        is_movie: bool | None = Field(
             default=None, description="Optional. Filter for movies."
         ),
-        is_series: Optional[bool] = Field(
+        is_series: bool | None = Field(
             default=None, description="Optional. Filter for series."
         ),
-        is_news: Optional[bool] = Field(
+        is_news: bool | None = Field(
             default=None, description="Optional. Filter for news."
         ),
-        is_kids: Optional[bool] = Field(
+        is_kids: bool | None = Field(
             default=None, description="Optional. Filter for kids."
         ),
-        is_sports: Optional[bool] = Field(
+        is_sports: bool | None = Field(
             default=None, description="Optional. Filter for sports."
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        is_favorite: Optional[bool] = Field(
+        is_favorite: bool | None = Field(
             default=None,
             description="Optional. Filter by channels that are favorites, or not.",
         ),
-        is_liked: Optional[bool] = Field(
+        is_liked: bool | None = Field(
             default=None,
             description="Optional. Filter by channels that are liked, or not.",
         ),
-        is_disliked: Optional[bool] = Field(
+        is_disliked: bool | None = Field(
             default=None,
             description="Optional. Filter by channels that are disliked, or not.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description='"Optional. The image types to include in the output.',
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        sort_by: Optional[List[Any]] = Field(
+        sort_by: list[Any] | None = Field(
             default=None, description="Optional. Key to sort by."
         ),
-        sort_order: Optional[str] = Field(
+        sort_order: str | None = Field(
             default=None, description="Optional. Sort order."
         ),
-        enable_favorite_sorting: Optional[bool] = Field(
+        enable_favorite_sorting: bool | None = Field(
             default=None,
             description="Optional. Incorporate favorite and like status into channel sorting.",
         ),
-        add_current_program: Optional[bool] = Field(
+        add_current_program: bool | None = Field(
             default=None,
             description="Optional. Adds current program info to each channel.",
         ),
@@ -6646,7 +6605,7 @@ def register_livetv_tools(mcp: FastMCP):
     )
     def get_channel_tool(
         channel_id: str = Field(description="Channel id."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None, description="Optional. Attach user data."
         ),
     ) -> Any:
@@ -6676,16 +6635,14 @@ def register_livetv_tools(mcp: FastMCP):
         tags={"LiveTv"},
     )
     def add_listing_provider_tool(
-        pw: Optional[str] = Field(default=None, description="Password."),
-        validate_listings: Optional[bool] = Field(
+        pw: str | None = Field(default=None, description="Password."),
+        validate_listings: bool | None = Field(
             default=None, description="Validate listings."
         ),
-        validate_login: Optional[bool] = Field(
+        validate_login: bool | None = Field(
             default=None, description="Validate login."
         ),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Adds a listings provider."""
         api = get_client()
@@ -6702,7 +6659,7 @@ def register_livetv_tools(mcp: FastMCP):
         tags={"LiveTv"},
     )
     def delete_listing_provider_tool(
-        id: Optional[str] = Field(default=None, description="Listing provider id.")
+        id: str | None = Field(default=None, description="Listing provider id."),
     ) -> Any:
         """Delete listing provider."""
         api = get_client()
@@ -6722,10 +6679,10 @@ def register_livetv_tools(mcp: FastMCP):
         name="get_lineups", description="Gets available lineups.", tags={"LiveTv"}
     )
     def get_lineups_tool(
-        id: Optional[str] = Field(default=None, description="Provider id."),
-        type: Optional[str] = Field(default=None, description="Provider type."),
-        location: Optional[str] = Field(default=None, description="Location."),
-        country: Optional[str] = Field(default=None, description="Country."),
+        id: str | None = Field(default=None, description="Provider id."),
+        type: str | None = Field(default=None, description="Provider type."),
+        location: str | None = Field(default=None, description="Location."),
+        country: str | None = Field(default=None, description="Country."),
     ) -> Any:
         """Gets available lineups."""
         api = get_client()
@@ -6772,93 +6729,93 @@ def register_livetv_tools(mcp: FastMCP):
         tags={"LiveTv"},
     )
     def get_live_tv_programs_tool(
-        channel_ids: Optional[List[Any]] = Field(
+        channel_ids: list[Any] | None = Field(
             default=None, description="The channels to return guide information for."
         ),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None, description="Optional. Filter by user id."
         ),
-        min_start_date: Optional[str] = Field(
+        min_start_date: str | None = Field(
             default=None, description="Optional. The minimum premiere start date."
         ),
-        has_aired: Optional[bool] = Field(
+        has_aired: bool | None = Field(
             default=None,
             description="Optional. Filter by programs that have completed airing, or not.",
         ),
-        is_airing: Optional[bool] = Field(
+        is_airing: bool | None = Field(
             default=None,
             description="Optional. Filter by programs that are currently airing, or not.",
         ),
-        max_start_date: Optional[str] = Field(
+        max_start_date: str | None = Field(
             default=None, description="Optional. The maximum premiere start date."
         ),
-        min_end_date: Optional[str] = Field(
+        min_end_date: str | None = Field(
             default=None, description="Optional. The minimum premiere end date."
         ),
-        max_end_date: Optional[str] = Field(
+        max_end_date: str | None = Field(
             default=None, description="Optional. The maximum premiere end date."
         ),
-        is_movie: Optional[bool] = Field(
+        is_movie: bool | None = Field(
             default=None, description="Optional. Filter for movies."
         ),
-        is_series: Optional[bool] = Field(
+        is_series: bool | None = Field(
             default=None, description="Optional. Filter for series."
         ),
-        is_news: Optional[bool] = Field(
+        is_news: bool | None = Field(
             default=None, description="Optional. Filter for news."
         ),
-        is_kids: Optional[bool] = Field(
+        is_kids: bool | None = Field(
             default=None, description="Optional. Filter for kids."
         ),
-        is_sports: Optional[bool] = Field(
+        is_sports: bool | None = Field(
             default=None, description="Optional. Filter for sports."
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        sort_by: Optional[List[Any]] = Field(
+        sort_by: list[Any] | None = Field(
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited. Options: Name, StartDate.",
         ),
-        sort_order: Optional[List[Any]] = Field(
+        sort_order: list[Any] | None = Field(
             default=None, description="Sort Order - Ascending,Descending."
         ),
-        genres: Optional[List[Any]] = Field(
+        genres: list[Any] | None = Field(
             default=None, description="The genres to return guide information for."
         ),
-        genre_ids: Optional[List[Any]] = Field(
+        genre_ids: list[Any] | None = Field(
             default=None, description="The genre ids to return guide information for."
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        series_timer_id: Optional[str] = Field(
+        series_timer_id: str | None = Field(
             default=None, description="Optional. Filter by series timer id."
         ),
-        library_series_id: Optional[str] = Field(
+        library_series_id: str | None = Field(
             default=None, description="Optional. Filter by library series id."
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_total_record_count: Optional[bool] = Field(
+        enable_total_record_count: bool | None = Field(
             default=None, description="Retrieve total record count."
         ),
     ) -> Any:
@@ -6898,7 +6855,7 @@ def register_livetv_tools(mcp: FastMCP):
         name="get_programs", description="Gets available live tv epgs.", tags={"LiveTv"}
     )
     def get_programs_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Gets available live tv epgs."""
         api = get_client()
@@ -6909,7 +6866,7 @@ def register_livetv_tools(mcp: FastMCP):
     )
     def get_program_tool(
         program_id: str = Field(description="Program id."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None, description="Optional. Attach user data."
         ),
     ) -> Any:
@@ -6923,62 +6880,62 @@ def register_livetv_tools(mcp: FastMCP):
         tags={"LiveTv"},
     )
     def get_recommended_programs_tool(
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None, description="Optional. filter by user id."
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        is_airing: Optional[bool] = Field(
+        is_airing: bool | None = Field(
             default=None,
             description="Optional. Filter by programs that are currently airing, or not.",
         ),
-        has_aired: Optional[bool] = Field(
+        has_aired: bool | None = Field(
             default=None,
             description="Optional. Filter by programs that have completed airing, or not.",
         ),
-        is_series: Optional[bool] = Field(
+        is_series: bool | None = Field(
             default=None, description="Optional. Filter for series."
         ),
-        is_movie: Optional[bool] = Field(
+        is_movie: bool | None = Field(
             default=None, description="Optional. Filter for movies."
         ),
-        is_news: Optional[bool] = Field(
+        is_news: bool | None = Field(
             default=None, description="Optional. Filter for news."
         ),
-        is_kids: Optional[bool] = Field(
+        is_kids: bool | None = Field(
             default=None, description="Optional. Filter for kids."
         ),
-        is_sports: Optional[bool] = Field(
+        is_sports: bool | None = Field(
             default=None, description="Optional. Filter for sports."
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        genre_ids: Optional[List[Any]] = Field(
+        genre_ids: list[Any] | None = Field(
             default=None, description="The genres to return guide information for."
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. include user data."
         ),
-        enable_total_record_count: Optional[bool] = Field(
+        enable_total_record_count: bool | None = Field(
             default=None, description="Retrieve total record count."
         ),
     ) -> Any:
@@ -7008,68 +6965,68 @@ def register_livetv_tools(mcp: FastMCP):
         name="get_recordings", description="Gets live tv recordings.", tags={"LiveTv"}
     )
     def get_recordings_tool(
-        channel_id: Optional[str] = Field(
+        channel_id: str | None = Field(
             default=None, description="Optional. Filter by channel id."
         ),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None, description="Optional. Filter by user and attach user data."
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        status: Optional[str] = Field(
+        status: str | None = Field(
             default=None, description="Optional. Filter by recording status."
         ),
-        is_in_progress: Optional[bool] = Field(
+        is_in_progress: bool | None = Field(
             default=None,
             description="Optional. Filter by recordings that are in progress, or not.",
         ),
-        series_timer_id: Optional[str] = Field(
+        series_timer_id: str | None = Field(
             default=None,
             description="Optional. Filter by recordings belonging to a series timer.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        is_movie: Optional[bool] = Field(
+        is_movie: bool | None = Field(
             default=None, description="Optional. Filter for movies."
         ),
-        is_series: Optional[bool] = Field(
+        is_series: bool | None = Field(
             default=None, description="Optional. Filter for series."
         ),
-        is_kids: Optional[bool] = Field(
+        is_kids: bool | None = Field(
             default=None, description="Optional. Filter for kids."
         ),
-        is_sports: Optional[bool] = Field(
+        is_sports: bool | None = Field(
             default=None, description="Optional. Filter for sports."
         ),
-        is_news: Optional[bool] = Field(
+        is_news: bool | None = Field(
             default=None, description="Optional. Filter for news."
         ),
-        is_library_item: Optional[bool] = Field(
+        is_library_item: bool | None = Field(
             default=None, description="Optional. Filter for is library item."
         ),
-        enable_total_record_count: Optional[bool] = Field(
+        enable_total_record_count: bool | None = Field(
             default=None, description="Optional. Return total record count."
         ),
     ) -> Any:
@@ -7102,7 +7059,7 @@ def register_livetv_tools(mcp: FastMCP):
     )
     def get_recording_tool(
         recording_id: str = Field(description="Recording id."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None, description="Optional. Attach user data."
         ),
     ) -> Any:
@@ -7128,9 +7085,9 @@ def register_livetv_tools(mcp: FastMCP):
         tags={"LiveTv"},
     )
     def get_recording_folders_tool(
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None, description="Optional. Filter by user and attach user data."
-        )
+        ),
     ) -> Any:
         """Gets recording folders."""
         api = get_client()
@@ -7142,9 +7099,9 @@ def register_livetv_tools(mcp: FastMCP):
         tags={"LiveTv"},
     )
     def get_recording_groups_tool(
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None, description="Optional. Filter by user and attach user data."
-        )
+        ),
     ) -> Any:
         """Gets live tv recording groups."""
         api = get_client()
@@ -7164,53 +7121,53 @@ def register_livetv_tools(mcp: FastMCP):
         tags={"LiveTv"},
     )
     def get_recordings_series_tool(
-        channel_id: Optional[str] = Field(
+        channel_id: str | None = Field(
             default=None, description="Optional. Filter by channel id."
         ),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None, description="Optional. Filter by user and attach user data."
         ),
-        group_id: Optional[str] = Field(
+        group_id: str | None = Field(
             default=None, description="Optional. Filter by recording group."
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        status: Optional[str] = Field(
+        status: str | None = Field(
             default=None, description="Optional. Filter by recording status."
         ),
-        is_in_progress: Optional[bool] = Field(
+        is_in_progress: bool | None = Field(
             default=None,
             description="Optional. Filter by recordings that are in progress, or not.",
         ),
-        series_timer_id: Optional[str] = Field(
+        series_timer_id: str | None = Field(
             default=None,
             description="Optional. Filter by recordings belonging to a series timer.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        enable_total_record_count: Optional[bool] = Field(
+        enable_total_record_count: bool | None = Field(
             default=None, description="Optional. Return total record count."
         ),
     ) -> Any:
@@ -7239,10 +7196,10 @@ def register_livetv_tools(mcp: FastMCP):
         tags={"LiveTv"},
     )
     def get_series_timers_tool(
-        sort_by: Optional[str] = Field(
+        sort_by: str | None = Field(
             default=None, description="Optional. Sort by SortName or Priority."
         ),
-        sort_order: Optional[str] = Field(
+        sort_order: str | None = Field(
             default=None, description="Optional. Sort in Ascending or Descending order."
         ),
     ) -> Any:
@@ -7256,7 +7213,7 @@ def register_livetv_tools(mcp: FastMCP):
         tags={"LiveTv"},
     )
     def create_series_timer_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Creates a live tv series timer."""
         api = get_client()
@@ -7289,9 +7246,7 @@ def register_livetv_tools(mcp: FastMCP):
     )
     def update_series_timer_tool(
         timer_id: str = Field(description="Timer id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Updates a live tv series timer."""
         api = get_client()
@@ -7301,17 +7256,17 @@ def register_livetv_tools(mcp: FastMCP):
         name="get_timers", description="Gets the live tv timers.", tags={"LiveTv"}
     )
     def get_timers_tool(
-        channel_id: Optional[str] = Field(
+        channel_id: str | None = Field(
             default=None, description="Optional. Filter by channel id."
         ),
-        series_timer_id: Optional[str] = Field(
+        series_timer_id: str | None = Field(
             default=None,
             description="Optional. Filter by timers belonging to a series timer.",
         ),
-        is_active: Optional[bool] = Field(
+        is_active: bool | None = Field(
             default=None, description="Optional. Filter by timers that are active."
         ),
-        is_scheduled: Optional[bool] = Field(
+        is_scheduled: bool | None = Field(
             default=None, description="Optional. Filter by timers that are scheduled."
         ),
     ) -> Any:
@@ -7328,7 +7283,7 @@ def register_livetv_tools(mcp: FastMCP):
         name="create_timer", description="Creates a live tv timer.", tags={"LiveTv"}
     )
     def create_timer_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Creates a live tv timer."""
         api = get_client()
@@ -7353,9 +7308,7 @@ def register_livetv_tools(mcp: FastMCP):
     )
     def update_timer_tool(
         timer_id: str = Field(description="Timer id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Updates a live tv timer."""
         api = get_client()
@@ -7367,10 +7320,10 @@ def register_livetv_tools(mcp: FastMCP):
         tags={"LiveTv"},
     )
     def get_default_timer_tool(
-        program_id: Optional[str] = Field(
+        program_id: str | None = Field(
             default=None,
             description="Optional. To attach default values based on a program.",
-        )
+        ),
     ) -> Any:
         """Gets the default values for a new timer."""
         api = get_client()
@@ -7378,7 +7331,7 @@ def register_livetv_tools(mcp: FastMCP):
 
     @mcp.tool(name="add_tuner_host", description="Adds a tuner host.", tags={"LiveTv"})
     def add_tuner_host_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Adds a tuner host."""
         api = get_client()
@@ -7388,7 +7341,7 @@ def register_livetv_tools(mcp: FastMCP):
         name="delete_tuner_host", description="Deletes a tuner host.", tags={"LiveTv"}
     )
     def delete_tuner_host_tool(
-        id: Optional[str] = Field(default=None, description="Tuner host id.")
+        id: str | None = Field(default=None, description="Tuner host id."),
     ) -> Any:
         """Deletes a tuner host."""
         api = get_client()
@@ -7412,9 +7365,9 @@ def register_livetv_tools(mcp: FastMCP):
 
     @mcp.tool(name="discover_tuners", description="Discover tuners.", tags={"LiveTv"})
     def discover_tuners_tool(
-        new_devices_only: Optional[bool] = Field(
+        new_devices_only: bool | None = Field(
             default=None, description="Only discover new tuners."
-        )
+        ),
     ) -> Any:
         """Discover tuners."""
         api = get_client()
@@ -7422,9 +7375,9 @@ def register_livetv_tools(mcp: FastMCP):
 
     @mcp.tool(name="discvover_tuners", description="Discover tuners.", tags={"LiveTv"})
     def discvover_tuners_tool(
-        new_devices_only: Optional[bool] = Field(
+        new_devices_only: bool | None = Field(
             default=None, description="Only discover new tuners."
-        )
+        ),
     ) -> Any:
         """Discover tuners."""
         api = get_client()
@@ -7483,12 +7436,10 @@ def register_lyrics_tools(mcp: FastMCP):
     )
     def upload_lyrics_tool(
         item_id: str = Field(description="The item the lyric belongs to."),
-        file_name: Optional[str] = Field(
+        file_name: str | None = Field(
             default=None, description="Name of the file being uploaded."
         ),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Upload an external lyric file."""
         api = get_client()
@@ -7548,7 +7499,7 @@ def register_mediainfo_tools(mcp: FastMCP):
     )
     def get_playback_info_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(default=None, description="The user id."),
+        user_id: str | None = Field(default=None, description="The user id."),
     ) -> Any:
         """Gets live playback media info for an item."""
         api = get_client()
@@ -7561,51 +7512,49 @@ def register_mediainfo_tools(mcp: FastMCP):
     )
     def get_posted_playback_info_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(default=None, description="The user id."),
-        max_streaming_bitrate: Optional[int] = Field(
+        user_id: str | None = Field(default=None, description="The user id."),
+        max_streaming_bitrate: int | None = Field(
             default=None, description="The maximum streaming bitrate."
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None, description="The start time in ticks."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None, description="The audio stream index."
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None, description="The subtitle stream index."
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None, description="The maximum number of audio channels."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None, description="The media source id."
         ),
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The livestream id."
         ),
-        auto_open_live_stream: Optional[bool] = Field(
+        auto_open_live_stream: bool | None = Field(
             default=None, description="Whether to auto open the livestream."
         ),
-        enable_direct_play: Optional[bool] = Field(
+        enable_direct_play: bool | None = Field(
             default=None, description="Whether to enable direct play. Default: true."
         ),
-        enable_direct_stream: Optional[bool] = Field(
+        enable_direct_stream: bool | None = Field(
             default=None, description="Whether to enable direct stream. Default: true."
         ),
-        enable_transcoding: Optional[bool] = Field(
+        enable_transcoding: bool | None = Field(
             default=None, description="Whether to enable transcoding. Default: true."
         ),
-        allow_video_stream_copy: Optional[bool] = Field(
+        allow_video_stream_copy: bool | None = Field(
             default=None,
             description="Whether to allow to copy the video stream. Default: true.",
         ),
-        allow_audio_stream_copy: Optional[bool] = Field(
+        allow_audio_stream_copy: bool | None = Field(
             default=None,
             description="Whether to allow to copy the audio stream. Default: true.",
         ),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Gets live playback media info for an item."""
         api = get_client()
@@ -7634,9 +7583,9 @@ def register_mediainfo_tools(mcp: FastMCP):
         tags={"MediaInfo"},
     )
     def close_live_stream_tool(
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The livestream id."
-        )
+        ),
     ) -> Any:
         """Closes a media source."""
         api = get_client()
@@ -7646,39 +7595,37 @@ def register_mediainfo_tools(mcp: FastMCP):
         name="open_live_stream", description="Opens a media source.", tags={"MediaInfo"}
     )
     def open_live_stream_tool(
-        open_token: Optional[str] = Field(default=None, description="The open token."),
-        user_id: Optional[str] = Field(default=None, description="The user id."),
-        play_session_id: Optional[str] = Field(
+        open_token: str | None = Field(default=None, description="The open token."),
+        user_id: str | None = Field(default=None, description="The user id."),
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        max_streaming_bitrate: Optional[int] = Field(
+        max_streaming_bitrate: int | None = Field(
             default=None, description="The maximum streaming bitrate."
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None, description="The start time in ticks."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None, description="The audio stream index."
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None, description="The subtitle stream index."
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None, description="The maximum number of audio channels."
         ),
-        item_id: Optional[str] = Field(default=None, description="The item id."),
-        enable_direct_play: Optional[bool] = Field(
+        item_id: str | None = Field(default=None, description="The item id."),
+        enable_direct_play: bool | None = Field(
             default=None, description="Whether to enable direct play. Default: true."
         ),
-        enable_direct_stream: Optional[bool] = Field(
+        enable_direct_stream: bool | None = Field(
             default=None, description="Whether to enable direct stream. Default: true."
         ),
-        always_burn_in_subtitle_when_transcoding: Optional[bool] = Field(
+        always_burn_in_subtitle_when_transcoding: bool | None = Field(
             default=None, description="Always burn-in subtitle when transcoding."
         ),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Opens a media source."""
         api = get_client()
@@ -7704,9 +7651,9 @@ def register_mediainfo_tools(mcp: FastMCP):
         tags={"MediaInfo"},
     )
     def get_bitrate_test_bytes_tool(
-        size: Optional[int] = Field(
+        size: int | None = Field(
             default=None, description="The bitrate. Defaults to 102400."
-        )
+        ),
     ) -> Any:
         """Tests the network with a request with the size of the bitrate."""
         api = get_client()
@@ -7721,7 +7668,7 @@ def register_mediasegments_tools(mcp: FastMCP):
     )
     def get_item_segments_tool(
         item_id: str = Field(description="The ItemId."),
-        include_segment_types: Optional[List[Any]] = Field(
+        include_segment_types: list[Any] | None = Field(
             default=None, description="Optional filter of requested segment types."
         ),
     ) -> Any:
@@ -7739,21 +7686,21 @@ def register_movies_tools(mcp: FastMCP):
         tags={"Movies"},
     )
     def get_movie_recommendations_tool(
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
-        parent_id: Optional[str] = Field(
+        parent_id: str | None = Field(
             default=None,
             description="Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None, description="Optional. The fields to return."
         ),
-        category_limit: Optional[int] = Field(
+        category_limit: int | None = Field(
             default=None, description="The max number of categories to return."
         ),
-        item_limit: Optional[int] = Field(
+        item_limit: int | None = Field(
             default=None, description="The max number of items to return per category."
         ),
     ) -> Any:
@@ -7775,69 +7722,67 @@ def register_musicgenres_tools(mcp: FastMCP):
         tags={"MusicGenres"},
     )
     def get_music_genres_tool(
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        search_term: Optional[str] = Field(
-            default=None, description="The search term."
-        ),
-        parent_id: Optional[str] = Field(
+        search_term: str | None = Field(default=None, description="The search term."),
+        parent_id: str | None = Field(
             default=None,
             description="Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        exclude_item_types: Optional[List[Any]] = Field(
+        exclude_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered out based on item type. This allows multiple, comma delimited.",
         ),
-        include_item_types: Optional[List[Any]] = Field(
+        include_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered in based on item type. This allows multiple, comma delimited.",
         ),
-        is_favorite: Optional[bool] = Field(
+        is_favorite: bool | None = Field(
             default=None,
             description="Optional filter by items that are marked as favorite, or not.",
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional, the max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        name_starts_with_or_greater: Optional[str] = Field(
+        user_id: str | None = Field(default=None, description="User id."),
+        name_starts_with_or_greater: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally or greater than a given input string.",
         ),
-        name_starts_with: Optional[str] = Field(
+        name_starts_with: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally than a given input string.",
         ),
-        name_less_than: Optional[str] = Field(
+        name_less_than: str | None = Field(
             default=None,
             description="Optional filter by items whose name is equally or lesser than a given input string.",
         ),
-        sort_by: Optional[List[Any]] = Field(
+        sort_by: list[Any] | None = Field(
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited.",
         ),
-        sort_order: Optional[List[Any]] = Field(
+        sort_order: list[Any] | None = Field(
             default=None, description="Sort Order - Ascending,Descending."
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional, include image information in output."
         ),
-        enable_total_record_count: Optional[bool] = Field(
+        enable_total_record_count: bool | None = Field(
             default=None, description="Optional. Include total record count."
         ),
     ) -> Any:
@@ -7871,7 +7816,7 @@ def register_musicgenres_tools(mcp: FastMCP):
     )
     def get_music_genre_tool(
         genre_name: str = Field(description="The genre name."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
@@ -7897,7 +7842,7 @@ def register_package_tools(mcp: FastMCP):
     )
     def get_package_info_tool(
         name: str = Field(description="The name of the package."),
-        assembly_guid: Optional[str] = Field(
+        assembly_guid: str | None = Field(
             default=None, description="The GUID of the associated assembly."
         ),
     ) -> Any:
@@ -7910,13 +7855,13 @@ def register_package_tools(mcp: FastMCP):
     )
     def install_package_tool(
         name: str = Field(description="Package name."),
-        assembly_guid: Optional[str] = Field(
+        assembly_guid: str | None = Field(
             default=None, description="GUID of the associated assembly."
         ),
-        version: Optional[str] = Field(
+        version: str | None = Field(
             default=None, description="Optional version. Defaults to latest version."
         ),
-        repository_url: Optional[str] = Field(
+        repository_url: str | None = Field(
             default=None,
             description="Optional. Specify the repository to install from.",
         ),
@@ -7958,7 +7903,7 @@ def register_package_tools(mcp: FastMCP):
         tags={"Package"},
     )
     def set_repositories_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Sets the enabled and existing package repositories."""
         api = get_client()
@@ -7968,49 +7913,47 @@ def register_package_tools(mcp: FastMCP):
 def register_persons_tools(mcp: FastMCP):
     @mcp.tool(name="get_persons", description="Gets all persons.", tags={"Persons"})
     def get_persons_tool(
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        search_term: Optional[str] = Field(
-            default=None, description="The search term."
-        ),
-        fields: Optional[List[Any]] = Field(
+        search_term: str | None = Field(default=None, description="The search term."),
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        filters: Optional[List[Any]] = Field(
+        filters: list[Any] | None = Field(
             default=None, description="Optional. Specify additional filters to apply."
         ),
-        is_favorite: Optional[bool] = Field(
+        is_favorite: bool | None = Field(
             default=None,
             description="Optional filter by items that are marked as favorite, or not. userId is required.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional, include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional, the max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        exclude_person_types: Optional[List[Any]] = Field(
+        exclude_person_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified results will be filtered to exclude those containing the specified PersonType. Allows multiple, comma-delimited.",
         ),
-        person_types: Optional[List[Any]] = Field(
+        person_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified results will be filtered to include only those containing the specified PersonType. Allows multiple, comma-delimited.",
         ),
-        appears_in_item_id: Optional[str] = Field(
+        appears_in_item_id: str | None = Field(
             default=None,
             description="Optional. If specified, person results will be filtered on items related to said persons.",
         ),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        enable_images: Optional[bool] = Field(
+        user_id: str | None = Field(default=None, description="User id."),
+        enable_images: bool | None = Field(
             default=None, description="Optional, include image information in output."
         ),
     ) -> Any:
@@ -8035,7 +7978,7 @@ def register_persons_tools(mcp: FastMCP):
     @mcp.tool(name="get_person", description="Get person by name.", tags={"Persons"})
     def get_person_tool(
         name: str = Field(description="Person name."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
@@ -8052,13 +7995,11 @@ def register_playlists_tools(mcp: FastMCP):
         tags={"Playlists"},
     )
     def create_playlist_tool(
-        name: Optional[str] = Field(default=None, description="The playlist name."),
-        ids: Optional[List[Any]] = Field(default=None, description="The item ids."),
-        user_id: Optional[str] = Field(default=None, description="The user id."),
-        media_type: Optional[str] = Field(default=None, description="The media type."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        name: str | None = Field(default=None, description="The playlist name."),
+        ids: list[Any] | None = Field(default=None, description="The item ids."),
+        user_id: str | None = Field(default=None, description="The user id."),
+        media_type: str | None = Field(default=None, description="The media type."),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Creates a new playlist."""
         api = get_client()
@@ -8071,9 +8012,7 @@ def register_playlists_tools(mcp: FastMCP):
     )
     def update_playlist_tool(
         playlist_id: str = Field(description="The playlist id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Updates a playlist."""
         api = get_client()
@@ -8094,10 +8033,10 @@ def register_playlists_tools(mcp: FastMCP):
     )
     def add_item_to_playlist_tool(
         playlist_id: str = Field(description="The playlist id."),
-        ids: Optional[List[Any]] = Field(
+        ids: list[Any] | None = Field(
             default=None, description="Item id, comma delimited."
         ),
-        user_id: Optional[str] = Field(default=None, description="The userId."),
+        user_id: str | None = Field(default=None, description="The userId."),
     ) -> Any:
         """Adds items to a playlist."""
         api = get_client()
@@ -8112,7 +8051,7 @@ def register_playlists_tools(mcp: FastMCP):
     )
     def remove_item_from_playlist_tool(
         playlist_id: str = Field(description="The playlist id."),
-        entry_ids: Optional[List[Any]] = Field(
+        entry_ids: list[Any] | None = Field(
             default=None, description="The item ids, comma delimited."
         ),
     ) -> Any:
@@ -8129,30 +8068,30 @@ def register_playlists_tools(mcp: FastMCP):
     )
     def get_playlist_items_tool(
         playlist_id: str = Field(description="The playlist id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        start_index: Optional[int] = Field(
+        user_id: str | None = Field(default=None, description="User id."),
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
@@ -8216,9 +8155,7 @@ def register_playlists_tools(mcp: FastMCP):
     def update_playlist_user_tool(
         playlist_id: str = Field(description="The playlist id."),
         user_id: str = Field(description="The user id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Modify a user of a playlist's users."""
         api = get_client()
@@ -8248,25 +8185,23 @@ def register_playstate_tools(mcp: FastMCP):
     )
     def on_playback_start_tool(
         item_id: str = Field(description="Item id."),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None, description="The id of the MediaSource."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None, description="The audio stream index."
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None, description="The subtitle stream index."
         ),
-        play_method: Optional[str] = Field(
-            default=None, description="The play method."
-        ),
-        live_stream_id: Optional[str] = Field(
+        play_method: str | None = Field(default=None, description="The play method."),
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        can_seek: Optional[bool] = Field(
+        can_seek: bool | None = Field(
             default=None, description="Indicates if the client can seek."
         ),
     ) -> Any:
@@ -8290,20 +8225,20 @@ def register_playstate_tools(mcp: FastMCP):
     )
     def on_playback_stopped_tool(
         item_id: str = Field(description="Item id."),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None, description="The id of the MediaSource."
         ),
-        next_media_type: Optional[str] = Field(
+        next_media_type: str | None = Field(
             default=None, description="The next media type that will play."
         ),
-        position_ticks: Optional[int] = Field(
+        position_ticks: int | None = Field(
             default=None,
             description="Optional. The position, in ticks, where playback stopped. 1 tick = 10000 ms.",
         ),
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
     ) -> Any:
@@ -8325,38 +8260,32 @@ def register_playstate_tools(mcp: FastMCP):
     )
     def on_playback_progress_tool(
         item_id: str = Field(description="Item id."),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None, description="The id of the MediaSource."
         ),
-        position_ticks: Optional[int] = Field(
+        position_ticks: int | None = Field(
             default=None,
             description="Optional. The current position, in ticks. 1 tick = 10000 ms.",
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None, description="The audio stream index."
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None, description="The subtitle stream index."
         ),
-        volume_level: Optional[int] = Field(
-            default=None, description="Scale of 0-100."
-        ),
-        play_method: Optional[str] = Field(
-            default=None, description="The play method."
-        ),
-        live_stream_id: Optional[str] = Field(
+        volume_level: int | None = Field(default=None, description="Scale of 0-100."),
+        play_method: str | None = Field(default=None, description="The play method."),
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        repeat_mode: Optional[str] = Field(
-            default=None, description="The repeat mode."
-        ),
-        is_paused: Optional[bool] = Field(
+        repeat_mode: str | None = Field(default=None, description="The repeat mode."),
+        is_paused: bool | None = Field(
             default=None, description="Indicates if the player is paused."
         ),
-        is_muted: Optional[bool] = Field(
+        is_muted: bool | None = Field(
             default=None, description="Indicates if the player is muted."
         ),
     ) -> Any:
@@ -8383,7 +8312,7 @@ def register_playstate_tools(mcp: FastMCP):
         tags={"Playstate"},
     )
     def report_playback_start_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Reports playback has started within a session."""
         api = get_client()
@@ -8395,9 +8324,9 @@ def register_playstate_tools(mcp: FastMCP):
         tags={"Playstate"},
     )
     def ping_playback_session_tool(
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="Playback session id."
-        )
+        ),
     ) -> Any:
         """Pings a playback session."""
         api = get_client()
@@ -8409,7 +8338,7 @@ def register_playstate_tools(mcp: FastMCP):
         tags={"Playstate"},
     )
     def report_playback_progress_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Reports playback progress within a session."""
         api = get_client()
@@ -8421,7 +8350,7 @@ def register_playstate_tools(mcp: FastMCP):
         tags={"Playstate"},
     )
     def report_playback_stopped_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Reports playback has stopped within a session."""
         api = get_client()
@@ -8434,8 +8363,8 @@ def register_playstate_tools(mcp: FastMCP):
     )
     def mark_played_item_tool(
         item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        date_played: Optional[str] = Field(
+        user_id: str | None = Field(default=None, description="User id."),
+        date_played: str | None = Field(
             default=None, description="Optional. The date the item was played."
         ),
     ) -> Any:
@@ -8452,7 +8381,7 @@ def register_playstate_tools(mcp: FastMCP):
     )
     def mark_unplayed_item_tool(
         item_id: str = Field(description="Item id."),
-        user_id: Optional[str] = Field(default=None, description="User id."),
+        user_id: str | None = Field(default=None, description="User id."),
     ) -> Any:
         """Marks an item as unplayed for user."""
         api = get_client()
@@ -8566,10 +8495,10 @@ def register_quickconnect_tools(mcp: FastMCP):
         tags={"QuickConnect"},
     )
     def authorize_quick_connect_tool(
-        code: Optional[str] = Field(
+        code: str | None = Field(
             default=None, description="Quick connect code to authorize."
         ),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="The user the authorize. Access to the requested user is required.",
         ),
@@ -8584,10 +8513,10 @@ def register_quickconnect_tools(mcp: FastMCP):
         tags={"QuickConnect"},
     )
     def get_quick_connect_state_tool(
-        secret: Optional[str] = Field(
+        secret: str | None = Field(
             default=None,
             description="Secret previously returned from the Initiate endpoint.",
-        )
+        ),
     ) -> Any:
         """Attempts to retrieve authentication information."""
         api = get_client()
@@ -8622,19 +8551,19 @@ def register_remoteimage_tools(mcp: FastMCP):
     )
     def get_remote_images_tool(
         item_id: str = Field(description="Item Id."),
-        type: Optional[str] = Field(default=None, description="The image type."),
-        start_index: Optional[int] = Field(
+        type: str | None = Field(default=None, description="The image type."),
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        provider_name: Optional[str] = Field(
+        provider_name: str | None = Field(
             default=None, description="Optional. The image provider to use."
         ),
-        include_all_languages: Optional[bool] = Field(
+        include_all_languages: bool | None = Field(
             default=None, description="Optional. Include all languages."
         ),
     ) -> Any:
@@ -8656,8 +8585,8 @@ def register_remoteimage_tools(mcp: FastMCP):
     )
     def download_remote_image_tool(
         item_id: str = Field(description="Item Id."),
-        type: Optional[str] = Field(default=None, description="The image type."),
-        image_url: Optional[str] = Field(default=None, description="The image url."),
+        type: str | None = Field(default=None, description="The image type."),
+        image_url: str | None = Field(default=None, description="The image url."),
     ) -> Any:
         """Downloads a remote image for an item."""
         api = get_client()
@@ -8681,10 +8610,10 @@ def register_remoteimage_tools(mcp: FastMCP):
 def register_scheduledtasks_tools(mcp: FastMCP):
     @mcp.tool(name="get_tasks", description="Get tasks.", tags={"ScheduledTasks"})
     def get_tasks_tool(
-        is_hidden: Optional[bool] = Field(
+        is_hidden: bool | None = Field(
             default=None, description="Optional filter tasks that are hidden, or not."
         ),
-        is_enabled: Optional[bool] = Field(
+        is_enabled: bool | None = Field(
             default=None, description="Optional filter tasks that are enabled, or not."
         ),
     ) -> Any:
@@ -8705,9 +8634,7 @@ def register_scheduledtasks_tools(mcp: FastMCP):
     )
     def update_task_tool(
         task_id: str = Field(description="Task Id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Update specified task triggers."""
         api = get_client()
@@ -8737,65 +8664,65 @@ def register_search_tools(mcp: FastMCP):
         tags={"Search"},
     )
     def get_search_hints_tool(
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Supply a user id to search within a user's library or omit to search all.",
         ),
-        search_term: Optional[str] = Field(
+        search_term: str | None = Field(
             default=None, description="The search term to filter on."
         ),
-        include_item_types: Optional[List[Any]] = Field(
+        include_item_types: list[Any] | None = Field(
             default=None,
             description="If specified, only results with the specified item types are returned. This allows multiple, comma delimited.",
         ),
-        exclude_item_types: Optional[List[Any]] = Field(
+        exclude_item_types: list[Any] | None = Field(
             default=None,
             description="If specified, results with these item types are filtered out. This allows multiple, comma delimited.",
         ),
-        media_types: Optional[List[Any]] = Field(
+        media_types: list[Any] | None = Field(
             default=None,
             description="If specified, only results with the specified media types are returned. This allows multiple, comma delimited.",
         ),
-        parent_id: Optional[str] = Field(
+        parent_id: str | None = Field(
             default=None,
             description="If specified, only children of the parent are returned.",
         ),
-        is_movie: Optional[bool] = Field(
+        is_movie: bool | None = Field(
             default=None, description="Optional filter for movies."
         ),
-        is_series: Optional[bool] = Field(
+        is_series: bool | None = Field(
             default=None, description="Optional filter for series."
         ),
-        is_news: Optional[bool] = Field(
+        is_news: bool | None = Field(
             default=None, description="Optional filter for news."
         ),
-        is_kids: Optional[bool] = Field(
+        is_kids: bool | None = Field(
             default=None, description="Optional filter for kids."
         ),
-        is_sports: Optional[bool] = Field(
+        is_sports: bool | None = Field(
             default=None, description="Optional filter for sports."
         ),
-        include_people: Optional[bool] = Field(
+        include_people: bool | None = Field(
             default=None, description="Optional filter whether to include people."
         ),
-        include_media: Optional[bool] = Field(
+        include_media: bool | None = Field(
             default=None, description="Optional filter whether to include media."
         ),
-        include_genres: Optional[bool] = Field(
+        include_genres: bool | None = Field(
             default=None, description="Optional filter whether to include genres."
         ),
-        include_studios: Optional[bool] = Field(
+        include_studios: bool | None = Field(
             default=None, description="Optional filter whether to include studios."
         ),
-        include_artists: Optional[bool] = Field(
+        include_artists: bool | None = Field(
             default=None, description="Optional filter whether to include artists."
         ),
     ) -> Any:
@@ -8848,14 +8775,12 @@ def register_session_tools(mcp: FastMCP):
         name="get_sessions", description="Gets a list of sessions.", tags={"Session"}
     )
     def get_sessions_tool(
-        controllable_by_user_id: Optional[str] = Field(
+        controllable_by_user_id: str | None = Field(
             default=None,
             description="Filter by sessions that a given user is allowed to remote control.",
         ),
-        device_id: Optional[str] = Field(
-            default=None, description="Filter by device Id."
-        ),
-        active_within_seconds: Optional[int] = Field(
+        device_id: str | None = Field(default=None, description="Filter by device Id."),
+        active_within_seconds: int | None = Field(
             default=None,
             description="Optional. Filter by sessions that were active in the last n seconds.",
         ),
@@ -8875,9 +8800,7 @@ def register_session_tools(mcp: FastMCP):
     )
     def send_full_general_command_tool(
         session_id: str = Field(description="The session id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Issues a full general command to a client."""
         api = get_client()
@@ -8903,9 +8826,7 @@ def register_session_tools(mcp: FastMCP):
     )
     def send_message_command_tool(
         session_id: str = Field(description="The session id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Issues a command to a client to display a message to the user."""
         api = get_client()
@@ -8918,27 +8839,27 @@ def register_session_tools(mcp: FastMCP):
     )
     def play_tool(
         session_id: str = Field(description="The session id."),
-        play_command: Optional[str] = Field(
+        play_command: str | None = Field(
             default=None,
             description="The type of play command to issue (PlayNow, PlayNext, PlayLast). Clients who have not yet implemented play next and play last may play now.",
         ),
-        item_ids: Optional[List[Any]] = Field(
+        item_ids: list[Any] | None = Field(
             default=None, description="The ids of the items to play, comma delimited."
         ),
-        start_position_ticks: Optional[int] = Field(
+        start_position_ticks: int | None = Field(
             default=None, description="The starting position of the first item."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None, description="Optional. The media source id."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None, description="Optional. The index of the audio stream to play."
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the subtitle stream to play.",
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None, description="Optional. The start index."
         ),
     ) -> Any:
@@ -8965,10 +8886,10 @@ def register_session_tools(mcp: FastMCP):
         command: str = Field(
             description="The MediaBrowser.Model.Session.PlaystateCommand."
         ),
-        seek_position_ticks: Optional[int] = Field(
+        seek_position_ticks: int | None = Field(
             default=None, description="The optional position ticks."
         ),
-        controlling_user_id: Optional[str] = Field(
+        controlling_user_id: str | None = Field(
             default=None, description="The optional controlling user id."
         ),
     ) -> Any:
@@ -9027,11 +8948,11 @@ def register_session_tools(mcp: FastMCP):
     )
     def display_content_tool(
         session_id: str = Field(description="The session Id."),
-        item_type: Optional[str] = Field(
+        item_type: str | None = Field(
             default=None, description="The type of item to browse to."
         ),
-        item_id: Optional[str] = Field(default=None, description="The Id of the item."),
-        item_name: Optional[str] = Field(
+        item_id: str | None = Field(default=None, description="The Id of the item."),
+        item_name: str | None = Field(
             default=None, description="The name of the item."
         ),
     ) -> Any:
@@ -9050,20 +8971,20 @@ def register_session_tools(mcp: FastMCP):
         tags={"Session"},
     )
     def post_capabilities_tool(
-        id: Optional[str] = Field(default=None, description="The session id."),
-        playable_media_types: Optional[List[Any]] = Field(
+        id: str | None = Field(default=None, description="The session id."),
+        playable_media_types: list[Any] | None = Field(
             default=None,
             description="A list of playable media types, comma delimited. Audio, Video, Book, Photo.",
         ),
-        supported_commands: Optional[List[Any]] = Field(
+        supported_commands: list[Any] | None = Field(
             default=None,
             description="A list of supported remote control commands, comma delimited.",
         ),
-        supports_media_control: Optional[bool] = Field(
+        supports_media_control: bool | None = Field(
             default=None,
             description="Determines whether media can be played remotely..",
         ),
-        supports_persistent_identifier: Optional[bool] = Field(
+        supports_persistent_identifier: bool | None = Field(
             default=None,
             description="Determines whether the device supports a unique identifier.",
         ),
@@ -9084,10 +9005,8 @@ def register_session_tools(mcp: FastMCP):
         tags={"Session"},
     )
     def post_full_capabilities_tool(
-        id: Optional[str] = Field(default=None, description="The session id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        id: str | None = Field(default=None, description="The session id."),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Updates capabilities for a device."""
         api = get_client()
@@ -9109,8 +9028,8 @@ def register_session_tools(mcp: FastMCP):
         tags={"Session"},
     )
     def report_viewing_tool(
-        session_id: Optional[str] = Field(default=None, description="The session id."),
-        item_id: Optional[str] = Field(default=None, description="The item id."),
+        session_id: str | None = Field(default=None, description="The session id."),
+        item_id: str | None = Field(default=None, description="The item id."),
     ) -> Any:
         """Reports that a session is viewing an item."""
         api = get_client()
@@ -9144,7 +9063,7 @@ def register_startup_tools(mcp: FastMCP):
         tags={"Startup"},
     )
     def update_initial_configuration_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Sets the initial startup wizard configuration."""
         api = get_client()
@@ -9164,7 +9083,7 @@ def register_startup_tools(mcp: FastMCP):
         tags={"Startup"},
     )
     def set_remote_access_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Sets remote access and UPnP."""
         api = get_client()
@@ -9184,7 +9103,7 @@ def register_startup_tools(mcp: FastMCP):
         tags={"Startup"},
     )
     def update_startup_user_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Sets the user name and password."""
         api = get_client()
@@ -9198,65 +9117,65 @@ def register_studios_tools(mcp: FastMCP):
         tags={"Studios"},
     )
     def get_studios_tool(
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        search_term: Optional[str] = Field(
+        search_term: str | None = Field(
             default=None, description="Optional. Search term."
         ),
-        parent_id: Optional[str] = Field(
+        parent_id: str | None = Field(
             default=None,
             description="Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        exclude_item_types: Optional[List[Any]] = Field(
+        exclude_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered out based on item type. This allows multiple, comma delimited.",
         ),
-        include_item_types: Optional[List[Any]] = Field(
+        include_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on item type. This allows multiple, comma delimited.",
         ),
-        is_favorite: Optional[bool] = Field(
+        is_favorite: bool | None = Field(
             default=None,
             description="Optional filter by items that are marked as favorite, or not.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional, include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional, the max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        name_starts_with_or_greater: Optional[str] = Field(
+        user_id: str | None = Field(default=None, description="User id."),
+        name_starts_with_or_greater: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally or greater than a given input string.",
         ),
-        name_starts_with: Optional[str] = Field(
+        name_starts_with: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally than a given input string.",
         ),
-        name_less_than: Optional[str] = Field(
+        name_less_than: str | None = Field(
             default=None,
             description="Optional filter by items whose name is equally or lesser than a given input string.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional, include image information in output."
         ),
-        enable_total_record_count: Optional[bool] = Field(
+        enable_total_record_count: bool | None = Field(
             default=None, description="Total record count."
         ),
     ) -> Any:
@@ -9285,7 +9204,7 @@ def register_studios_tools(mcp: FastMCP):
     @mcp.tool(name="get_studio", description="Gets a studio by name.", tags={"Studios"})
     def get_studio_tool(
         name: str = Field(description="Studio name."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
@@ -9326,7 +9245,7 @@ def register_subtitle_tools(mcp: FastMCP):
     def search_remote_subtitles_tool(
         item_id: str = Field(description="The item id."),
         language: str = Field(description="The language of the subtitles."),
-        is_perfect_match: Optional[bool] = Field(
+        is_perfect_match: bool | None = Field(
             default=None,
             description="Optional. Only show subtitles which are a perfect match.",
         ),
@@ -9371,7 +9290,7 @@ def register_subtitle_tools(mcp: FastMCP):
         item_id: str = Field(description="The item id."),
         index: int = Field(description="The subtitle stream index."),
         media_source_id: str = Field(description="The media source id."),
-        segment_length: Optional[int] = Field(
+        segment_length: int | None = Field(
             default=None, description="The subtitle segment length."
         ),
     ) -> Any:
@@ -9391,9 +9310,7 @@ def register_subtitle_tools(mcp: FastMCP):
     )
     def upload_subtitle_tool(
         item_id: str = Field(description="The item the subtitle belongs to."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Upload an external subtitle file."""
         api = get_client()
@@ -9427,27 +9344,27 @@ def register_subtitle_tools(mcp: FastMCP):
         route_format: str = Field(
             description="The (route) format of the returned subtitle."
         ),
-        item_id: Optional[str] = Field(default=None, description="The item id."),
-        media_source_id: Optional[str] = Field(
+        item_id: str | None = Field(default=None, description="The item id."),
+        media_source_id: str | None = Field(
             default=None, description="The media source id."
         ),
-        index: Optional[int] = Field(
+        index: int | None = Field(
             default=None, description="The subtitle stream index."
         ),
-        start_position_ticks: Optional[int] = Field(
+        start_position_ticks: int | None = Field(
             default=None, description="The start position of the subtitle in ticks."
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None, description="The format of the returned subtitle."
         ),
-        end_position_ticks: Optional[int] = Field(
+        end_position_ticks: int | None = Field(
             default=None,
             description="Optional. The end position of the subtitle in ticks.",
         ),
-        copy_timestamps: Optional[bool] = Field(
+        copy_timestamps: bool | None = Field(
             default=None, description="Optional. Whether to copy the timestamps."
         ),
-        add_vtt_time_map: Optional[bool] = Field(
+        add_vtt_time_map: bool | None = Field(
             default=None, description="Optional. Whether to add a VTT time map."
         ),
     ) -> Any:
@@ -9481,27 +9398,27 @@ def register_subtitle_tools(mcp: FastMCP):
         route_format: str = Field(
             description="The (route) format of the returned subtitle."
         ),
-        item_id: Optional[str] = Field(default=None, description="The item id."),
-        media_source_id: Optional[str] = Field(
+        item_id: str | None = Field(default=None, description="The item id."),
+        media_source_id: str | None = Field(
             default=None, description="The media source id."
         ),
-        index: Optional[int] = Field(
+        index: int | None = Field(
             default=None, description="The subtitle stream index."
         ),
-        format: Optional[str] = Field(
+        format: str | None = Field(
             default=None, description="The format of the returned subtitle."
         ),
-        end_position_ticks: Optional[int] = Field(
+        end_position_ticks: int | None = Field(
             default=None,
             description="Optional. The end position of the subtitle in ticks.",
         ),
-        copy_timestamps: Optional[bool] = Field(
+        copy_timestamps: bool | None = Field(
             default=None, description="Optional. Whether to copy the timestamps."
         ),
-        add_vtt_time_map: Optional[bool] = Field(
+        add_vtt_time_map: bool | None = Field(
             default=None, description="Optional. Whether to add a VTT time map."
         ),
-        start_position_ticks: Optional[int] = Field(
+        start_position_ticks: int | None = Field(
             default=None, description="The start position of the subtitle in ticks."
         ),
     ) -> Any:
@@ -9528,16 +9445,16 @@ def register_suggestions_tools(mcp: FastMCP):
         name="get_suggestions", description="Gets suggestions.", tags={"Suggestions"}
     )
     def get_suggestions_tool(
-        user_id: Optional[str] = Field(default=None, description="The user id."),
-        media_type: Optional[List[Any]] = Field(
+        user_id: str | None = Field(default=None, description="The user id."),
+        media_type: list[Any] | None = Field(
             default=None, description="The media types."
         ),
-        type: Optional[List[Any]] = Field(default=None, description="The type."),
-        start_index: Optional[int] = Field(
+        type: list[Any] | None = Field(default=None, description="The type."),
+        start_index: int | None = Field(
             default=None, description="Optional. The start index."
         ),
-        limit: Optional[int] = Field(default=None, description="Optional. The limit."),
-        enable_total_record_count: Optional[bool] = Field(
+        limit: int | None = Field(default=None, description="Optional. The limit."),
+        enable_total_record_count: bool | None = Field(
             default=None, description="Whether to enable the total record count."
         ),
     ) -> Any:
@@ -9572,7 +9489,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_buffering_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Notify SyncPlay group that member is buffering."""
         api = get_client()
@@ -9584,7 +9501,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_join_group_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Join an existing SyncPlay group."""
         api = get_client()
@@ -9616,7 +9533,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_move_playlist_item_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Request to move an item in the playlist in SyncPlay group."""
         api = get_client()
@@ -9628,7 +9545,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_create_group_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Create a new SyncPlay group."""
         api = get_client()
@@ -9640,7 +9557,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_next_item_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Request next item in SyncPlay group."""
         api = get_client()
@@ -9660,7 +9577,7 @@ def register_syncplay_tools(mcp: FastMCP):
         name="sync_play_ping", description="Update session ping.", tags={"SyncPlay"}
     )
     def sync_play_ping_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Update session ping."""
         api = get_client()
@@ -9672,7 +9589,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_previous_item_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Request previous item in SyncPlay group."""
         api = get_client()
@@ -9684,7 +9601,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_queue_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Request to queue items to the playlist of a SyncPlay group."""
         api = get_client()
@@ -9696,7 +9613,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_ready_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Notify SyncPlay group that member is ready for playback."""
         api = get_client()
@@ -9708,7 +9625,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_remove_from_playlist_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Request to remove items from the playlist in SyncPlay group."""
         api = get_client()
@@ -9720,7 +9637,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_seek_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Request seek in SyncPlay group."""
         api = get_client()
@@ -9732,7 +9649,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_set_ignore_wait_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Request SyncPlay group to ignore member during group-wait."""
         api = get_client()
@@ -9744,7 +9661,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_set_new_queue_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Request to set new playlist in SyncPlay group."""
         api = get_client()
@@ -9756,7 +9673,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_set_playlist_item_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Request to change playlist item in SyncPlay group."""
         api = get_client()
@@ -9768,7 +9685,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_set_repeat_mode_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Request to set repeat mode in SyncPlay group."""
         api = get_client()
@@ -9780,7 +9697,7 @@ def register_syncplay_tools(mcp: FastMCP):
         tags={"SyncPlay"},
     )
     def sync_play_set_shuffle_mode_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Request to set shuffle mode in SyncPlay group."""
         api = get_client()
@@ -9860,9 +9777,9 @@ def register_system_tools(mcp: FastMCP):
 
     @mcp.tool(name="get_log_file", description="Gets a log file.", tags={"System"})
     def get_log_file_tool(
-        name: Optional[str] = Field(
+        name: str | None = Field(
             default=None, description="The name of the log file to get."
-        )
+        ),
     ) -> Any:
         """Gets a log file."""
         api = get_client()
@@ -9930,317 +9847,317 @@ def register_trailers_tools(mcp: FastMCP):
         tags={"Trailers"},
     )
     def get_trailers_tool(
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="The user id supplied as query parameter; this is required when not using an API key.",
         ),
-        max_official_rating: Optional[str] = Field(
+        max_official_rating: str | None = Field(
             default=None,
             description="Optional filter by maximum official rating (PG, PG-13, TV-MA, etc).",
         ),
-        has_theme_song: Optional[bool] = Field(
+        has_theme_song: bool | None = Field(
             default=None, description="Optional filter by items with theme songs."
         ),
-        has_theme_video: Optional[bool] = Field(
+        has_theme_video: bool | None = Field(
             default=None, description="Optional filter by items with theme videos."
         ),
-        has_subtitles: Optional[bool] = Field(
+        has_subtitles: bool | None = Field(
             default=None, description="Optional filter by items with subtitles."
         ),
-        has_special_feature: Optional[bool] = Field(
+        has_special_feature: bool | None = Field(
             default=None, description="Optional filter by items with special features."
         ),
-        has_trailer: Optional[bool] = Field(
+        has_trailer: bool | None = Field(
             default=None, description="Optional filter by items with trailers."
         ),
-        adjacent_to: Optional[str] = Field(
+        adjacent_to: str | None = Field(
             default=None,
             description="Optional. Return items that are siblings of a supplied item.",
         ),
-        parent_index_number: Optional[int] = Field(
+        parent_index_number: int | None = Field(
             default=None, description="Optional filter by parent index number."
         ),
-        has_parental_rating: Optional[bool] = Field(
+        has_parental_rating: bool | None = Field(
             default=None,
             description="Optional filter by items that have or do not have a parental rating.",
         ),
-        is_hd: Optional[bool] = Field(
+        is_hd: bool | None = Field(
             default=None, description="Optional filter by items that are HD or not."
         ),
-        is4_k: Optional[bool] = Field(
+        is4_k: bool | None = Field(
             default=None, description="Optional filter by items that are 4K or not."
         ),
-        location_types: Optional[List[Any]] = Field(
+        location_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on LocationType. This allows multiple, comma delimited.",
         ),
-        exclude_location_types: Optional[List[Any]] = Field(
+        exclude_location_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on the LocationType. This allows multiple, comma delimited.",
         ),
-        is_missing: Optional[bool] = Field(
+        is_missing: bool | None = Field(
             default=None,
             description="Optional filter by items that are missing episodes or not.",
         ),
-        is_unaired: Optional[bool] = Field(
+        is_unaired: bool | None = Field(
             default=None,
             description="Optional filter by items that are unaired episodes or not.",
         ),
-        min_community_rating: Optional[float] = Field(
+        min_community_rating: float | None = Field(
             default=None, description="Optional filter by minimum community rating."
         ),
-        min_critic_rating: Optional[float] = Field(
+        min_critic_rating: float | None = Field(
             default=None, description="Optional filter by minimum critic rating."
         ),
-        min_premiere_date: Optional[str] = Field(
+        min_premiere_date: str | None = Field(
             default=None,
             description="Optional. The minimum premiere date. Format = ISO.",
         ),
-        min_date_last_saved: Optional[str] = Field(
+        min_date_last_saved: str | None = Field(
             default=None,
             description="Optional. The minimum last saved date. Format = ISO.",
         ),
-        min_date_last_saved_for_user: Optional[str] = Field(
+        min_date_last_saved_for_user: str | None = Field(
             default=None,
             description="Optional. The minimum last saved date for the current user. Format = ISO.",
         ),
-        max_premiere_date: Optional[str] = Field(
+        max_premiere_date: str | None = Field(
             default=None,
             description="Optional. The maximum premiere date. Format = ISO.",
         ),
-        has_overview: Optional[bool] = Field(
+        has_overview: bool | None = Field(
             default=None,
             description="Optional filter by items that have an overview or not.",
         ),
-        has_imdb_id: Optional[bool] = Field(
+        has_imdb_id: bool | None = Field(
             default=None,
             description="Optional filter by items that have an IMDb id or not.",
         ),
-        has_tmdb_id: Optional[bool] = Field(
+        has_tmdb_id: bool | None = Field(
             default=None,
             description="Optional filter by items that have a TMDb id or not.",
         ),
-        has_tvdb_id: Optional[bool] = Field(
+        has_tvdb_id: bool | None = Field(
             default=None,
             description="Optional filter by items that have a TVDb id or not.",
         ),
-        is_movie: Optional[bool] = Field(
+        is_movie: bool | None = Field(
             default=None, description="Optional filter for live tv movies."
         ),
-        is_series: Optional[bool] = Field(
+        is_series: bool | None = Field(
             default=None, description="Optional filter for live tv series."
         ),
-        is_news: Optional[bool] = Field(
+        is_news: bool | None = Field(
             default=None, description="Optional filter for live tv news."
         ),
-        is_kids: Optional[bool] = Field(
+        is_kids: bool | None = Field(
             default=None, description="Optional filter for live tv kids."
         ),
-        is_sports: Optional[bool] = Field(
+        is_sports: bool | None = Field(
             default=None, description="Optional filter for live tv sports."
         ),
-        exclude_item_ids: Optional[List[Any]] = Field(
+        exclude_item_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered by excluding item ids. This allows multiple, comma delimited.",
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        recursive: Optional[bool] = Field(
+        recursive: bool | None = Field(
             default=None,
             description="When searching within folders, this determines whether or not the search will be recursive. true/false.",
         ),
-        search_term: Optional[str] = Field(
+        search_term: str | None = Field(
             default=None, description="Optional. Filter based on a search term."
         ),
-        sort_order: Optional[List[Any]] = Field(
+        sort_order: list[Any] | None = Field(
             default=None, description="Sort Order - Ascending, Descending."
         ),
-        parent_id: Optional[str] = Field(
+        parent_id: str | None = Field(
             default=None,
             description="Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines.",
         ),
-        exclude_item_types: Optional[List[Any]] = Field(
+        exclude_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on item type. This allows multiple, comma delimited.",
         ),
-        filters: Optional[List[Any]] = Field(
+        filters: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional filters to apply. This allows multiple, comma delimited. Options: IsFolder, IsNotFolder, IsUnplayed, IsPlayed, IsFavorite, IsResumable, Likes, Dislikes.",
         ),
-        is_favorite: Optional[bool] = Field(
+        is_favorite: bool | None = Field(
             default=None,
             description="Optional filter by items that are marked as favorite, or not.",
         ),
-        media_types: Optional[List[Any]] = Field(
+        media_types: list[Any] | None = Field(
             default=None,
             description="Optional filter by MediaType. Allows multiple, comma delimited.",
         ),
-        image_types: Optional[List[Any]] = Field(
+        image_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on those containing image types. This allows multiple, comma delimited.",
         ),
-        sort_by: Optional[List[Any]] = Field(
+        sort_by: list[Any] | None = Field(
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited. Options: Album, AlbumArtist, Artist, Budget, CommunityRating, CriticRating, DateCreated, DatePlayed, PlayCount, PremiereDate, ProductionYear, SortName, Random, Revenue, Runtime.",
         ),
-        is_played: Optional[bool] = Field(
+        is_played: bool | None = Field(
             default=None,
             description="Optional filter by items that are played, or not.",
         ),
-        genres: Optional[List[Any]] = Field(
+        genres: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on genre. This allows multiple, pipe delimited.",
         ),
-        official_ratings: Optional[List[Any]] = Field(
+        official_ratings: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on OfficialRating. This allows multiple, pipe delimited.",
         ),
-        tags: Optional[List[Any]] = Field(
+        tags: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on tag. This allows multiple, pipe delimited.",
         ),
-        years: Optional[List[Any]] = Field(
+        years: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on production year. This allows multiple, comma delimited.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional, include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional, the max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        person: Optional[str] = Field(
+        person: str | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified person.",
         ),
-        person_ids: Optional[List[Any]] = Field(
+        person_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified person id.",
         ),
-        person_types: Optional[List[Any]] = Field(
+        person_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, along with Person, results will be filtered to include only those containing the specified person and PersonType. Allows multiple, comma-delimited.",
         ),
-        studios: Optional[List[Any]] = Field(
+        studios: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on studio. This allows multiple, pipe delimited.",
         ),
-        artists: Optional[List[Any]] = Field(
+        artists: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on artists. This allows multiple, pipe delimited.",
         ),
-        exclude_artist_ids: Optional[List[Any]] = Field(
+        exclude_artist_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on artist id. This allows multiple, pipe delimited.",
         ),
-        artist_ids: Optional[List[Any]] = Field(
+        artist_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified artist id.",
         ),
-        album_artist_ids: Optional[List[Any]] = Field(
+        album_artist_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified album artist id.",
         ),
-        contributing_artist_ids: Optional[List[Any]] = Field(
+        contributing_artist_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered to include only those containing the specified contributing artist id.",
         ),
-        albums: Optional[List[Any]] = Field(
+        albums: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on album. This allows multiple, pipe delimited.",
         ),
-        album_ids: Optional[List[Any]] = Field(
+        album_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on album id. This allows multiple, pipe delimited.",
         ),
-        ids: Optional[List[Any]] = Field(
+        ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specific items are needed, specify a list of item id's to retrieve. This allows multiple, comma delimited.",
         ),
-        video_types: Optional[List[Any]] = Field(
+        video_types: list[Any] | None = Field(
             default=None,
             description="Optional filter by VideoType (videofile, dvd, bluray, iso). Allows multiple, comma delimited.",
         ),
-        min_official_rating: Optional[str] = Field(
+        min_official_rating: str | None = Field(
             default=None,
             description="Optional filter by minimum official rating (PG, PG-13, TV-MA, etc).",
         ),
-        is_locked: Optional[bool] = Field(
+        is_locked: bool | None = Field(
             default=None, description="Optional filter by items that are locked."
         ),
-        is_place_holder: Optional[bool] = Field(
+        is_place_holder: bool | None = Field(
             default=None, description="Optional filter by items that are placeholders."
         ),
-        has_official_rating: Optional[bool] = Field(
+        has_official_rating: bool | None = Field(
             default=None,
             description="Optional filter by items that have official ratings.",
         ),
-        collapse_box_set_items: Optional[bool] = Field(
+        collapse_box_set_items: bool | None = Field(
             default=None,
             description="Whether or not to hide items behind their boxsets.",
         ),
-        min_width: Optional[int] = Field(
+        min_width: int | None = Field(
             default=None,
             description="Optional. Filter by the minimum width of the item.",
         ),
-        min_height: Optional[int] = Field(
+        min_height: int | None = Field(
             default=None,
             description="Optional. Filter by the minimum height of the item.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None,
             description="Optional. Filter by the maximum width of the item.",
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None,
             description="Optional. Filter by the maximum height of the item.",
         ),
-        is3_d: Optional[bool] = Field(
+        is3_d: bool | None = Field(
             default=None, description="Optional filter by items that are 3D, or not."
         ),
-        series_status: Optional[List[Any]] = Field(
+        series_status: list[Any] | None = Field(
             default=None,
             description="Optional filter by Series Status. Allows multiple, comma delimited.",
         ),
-        name_starts_with_or_greater: Optional[str] = Field(
+        name_starts_with_or_greater: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally or greater than a given input string.",
         ),
-        name_starts_with: Optional[str] = Field(
+        name_starts_with: str | None = Field(
             default=None,
             description="Optional filter by items whose name is sorted equally than a given input string.",
         ),
-        name_less_than: Optional[str] = Field(
+        name_less_than: str | None = Field(
             default=None,
             description="Optional filter by items whose name is equally or lesser than a given input string.",
         ),
-        studio_ids: Optional[List[Any]] = Field(
+        studio_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on studio id. This allows multiple, pipe delimited.",
         ),
-        genre_ids: Optional[List[Any]] = Field(
+        genre_ids: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be filtered based on genre id. This allows multiple, pipe delimited.",
         ),
-        enable_total_record_count: Optional[bool] = Field(
+        enable_total_record_count: bool | None = Field(
             default=None, description="Optional. Enable the total record count."
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional, include image information in output."
         ),
     ) -> Any:
@@ -10344,7 +10261,7 @@ def register_trickplay_tools(mcp: FastMCP):
         item_id: str = Field(description="The item id."),
         width: int = Field(description="The width of a single tile."),
         index: int = Field(description="The index of the desired tile."),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if using an alternate version.",
         ),
@@ -10363,7 +10280,7 @@ def register_trickplay_tools(mcp: FastMCP):
     def get_trickplay_hls_playlist_tool(
         item_id: str = Field(description="The item id."),
         width: int = Field(description="The width of a single tile."),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if using an alternate version.",
         ),
@@ -10383,52 +10300,52 @@ def register_tvshows_tools(mcp: FastMCP):
     )
     def get_episodes_tool(
         series_id: str = Field(description="The series id."),
-        user_id: Optional[str] = Field(default=None, description="The user id."),
-        fields: Optional[List[Any]] = Field(
+        user_id: str | None = Field(default=None, description="The user id."),
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
         ),
-        season: Optional[int] = Field(
+        season: int | None = Field(
             default=None, description="Optional filter by season number."
         ),
-        season_id: Optional[str] = Field(
+        season_id: str | None = Field(
             default=None, description="Optional. Filter by season id."
         ),
-        is_missing: Optional[bool] = Field(
+        is_missing: bool | None = Field(
             default=None,
             description="Optional. Filter by items that are missing episodes or not.",
         ),
-        adjacent_to: Optional[str] = Field(
+        adjacent_to: str | None = Field(
             default=None,
             description="Optional. Return items that are siblings of a supplied item.",
         ),
-        start_item_id: Optional[str] = Field(
+        start_item_id: str | None = Field(
             default=None,
             description="Optional. Skip through the list until a given item is found.",
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional, include image information in output."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional, the max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        sort_by: Optional[str] = Field(
+        sort_by: str | None = Field(
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited. Options: Album, AlbumArtist, Artist, Budget, CommunityRating, CriticRating, DateCreated, DatePlayed, PlayCount, PremiereDate, ProductionYear, SortName, Random, Revenue, Runtime.",
         ),
@@ -10460,34 +10377,34 @@ def register_tvshows_tools(mcp: FastMCP):
     )
     def get_seasons_tool(
         series_id: str = Field(description="The series id."),
-        user_id: Optional[str] = Field(default=None, description="The user id."),
-        fields: Optional[List[Any]] = Field(
+        user_id: str | None = Field(default=None, description="The user id."),
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
         ),
-        is_special_season: Optional[bool] = Field(
+        is_special_season: bool | None = Field(
             default=None, description="Optional. Filter by special season."
         ),
-        is_missing: Optional[bool] = Field(
+        is_missing: bool | None = Field(
             default=None,
             description="Optional. Filter by items that are missing episodes or not.",
         ),
-        adjacent_to: Optional[str] = Field(
+        adjacent_to: str | None = Field(
             default=None,
             description="Optional. Return items that are siblings of a supplied item.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
     ) -> Any:
@@ -10512,60 +10429,60 @@ def register_tvshows_tools(mcp: FastMCP):
         tags={"TvShows"},
     )
     def get_next_up_tool(
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="The user id of the user to get the next up episodes for.",
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        series_id: Optional[str] = Field(
+        series_id: str | None = Field(
             default=None, description="Optional. Filter by series id."
         ),
-        parent_id: Optional[str] = Field(
+        parent_id: str | None = Field(
             default=None,
             description="Optional. Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        next_up_date_cutoff: Optional[str] = Field(
+        next_up_date_cutoff: str | None = Field(
             default=None,
             description="Optional. Starting date of shows to show in Next Up section.",
         ),
-        enable_total_record_count: Optional[bool] = Field(
+        enable_total_record_count: bool | None = Field(
             default=None,
             description="Whether to enable the total records count. Defaults to true.",
         ),
-        disable_first_episode: Optional[bool] = Field(
+        disable_first_episode: bool | None = Field(
             default=None,
             description="Whether to disable sending the first episode in a series as next up.",
         ),
-        enable_resumable: Optional[bool] = Field(
+        enable_resumable: bool | None = Field(
             default=None,
             description="Whether to include resumable episodes in next up results.",
         ),
-        enable_rewatching: Optional[bool] = Field(
+        enable_rewatching: bool | None = Field(
             default=None,
             description="Whether to include watched episodes in next up results.",
         ),
@@ -10596,38 +10513,38 @@ def register_tvshows_tools(mcp: FastMCP):
         tags={"TvShows"},
     )
     def get_upcoming_episodes_tool(
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="The user id of the user to get the upcoming episodes for.",
         ),
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Optional. The record index to start at. All items with a lower index will be dropped from the results.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        parent_id: Optional[str] = Field(
+        parent_id: str | None = Field(
             default=None,
             description="Optional. Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        enable_images: Optional[bool] = Field(
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
     ) -> Any:
@@ -10654,63 +10571,61 @@ def register_universalaudio_tools(mcp: FastMCP):
     )
     def get_universal_audio_stream_tool(
         item_id: str = Field(description="The item id."),
-        container: Optional[List[Any]] = Field(
+        container: list[Any] | None = Field(
             default=None, description="Optional. The audio container."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if playing an alternate version.",
         ),
-        device_id: Optional[str] = Field(
+        device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
         ),
-        user_id: Optional[str] = Field(
-            default=None, description="Optional. The user id."
-        ),
-        audio_codec: Optional[str] = Field(
+        user_id: str | None = Field(default=None, description="Optional. The user id."),
+        audio_codec: str | None = Field(
             default=None, description="Optional. The audio codec to transcode to."
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None, description="Optional. The maximum number of audio channels."
         ),
-        transcoding_audio_channels: Optional[int] = Field(
+        transcoding_audio_channels: int | None = Field(
             default=None,
             description="Optional. The number of how many audio channels to transcode to.",
         ),
-        max_streaming_bitrate: Optional[int] = Field(
+        max_streaming_bitrate: int | None = Field(
             default=None, description="Optional. The maximum streaming bitrate."
         ),
-        audio_bit_rate: Optional[int] = Field(
+        audio_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify an audio bitrate to encode to, e.g. 128000. If omitted this will be left to encoder defaults.",
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None,
             description="Optional. Specify a starting offset, in ticks. 1 tick = 10000 ms.",
         ),
-        transcoding_container: Optional[str] = Field(
+        transcoding_container: str | None = Field(
             default=None, description="Optional. The container to transcode to."
         ),
-        transcoding_protocol: Optional[str] = Field(
+        transcoding_protocol: str | None = Field(
             default=None, description="Optional. The transcoding protocol."
         ),
-        max_audio_sample_rate: Optional[int] = Field(
+        max_audio_sample_rate: int | None = Field(
             default=None, description="Optional. The maximum audio sample rate."
         ),
-        max_audio_bit_depth: Optional[int] = Field(
+        max_audio_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum audio bit depth."
         ),
-        enable_remote_media: Optional[bool] = Field(
+        enable_remote_media: bool | None = Field(
             default=None, description="Optional. Whether to enable remote media."
         ),
-        enable_audio_vbr_encoding: Optional[bool] = Field(
+        enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
-        break_on_non_key_frames: Optional[bool] = Field(
+        break_on_non_key_frames: bool | None = Field(
             default=None, description="Optional. Whether to break on non key frames."
         ),
-        enable_redirection: Optional[bool] = Field(
+        enable_redirection: bool | None = Field(
             default=None, description="Whether to enable redirection. Defaults to true."
         ),
     ) -> Any:
@@ -10742,10 +10657,10 @@ def register_universalaudio_tools(mcp: FastMCP):
 def register_user_tools(mcp: FastMCP):
     @mcp.tool(name="get_users", description="Gets a list of users.", tags={"User"})
     def get_users_tool(
-        is_hidden: Optional[bool] = Field(
+        is_hidden: bool | None = Field(
             default=None, description="Optional filter by IsHidden=true or false."
         ),
-        is_disabled: Optional[bool] = Field(
+        is_disabled: bool | None = Field(
             default=None, description="Optional filter by IsDisabled=true or false."
         ),
     ) -> Any:
@@ -10755,10 +10670,8 @@ def register_user_tools(mcp: FastMCP):
 
     @mcp.tool(name="update_user", description="Updates a user.", tags={"User"})
     def update_user_tool(
-        user_id: Optional[str] = Field(default=None, description="The user id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        user_id: str | None = Field(default=None, description="The user id."),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Updates a user."""
         api = get_client()
@@ -10781,9 +10694,7 @@ def register_user_tools(mcp: FastMCP):
     )
     def update_user_policy_tool(
         user_id: str = Field(description="The user id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Updates a user policy."""
         api = get_client()
@@ -10795,7 +10706,7 @@ def register_user_tools(mcp: FastMCP):
         tags={"User"},
     )
     def authenticate_user_by_name_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Authenticates a user by name."""
         api = get_client()
@@ -10807,7 +10718,7 @@ def register_user_tools(mcp: FastMCP):
         tags={"User"},
     )
     def authenticate_with_quick_connect_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Authenticates a user with quick connect."""
         api = get_client()
@@ -10819,10 +10730,8 @@ def register_user_tools(mcp: FastMCP):
         tags={"User"},
     )
     def update_user_configuration_tool(
-        user_id: Optional[str] = Field(default=None, description="The user id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        user_id: str | None = Field(default=None, description="The user id."),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Updates a user configuration."""
         api = get_client()
@@ -10834,7 +10743,7 @@ def register_user_tools(mcp: FastMCP):
         tags={"User"},
     )
     def forgot_password_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Initiates the forgot password process for a local user."""
         api = get_client()
@@ -10846,7 +10755,7 @@ def register_user_tools(mcp: FastMCP):
         tags={"User"},
     )
     def forgot_password_pin_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Redeems a forgot password pin."""
         api = get_client()
@@ -10864,7 +10773,7 @@ def register_user_tools(mcp: FastMCP):
 
     @mcp.tool(name="create_user_by_name", description="Creates a user.", tags={"User"})
     def create_user_by_name_tool(
-        body: Optional[Dict[str, Any]] = Field(default=None, description="Request body")
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Creates a user."""
         api = get_client()
@@ -10876,10 +10785,8 @@ def register_user_tools(mcp: FastMCP):
         tags={"User"},
     )
     def update_user_password_tool(
-        user_id: Optional[str] = Field(default=None, description="The user id."),
-        body: Optional[Dict[str, Any]] = Field(
-            default=None, description="Request body"
-        ),
+        user_id: str | None = Field(default=None, description="The user id."),
+        body: dict[str, Any] | None = Field(default=None, description="Request body"),
     ) -> Any:
         """Updates a user's password."""
         api = get_client()
@@ -10899,15 +10806,15 @@ def register_user_tools(mcp: FastMCP):
 def register_userviews_tools(mcp: FastMCP):
     @mcp.tool(name="get_user_views", description="Get user views.", tags={"UserViews"})
     def get_user_views_tool(
-        user_id: Optional[str] = Field(default=None, description="User id."),
-        include_external_content: Optional[bool] = Field(
+        user_id: str | None = Field(default=None, description="User id."),
+        include_external_content: bool | None = Field(
             default=None,
             description="Whether or not to include external views such as channels or live tv.",
         ),
-        preset_views: Optional[List[Any]] = Field(
+        preset_views: list[Any] | None = Field(
             default=None, description="Preset views."
         ),
-        include_hidden: Optional[bool] = Field(
+        include_hidden: bool | None = Field(
             default=None, description="Whether or not to include hidden content."
         ),
     ) -> Any:
@@ -10926,7 +10833,7 @@ def register_userviews_tools(mcp: FastMCP):
         tags={"UserViews"},
     )
     def get_grouping_options_tool(
-        user_id: Optional[str] = Field(default=None, description="User id.")
+        user_id: str | None = Field(default=None, description="User id."),
     ) -> Any:
         """Get user view grouping options."""
         api = get_client()
@@ -10959,7 +10866,7 @@ def register_videos_tools(mcp: FastMCP):
     )
     def get_additional_part_tool(
         item_id: str = Field(description="The item id."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
@@ -10985,184 +10892,184 @@ def register_videos_tools(mcp: FastMCP):
     )
     def get_video_stream_tool(
         item_id: str = Field(description="The item id."),
-        container: Optional[str] = Field(
+        container: str | None = Field(
             default=None,
             description="The video container. Possible values are: ts, webm, asf, wmv, ogv, mp4, m4v, mkv, mpeg, mpg, avi, 3gp, wmv, wtv, m2ts, mov, iso, flv.",
         ),
-        static: Optional[bool] = Field(
+        static: bool | None = Field(
             default=None,
             description="Optional. If true, the original file will be streamed statically without any encoding. Use either no url extension or the original file extension. true/false.",
         ),
-        params: Optional[str] = Field(
+        params: str | None = Field(
             default=None, description="The streaming parameters."
         ),
-        tag: Optional[str] = Field(default=None, description="The tag."),
-        device_profile_id: Optional[str] = Field(
+        tag: str | None = Field(default=None, description="The tag."),
+        device_profile_id: str | None = Field(
             default=None, description="Optional. The dlna device profile id to utilize."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        segment_container: Optional[str] = Field(
+        segment_container: str | None = Field(
             default=None, description="The segment container."
         ),
-        segment_length: Optional[int] = Field(
+        segment_length: int | None = Field(
             default=None, description="The segment length."
         ),
-        min_segments: Optional[int] = Field(
+        min_segments: int | None = Field(
             default=None, description="The minimum number of segments."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if playing an alternate version.",
         ),
-        device_id: Optional[str] = Field(
+        device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
         ),
-        audio_codec: Optional[str] = Field(
+        audio_codec: str | None = Field(
             default=None,
             description="Optional. Specify an audio codec to encode to, e.g. mp3. If omitted the server will auto-select using the url's extension.",
         ),
-        enable_auto_stream_copy: Optional[bool] = Field(
+        enable_auto_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow automatic stream copy if requested values match the original source. Defaults to true.",
         ),
-        allow_video_stream_copy: Optional[bool] = Field(
+        allow_video_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the video stream url.",
         ),
-        allow_audio_stream_copy: Optional[bool] = Field(
+        allow_audio_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the audio stream url.",
         ),
-        break_on_non_key_frames: Optional[bool] = Field(
+        break_on_non_key_frames: bool | None = Field(
             default=None, description="Optional. Whether to break on non key frames."
         ),
-        audio_sample_rate: Optional[int] = Field(
+        audio_sample_rate: int | None = Field(
             default=None,
             description="Optional. Specify a specific audio sample rate, e.g. 44100.",
         ),
-        max_audio_bit_depth: Optional[int] = Field(
+        max_audio_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum audio bit depth."
         ),
-        audio_bit_rate: Optional[int] = Field(
+        audio_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify an audio bitrate to encode to, e.g. 128000. If omitted this will be left to encoder defaults.",
         ),
-        audio_channels: Optional[int] = Field(
+        audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a specific number of audio channels to encode to, e.g. 2.",
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a maximum number of audio channels to encode to, e.g. 2.",
         ),
-        profile: Optional[str] = Field(
+        profile: str | None = Field(
             default=None,
             description="Optional. Specify a specific an encoder profile (varies by encoder), e.g. main, baseline, high.",
         ),
-        level: Optional[str] = Field(
+        level: str | None = Field(
             default=None,
             description="Optional. Specify a level for the encoder profile (varies by encoder), e.g. 3, 3.1.",
         ),
-        framerate: Optional[float] = Field(
+        framerate: float | None = Field(
             default=None,
             description="Optional. A specific video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        max_framerate: Optional[float] = Field(
+        max_framerate: float | None = Field(
             default=None,
             description="Optional. A specific maximum video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        copy_timestamps: Optional[bool] = Field(
+        copy_timestamps: bool | None = Field(
             default=None,
             description="Whether or not to copy timestamps when transcoding with an offset. Defaults to false.",
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None,
             description="Optional. Specify a starting offset, in ticks. 1 tick = 10000 ms.",
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None,
             description="Optional. The fixed horizontal resolution of the encoded video.",
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None,
             description="Optional. The fixed vertical resolution of the encoded video.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None,
             description="Optional. The maximum horizontal resolution of the encoded video.",
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None,
             description="Optional. The maximum vertical resolution of the encoded video.",
         ),
-        video_bit_rate: Optional[int] = Field(
+        video_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify a video bitrate to encode to, e.g. 500000. If omitted this will be left to encoder defaults.",
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the subtitle stream to use. If omitted no subtitles will be used.",
         ),
-        subtitle_method: Optional[str] = Field(
+        subtitle_method: str | None = Field(
             default=None, description="Optional. Specify the subtitle delivery method."
         ),
-        max_ref_frames: Optional[int] = Field(default=None, description="Optional."),
-        max_video_bit_depth: Optional[int] = Field(
+        max_ref_frames: int | None = Field(default=None, description="Optional."),
+        max_video_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum video bit depth."
         ),
-        require_avc: Optional[bool] = Field(
+        require_avc: bool | None = Field(
             default=None, description="Optional. Whether to require avc."
         ),
-        de_interlace: Optional[bool] = Field(
+        de_interlace: bool | None = Field(
             default=None, description="Optional. Whether to deinterlace the video."
         ),
-        require_non_anamorphic: Optional[bool] = Field(
+        require_non_anamorphic: bool | None = Field(
             default=None,
             description="Optional. Whether to require a non anamorphic stream.",
         ),
-        transcoding_max_audio_channels: Optional[int] = Field(
+        transcoding_max_audio_channels: int | None = Field(
             default=None,
             description="Optional. The maximum number of audio channels to transcode.",
         ),
-        cpu_core_limit: Optional[int] = Field(
+        cpu_core_limit: int | None = Field(
             default=None,
             description="Optional. The limit of how many cpu cores to use.",
         ),
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        enable_mpegts_m2_ts_mode: Optional[bool] = Field(
+        enable_mpegts_m2_ts_mode: bool | None = Field(
             default=None, description="Optional. Whether to enable the MpegtsM2Ts mode."
         ),
-        video_codec: Optional[str] = Field(
+        video_codec: str | None = Field(
             default=None,
             description="Optional. Specify a video codec to encode to, e.g. h264. If omitted the server will auto-select using the url's extension.",
         ),
-        subtitle_codec: Optional[str] = Field(
+        subtitle_codec: str | None = Field(
             default=None, description="Optional. Specify a subtitle codec to encode to."
         ),
-        transcode_reasons: Optional[str] = Field(
+        transcode_reasons: str | None = Field(
             default=None, description="Optional. The transcoding reason."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the audio stream to use. If omitted the first audio stream will be used.",
         ),
-        video_stream_index: Optional[int] = Field(
+        video_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the video stream to use. If omitted the first video stream will be used.",
         ),
-        context: Optional[str] = Field(
+        context: str | None = Field(
             default=None,
             description="Optional. The MediaBrowser.Model.Dlna.EncodingContext.",
         ),
-        stream_options: Optional[Dict[str, Any]] = Field(
+        stream_options: dict[str, Any] | None = Field(
             default=None, description="Optional. The streaming options."
         ),
-        enable_audio_vbr_encoding: Optional[bool] = Field(
+        enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
     ) -> Any:
@@ -11233,180 +11140,180 @@ def register_videos_tools(mcp: FastMCP):
         container: str = Field(
             description="The video container. Possible values are: ts, webm, asf, wmv, ogv, mp4, m4v, mkv, mpeg, mpg, avi, 3gp, wmv, wtv, m2ts, mov, iso, flv."
         ),
-        static: Optional[bool] = Field(
+        static: bool | None = Field(
             default=None,
             description="Optional. If true, the original file will be streamed statically without any encoding. Use either no url extension or the original file extension. true/false.",
         ),
-        params: Optional[str] = Field(
+        params: str | None = Field(
             default=None, description="The streaming parameters."
         ),
-        tag: Optional[str] = Field(default=None, description="The tag."),
-        device_profile_id: Optional[str] = Field(
+        tag: str | None = Field(default=None, description="The tag."),
+        device_profile_id: str | None = Field(
             default=None, description="Optional. The dlna device profile id to utilize."
         ),
-        play_session_id: Optional[str] = Field(
+        play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
-        segment_container: Optional[str] = Field(
+        segment_container: str | None = Field(
             default=None, description="The segment container."
         ),
-        segment_length: Optional[int] = Field(
+        segment_length: int | None = Field(
             default=None, description="The segment length."
         ),
-        min_segments: Optional[int] = Field(
+        min_segments: int | None = Field(
             default=None, description="The minimum number of segments."
         ),
-        media_source_id: Optional[str] = Field(
+        media_source_id: str | None = Field(
             default=None,
             description="The media version id, if playing an alternate version.",
         ),
-        device_id: Optional[str] = Field(
+        device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
         ),
-        audio_codec: Optional[str] = Field(
+        audio_codec: str | None = Field(
             default=None,
             description="Optional. Specify an audio codec to encode to, e.g. mp3. If omitted the server will auto-select using the url's extension.",
         ),
-        enable_auto_stream_copy: Optional[bool] = Field(
+        enable_auto_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow automatic stream copy if requested values match the original source. Defaults to true.",
         ),
-        allow_video_stream_copy: Optional[bool] = Field(
+        allow_video_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the video stream url.",
         ),
-        allow_audio_stream_copy: Optional[bool] = Field(
+        allow_audio_stream_copy: bool | None = Field(
             default=None,
             description="Whether or not to allow copying of the audio stream url.",
         ),
-        break_on_non_key_frames: Optional[bool] = Field(
+        break_on_non_key_frames: bool | None = Field(
             default=None, description="Optional. Whether to break on non key frames."
         ),
-        audio_sample_rate: Optional[int] = Field(
+        audio_sample_rate: int | None = Field(
             default=None,
             description="Optional. Specify a specific audio sample rate, e.g. 44100.",
         ),
-        max_audio_bit_depth: Optional[int] = Field(
+        max_audio_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum audio bit depth."
         ),
-        audio_bit_rate: Optional[int] = Field(
+        audio_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify an audio bitrate to encode to, e.g. 128000. If omitted this will be left to encoder defaults.",
         ),
-        audio_channels: Optional[int] = Field(
+        audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a specific number of audio channels to encode to, e.g. 2.",
         ),
-        max_audio_channels: Optional[int] = Field(
+        max_audio_channels: int | None = Field(
             default=None,
             description="Optional. Specify a maximum number of audio channels to encode to, e.g. 2.",
         ),
-        profile: Optional[str] = Field(
+        profile: str | None = Field(
             default=None,
             description="Optional. Specify a specific an encoder profile (varies by encoder), e.g. main, baseline, high.",
         ),
-        level: Optional[str] = Field(
+        level: str | None = Field(
             default=None,
             description="Optional. Specify a level for the encoder profile (varies by encoder), e.g. 3, 3.1.",
         ),
-        framerate: Optional[float] = Field(
+        framerate: float | None = Field(
             default=None,
             description="Optional. A specific video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        max_framerate: Optional[float] = Field(
+        max_framerate: float | None = Field(
             default=None,
             description="Optional. A specific maximum video framerate to encode to, e.g. 23.976. Generally this should be omitted unless the device has specific requirements.",
         ),
-        copy_timestamps: Optional[bool] = Field(
+        copy_timestamps: bool | None = Field(
             default=None,
             description="Whether or not to copy timestamps when transcoding with an offset. Defaults to false.",
         ),
-        start_time_ticks: Optional[int] = Field(
+        start_time_ticks: int | None = Field(
             default=None,
             description="Optional. Specify a starting offset, in ticks. 1 tick = 10000 ms.",
         ),
-        width: Optional[int] = Field(
+        width: int | None = Field(
             default=None,
             description="Optional. The fixed horizontal resolution of the encoded video.",
         ),
-        height: Optional[int] = Field(
+        height: int | None = Field(
             default=None,
             description="Optional. The fixed vertical resolution of the encoded video.",
         ),
-        max_width: Optional[int] = Field(
+        max_width: int | None = Field(
             default=None,
             description="Optional. The maximum horizontal resolution of the encoded video.",
         ),
-        max_height: Optional[int] = Field(
+        max_height: int | None = Field(
             default=None,
             description="Optional. The maximum vertical resolution of the encoded video.",
         ),
-        video_bit_rate: Optional[int] = Field(
+        video_bit_rate: int | None = Field(
             default=None,
             description="Optional. Specify a video bitrate to encode to, e.g. 500000. If omitted this will be left to encoder defaults.",
         ),
-        subtitle_stream_index: Optional[int] = Field(
+        subtitle_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the subtitle stream to use. If omitted no subtitles will be used.",
         ),
-        subtitle_method: Optional[str] = Field(
+        subtitle_method: str | None = Field(
             default=None, description="Optional. Specify the subtitle delivery method."
         ),
-        max_ref_frames: Optional[int] = Field(default=None, description="Optional."),
-        max_video_bit_depth: Optional[int] = Field(
+        max_ref_frames: int | None = Field(default=None, description="Optional."),
+        max_video_bit_depth: int | None = Field(
             default=None, description="Optional. The maximum video bit depth."
         ),
-        require_avc: Optional[bool] = Field(
+        require_avc: bool | None = Field(
             default=None, description="Optional. Whether to require avc."
         ),
-        de_interlace: Optional[bool] = Field(
+        de_interlace: bool | None = Field(
             default=None, description="Optional. Whether to deinterlace the video."
         ),
-        require_non_anamorphic: Optional[bool] = Field(
+        require_non_anamorphic: bool | None = Field(
             default=None,
             description="Optional. Whether to require a non anamorphic stream.",
         ),
-        transcoding_max_audio_channels: Optional[int] = Field(
+        transcoding_max_audio_channels: int | None = Field(
             default=None,
             description="Optional. The maximum number of audio channels to transcode.",
         ),
-        cpu_core_limit: Optional[int] = Field(
+        cpu_core_limit: int | None = Field(
             default=None,
             description="Optional. The limit of how many cpu cores to use.",
         ),
-        live_stream_id: Optional[str] = Field(
+        live_stream_id: str | None = Field(
             default=None, description="The live stream id."
         ),
-        enable_mpegts_m2_ts_mode: Optional[bool] = Field(
+        enable_mpegts_m2_ts_mode: bool | None = Field(
             default=None, description="Optional. Whether to enable the MpegtsM2Ts mode."
         ),
-        video_codec: Optional[str] = Field(
+        video_codec: str | None = Field(
             default=None,
             description="Optional. Specify a video codec to encode to, e.g. h264. If omitted the server will auto-select using the url's extension.",
         ),
-        subtitle_codec: Optional[str] = Field(
+        subtitle_codec: str | None = Field(
             default=None, description="Optional. Specify a subtitle codec to encode to."
         ),
-        transcode_reasons: Optional[str] = Field(
+        transcode_reasons: str | None = Field(
             default=None, description="Optional. The transcoding reason."
         ),
-        audio_stream_index: Optional[int] = Field(
+        audio_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the audio stream to use. If omitted the first audio stream will be used.",
         ),
-        video_stream_index: Optional[int] = Field(
+        video_stream_index: int | None = Field(
             default=None,
             description="Optional. The index of the video stream to use. If omitted the first video stream will be used.",
         ),
-        context: Optional[str] = Field(
+        context: str | None = Field(
             default=None,
             description="Optional. The MediaBrowser.Model.Dlna.EncodingContext.",
         ),
-        stream_options: Optional[Dict[str, Any]] = Field(
+        stream_options: dict[str, Any] | None = Field(
             default=None, description="Optional. The streaming options."
         ),
-        enable_audio_vbr_encoding: Optional[bool] = Field(
+        enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
     ) -> Any:
@@ -11473,10 +11380,10 @@ def register_videos_tools(mcp: FastMCP):
         tags={"Videos"},
     )
     def merge_versions_tool(
-        ids: Optional[List[Any]] = Field(
+        ids: list[Any] | None = Field(
             default=None,
             description="Item id list. This allows multiple, comma delimited.",
-        )
+        ),
     ) -> Any:
         """Merges videos into a single record."""
         api = get_client()
@@ -11486,57 +11393,55 @@ def register_videos_tools(mcp: FastMCP):
 def register_years_tools(mcp: FastMCP):
     @mcp.tool(name="get_years", description="Get years.", tags={"Years"})
     def get_years_tool(
-        start_index: Optional[int] = Field(
+        start_index: int | None = Field(
             default=None,
             description="Skips over a given number of items within the results. Use for paging.",
         ),
-        limit: Optional[int] = Field(
+        limit: int | None = Field(
             default=None,
             description="Optional. The maximum number of records to return.",
         ),
-        sort_order: Optional[List[Any]] = Field(
+        sort_order: list[Any] | None = Field(
             default=None, description="Sort Order - Ascending,Descending."
         ),
-        parent_id: Optional[str] = Field(
+        parent_id: str | None = Field(
             default=None,
             description="Specify this to localize the search to a specific item or folder. Omit to use the root.",
         ),
-        fields: Optional[List[Any]] = Field(
+        fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
-        exclude_item_types: Optional[List[Any]] = Field(
+        exclude_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be excluded based on item type. This allows multiple, comma delimited.",
         ),
-        include_item_types: Optional[List[Any]] = Field(
+        include_item_types: list[Any] | None = Field(
             default=None,
             description="Optional. If specified, results will be included based on item type. This allows multiple, comma delimited.",
         ),
-        media_types: Optional[List[Any]] = Field(
+        media_types: list[Any] | None = Field(
             default=None,
             description="Optional. Filter by MediaType. Allows multiple, comma delimited.",
         ),
-        sort_by: Optional[List[Any]] = Field(
+        sort_by: list[Any] | None = Field(
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited. Options: Album, AlbumArtist, Artist, Budget, CommunityRating, CriticRating, DateCreated, DatePlayed, PlayCount, PremiereDate, ProductionYear, SortName, Random, Revenue, Runtime.",
         ),
-        enable_user_data: Optional[bool] = Field(
+        enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
         ),
-        image_type_limit: Optional[int] = Field(
+        image_type_limit: int | None = Field(
             default=None,
             description="Optional. The max number of images to return, per image type.",
         ),
-        enable_image_types: Optional[List[Any]] = Field(
+        enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
         ),
-        user_id: Optional[str] = Field(default=None, description="User Id."),
-        recursive: Optional[bool] = Field(
-            default=None, description="Search recursively."
-        ),
-        enable_images: Optional[bool] = Field(
+        user_id: str | None = Field(default=None, description="User Id."),
+        recursive: bool | None = Field(default=None, description="Search recursively."),
+        enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
     ) -> Any:
@@ -11563,7 +11468,7 @@ def register_years_tools(mcp: FastMCP):
     @mcp.tool(name="get_year", description="Gets a year.", tags={"Years"})
     def get_year_tool(
         year: int = Field(description="The year."),
-        user_id: Optional[str] = Field(
+        user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),

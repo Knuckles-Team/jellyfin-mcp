@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 
 
-import requests
-from typing import Dict, List, Optional, Any
+from typing import Any
 from urllib.parse import urljoin
+
+import requests
 
 
 class Api:
     def __init__(
         self,
         base_url: str,
-        token: Optional[str] = None,
-        username: Optional[str] = None,
-        password: Optional[str] = None,
+        token: str | None = None,
+        username: str | None = None,
+        password: str | None = None,
         verify: bool = False,
     ):
         self.base_url = base_url
@@ -25,7 +26,6 @@ class Api:
             self._session.headers.update({"X-Emby-Token": token})
 
         try:
-
             response = self._session.get(urljoin(self.base_url, "/System/Info"))
             if response.status_code == 401:
                 from agent_utilities.exceptions import AuthError
@@ -50,9 +50,9 @@ class Api:
         self,
         method: str,
         endpoint: str,
-        params: Dict = None,
-        data: Dict = None,
-        json_data: Dict = None,
+        params: dict | None = None,
+        data: dict | None = None,
+        json_data: dict | None = None,
     ) -> Any:
         url = urljoin(self.base_url, endpoint)
         response = self._session.request(
@@ -66,14 +66,14 @@ class Api:
 
     def get_log_entries(
         self,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        min_date: Optional[str] = None,
-        has_user_id: Optional[bool] = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        min_date: str | None = None,
+        has_user_id: bool | None = None,
     ) -> Any:
         """Gets activity log entries."""
         endpoint = "/System/ActivityLog/Entries"
-        params = {}
+        params: dict[str, Any] = {}
         if start_index is not None:
             params["startIndex"] = start_index
         if limit is not None:
@@ -90,10 +90,10 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def create_key(self, app: Optional[str] = None) -> Any:
+    def create_key(self, app: str | None = None) -> Any:
         """Create a new api key."""
         endpoint = "/Auth/Keys"
-        params = {}
+        params: dict[str, Any] = {}
         if app is not None:
             params["app"] = app
         return self.request("POST", endpoint, params=params)
@@ -107,42 +107,42 @@ class Api:
 
     def get_artists(
         self,
-        min_community_rating: Optional[float] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        search_term: Optional[str] = None,
-        parent_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        exclude_item_types: Optional[List[Any]] = None,
-        include_item_types: Optional[List[Any]] = None,
-        filters: Optional[List[Any]] = None,
-        is_favorite: Optional[bool] = None,
-        media_types: Optional[List[Any]] = None,
-        genres: Optional[List[Any]] = None,
-        genre_ids: Optional[List[Any]] = None,
-        official_ratings: Optional[List[Any]] = None,
-        tags: Optional[List[Any]] = None,
-        years: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        person: Optional[str] = None,
-        person_ids: Optional[List[Any]] = None,
-        person_types: Optional[List[Any]] = None,
-        studios: Optional[List[Any]] = None,
-        studio_ids: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        name_starts_with_or_greater: Optional[str] = None,
-        name_starts_with: Optional[str] = None,
-        name_less_than: Optional[str] = None,
-        sort_by: Optional[List[Any]] = None,
-        sort_order: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        enable_total_record_count: Optional[bool] = None,
+        min_community_rating: float | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        search_term: str | None = None,
+        parent_id: str | None = None,
+        fields: list[Any] | None = None,
+        exclude_item_types: list[Any] | None = None,
+        include_item_types: list[Any] | None = None,
+        filters: list[Any] | None = None,
+        is_favorite: bool | None = None,
+        media_types: list[Any] | None = None,
+        genres: list[Any] | None = None,
+        genre_ids: list[Any] | None = None,
+        official_ratings: list[Any] | None = None,
+        tags: list[Any] | None = None,
+        years: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        person: str | None = None,
+        person_ids: list[Any] | None = None,
+        person_types: list[Any] | None = None,
+        studios: list[Any] | None = None,
+        studio_ids: list[Any] | None = None,
+        user_id: str | None = None,
+        name_starts_with_or_greater: str | None = None,
+        name_starts_with: str | None = None,
+        name_less_than: str | None = None,
+        sort_by: list[Any] | None = None,
+        sort_order: list[Any] | None = None,
+        enable_images: bool | None = None,
+        enable_total_record_count: bool | None = None,
     ) -> Any:
         """Gets all artists from a given item, folder, or the entire library."""
         endpoint = "/Artists"
-        params = {}
+        params: dict[str, Any] = {}
         if min_community_rating is not None:
             params["minCommunityRating"] = min_community_rating
         if start_index is not None:
@@ -209,53 +209,53 @@ class Api:
             params["enableTotalRecordCount"] = enable_total_record_count
         return self.request("GET", endpoint, params=params)
 
-    def get_artist_by_name(self, name: str, user_id: Optional[str] = None) -> Any:
+    def get_artist_by_name(self, name: str, user_id: str | None = None) -> Any:
         """Gets an artist by name."""
         endpoint = "/Artists/{name}"
         endpoint = endpoint.replace("{name}", str(name))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
 
     def get_album_artists(
         self,
-        min_community_rating: Optional[float] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        search_term: Optional[str] = None,
-        parent_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        exclude_item_types: Optional[List[Any]] = None,
-        include_item_types: Optional[List[Any]] = None,
-        filters: Optional[List[Any]] = None,
-        is_favorite: Optional[bool] = None,
-        media_types: Optional[List[Any]] = None,
-        genres: Optional[List[Any]] = None,
-        genre_ids: Optional[List[Any]] = None,
-        official_ratings: Optional[List[Any]] = None,
-        tags: Optional[List[Any]] = None,
-        years: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        person: Optional[str] = None,
-        person_ids: Optional[List[Any]] = None,
-        person_types: Optional[List[Any]] = None,
-        studios: Optional[List[Any]] = None,
-        studio_ids: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        name_starts_with_or_greater: Optional[str] = None,
-        name_starts_with: Optional[str] = None,
-        name_less_than: Optional[str] = None,
-        sort_by: Optional[List[Any]] = None,
-        sort_order: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        enable_total_record_count: Optional[bool] = None,
+        min_community_rating: float | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        search_term: str | None = None,
+        parent_id: str | None = None,
+        fields: list[Any] | None = None,
+        exclude_item_types: list[Any] | None = None,
+        include_item_types: list[Any] | None = None,
+        filters: list[Any] | None = None,
+        is_favorite: bool | None = None,
+        media_types: list[Any] | None = None,
+        genres: list[Any] | None = None,
+        genre_ids: list[Any] | None = None,
+        official_ratings: list[Any] | None = None,
+        tags: list[Any] | None = None,
+        years: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        person: str | None = None,
+        person_ids: list[Any] | None = None,
+        person_types: list[Any] | None = None,
+        studios: list[Any] | None = None,
+        studio_ids: list[Any] | None = None,
+        user_id: str | None = None,
+        name_starts_with_or_greater: str | None = None,
+        name_starts_with: str | None = None,
+        name_less_than: str | None = None,
+        sort_by: list[Any] | None = None,
+        sort_order: list[Any] | None = None,
+        enable_images: bool | None = None,
+        enable_total_record_count: bool | None = None,
     ) -> Any:
         """Gets all album artists from a given item, folder, or the entire library."""
         endpoint = "/Artists/AlbumArtists"
-        params = {}
+        params: dict[str, Any] = {}
         if min_community_rating is not None:
             params["minCommunityRating"] = min_community_rating
         if start_index is not None:
@@ -325,60 +325,60 @@ class Api:
     def get_audio_stream(
         self,
         item_id: str,
-        container: Optional[str] = None,
-        static: Optional[bool] = None,
-        params: Optional[str] = None,
-        tag: Optional[str] = None,
-        device_profile_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        segment_container: Optional[str] = None,
-        segment_length: Optional[int] = None,
-        min_segments: Optional[int] = None,
-        media_source_id: Optional[str] = None,
-        device_id: Optional[str] = None,
-        audio_codec: Optional[str] = None,
-        enable_auto_stream_copy: Optional[bool] = None,
-        allow_video_stream_copy: Optional[bool] = None,
-        allow_audio_stream_copy: Optional[bool] = None,
-        break_on_non_key_frames: Optional[bool] = None,
-        audio_sample_rate: Optional[int] = None,
-        max_audio_bit_depth: Optional[int] = None,
-        audio_bit_rate: Optional[int] = None,
-        audio_channels: Optional[int] = None,
-        max_audio_channels: Optional[int] = None,
-        profile: Optional[str] = None,
-        level: Optional[str] = None,
-        framerate: Optional[float] = None,
-        max_framerate: Optional[float] = None,
-        copy_timestamps: Optional[bool] = None,
-        start_time_ticks: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        video_bit_rate: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        subtitle_method: Optional[str] = None,
-        max_ref_frames: Optional[int] = None,
-        max_video_bit_depth: Optional[int] = None,
-        require_avc: Optional[bool] = None,
-        de_interlace: Optional[bool] = None,
-        require_non_anamorphic: Optional[bool] = None,
-        transcoding_max_audio_channels: Optional[int] = None,
-        cpu_core_limit: Optional[int] = None,
-        live_stream_id: Optional[str] = None,
-        enable_mpegts_m2_ts_mode: Optional[bool] = None,
-        video_codec: Optional[str] = None,
-        subtitle_codec: Optional[str] = None,
-        transcode_reasons: Optional[str] = None,
-        audio_stream_index: Optional[int] = None,
-        video_stream_index: Optional[int] = None,
-        context: Optional[str] = None,
-        stream_options: Optional[Dict[str, Any]] = None,
-        enable_audio_vbr_encoding: Optional[bool] = None,
+        container: str | None = None,
+        static: bool | None = None,
+        params: str | None = None,
+        tag: str | None = None,
+        device_profile_id: str | None = None,
+        play_session_id: str | None = None,
+        segment_container: str | None = None,
+        segment_length: int | None = None,
+        min_segments: int | None = None,
+        media_source_id: str | None = None,
+        device_id: str | None = None,
+        audio_codec: str | None = None,
+        enable_auto_stream_copy: bool | None = None,
+        allow_video_stream_copy: bool | None = None,
+        allow_audio_stream_copy: bool | None = None,
+        break_on_non_key_frames: bool | None = None,
+        audio_sample_rate: int | None = None,
+        max_audio_bit_depth: int | None = None,
+        audio_bit_rate: int | None = None,
+        audio_channels: int | None = None,
+        max_audio_channels: int | None = None,
+        profile: str | None = None,
+        level: str | None = None,
+        framerate: float | None = None,
+        max_framerate: float | None = None,
+        copy_timestamps: bool | None = None,
+        start_time_ticks: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        video_bit_rate: int | None = None,
+        subtitle_stream_index: int | None = None,
+        subtitle_method: str | None = None,
+        max_ref_frames: int | None = None,
+        max_video_bit_depth: int | None = None,
+        require_avc: bool | None = None,
+        de_interlace: bool | None = None,
+        require_non_anamorphic: bool | None = None,
+        transcoding_max_audio_channels: int | None = None,
+        cpu_core_limit: int | None = None,
+        live_stream_id: str | None = None,
+        enable_mpegts_m2_ts_mode: bool | None = None,
+        video_codec: str | None = None,
+        subtitle_codec: str | None = None,
+        transcode_reasons: str | None = None,
+        audio_stream_index: int | None = None,
+        video_stream_index: int | None = None,
+        context: str | None = None,
+        stream_options: dict[str, Any] | None = None,
+        enable_audio_vbr_encoding: bool | None = None,
     ) -> Any:
         """Gets an audio stream."""
         endpoint = "/Audio/{itemId}/stream"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if container is not None:
             params["container"] = container
         if static is not None:
@@ -483,60 +483,60 @@ class Api:
         self,
         item_id: str,
         container: str,
-        static: Optional[bool] = None,
-        params: Optional[str] = None,
-        tag: Optional[str] = None,
-        device_profile_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        segment_container: Optional[str] = None,
-        segment_length: Optional[int] = None,
-        min_segments: Optional[int] = None,
-        media_source_id: Optional[str] = None,
-        device_id: Optional[str] = None,
-        audio_codec: Optional[str] = None,
-        enable_auto_stream_copy: Optional[bool] = None,
-        allow_video_stream_copy: Optional[bool] = None,
-        allow_audio_stream_copy: Optional[bool] = None,
-        break_on_non_key_frames: Optional[bool] = None,
-        audio_sample_rate: Optional[int] = None,
-        max_audio_bit_depth: Optional[int] = None,
-        audio_bit_rate: Optional[int] = None,
-        audio_channels: Optional[int] = None,
-        max_audio_channels: Optional[int] = None,
-        profile: Optional[str] = None,
-        level: Optional[str] = None,
-        framerate: Optional[float] = None,
-        max_framerate: Optional[float] = None,
-        copy_timestamps: Optional[bool] = None,
-        start_time_ticks: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        video_bit_rate: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        subtitle_method: Optional[str] = None,
-        max_ref_frames: Optional[int] = None,
-        max_video_bit_depth: Optional[int] = None,
-        require_avc: Optional[bool] = None,
-        de_interlace: Optional[bool] = None,
-        require_non_anamorphic: Optional[bool] = None,
-        transcoding_max_audio_channels: Optional[int] = None,
-        cpu_core_limit: Optional[int] = None,
-        live_stream_id: Optional[str] = None,
-        enable_mpegts_m2_ts_mode: Optional[bool] = None,
-        video_codec: Optional[str] = None,
-        subtitle_codec: Optional[str] = None,
-        transcode_reasons: Optional[str] = None,
-        audio_stream_index: Optional[int] = None,
-        video_stream_index: Optional[int] = None,
-        context: Optional[str] = None,
-        stream_options: Optional[Dict[str, Any]] = None,
-        enable_audio_vbr_encoding: Optional[bool] = None,
+        static: bool | None = None,
+        params: str | None = None,
+        tag: str | None = None,
+        device_profile_id: str | None = None,
+        play_session_id: str | None = None,
+        segment_container: str | None = None,
+        segment_length: int | None = None,
+        min_segments: int | None = None,
+        media_source_id: str | None = None,
+        device_id: str | None = None,
+        audio_codec: str | None = None,
+        enable_auto_stream_copy: bool | None = None,
+        allow_video_stream_copy: bool | None = None,
+        allow_audio_stream_copy: bool | None = None,
+        break_on_non_key_frames: bool | None = None,
+        audio_sample_rate: int | None = None,
+        max_audio_bit_depth: int | None = None,
+        audio_bit_rate: int | None = None,
+        audio_channels: int | None = None,
+        max_audio_channels: int | None = None,
+        profile: str | None = None,
+        level: str | None = None,
+        framerate: float | None = None,
+        max_framerate: float | None = None,
+        copy_timestamps: bool | None = None,
+        start_time_ticks: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        video_bit_rate: int | None = None,
+        subtitle_stream_index: int | None = None,
+        subtitle_method: str | None = None,
+        max_ref_frames: int | None = None,
+        max_video_bit_depth: int | None = None,
+        require_avc: bool | None = None,
+        de_interlace: bool | None = None,
+        require_non_anamorphic: bool | None = None,
+        transcoding_max_audio_channels: int | None = None,
+        cpu_core_limit: int | None = None,
+        live_stream_id: str | None = None,
+        enable_mpegts_m2_ts_mode: bool | None = None,
+        video_codec: str | None = None,
+        subtitle_codec: str | None = None,
+        transcode_reasons: str | None = None,
+        audio_stream_index: int | None = None,
+        video_stream_index: int | None = None,
+        context: str | None = None,
+        stream_options: dict[str, Any] | None = None,
+        enable_audio_vbr_encoding: bool | None = None,
     ) -> Any:
         """Gets an audio stream."""
         endpoint = "/Audio/{itemId}/stream.{container}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         endpoint = endpoint.replace("{container}", str(container))
-        params = {}
+        params: dict[str, Any] = {}
         if static is not None:
             params["static"] = static
         if params is not None:
@@ -641,21 +641,21 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def create_backup(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def create_backup(self, body: dict[str, Any] | None = None) -> Any:
         """Creates a new Backup."""
         endpoint = "/Backup/Create"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def get_backup(self, path: Optional[str] = None) -> Any:
+    def get_backup(self, path: str | None = None) -> Any:
         """Gets the descriptor from an existing archive is present."""
         endpoint = "/Backup/Manifest"
-        params = {}
+        params: dict[str, Any] = {}
         if path is not None:
             params["path"] = path
         return self.request("GET", endpoint, params=params)
 
-    def start_restore_backup(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def start_restore_backup(self, body: dict[str, Any] | None = None) -> Any:
         """Restores to a backup by restarting the server and applying the backup."""
         endpoint = "/Backup/Restore"
         params = None
@@ -681,16 +681,16 @@ class Api:
 
     def get_channels(
         self,
-        user_id: Optional[str] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        supports_latest_items: Optional[bool] = None,
-        supports_media_deletion: Optional[bool] = None,
-        is_favorite: Optional[bool] = None,
+        user_id: str | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        supports_latest_items: bool | None = None,
+        supports_media_deletion: bool | None = None,
+        is_favorite: bool | None = None,
     ) -> Any:
         """Gets available channels."""
         endpoint = "/Channels"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if start_index is not None:
@@ -715,19 +715,19 @@ class Api:
     def get_channel_items(
         self,
         channel_id: str,
-        folder_id: Optional[str] = None,
-        user_id: Optional[str] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        sort_order: Optional[List[Any]] = None,
-        filters: Optional[List[Any]] = None,
-        sort_by: Optional[List[Any]] = None,
-        fields: Optional[List[Any]] = None,
+        folder_id: str | None = None,
+        user_id: str | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        sort_order: list[Any] | None = None,
+        filters: list[Any] | None = None,
+        sort_by: list[Any] | None = None,
+        fields: list[Any] | None = None,
     ) -> Any:
         """Get channel items."""
         endpoint = "/Channels/{channelId}/Items"
         endpoint = endpoint.replace("{channelId}", str(channel_id))
-        params = {}
+        params: dict[str, Any] = {}
         if folder_id is not None:
             params["folderId"] = folder_id
         if user_id is not None:
@@ -754,16 +754,16 @@ class Api:
 
     def get_latest_channel_items(
         self,
-        user_id: Optional[str] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        filters: Optional[List[Any]] = None,
-        fields: Optional[List[Any]] = None,
-        channel_ids: Optional[List[Any]] = None,
+        user_id: str | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        filters: list[Any] | None = None,
+        fields: list[Any] | None = None,
+        channel_ids: list[Any] | None = None,
     ) -> Any:
         """Gets latest channel items."""
         endpoint = "/Channels/Items/Latest"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if start_index is not None:
@@ -778,7 +778,7 @@ class Api:
             params["channelIds"] = channel_ids
         return self.request("GET", endpoint, params=params)
 
-    def log_file(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def log_file(self, body: dict[str, Any] | None = None) -> Any:
         """Upload a document."""
         endpoint = "/ClientLog/Document"
         params = None
@@ -786,14 +786,14 @@ class Api:
 
     def create_collection(
         self,
-        name: Optional[str] = None,
-        ids: Optional[List[Any]] = None,
-        parent_id: Optional[str] = None,
-        is_locked: Optional[bool] = None,
+        name: str | None = None,
+        ids: list[Any] | None = None,
+        parent_id: str | None = None,
+        is_locked: bool | None = None,
     ) -> Any:
         """Creates a new collection."""
         endpoint = "/Collections"
-        params = {}
+        params: dict[str, Any] = {}
         if name is not None:
             params["name"] = name
         if ids is not None:
@@ -805,23 +805,23 @@ class Api:
         return self.request("POST", endpoint, params=params)
 
     def add_to_collection(
-        self, collection_id: str, ids: Optional[List[Any]] = None
+        self, collection_id: str, ids: list[Any] | None = None
     ) -> Any:
         """Adds items to a collection."""
         endpoint = "/Collections/{collectionId}/Items"
         endpoint = endpoint.replace("{collectionId}", str(collection_id))
-        params = {}
+        params: dict[str, Any] = {}
         if ids is not None:
             params["ids"] = ids
         return self.request("POST", endpoint, params=params)
 
     def remove_from_collection(
-        self, collection_id: str, ids: Optional[List[Any]] = None
+        self, collection_id: str, ids: list[Any] | None = None
     ) -> Any:
         """Removes items from a collection."""
         endpoint = "/Collections/{collectionId}/Items"
         endpoint = endpoint.replace("{collectionId}", str(collection_id))
-        params = {}
+        params: dict[str, Any] = {}
         if ids is not None:
             params["ids"] = ids
         return self.request("DELETE", endpoint, params=params)
@@ -832,7 +832,7 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def update_configuration(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def update_configuration(self, body: dict[str, Any] | None = None) -> Any:
         """Updates application configuration."""
         endpoint = "/System/Configuration"
         params = None
@@ -846,7 +846,7 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def update_named_configuration(
-        self, key: str, body: Optional[Dict[str, Any]] = None
+        self, key: str, body: dict[str, Any] | None = None
     ) -> Any:
         """Updates named configuration."""
         endpoint = "/System/Configuration/{key}"
@@ -854,9 +854,7 @@ class Api:
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def update_branding_configuration(
-        self, body: Optional[Dict[str, Any]] = None
-    ) -> Any:
+    def update_branding_configuration(self, body: dict[str, Any] | None = None) -> Any:
         """Updates branding configuration."""
         endpoint = "/System/Configuration/Branding"
         params = None
@@ -868,62 +866,60 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def get_dashboard_configuration_page(self, name: Optional[str] = None) -> Any:
+    def get_dashboard_configuration_page(self, name: str | None = None) -> Any:
         """Gets a dashboard configuration page."""
         endpoint = "/web/ConfigurationPage"
-        params = {}
+        params: dict[str, Any] = {}
         if name is not None:
             params["name"] = name
         return self.request("GET", endpoint, params=params)
 
-    def get_configuration_pages(
-        self, enable_in_main_menu: Optional[bool] = None
-    ) -> Any:
+    def get_configuration_pages(self, enable_in_main_menu: bool | None = None) -> Any:
         """Gets the configuration pages."""
         endpoint = "/web/ConfigurationPages"
-        params = {}
+        params: dict[str, Any] = {}
         if enable_in_main_menu is not None:
             params["enableInMainMenu"] = enable_in_main_menu
         return self.request("GET", endpoint, params=params)
 
-    def get_devices(self, user_id: Optional[str] = None) -> Any:
+    def get_devices(self, user_id: str | None = None) -> Any:
         """Get Devices."""
         endpoint = "/Devices"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
 
-    def delete_device(self, id: Optional[str] = None) -> Any:
+    def delete_device(self, id: str | None = None) -> Any:
         """Deletes a device."""
         endpoint = "/Devices"
-        params = {}
+        params: dict[str, Any] = {}
         if id is not None:
             params["id"] = id
         return self.request("DELETE", endpoint, params=params)
 
-    def get_device_info(self, id: Optional[str] = None) -> Any:
+    def get_device_info(self, id: str | None = None) -> Any:
         """Get info for a device."""
         endpoint = "/Devices/Info"
-        params = {}
+        params: dict[str, Any] = {}
         if id is not None:
             params["id"] = id
         return self.request("GET", endpoint, params=params)
 
-    def get_device_options(self, id: Optional[str] = None) -> Any:
+    def get_device_options(self, id: str | None = None) -> Any:
         """Get options for a device."""
         endpoint = "/Devices/Options"
-        params = {}
+        params: dict[str, Any] = {}
         if id is not None:
             params["id"] = id
         return self.request("GET", endpoint, params=params)
 
     def update_device_options(
-        self, id: Optional[str] = None, body: Optional[Dict[str, Any]] = None
+        self, id: str | None = None, body: dict[str, Any] | None = None
     ) -> Any:
         """Update device options."""
         endpoint = "/Devices/Options"
-        params = {}
+        params: dict[str, Any] = {}
         if id is not None:
             params["id"] = id
         return self.request("POST", endpoint, params=params, json_data=body)
@@ -931,15 +927,15 @@ class Api:
     def get_display_preferences(
         self,
         display_preferences_id: str,
-        user_id: Optional[str] = None,
-        client: Optional[str] = None,
+        user_id: str | None = None,
+        client: str | None = None,
     ) -> Any:
         """Get Display Preferences."""
         endpoint = "/DisplayPreferences/{displayPreferencesId}"
         endpoint = endpoint.replace(
             "{displayPreferencesId}", str(display_preferences_id)
         )
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if client is not None:
@@ -949,16 +945,16 @@ class Api:
     def update_display_preferences(
         self,
         display_preferences_id: str,
-        user_id: Optional[str] = None,
-        client: Optional[str] = None,
-        body: Optional[Dict[str, Any]] = None,
+        user_id: str | None = None,
+        client: str | None = None,
+        body: dict[str, Any] | None = None,
     ) -> Any:
         """Update Display Preferences."""
         endpoint = "/DisplayPreferences/{displayPreferencesId}"
         endpoint = endpoint.replace(
             "{displayPreferencesId}", str(display_preferences_id)
         )
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if client is not None:
@@ -971,57 +967,57 @@ class Api:
         playlist_id: str,
         segment_id: int,
         container: str,
-        runtime_ticks: Optional[int] = None,
-        actual_segment_length_ticks: Optional[int] = None,
-        static: Optional[bool] = None,
-        params: Optional[str] = None,
-        tag: Optional[str] = None,
-        device_profile_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        segment_container: Optional[str] = None,
-        segment_length: Optional[int] = None,
-        min_segments: Optional[int] = None,
-        media_source_id: Optional[str] = None,
-        device_id: Optional[str] = None,
-        audio_codec: Optional[str] = None,
-        enable_auto_stream_copy: Optional[bool] = None,
-        allow_video_stream_copy: Optional[bool] = None,
-        allow_audio_stream_copy: Optional[bool] = None,
-        break_on_non_key_frames: Optional[bool] = None,
-        audio_sample_rate: Optional[int] = None,
-        max_audio_bit_depth: Optional[int] = None,
-        max_streaming_bitrate: Optional[int] = None,
-        audio_bit_rate: Optional[int] = None,
-        audio_channels: Optional[int] = None,
-        max_audio_channels: Optional[int] = None,
-        profile: Optional[str] = None,
-        level: Optional[str] = None,
-        framerate: Optional[float] = None,
-        max_framerate: Optional[float] = None,
-        copy_timestamps: Optional[bool] = None,
-        start_time_ticks: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        video_bit_rate: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        subtitle_method: Optional[str] = None,
-        max_ref_frames: Optional[int] = None,
-        max_video_bit_depth: Optional[int] = None,
-        require_avc: Optional[bool] = None,
-        de_interlace: Optional[bool] = None,
-        require_non_anamorphic: Optional[bool] = None,
-        transcoding_max_audio_channels: Optional[int] = None,
-        cpu_core_limit: Optional[int] = None,
-        live_stream_id: Optional[str] = None,
-        enable_mpegts_m2_ts_mode: Optional[bool] = None,
-        video_codec: Optional[str] = None,
-        subtitle_codec: Optional[str] = None,
-        transcode_reasons: Optional[str] = None,
-        audio_stream_index: Optional[int] = None,
-        video_stream_index: Optional[int] = None,
-        context: Optional[str] = None,
-        stream_options: Optional[Dict[str, Any]] = None,
-        enable_audio_vbr_encoding: Optional[bool] = None,
+        runtime_ticks: int | None = None,
+        actual_segment_length_ticks: int | None = None,
+        static: bool | None = None,
+        params: str | None = None,
+        tag: str | None = None,
+        device_profile_id: str | None = None,
+        play_session_id: str | None = None,
+        segment_container: str | None = None,
+        segment_length: int | None = None,
+        min_segments: int | None = None,
+        media_source_id: str | None = None,
+        device_id: str | None = None,
+        audio_codec: str | None = None,
+        enable_auto_stream_copy: bool | None = None,
+        allow_video_stream_copy: bool | None = None,
+        allow_audio_stream_copy: bool | None = None,
+        break_on_non_key_frames: bool | None = None,
+        audio_sample_rate: int | None = None,
+        max_audio_bit_depth: int | None = None,
+        max_streaming_bitrate: int | None = None,
+        audio_bit_rate: int | None = None,
+        audio_channels: int | None = None,
+        max_audio_channels: int | None = None,
+        profile: str | None = None,
+        level: str | None = None,
+        framerate: float | None = None,
+        max_framerate: float | None = None,
+        copy_timestamps: bool | None = None,
+        start_time_ticks: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        video_bit_rate: int | None = None,
+        subtitle_stream_index: int | None = None,
+        subtitle_method: str | None = None,
+        max_ref_frames: int | None = None,
+        max_video_bit_depth: int | None = None,
+        require_avc: bool | None = None,
+        de_interlace: bool | None = None,
+        require_non_anamorphic: bool | None = None,
+        transcoding_max_audio_channels: int | None = None,
+        cpu_core_limit: int | None = None,
+        live_stream_id: str | None = None,
+        enable_mpegts_m2_ts_mode: bool | None = None,
+        video_codec: str | None = None,
+        subtitle_codec: str | None = None,
+        transcode_reasons: str | None = None,
+        audio_stream_index: int | None = None,
+        video_stream_index: int | None = None,
+        context: str | None = None,
+        stream_options: dict[str, Any] | None = None,
+        enable_audio_vbr_encoding: bool | None = None,
     ) -> Any:
         """Gets a video stream using HTTP live streaming."""
         endpoint = "/Audio/{itemId}/hls1/{playlistId}/{segmentId}.{container}"
@@ -1029,7 +1025,7 @@ class Api:
         endpoint = endpoint.replace("{playlistId}", str(playlist_id))
         endpoint = endpoint.replace("{segmentId}", str(segment_id))
         endpoint = endpoint.replace("{container}", str(container))
-        params = {}
+        params: dict[str, Any] = {}
         if runtime_ticks is not None:
             params["runtimeTicks"] = runtime_ticks
         if actual_segment_length_ticks is not None:
@@ -1137,60 +1133,60 @@ class Api:
     def get_variant_hls_audio_playlist(
         self,
         item_id: str,
-        static: Optional[bool] = None,
-        params: Optional[str] = None,
-        tag: Optional[str] = None,
-        device_profile_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        segment_container: Optional[str] = None,
-        segment_length: Optional[int] = None,
-        min_segments: Optional[int] = None,
-        media_source_id: Optional[str] = None,
-        device_id: Optional[str] = None,
-        audio_codec: Optional[str] = None,
-        enable_auto_stream_copy: Optional[bool] = None,
-        allow_video_stream_copy: Optional[bool] = None,
-        allow_audio_stream_copy: Optional[bool] = None,
-        break_on_non_key_frames: Optional[bool] = None,
-        audio_sample_rate: Optional[int] = None,
-        max_audio_bit_depth: Optional[int] = None,
-        max_streaming_bitrate: Optional[int] = None,
-        audio_bit_rate: Optional[int] = None,
-        audio_channels: Optional[int] = None,
-        max_audio_channels: Optional[int] = None,
-        profile: Optional[str] = None,
-        level: Optional[str] = None,
-        framerate: Optional[float] = None,
-        max_framerate: Optional[float] = None,
-        copy_timestamps: Optional[bool] = None,
-        start_time_ticks: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        video_bit_rate: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        subtitle_method: Optional[str] = None,
-        max_ref_frames: Optional[int] = None,
-        max_video_bit_depth: Optional[int] = None,
-        require_avc: Optional[bool] = None,
-        de_interlace: Optional[bool] = None,
-        require_non_anamorphic: Optional[bool] = None,
-        transcoding_max_audio_channels: Optional[int] = None,
-        cpu_core_limit: Optional[int] = None,
-        live_stream_id: Optional[str] = None,
-        enable_mpegts_m2_ts_mode: Optional[bool] = None,
-        video_codec: Optional[str] = None,
-        subtitle_codec: Optional[str] = None,
-        transcode_reasons: Optional[str] = None,
-        audio_stream_index: Optional[int] = None,
-        video_stream_index: Optional[int] = None,
-        context: Optional[str] = None,
-        stream_options: Optional[Dict[str, Any]] = None,
-        enable_audio_vbr_encoding: Optional[bool] = None,
+        static: bool | None = None,
+        params: str | None = None,
+        tag: str | None = None,
+        device_profile_id: str | None = None,
+        play_session_id: str | None = None,
+        segment_container: str | None = None,
+        segment_length: int | None = None,
+        min_segments: int | None = None,
+        media_source_id: str | None = None,
+        device_id: str | None = None,
+        audio_codec: str | None = None,
+        enable_auto_stream_copy: bool | None = None,
+        allow_video_stream_copy: bool | None = None,
+        allow_audio_stream_copy: bool | None = None,
+        break_on_non_key_frames: bool | None = None,
+        audio_sample_rate: int | None = None,
+        max_audio_bit_depth: int | None = None,
+        max_streaming_bitrate: int | None = None,
+        audio_bit_rate: int | None = None,
+        audio_channels: int | None = None,
+        max_audio_channels: int | None = None,
+        profile: str | None = None,
+        level: str | None = None,
+        framerate: float | None = None,
+        max_framerate: float | None = None,
+        copy_timestamps: bool | None = None,
+        start_time_ticks: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        video_bit_rate: int | None = None,
+        subtitle_stream_index: int | None = None,
+        subtitle_method: str | None = None,
+        max_ref_frames: int | None = None,
+        max_video_bit_depth: int | None = None,
+        require_avc: bool | None = None,
+        de_interlace: bool | None = None,
+        require_non_anamorphic: bool | None = None,
+        transcoding_max_audio_channels: int | None = None,
+        cpu_core_limit: int | None = None,
+        live_stream_id: str | None = None,
+        enable_mpegts_m2_ts_mode: bool | None = None,
+        video_codec: str | None = None,
+        subtitle_codec: str | None = None,
+        transcode_reasons: str | None = None,
+        audio_stream_index: int | None = None,
+        video_stream_index: int | None = None,
+        context: str | None = None,
+        stream_options: dict[str, Any] | None = None,
+        enable_audio_vbr_encoding: bool | None = None,
     ) -> Any:
         """Gets an audio stream using HTTP live streaming."""
         endpoint = "/Audio/{itemId}/main.m3u8"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if static is not None:
             params["static"] = static
         if params is not None:
@@ -1294,61 +1290,61 @@ class Api:
     def get_master_hls_audio_playlist(
         self,
         item_id: str,
-        static: Optional[bool] = None,
-        params: Optional[str] = None,
-        tag: Optional[str] = None,
-        device_profile_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        segment_container: Optional[str] = None,
-        segment_length: Optional[int] = None,
-        min_segments: Optional[int] = None,
-        media_source_id: Optional[str] = None,
-        device_id: Optional[str] = None,
-        audio_codec: Optional[str] = None,
-        enable_auto_stream_copy: Optional[bool] = None,
-        allow_video_stream_copy: Optional[bool] = None,
-        allow_audio_stream_copy: Optional[bool] = None,
-        break_on_non_key_frames: Optional[bool] = None,
-        audio_sample_rate: Optional[int] = None,
-        max_audio_bit_depth: Optional[int] = None,
-        max_streaming_bitrate: Optional[int] = None,
-        audio_bit_rate: Optional[int] = None,
-        audio_channels: Optional[int] = None,
-        max_audio_channels: Optional[int] = None,
-        profile: Optional[str] = None,
-        level: Optional[str] = None,
-        framerate: Optional[float] = None,
-        max_framerate: Optional[float] = None,
-        copy_timestamps: Optional[bool] = None,
-        start_time_ticks: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        video_bit_rate: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        subtitle_method: Optional[str] = None,
-        max_ref_frames: Optional[int] = None,
-        max_video_bit_depth: Optional[int] = None,
-        require_avc: Optional[bool] = None,
-        de_interlace: Optional[bool] = None,
-        require_non_anamorphic: Optional[bool] = None,
-        transcoding_max_audio_channels: Optional[int] = None,
-        cpu_core_limit: Optional[int] = None,
-        live_stream_id: Optional[str] = None,
-        enable_mpegts_m2_ts_mode: Optional[bool] = None,
-        video_codec: Optional[str] = None,
-        subtitle_codec: Optional[str] = None,
-        transcode_reasons: Optional[str] = None,
-        audio_stream_index: Optional[int] = None,
-        video_stream_index: Optional[int] = None,
-        context: Optional[str] = None,
-        stream_options: Optional[Dict[str, Any]] = None,
-        enable_adaptive_bitrate_streaming: Optional[bool] = None,
-        enable_audio_vbr_encoding: Optional[bool] = None,
+        static: bool | None = None,
+        params: str | None = None,
+        tag: str | None = None,
+        device_profile_id: str | None = None,
+        play_session_id: str | None = None,
+        segment_container: str | None = None,
+        segment_length: int | None = None,
+        min_segments: int | None = None,
+        media_source_id: str | None = None,
+        device_id: str | None = None,
+        audio_codec: str | None = None,
+        enable_auto_stream_copy: bool | None = None,
+        allow_video_stream_copy: bool | None = None,
+        allow_audio_stream_copy: bool | None = None,
+        break_on_non_key_frames: bool | None = None,
+        audio_sample_rate: int | None = None,
+        max_audio_bit_depth: int | None = None,
+        max_streaming_bitrate: int | None = None,
+        audio_bit_rate: int | None = None,
+        audio_channels: int | None = None,
+        max_audio_channels: int | None = None,
+        profile: str | None = None,
+        level: str | None = None,
+        framerate: float | None = None,
+        max_framerate: float | None = None,
+        copy_timestamps: bool | None = None,
+        start_time_ticks: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        video_bit_rate: int | None = None,
+        subtitle_stream_index: int | None = None,
+        subtitle_method: str | None = None,
+        max_ref_frames: int | None = None,
+        max_video_bit_depth: int | None = None,
+        require_avc: bool | None = None,
+        de_interlace: bool | None = None,
+        require_non_anamorphic: bool | None = None,
+        transcoding_max_audio_channels: int | None = None,
+        cpu_core_limit: int | None = None,
+        live_stream_id: str | None = None,
+        enable_mpegts_m2_ts_mode: bool | None = None,
+        video_codec: str | None = None,
+        subtitle_codec: str | None = None,
+        transcode_reasons: str | None = None,
+        audio_stream_index: int | None = None,
+        video_stream_index: int | None = None,
+        context: str | None = None,
+        stream_options: dict[str, Any] | None = None,
+        enable_adaptive_bitrate_streaming: bool | None = None,
+        enable_audio_vbr_encoding: bool | None = None,
     ) -> Any:
         """Gets an audio hls playlist stream."""
         endpoint = "/Audio/{itemId}/master.m3u8"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if static is not None:
             params["static"] = static
         if params is not None:
@@ -1457,59 +1453,59 @@ class Api:
         playlist_id: str,
         segment_id: int,
         container: str,
-        runtime_ticks: Optional[int] = None,
-        actual_segment_length_ticks: Optional[int] = None,
-        static: Optional[bool] = None,
-        params: Optional[str] = None,
-        tag: Optional[str] = None,
-        device_profile_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        segment_container: Optional[str] = None,
-        segment_length: Optional[int] = None,
-        min_segments: Optional[int] = None,
-        media_source_id: Optional[str] = None,
-        device_id: Optional[str] = None,
-        audio_codec: Optional[str] = None,
-        enable_auto_stream_copy: Optional[bool] = None,
-        allow_video_stream_copy: Optional[bool] = None,
-        allow_audio_stream_copy: Optional[bool] = None,
-        break_on_non_key_frames: Optional[bool] = None,
-        audio_sample_rate: Optional[int] = None,
-        max_audio_bit_depth: Optional[int] = None,
-        audio_bit_rate: Optional[int] = None,
-        audio_channels: Optional[int] = None,
-        max_audio_channels: Optional[int] = None,
-        profile: Optional[str] = None,
-        level: Optional[str] = None,
-        framerate: Optional[float] = None,
-        max_framerate: Optional[float] = None,
-        copy_timestamps: Optional[bool] = None,
-        start_time_ticks: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        video_bit_rate: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        subtitle_method: Optional[str] = None,
-        max_ref_frames: Optional[int] = None,
-        max_video_bit_depth: Optional[int] = None,
-        require_avc: Optional[bool] = None,
-        de_interlace: Optional[bool] = None,
-        require_non_anamorphic: Optional[bool] = None,
-        transcoding_max_audio_channels: Optional[int] = None,
-        cpu_core_limit: Optional[int] = None,
-        live_stream_id: Optional[str] = None,
-        enable_mpegts_m2_ts_mode: Optional[bool] = None,
-        video_codec: Optional[str] = None,
-        subtitle_codec: Optional[str] = None,
-        transcode_reasons: Optional[str] = None,
-        audio_stream_index: Optional[int] = None,
-        video_stream_index: Optional[int] = None,
-        context: Optional[str] = None,
-        stream_options: Optional[Dict[str, Any]] = None,
-        enable_audio_vbr_encoding: Optional[bool] = None,
-        always_burn_in_subtitle_when_transcoding: Optional[bool] = None,
+        runtime_ticks: int | None = None,
+        actual_segment_length_ticks: int | None = None,
+        static: bool | None = None,
+        params: str | None = None,
+        tag: str | None = None,
+        device_profile_id: str | None = None,
+        play_session_id: str | None = None,
+        segment_container: str | None = None,
+        segment_length: int | None = None,
+        min_segments: int | None = None,
+        media_source_id: str | None = None,
+        device_id: str | None = None,
+        audio_codec: str | None = None,
+        enable_auto_stream_copy: bool | None = None,
+        allow_video_stream_copy: bool | None = None,
+        allow_audio_stream_copy: bool | None = None,
+        break_on_non_key_frames: bool | None = None,
+        audio_sample_rate: int | None = None,
+        max_audio_bit_depth: int | None = None,
+        audio_bit_rate: int | None = None,
+        audio_channels: int | None = None,
+        max_audio_channels: int | None = None,
+        profile: str | None = None,
+        level: str | None = None,
+        framerate: float | None = None,
+        max_framerate: float | None = None,
+        copy_timestamps: bool | None = None,
+        start_time_ticks: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        video_bit_rate: int | None = None,
+        subtitle_stream_index: int | None = None,
+        subtitle_method: str | None = None,
+        max_ref_frames: int | None = None,
+        max_video_bit_depth: int | None = None,
+        require_avc: bool | None = None,
+        de_interlace: bool | None = None,
+        require_non_anamorphic: bool | None = None,
+        transcoding_max_audio_channels: int | None = None,
+        cpu_core_limit: int | None = None,
+        live_stream_id: str | None = None,
+        enable_mpegts_m2_ts_mode: bool | None = None,
+        video_codec: str | None = None,
+        subtitle_codec: str | None = None,
+        transcode_reasons: str | None = None,
+        audio_stream_index: int | None = None,
+        video_stream_index: int | None = None,
+        context: str | None = None,
+        stream_options: dict[str, Any] | None = None,
+        enable_audio_vbr_encoding: bool | None = None,
+        always_burn_in_subtitle_when_transcoding: bool | None = None,
     ) -> Any:
         """Gets a video stream using HTTP live streaming."""
         endpoint = "/Videos/{itemId}/hls1/{playlistId}/{segmentId}.{container}"
@@ -1517,7 +1513,7 @@ class Api:
         endpoint = endpoint.replace("{playlistId}", str(playlist_id))
         endpoint = endpoint.replace("{segmentId}", str(segment_id))
         endpoint = endpoint.replace("{container}", str(container))
-        params = {}
+        params: dict[str, Any] = {}
         if runtime_ticks is not None:
             params["runtimeTicks"] = runtime_ticks
         if actual_segment_length_ticks is not None:
@@ -1631,64 +1627,64 @@ class Api:
     def get_live_hls_stream(
         self,
         item_id: str,
-        container: Optional[str] = None,
-        static: Optional[bool] = None,
-        params: Optional[str] = None,
-        tag: Optional[str] = None,
-        device_profile_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        segment_container: Optional[str] = None,
-        segment_length: Optional[int] = None,
-        min_segments: Optional[int] = None,
-        media_source_id: Optional[str] = None,
-        device_id: Optional[str] = None,
-        audio_codec: Optional[str] = None,
-        enable_auto_stream_copy: Optional[bool] = None,
-        allow_video_stream_copy: Optional[bool] = None,
-        allow_audio_stream_copy: Optional[bool] = None,
-        break_on_non_key_frames: Optional[bool] = None,
-        audio_sample_rate: Optional[int] = None,
-        max_audio_bit_depth: Optional[int] = None,
-        audio_bit_rate: Optional[int] = None,
-        audio_channels: Optional[int] = None,
-        max_audio_channels: Optional[int] = None,
-        profile: Optional[str] = None,
-        level: Optional[str] = None,
-        framerate: Optional[float] = None,
-        max_framerate: Optional[float] = None,
-        copy_timestamps: Optional[bool] = None,
-        start_time_ticks: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        video_bit_rate: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        subtitle_method: Optional[str] = None,
-        max_ref_frames: Optional[int] = None,
-        max_video_bit_depth: Optional[int] = None,
-        require_avc: Optional[bool] = None,
-        de_interlace: Optional[bool] = None,
-        require_non_anamorphic: Optional[bool] = None,
-        transcoding_max_audio_channels: Optional[int] = None,
-        cpu_core_limit: Optional[int] = None,
-        live_stream_id: Optional[str] = None,
-        enable_mpegts_m2_ts_mode: Optional[bool] = None,
-        video_codec: Optional[str] = None,
-        subtitle_codec: Optional[str] = None,
-        transcode_reasons: Optional[str] = None,
-        audio_stream_index: Optional[int] = None,
-        video_stream_index: Optional[int] = None,
-        context: Optional[str] = None,
-        stream_options: Optional[Dict[str, Any]] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        enable_subtitles_in_manifest: Optional[bool] = None,
-        enable_audio_vbr_encoding: Optional[bool] = None,
-        always_burn_in_subtitle_when_transcoding: Optional[bool] = None,
+        container: str | None = None,
+        static: bool | None = None,
+        params: str | None = None,
+        tag: str | None = None,
+        device_profile_id: str | None = None,
+        play_session_id: str | None = None,
+        segment_container: str | None = None,
+        segment_length: int | None = None,
+        min_segments: int | None = None,
+        media_source_id: str | None = None,
+        device_id: str | None = None,
+        audio_codec: str | None = None,
+        enable_auto_stream_copy: bool | None = None,
+        allow_video_stream_copy: bool | None = None,
+        allow_audio_stream_copy: bool | None = None,
+        break_on_non_key_frames: bool | None = None,
+        audio_sample_rate: int | None = None,
+        max_audio_bit_depth: int | None = None,
+        audio_bit_rate: int | None = None,
+        audio_channels: int | None = None,
+        max_audio_channels: int | None = None,
+        profile: str | None = None,
+        level: str | None = None,
+        framerate: float | None = None,
+        max_framerate: float | None = None,
+        copy_timestamps: bool | None = None,
+        start_time_ticks: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        video_bit_rate: int | None = None,
+        subtitle_stream_index: int | None = None,
+        subtitle_method: str | None = None,
+        max_ref_frames: int | None = None,
+        max_video_bit_depth: int | None = None,
+        require_avc: bool | None = None,
+        de_interlace: bool | None = None,
+        require_non_anamorphic: bool | None = None,
+        transcoding_max_audio_channels: int | None = None,
+        cpu_core_limit: int | None = None,
+        live_stream_id: str | None = None,
+        enable_mpegts_m2_ts_mode: bool | None = None,
+        video_codec: str | None = None,
+        subtitle_codec: str | None = None,
+        transcode_reasons: str | None = None,
+        audio_stream_index: int | None = None,
+        video_stream_index: int | None = None,
+        context: str | None = None,
+        stream_options: dict[str, Any] | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        enable_subtitles_in_manifest: bool | None = None,
+        enable_audio_vbr_encoding: bool | None = None,
+        always_burn_in_subtitle_when_transcoding: bool | None = None,
     ) -> Any:
         """Gets a hls live stream."""
         endpoint = "/Videos/{itemId}/live.m3u8"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if container is not None:
             params["container"] = container
         if static is not None:
@@ -1802,62 +1798,62 @@ class Api:
     def get_variant_hls_video_playlist(
         self,
         item_id: str,
-        static: Optional[bool] = None,
-        params: Optional[str] = None,
-        tag: Optional[str] = None,
-        device_profile_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        segment_container: Optional[str] = None,
-        segment_length: Optional[int] = None,
-        min_segments: Optional[int] = None,
-        media_source_id: Optional[str] = None,
-        device_id: Optional[str] = None,
-        audio_codec: Optional[str] = None,
-        enable_auto_stream_copy: Optional[bool] = None,
-        allow_video_stream_copy: Optional[bool] = None,
-        allow_audio_stream_copy: Optional[bool] = None,
-        break_on_non_key_frames: Optional[bool] = None,
-        audio_sample_rate: Optional[int] = None,
-        max_audio_bit_depth: Optional[int] = None,
-        audio_bit_rate: Optional[int] = None,
-        audio_channels: Optional[int] = None,
-        max_audio_channels: Optional[int] = None,
-        profile: Optional[str] = None,
-        level: Optional[str] = None,
-        framerate: Optional[float] = None,
-        max_framerate: Optional[float] = None,
-        copy_timestamps: Optional[bool] = None,
-        start_time_ticks: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        video_bit_rate: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        subtitle_method: Optional[str] = None,
-        max_ref_frames: Optional[int] = None,
-        max_video_bit_depth: Optional[int] = None,
-        require_avc: Optional[bool] = None,
-        de_interlace: Optional[bool] = None,
-        require_non_anamorphic: Optional[bool] = None,
-        transcoding_max_audio_channels: Optional[int] = None,
-        cpu_core_limit: Optional[int] = None,
-        live_stream_id: Optional[str] = None,
-        enable_mpegts_m2_ts_mode: Optional[bool] = None,
-        video_codec: Optional[str] = None,
-        subtitle_codec: Optional[str] = None,
-        transcode_reasons: Optional[str] = None,
-        audio_stream_index: Optional[int] = None,
-        video_stream_index: Optional[int] = None,
-        context: Optional[str] = None,
-        stream_options: Optional[Dict[str, Any]] = None,
-        enable_audio_vbr_encoding: Optional[bool] = None,
-        always_burn_in_subtitle_when_transcoding: Optional[bool] = None,
+        static: bool | None = None,
+        params: str | None = None,
+        tag: str | None = None,
+        device_profile_id: str | None = None,
+        play_session_id: str | None = None,
+        segment_container: str | None = None,
+        segment_length: int | None = None,
+        min_segments: int | None = None,
+        media_source_id: str | None = None,
+        device_id: str | None = None,
+        audio_codec: str | None = None,
+        enable_auto_stream_copy: bool | None = None,
+        allow_video_stream_copy: bool | None = None,
+        allow_audio_stream_copy: bool | None = None,
+        break_on_non_key_frames: bool | None = None,
+        audio_sample_rate: int | None = None,
+        max_audio_bit_depth: int | None = None,
+        audio_bit_rate: int | None = None,
+        audio_channels: int | None = None,
+        max_audio_channels: int | None = None,
+        profile: str | None = None,
+        level: str | None = None,
+        framerate: float | None = None,
+        max_framerate: float | None = None,
+        copy_timestamps: bool | None = None,
+        start_time_ticks: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        video_bit_rate: int | None = None,
+        subtitle_stream_index: int | None = None,
+        subtitle_method: str | None = None,
+        max_ref_frames: int | None = None,
+        max_video_bit_depth: int | None = None,
+        require_avc: bool | None = None,
+        de_interlace: bool | None = None,
+        require_non_anamorphic: bool | None = None,
+        transcoding_max_audio_channels: int | None = None,
+        cpu_core_limit: int | None = None,
+        live_stream_id: str | None = None,
+        enable_mpegts_m2_ts_mode: bool | None = None,
+        video_codec: str | None = None,
+        subtitle_codec: str | None = None,
+        transcode_reasons: str | None = None,
+        audio_stream_index: int | None = None,
+        video_stream_index: int | None = None,
+        context: str | None = None,
+        stream_options: dict[str, Any] | None = None,
+        enable_audio_vbr_encoding: bool | None = None,
+        always_burn_in_subtitle_when_transcoding: bool | None = None,
     ) -> Any:
         """Gets a video stream using HTTP live streaming."""
         endpoint = "/Videos/{itemId}/main.m3u8"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if static is not None:
             params["static"] = static
         if params is not None:
@@ -1967,64 +1963,64 @@ class Api:
     def get_master_hls_video_playlist(
         self,
         item_id: str,
-        static: Optional[bool] = None,
-        params: Optional[str] = None,
-        tag: Optional[str] = None,
-        device_profile_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        segment_container: Optional[str] = None,
-        segment_length: Optional[int] = None,
-        min_segments: Optional[int] = None,
-        media_source_id: Optional[str] = None,
-        device_id: Optional[str] = None,
-        audio_codec: Optional[str] = None,
-        enable_auto_stream_copy: Optional[bool] = None,
-        allow_video_stream_copy: Optional[bool] = None,
-        allow_audio_stream_copy: Optional[bool] = None,
-        break_on_non_key_frames: Optional[bool] = None,
-        audio_sample_rate: Optional[int] = None,
-        max_audio_bit_depth: Optional[int] = None,
-        audio_bit_rate: Optional[int] = None,
-        audio_channels: Optional[int] = None,
-        max_audio_channels: Optional[int] = None,
-        profile: Optional[str] = None,
-        level: Optional[str] = None,
-        framerate: Optional[float] = None,
-        max_framerate: Optional[float] = None,
-        copy_timestamps: Optional[bool] = None,
-        start_time_ticks: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        video_bit_rate: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        subtitle_method: Optional[str] = None,
-        max_ref_frames: Optional[int] = None,
-        max_video_bit_depth: Optional[int] = None,
-        require_avc: Optional[bool] = None,
-        de_interlace: Optional[bool] = None,
-        require_non_anamorphic: Optional[bool] = None,
-        transcoding_max_audio_channels: Optional[int] = None,
-        cpu_core_limit: Optional[int] = None,
-        live_stream_id: Optional[str] = None,
-        enable_mpegts_m2_ts_mode: Optional[bool] = None,
-        video_codec: Optional[str] = None,
-        subtitle_codec: Optional[str] = None,
-        transcode_reasons: Optional[str] = None,
-        audio_stream_index: Optional[int] = None,
-        video_stream_index: Optional[int] = None,
-        context: Optional[str] = None,
-        stream_options: Optional[Dict[str, Any]] = None,
-        enable_adaptive_bitrate_streaming: Optional[bool] = None,
-        enable_trickplay: Optional[bool] = None,
-        enable_audio_vbr_encoding: Optional[bool] = None,
-        always_burn_in_subtitle_when_transcoding: Optional[bool] = None,
+        static: bool | None = None,
+        params: str | None = None,
+        tag: str | None = None,
+        device_profile_id: str | None = None,
+        play_session_id: str | None = None,
+        segment_container: str | None = None,
+        segment_length: int | None = None,
+        min_segments: int | None = None,
+        media_source_id: str | None = None,
+        device_id: str | None = None,
+        audio_codec: str | None = None,
+        enable_auto_stream_copy: bool | None = None,
+        allow_video_stream_copy: bool | None = None,
+        allow_audio_stream_copy: bool | None = None,
+        break_on_non_key_frames: bool | None = None,
+        audio_sample_rate: int | None = None,
+        max_audio_bit_depth: int | None = None,
+        audio_bit_rate: int | None = None,
+        audio_channels: int | None = None,
+        max_audio_channels: int | None = None,
+        profile: str | None = None,
+        level: str | None = None,
+        framerate: float | None = None,
+        max_framerate: float | None = None,
+        copy_timestamps: bool | None = None,
+        start_time_ticks: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        video_bit_rate: int | None = None,
+        subtitle_stream_index: int | None = None,
+        subtitle_method: str | None = None,
+        max_ref_frames: int | None = None,
+        max_video_bit_depth: int | None = None,
+        require_avc: bool | None = None,
+        de_interlace: bool | None = None,
+        require_non_anamorphic: bool | None = None,
+        transcoding_max_audio_channels: int | None = None,
+        cpu_core_limit: int | None = None,
+        live_stream_id: str | None = None,
+        enable_mpegts_m2_ts_mode: bool | None = None,
+        video_codec: str | None = None,
+        subtitle_codec: str | None = None,
+        transcode_reasons: str | None = None,
+        audio_stream_index: int | None = None,
+        video_stream_index: int | None = None,
+        context: str | None = None,
+        stream_options: dict[str, Any] | None = None,
+        enable_adaptive_bitrate_streaming: bool | None = None,
+        enable_trickplay: bool | None = None,
+        enable_audio_vbr_encoding: bool | None = None,
+        always_burn_in_subtitle_when_transcoding: bool | None = None,
     ) -> Any:
         """Gets a video hls playlist stream."""
         endpoint = "/Videos/{itemId}/master.m3u8"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if static is not None:
             params["static"] = static
         if params is not None:
@@ -2143,13 +2139,13 @@ class Api:
 
     def get_directory_contents(
         self,
-        path: Optional[str] = None,
-        include_files: Optional[bool] = None,
-        include_directories: Optional[bool] = None,
+        path: str | None = None,
+        include_files: bool | None = None,
+        include_directories: bool | None = None,
     ) -> Any:
         """Gets the contents of a given directory in the file system."""
         endpoint = "/Environment/DirectoryContents"
-        params = {}
+        params: dict[str, Any] = {}
         if path is not None:
             params["path"] = path
         if include_files is not None:
@@ -2170,15 +2166,15 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def get_parent_path(self, path: Optional[str] = None) -> Any:
+    def get_parent_path(self, path: str | None = None) -> Any:
         """Gets the parent path of a given path."""
         endpoint = "/Environment/ParentPath"
-        params = {}
+        params: dict[str, Any] = {}
         if path is not None:
             params["path"] = path
         return self.request("GET", endpoint, params=params)
 
-    def validate_path(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def validate_path(self, body: dict[str, Any] | None = None) -> Any:
         """Validates path."""
         endpoint = "/Environment/ValidatePath"
         params = None
@@ -2186,14 +2182,14 @@ class Api:
 
     def get_query_filters_legacy(
         self,
-        user_id: Optional[str] = None,
-        parent_id: Optional[str] = None,
-        include_item_types: Optional[List[Any]] = None,
-        media_types: Optional[List[Any]] = None,
+        user_id: str | None = None,
+        parent_id: str | None = None,
+        include_item_types: list[Any] | None = None,
+        media_types: list[Any] | None = None,
     ) -> Any:
         """Gets legacy query filters."""
         endpoint = "/Items/Filters"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if parent_id is not None:
@@ -2206,20 +2202,20 @@ class Api:
 
     def get_query_filters(
         self,
-        user_id: Optional[str] = None,
-        parent_id: Optional[str] = None,
-        include_item_types: Optional[List[Any]] = None,
-        is_airing: Optional[bool] = None,
-        is_movie: Optional[bool] = None,
-        is_sports: Optional[bool] = None,
-        is_kids: Optional[bool] = None,
-        is_news: Optional[bool] = None,
-        is_series: Optional[bool] = None,
-        recursive: Optional[bool] = None,
+        user_id: str | None = None,
+        parent_id: str | None = None,
+        include_item_types: list[Any] | None = None,
+        is_airing: bool | None = None,
+        is_movie: bool | None = None,
+        is_sports: bool | None = None,
+        is_kids: bool | None = None,
+        is_news: bool | None = None,
+        is_series: bool | None = None,
+        recursive: bool | None = None,
     ) -> Any:
         """Gets query filters."""
         endpoint = "/Items/Filters2"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if parent_id is not None:
@@ -2244,28 +2240,28 @@ class Api:
 
     def get_genres(
         self,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        search_term: Optional[str] = None,
-        parent_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        exclude_item_types: Optional[List[Any]] = None,
-        include_item_types: Optional[List[Any]] = None,
-        is_favorite: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        name_starts_with_or_greater: Optional[str] = None,
-        name_starts_with: Optional[str] = None,
-        name_less_than: Optional[str] = None,
-        sort_by: Optional[List[Any]] = None,
-        sort_order: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        enable_total_record_count: Optional[bool] = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        search_term: str | None = None,
+        parent_id: str | None = None,
+        fields: list[Any] | None = None,
+        exclude_item_types: list[Any] | None = None,
+        include_item_types: list[Any] | None = None,
+        is_favorite: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        user_id: str | None = None,
+        name_starts_with_or_greater: str | None = None,
+        name_starts_with: str | None = None,
+        name_less_than: str | None = None,
+        sort_by: list[Any] | None = None,
+        sort_order: list[Any] | None = None,
+        enable_images: bool | None = None,
+        enable_total_record_count: bool | None = None,
     ) -> Any:
         """Gets all genres from a given item, folder, or the entire library."""
         endpoint = "/Genres"
-        params = {}
+        params: dict[str, Any] = {}
         if start_index is not None:
             params["startIndex"] = start_index
         if limit is not None:
@@ -2304,11 +2300,11 @@ class Api:
             params["enableTotalRecordCount"] = enable_total_record_count
         return self.request("GET", endpoint, params=params)
 
-    def get_genre(self, genre_name: str, user_id: Optional[str] = None) -> Any:
+    def get_genre(self, genre_name: str, user_id: str | None = None) -> Any:
         """Gets a genre, by name."""
         endpoint = "/Genres/{genreName}"
         endpoint = endpoint.replace("{genreName}", str(genre_name))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
@@ -2350,11 +2346,11 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def stop_encoding_process(
-        self, device_id: Optional[str] = None, play_session_id: Optional[str] = None
+        self, device_id: str | None = None, play_session_id: str | None = None
     ) -> Any:
         """Stops an active encoding."""
         endpoint = "/Videos/ActiveEncodings"
-        params = {}
+        params: dict[str, Any] = {}
         if device_id is not None:
             params["deviceId"] = device_id
         if play_session_id is not None:
@@ -2366,27 +2362,27 @@ class Api:
         name: str,
         image_type: str,
         image_index: int,
-        tag: Optional[str] = None,
-        format: Optional[str] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        percent_played: Optional[float] = None,
-        unplayed_count: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        quality: Optional[int] = None,
-        fill_width: Optional[int] = None,
-        fill_height: Optional[int] = None,
-        blur: Optional[int] = None,
-        background_color: Optional[str] = None,
-        foreground_layer: Optional[str] = None,
+        tag: str | None = None,
+        format: str | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        percent_played: float | None = None,
+        unplayed_count: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        quality: int | None = None,
+        fill_width: int | None = None,
+        fill_height: int | None = None,
+        blur: int | None = None,
+        background_color: str | None = None,
+        foreground_layer: str | None = None,
     ) -> Any:
         """Get artist image by name."""
         endpoint = "/Artists/{name}/Images/{imageType}/{imageIndex}"
         endpoint = endpoint.replace("{name}", str(name))
         endpoint = endpoint.replace("{imageType}", str(image_type))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
-        params = {}
+        params: dict[str, Any] = {}
         if tag is not None:
             params["tag"] = tag
         if format is not None:
@@ -2418,18 +2414,18 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def get_splashscreen(
-        self, tag: Optional[str] = None, format: Optional[str] = None
+        self, tag: str | None = None, format: str | None = None
     ) -> Any:
         """Generates or gets the splashscreen."""
         endpoint = "/Branding/Splashscreen"
-        params = {}
+        params: dict[str, Any] = {}
         if tag is not None:
             params["tag"] = tag
         if format is not None:
             params["format"] = format
         return self.request("GET", endpoint, params=params)
 
-    def upload_custom_splashscreen(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def upload_custom_splashscreen(self, body: dict[str, Any] | None = None) -> Any:
         """Uploads a custom splashscreen.
         The body is expected to the image contents base64 encoded."""
         endpoint = "/Branding/Splashscreen"
@@ -2446,27 +2442,27 @@ class Api:
         self,
         name: str,
         image_type: str,
-        tag: Optional[str] = None,
-        format: Optional[str] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        percent_played: Optional[float] = None,
-        unplayed_count: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        quality: Optional[int] = None,
-        fill_width: Optional[int] = None,
-        fill_height: Optional[int] = None,
-        blur: Optional[int] = None,
-        background_color: Optional[str] = None,
-        foreground_layer: Optional[str] = None,
-        image_index: Optional[int] = None,
+        tag: str | None = None,
+        format: str | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        percent_played: float | None = None,
+        unplayed_count: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        quality: int | None = None,
+        fill_width: int | None = None,
+        fill_height: int | None = None,
+        blur: int | None = None,
+        background_color: str | None = None,
+        foreground_layer: str | None = None,
+        image_index: int | None = None,
     ) -> Any:
         """Get genre image by name."""
         endpoint = "/Genres/{name}/Images/{imageType}"
         endpoint = endpoint.replace("{name}", str(name))
         endpoint = endpoint.replace("{imageType}", str(image_type))
-        params = {}
+        params: dict[str, Any] = {}
         if tag is not None:
             params["tag"] = tag
         if format is not None:
@@ -2504,27 +2500,27 @@ class Api:
         name: str,
         image_type: str,
         image_index: int,
-        tag: Optional[str] = None,
-        format: Optional[str] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        percent_played: Optional[float] = None,
-        unplayed_count: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        quality: Optional[int] = None,
-        fill_width: Optional[int] = None,
-        fill_height: Optional[int] = None,
-        blur: Optional[int] = None,
-        background_color: Optional[str] = None,
-        foreground_layer: Optional[str] = None,
+        tag: str | None = None,
+        format: str | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        percent_played: float | None = None,
+        unplayed_count: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        quality: int | None = None,
+        fill_width: int | None = None,
+        fill_height: int | None = None,
+        blur: int | None = None,
+        background_color: str | None = None,
+        foreground_layer: str | None = None,
     ) -> Any:
         """Get genre image by name."""
         endpoint = "/Genres/{name}/Images/{imageType}/{imageIndex}"
         endpoint = endpoint.replace("{name}", str(name))
         endpoint = endpoint.replace("{imageType}", str(image_type))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
-        params = {}
+        params: dict[str, Any] = {}
         if tag is not None:
             params["tag"] = tag
         if format is not None:
@@ -2563,19 +2559,19 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def delete_item_image(
-        self, item_id: str, image_type: str, image_index: Optional[int] = None
+        self, item_id: str, image_type: str, image_index: int | None = None
     ) -> Any:
         """Delete an item's image."""
         endpoint = "/Items/{itemId}/Images/{imageType}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         endpoint = endpoint.replace("{imageType}", str(image_type))
-        params = {}
+        params: dict[str, Any] = {}
         if image_index is not None:
             params["imageIndex"] = image_index
         return self.request("DELETE", endpoint, params=params)
 
     def set_item_image(
-        self, item_id: str, image_type: str, body: Optional[Dict[str, Any]] = None
+        self, item_id: str, image_type: str, body: dict[str, Any] | None = None
     ) -> Any:
         """Set item image."""
         endpoint = "/Items/{itemId}/Images/{imageType}"
@@ -2588,27 +2584,27 @@ class Api:
         self,
         item_id: str,
         image_type: str,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        quality: Optional[int] = None,
-        fill_width: Optional[int] = None,
-        fill_height: Optional[int] = None,
-        tag: Optional[str] = None,
-        format: Optional[str] = None,
-        percent_played: Optional[float] = None,
-        unplayed_count: Optional[int] = None,
-        blur: Optional[int] = None,
-        background_color: Optional[str] = None,
-        foreground_layer: Optional[str] = None,
-        image_index: Optional[int] = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        quality: int | None = None,
+        fill_width: int | None = None,
+        fill_height: int | None = None,
+        tag: str | None = None,
+        format: str | None = None,
+        percent_played: float | None = None,
+        unplayed_count: int | None = None,
+        blur: int | None = None,
+        background_color: str | None = None,
+        foreground_layer: str | None = None,
+        image_index: int | None = None,
     ) -> Any:
         """Gets the item's image."""
         endpoint = "/Items/{itemId}/Images/{imageType}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         endpoint = endpoint.replace("{imageType}", str(image_type))
-        params = {}
+        params: dict[str, Any] = {}
         if max_width is not None:
             params["maxWidth"] = max_width
         if max_height is not None:
@@ -2657,7 +2653,7 @@ class Api:
         item_id: str,
         image_type: str,
         image_index: int,
-        body: Optional[Dict[str, Any]] = None,
+        body: dict[str, Any] | None = None,
     ) -> Any:
         """Set item image."""
         endpoint = "/Items/{itemId}/Images/{imageType}/{imageIndex}"
@@ -2672,27 +2668,27 @@ class Api:
         item_id: str,
         image_type: str,
         image_index: int,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        quality: Optional[int] = None,
-        fill_width: Optional[int] = None,
-        fill_height: Optional[int] = None,
-        tag: Optional[str] = None,
-        format: Optional[str] = None,
-        percent_played: Optional[float] = None,
-        unplayed_count: Optional[int] = None,
-        blur: Optional[int] = None,
-        background_color: Optional[str] = None,
-        foreground_layer: Optional[str] = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        quality: int | None = None,
+        fill_width: int | None = None,
+        fill_height: int | None = None,
+        tag: str | None = None,
+        format: str | None = None,
+        percent_played: float | None = None,
+        unplayed_count: int | None = None,
+        blur: int | None = None,
+        background_color: str | None = None,
+        foreground_layer: str | None = None,
     ) -> Any:
         """Gets the item's image."""
         endpoint = "/Items/{itemId}/Images/{imageType}/{imageIndex}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         endpoint = endpoint.replace("{imageType}", str(image_type))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
-        params = {}
+        params: dict[str, Any] = {}
         if max_width is not None:
             params["maxWidth"] = max_width
         if max_height is not None:
@@ -2734,14 +2730,14 @@ class Api:
         percent_played: float,
         unplayed_count: int,
         image_index: int,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        quality: Optional[int] = None,
-        fill_width: Optional[int] = None,
-        fill_height: Optional[int] = None,
-        blur: Optional[int] = None,
-        background_color: Optional[str] = None,
-        foreground_layer: Optional[str] = None,
+        width: int | None = None,
+        height: int | None = None,
+        quality: int | None = None,
+        fill_width: int | None = None,
+        fill_height: int | None = None,
+        blur: int | None = None,
+        background_color: str | None = None,
+        foreground_layer: str | None = None,
     ) -> Any:
         """Gets the item's image."""
         endpoint = "/Items/{itemId}/Images/{imageType}/{imageIndex}/{tag}/{format}/{maxWidth}/{maxHeight}/{percentPlayed}/{unplayedCount}"
@@ -2754,7 +2750,7 @@ class Api:
         endpoint = endpoint.replace("{percentPlayed}", str(percent_played))
         endpoint = endpoint.replace("{unplayedCount}", str(unplayed_count))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
-        params = {}
+        params: dict[str, Any] = {}
         if width is not None:
             params["width"] = width
         if height is not None:
@@ -2778,14 +2774,14 @@ class Api:
         item_id: str,
         image_type: str,
         image_index: int,
-        new_index: Optional[int] = None,
+        new_index: int | None = None,
     ) -> Any:
         """Updates the index for an item image."""
         endpoint = "/Items/{itemId}/Images/{imageType}/{imageIndex}/Index"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         endpoint = endpoint.replace("{imageType}", str(image_type))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
-        params = {}
+        params: dict[str, Any] = {}
         if new_index is not None:
             params["newIndex"] = new_index
         return self.request("POST", endpoint, params=params)
@@ -2794,27 +2790,27 @@ class Api:
         self,
         name: str,
         image_type: str,
-        tag: Optional[str] = None,
-        format: Optional[str] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        percent_played: Optional[float] = None,
-        unplayed_count: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        quality: Optional[int] = None,
-        fill_width: Optional[int] = None,
-        fill_height: Optional[int] = None,
-        blur: Optional[int] = None,
-        background_color: Optional[str] = None,
-        foreground_layer: Optional[str] = None,
-        image_index: Optional[int] = None,
+        tag: str | None = None,
+        format: str | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        percent_played: float | None = None,
+        unplayed_count: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        quality: int | None = None,
+        fill_width: int | None = None,
+        fill_height: int | None = None,
+        blur: int | None = None,
+        background_color: str | None = None,
+        foreground_layer: str | None = None,
+        image_index: int | None = None,
     ) -> Any:
         """Get music genre image by name."""
         endpoint = "/MusicGenres/{name}/Images/{imageType}"
         endpoint = endpoint.replace("{name}", str(name))
         endpoint = endpoint.replace("{imageType}", str(image_type))
-        params = {}
+        params: dict[str, Any] = {}
         if tag is not None:
             params["tag"] = tag
         if format is not None:
@@ -2852,27 +2848,27 @@ class Api:
         name: str,
         image_type: str,
         image_index: int,
-        tag: Optional[str] = None,
-        format: Optional[str] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        percent_played: Optional[float] = None,
-        unplayed_count: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        quality: Optional[int] = None,
-        fill_width: Optional[int] = None,
-        fill_height: Optional[int] = None,
-        blur: Optional[int] = None,
-        background_color: Optional[str] = None,
-        foreground_layer: Optional[str] = None,
+        tag: str | None = None,
+        format: str | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        percent_played: float | None = None,
+        unplayed_count: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        quality: int | None = None,
+        fill_width: int | None = None,
+        fill_height: int | None = None,
+        blur: int | None = None,
+        background_color: str | None = None,
+        foreground_layer: str | None = None,
     ) -> Any:
         """Get music genre image by name."""
         endpoint = "/MusicGenres/{name}/Images/{imageType}/{imageIndex}"
         endpoint = endpoint.replace("{name}", str(name))
         endpoint = endpoint.replace("{imageType}", str(image_type))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
-        params = {}
+        params: dict[str, Any] = {}
         if tag is not None:
             params["tag"] = tag
         if format is not None:
@@ -2907,27 +2903,27 @@ class Api:
         self,
         name: str,
         image_type: str,
-        tag: Optional[str] = None,
-        format: Optional[str] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        percent_played: Optional[float] = None,
-        unplayed_count: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        quality: Optional[int] = None,
-        fill_width: Optional[int] = None,
-        fill_height: Optional[int] = None,
-        blur: Optional[int] = None,
-        background_color: Optional[str] = None,
-        foreground_layer: Optional[str] = None,
-        image_index: Optional[int] = None,
+        tag: str | None = None,
+        format: str | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        percent_played: float | None = None,
+        unplayed_count: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        quality: int | None = None,
+        fill_width: int | None = None,
+        fill_height: int | None = None,
+        blur: int | None = None,
+        background_color: str | None = None,
+        foreground_layer: str | None = None,
+        image_index: int | None = None,
     ) -> Any:
         """Get person image by name."""
         endpoint = "/Persons/{name}/Images/{imageType}"
         endpoint = endpoint.replace("{name}", str(name))
         endpoint = endpoint.replace("{imageType}", str(image_type))
-        params = {}
+        params: dict[str, Any] = {}
         if tag is not None:
             params["tag"] = tag
         if format is not None:
@@ -2965,27 +2961,27 @@ class Api:
         name: str,
         image_type: str,
         image_index: int,
-        tag: Optional[str] = None,
-        format: Optional[str] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        percent_played: Optional[float] = None,
-        unplayed_count: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        quality: Optional[int] = None,
-        fill_width: Optional[int] = None,
-        fill_height: Optional[int] = None,
-        blur: Optional[int] = None,
-        background_color: Optional[str] = None,
-        foreground_layer: Optional[str] = None,
+        tag: str | None = None,
+        format: str | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        percent_played: float | None = None,
+        unplayed_count: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        quality: int | None = None,
+        fill_width: int | None = None,
+        fill_height: int | None = None,
+        blur: int | None = None,
+        background_color: str | None = None,
+        foreground_layer: str | None = None,
     ) -> Any:
         """Get person image by name."""
         endpoint = "/Persons/{name}/Images/{imageType}/{imageIndex}"
         endpoint = endpoint.replace("{name}", str(name))
         endpoint = endpoint.replace("{imageType}", str(image_type))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
-        params = {}
+        params: dict[str, Any] = {}
         if tag is not None:
             params["tag"] = tag
         if format is not None:
@@ -3020,27 +3016,27 @@ class Api:
         self,
         name: str,
         image_type: str,
-        tag: Optional[str] = None,
-        format: Optional[str] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        percent_played: Optional[float] = None,
-        unplayed_count: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        quality: Optional[int] = None,
-        fill_width: Optional[int] = None,
-        fill_height: Optional[int] = None,
-        blur: Optional[int] = None,
-        background_color: Optional[str] = None,
-        foreground_layer: Optional[str] = None,
-        image_index: Optional[int] = None,
+        tag: str | None = None,
+        format: str | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        percent_played: float | None = None,
+        unplayed_count: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        quality: int | None = None,
+        fill_width: int | None = None,
+        fill_height: int | None = None,
+        blur: int | None = None,
+        background_color: str | None = None,
+        foreground_layer: str | None = None,
+        image_index: int | None = None,
     ) -> Any:
         """Get studio image by name."""
         endpoint = "/Studios/{name}/Images/{imageType}"
         endpoint = endpoint.replace("{name}", str(name))
         endpoint = endpoint.replace("{imageType}", str(image_type))
-        params = {}
+        params: dict[str, Any] = {}
         if tag is not None:
             params["tag"] = tag
         if format is not None:
@@ -3078,27 +3074,27 @@ class Api:
         name: str,
         image_type: str,
         image_index: int,
-        tag: Optional[str] = None,
-        format: Optional[str] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        percent_played: Optional[float] = None,
-        unplayed_count: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        quality: Optional[int] = None,
-        fill_width: Optional[int] = None,
-        fill_height: Optional[int] = None,
-        blur: Optional[int] = None,
-        background_color: Optional[str] = None,
-        foreground_layer: Optional[str] = None,
+        tag: str | None = None,
+        format: str | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        percent_played: float | None = None,
+        unplayed_count: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        quality: int | None = None,
+        fill_width: int | None = None,
+        fill_height: int | None = None,
+        blur: int | None = None,
+        background_color: str | None = None,
+        foreground_layer: str | None = None,
     ) -> Any:
         """Get studio image by name."""
         endpoint = "/Studios/{name}/Images/{imageType}/{imageIndex}"
         endpoint = endpoint.replace("{name}", str(name))
         endpoint = endpoint.replace("{imageType}", str(image_type))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
-        params = {}
+        params: dict[str, Any] = {}
         if tag is not None:
             params["tag"] = tag
         if format is not None:
@@ -3130,32 +3126,32 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def post_user_image(
-        self, user_id: Optional[str] = None, body: Optional[Dict[str, Any]] = None
+        self, user_id: str | None = None, body: dict[str, Any] | None = None
     ) -> Any:
         """Sets the user image."""
         endpoint = "/UserImage"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def delete_user_image(self, user_id: Optional[str] = None) -> Any:
+    def delete_user_image(self, user_id: str | None = None) -> Any:
         """Delete the user's image."""
         endpoint = "/UserImage"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("DELETE", endpoint, params=params)
 
     def get_user_image(
         self,
-        user_id: Optional[str] = None,
-        tag: Optional[str] = None,
-        format: Optional[str] = None,
+        user_id: str | None = None,
+        tag: str | None = None,
+        format: str | None = None,
     ) -> Any:
         """Get user profile image."""
         endpoint = "/UserImage"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if tag is not None:
@@ -3167,18 +3163,18 @@ class Api:
     def get_instant_mix_from_album(
         self,
         item_id: str,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
+        enable_images: bool | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
     ) -> Any:
         """Creates an instant playlist based on a given album."""
         endpoint = "/Albums/{itemId}/InstantMix"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if limit is not None:
@@ -3198,18 +3194,18 @@ class Api:
     def get_instant_mix_from_artists(
         self,
         item_id: str,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
+        enable_images: bool | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
     ) -> Any:
         """Creates an instant playlist based on a given artist."""
         endpoint = "/Artists/{itemId}/InstantMix"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if limit is not None:
@@ -3228,18 +3224,18 @@ class Api:
 
     def get_instant_mix_from_artists2(
         self,
-        id: Optional[str] = None,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
+        id: str | None = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
+        enable_images: bool | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
     ) -> Any:
         """Creates an instant playlist based on a given artist."""
         endpoint = "/Artists/InstantMix"
-        params = {}
+        params: dict[str, Any] = {}
         if id is not None:
             params["id"] = id
         if user_id is not None:
@@ -3261,18 +3257,18 @@ class Api:
     def get_instant_mix_from_item(
         self,
         item_id: str,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
+        enable_images: bool | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
     ) -> Any:
         """Creates an instant playlist based on a given item."""
         endpoint = "/Items/{itemId}/InstantMix"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if limit is not None:
@@ -3292,18 +3288,18 @@ class Api:
     def get_instant_mix_from_music_genre_by_name(
         self,
         name: str,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
+        enable_images: bool | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
     ) -> Any:
         """Creates an instant playlist based on a given genre."""
         endpoint = "/MusicGenres/{name}/InstantMix"
         endpoint = endpoint.replace("{name}", str(name))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if limit is not None:
@@ -3322,18 +3318,18 @@ class Api:
 
     def get_instant_mix_from_music_genre_by_id(
         self,
-        id: Optional[str] = None,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
+        id: str | None = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
+        enable_images: bool | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
     ) -> Any:
         """Creates an instant playlist based on a given genre."""
         endpoint = "/MusicGenres/InstantMix"
-        params = {}
+        params: dict[str, Any] = {}
         if id is not None:
             params["id"] = id
         if user_id is not None:
@@ -3355,18 +3351,18 @@ class Api:
     def get_instant_mix_from_playlist(
         self,
         item_id: str,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
+        enable_images: bool | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
     ) -> Any:
         """Creates an instant playlist based on a given playlist."""
         endpoint = "/Playlists/{itemId}/InstantMix"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if limit is not None:
@@ -3386,18 +3382,18 @@ class Api:
     def get_instant_mix_from_song(
         self,
         item_id: str,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
+        enable_images: bool | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
     ) -> Any:
         """Creates an instant playlist based on a given song."""
         endpoint = "/Songs/{itemId}/InstantMix"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if limit is not None:
@@ -3424,27 +3420,25 @@ class Api:
     def apply_search_criteria(
         self,
         item_id: str,
-        replace_all_images: Optional[bool] = None,
-        body: Optional[Dict[str, Any]] = None,
+        replace_all_images: bool | None = None,
+        body: dict[str, Any] | None = None,
     ) -> Any:
         """Applies search criteria to an item and refreshes metadata."""
         endpoint = "/Items/RemoteSearch/Apply/{itemId}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if replace_all_images is not None:
             params["replaceAllImages"] = replace_all_images
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def get_book_remote_search_results(
-        self, body: Optional[Dict[str, Any]] = None
-    ) -> Any:
+    def get_book_remote_search_results(self, body: dict[str, Any] | None = None) -> Any:
         """Get book remote search."""
         endpoint = "/Items/RemoteSearch/Book"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def get_box_set_remote_search_results(
-        self, body: Optional[Dict[str, Any]] = None
+        self, body: dict[str, Any] | None = None
     ) -> Any:
         """Get box set remote search."""
         endpoint = "/Items/RemoteSearch/BoxSet"
@@ -3452,7 +3446,7 @@ class Api:
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def get_movie_remote_search_results(
-        self, body: Optional[Dict[str, Any]] = None
+        self, body: dict[str, Any] | None = None
     ) -> Any:
         """Get movie remote search."""
         endpoint = "/Items/RemoteSearch/Movie"
@@ -3460,7 +3454,7 @@ class Api:
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def get_music_album_remote_search_results(
-        self, body: Optional[Dict[str, Any]] = None
+        self, body: dict[str, Any] | None = None
     ) -> Any:
         """Get music album remote search."""
         endpoint = "/Items/RemoteSearch/MusicAlbum"
@@ -3468,7 +3462,7 @@ class Api:
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def get_music_artist_remote_search_results(
-        self, body: Optional[Dict[str, Any]] = None
+        self, body: dict[str, Any] | None = None
     ) -> Any:
         """Get music artist remote search."""
         endpoint = "/Items/RemoteSearch/MusicArtist"
@@ -3476,7 +3470,7 @@ class Api:
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def get_music_video_remote_search_results(
-        self, body: Optional[Dict[str, Any]] = None
+        self, body: dict[str, Any] | None = None
     ) -> Any:
         """Get music video remote search."""
         endpoint = "/Items/RemoteSearch/MusicVideo"
@@ -3484,7 +3478,7 @@ class Api:
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def get_person_remote_search_results(
-        self, body: Optional[Dict[str, Any]] = None
+        self, body: dict[str, Any] | None = None
     ) -> Any:
         """Get person remote search."""
         endpoint = "/Items/RemoteSearch/Person"
@@ -3492,7 +3486,7 @@ class Api:
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def get_series_remote_search_results(
-        self, body: Optional[Dict[str, Any]] = None
+        self, body: dict[str, Any] | None = None
     ) -> Any:
         """Get series remote search."""
         endpoint = "/Items/RemoteSearch/Series"
@@ -3500,7 +3494,7 @@ class Api:
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def get_trailer_remote_search_results(
-        self, body: Optional[Dict[str, Any]] = None
+        self, body: dict[str, Any] | None = None
     ) -> Any:
         """Get trailer remote search."""
         endpoint = "/Items/RemoteSearch/Trailer"
@@ -3510,16 +3504,16 @@ class Api:
     def refresh_item(
         self,
         item_id: str,
-        metadata_refresh_mode: Optional[str] = None,
-        image_refresh_mode: Optional[str] = None,
-        replace_all_metadata: Optional[bool] = None,
-        replace_all_images: Optional[bool] = None,
-        regenerate_trickplay: Optional[bool] = None,
+        metadata_refresh_mode: str | None = None,
+        image_refresh_mode: str | None = None,
+        replace_all_metadata: bool | None = None,
+        replace_all_images: bool | None = None,
+        regenerate_trickplay: bool | None = None,
     ) -> Any:
         """Refreshes metadata for an item."""
         endpoint = "/Items/{itemId}/Refresh"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if metadata_refresh_mode is not None:
             params["metadataRefreshMode"] = metadata_refresh_mode
         if image_refresh_mode is not None:
@@ -3534,96 +3528,96 @@ class Api:
 
     def get_items(
         self,
-        user_id: Optional[str] = None,
-        max_official_rating: Optional[str] = None,
-        has_theme_song: Optional[bool] = None,
-        has_theme_video: Optional[bool] = None,
-        has_subtitles: Optional[bool] = None,
-        has_special_feature: Optional[bool] = None,
-        has_trailer: Optional[bool] = None,
-        adjacent_to: Optional[str] = None,
-        index_number: Optional[int] = None,
-        parent_index_number: Optional[int] = None,
-        has_parental_rating: Optional[bool] = None,
-        is_hd: Optional[bool] = None,
-        is4_k: Optional[bool] = None,
-        location_types: Optional[List[Any]] = None,
-        exclude_location_types: Optional[List[Any]] = None,
-        is_missing: Optional[bool] = None,
-        is_unaired: Optional[bool] = None,
-        min_community_rating: Optional[float] = None,
-        min_critic_rating: Optional[float] = None,
-        min_premiere_date: Optional[str] = None,
-        min_date_last_saved: Optional[str] = None,
-        min_date_last_saved_for_user: Optional[str] = None,
-        max_premiere_date: Optional[str] = None,
-        has_overview: Optional[bool] = None,
-        has_imdb_id: Optional[bool] = None,
-        has_tmdb_id: Optional[bool] = None,
-        has_tvdb_id: Optional[bool] = None,
-        is_movie: Optional[bool] = None,
-        is_series: Optional[bool] = None,
-        is_news: Optional[bool] = None,
-        is_kids: Optional[bool] = None,
-        is_sports: Optional[bool] = None,
-        exclude_item_ids: Optional[List[Any]] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        recursive: Optional[bool] = None,
-        search_term: Optional[str] = None,
-        sort_order: Optional[List[Any]] = None,
-        parent_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        exclude_item_types: Optional[List[Any]] = None,
-        include_item_types: Optional[List[Any]] = None,
-        filters: Optional[List[Any]] = None,
-        is_favorite: Optional[bool] = None,
-        media_types: Optional[List[Any]] = None,
-        image_types: Optional[List[Any]] = None,
-        sort_by: Optional[List[Any]] = None,
-        is_played: Optional[bool] = None,
-        genres: Optional[List[Any]] = None,
-        official_ratings: Optional[List[Any]] = None,
-        tags: Optional[List[Any]] = None,
-        years: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        person: Optional[str] = None,
-        person_ids: Optional[List[Any]] = None,
-        person_types: Optional[List[Any]] = None,
-        studios: Optional[List[Any]] = None,
-        artists: Optional[List[Any]] = None,
-        exclude_artist_ids: Optional[List[Any]] = None,
-        artist_ids: Optional[List[Any]] = None,
-        album_artist_ids: Optional[List[Any]] = None,
-        contributing_artist_ids: Optional[List[Any]] = None,
-        albums: Optional[List[Any]] = None,
-        album_ids: Optional[List[Any]] = None,
-        ids: Optional[List[Any]] = None,
-        video_types: Optional[List[Any]] = None,
-        min_official_rating: Optional[str] = None,
-        is_locked: Optional[bool] = None,
-        is_place_holder: Optional[bool] = None,
-        has_official_rating: Optional[bool] = None,
-        collapse_box_set_items: Optional[bool] = None,
-        min_width: Optional[int] = None,
-        min_height: Optional[int] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        is3_d: Optional[bool] = None,
-        series_status: Optional[List[Any]] = None,
-        name_starts_with_or_greater: Optional[str] = None,
-        name_starts_with: Optional[str] = None,
-        name_less_than: Optional[str] = None,
-        studio_ids: Optional[List[Any]] = None,
-        genre_ids: Optional[List[Any]] = None,
-        enable_total_record_count: Optional[bool] = None,
-        enable_images: Optional[bool] = None,
+        user_id: str | None = None,
+        max_official_rating: str | None = None,
+        has_theme_song: bool | None = None,
+        has_theme_video: bool | None = None,
+        has_subtitles: bool | None = None,
+        has_special_feature: bool | None = None,
+        has_trailer: bool | None = None,
+        adjacent_to: str | None = None,
+        index_number: int | None = None,
+        parent_index_number: int | None = None,
+        has_parental_rating: bool | None = None,
+        is_hd: bool | None = None,
+        is4_k: bool | None = None,
+        location_types: list[Any] | None = None,
+        exclude_location_types: list[Any] | None = None,
+        is_missing: bool | None = None,
+        is_unaired: bool | None = None,
+        min_community_rating: float | None = None,
+        min_critic_rating: float | None = None,
+        min_premiere_date: str | None = None,
+        min_date_last_saved: str | None = None,
+        min_date_last_saved_for_user: str | None = None,
+        max_premiere_date: str | None = None,
+        has_overview: bool | None = None,
+        has_imdb_id: bool | None = None,
+        has_tmdb_id: bool | None = None,
+        has_tvdb_id: bool | None = None,
+        is_movie: bool | None = None,
+        is_series: bool | None = None,
+        is_news: bool | None = None,
+        is_kids: bool | None = None,
+        is_sports: bool | None = None,
+        exclude_item_ids: list[Any] | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        recursive: bool | None = None,
+        search_term: str | None = None,
+        sort_order: list[Any] | None = None,
+        parent_id: str | None = None,
+        fields: list[Any] | None = None,
+        exclude_item_types: list[Any] | None = None,
+        include_item_types: list[Any] | None = None,
+        filters: list[Any] | None = None,
+        is_favorite: bool | None = None,
+        media_types: list[Any] | None = None,
+        image_types: list[Any] | None = None,
+        sort_by: list[Any] | None = None,
+        is_played: bool | None = None,
+        genres: list[Any] | None = None,
+        official_ratings: list[Any] | None = None,
+        tags: list[Any] | None = None,
+        years: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        person: str | None = None,
+        person_ids: list[Any] | None = None,
+        person_types: list[Any] | None = None,
+        studios: list[Any] | None = None,
+        artists: list[Any] | None = None,
+        exclude_artist_ids: list[Any] | None = None,
+        artist_ids: list[Any] | None = None,
+        album_artist_ids: list[Any] | None = None,
+        contributing_artist_ids: list[Any] | None = None,
+        albums: list[Any] | None = None,
+        album_ids: list[Any] | None = None,
+        ids: list[Any] | None = None,
+        video_types: list[Any] | None = None,
+        min_official_rating: str | None = None,
+        is_locked: bool | None = None,
+        is_place_holder: bool | None = None,
+        has_official_rating: bool | None = None,
+        collapse_box_set_items: bool | None = None,
+        min_width: int | None = None,
+        min_height: int | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        is3_d: bool | None = None,
+        series_status: list[Any] | None = None,
+        name_starts_with_or_greater: str | None = None,
+        name_starts_with: str | None = None,
+        name_less_than: str | None = None,
+        studio_ids: list[Any] | None = None,
+        genre_ids: list[Any] | None = None,
+        enable_total_record_count: bool | None = None,
+        enable_images: bool | None = None,
     ) -> Any:
         """Gets items based on a query."""
         endpoint = "/Items"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if max_official_rating is not None:
@@ -3798,19 +3792,19 @@ class Api:
             params["enableImages"] = enable_images
         return self.request("GET", endpoint, params=params)
 
-    def delete_items(self, ids: Optional[List[Any]] = None) -> Any:
+    def delete_items(self, ids: list[Any] | None = None) -> Any:
         """Deletes items from the library and filesystem."""
         endpoint = "/Items"
-        params = {}
+        params: dict[str, Any] = {}
         if ids is not None:
             params["ids"] = ids
         return self.request("DELETE", endpoint, params=params)
 
-    def get_item_user_data(self, item_id: str, user_id: Optional[str] = None) -> Any:
+    def get_item_user_data(self, item_id: str, user_id: str | None = None) -> Any:
         """Get Item User Data."""
         endpoint = "/UserItems/{itemId}/UserData"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
@@ -3818,38 +3812,38 @@ class Api:
     def update_item_user_data(
         self,
         item_id: str,
-        user_id: Optional[str] = None,
-        body: Optional[Dict[str, Any]] = None,
+        user_id: str | None = None,
+        body: dict[str, Any] | None = None,
     ) -> Any:
         """Update Item User Data."""
         endpoint = "/UserItems/{itemId}/UserData"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def get_resume_items(
         self,
-        user_id: Optional[str] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        search_term: Optional[str] = None,
-        parent_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        media_types: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        exclude_item_types: Optional[List[Any]] = None,
-        include_item_types: Optional[List[Any]] = None,
-        enable_total_record_count: Optional[bool] = None,
-        enable_images: Optional[bool] = None,
-        exclude_active_sessions: Optional[bool] = None,
+        user_id: str | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        search_term: str | None = None,
+        parent_id: str | None = None,
+        fields: list[Any] | None = None,
+        media_types: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        exclude_item_types: list[Any] | None = None,
+        include_item_types: list[Any] | None = None,
+        enable_total_record_count: bool | None = None,
+        enable_images: bool | None = None,
+        exclude_active_sessions: bool | None = None,
     ) -> Any:
         """Gets items based on a query."""
         endpoint = "/UserItems/Resume"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if start_index is not None:
@@ -3882,7 +3876,7 @@ class Api:
             params["excludeActiveSessions"] = exclude_active_sessions
         return self.request("GET", endpoint, params=params)
 
-    def update_item(self, item_id: str, body: Optional[Dict[str, Any]] = None) -> Any:
+    def update_item(self, item_id: str, body: dict[str, Any] | None = None) -> Any:
         """Updates an item."""
         endpoint = "/Items/{itemId}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
@@ -3896,22 +3890,22 @@ class Api:
         params = None
         return self.request("DELETE", endpoint, params=params)
 
-    def get_item(self, item_id: str, user_id: Optional[str] = None) -> Any:
+    def get_item(self, item_id: str, user_id: str | None = None) -> Any:
         """Gets an item from a user's library."""
         endpoint = "/Items/{itemId}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
 
     def update_item_content_type(
-        self, item_id: str, content_type: Optional[str] = None
+        self, item_id: str, content_type: str | None = None
     ) -> Any:
         """Updates an item's content type."""
         endpoint = "/Items/{itemId}/ContentType"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if content_type is not None:
             params["contentType"] = content_type
         return self.request("POST", endpoint, params=params)
@@ -3926,15 +3920,15 @@ class Api:
     def get_similar_albums(
         self,
         item_id: str,
-        exclude_artist_ids: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
+        exclude_artist_ids: list[Any] | None = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
     ) -> Any:
         """Gets similar items."""
         endpoint = "/Albums/{itemId}/Similar"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if exclude_artist_ids is not None:
             params["excludeArtistIds"] = exclude_artist_ids
         if user_id is not None:
@@ -3948,15 +3942,15 @@ class Api:
     def get_similar_artists(
         self,
         item_id: str,
-        exclude_artist_ids: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
+        exclude_artist_ids: list[Any] | None = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
     ) -> Any:
         """Gets similar items."""
         endpoint = "/Artists/{itemId}/Similar"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if exclude_artist_ids is not None:
             params["excludeArtistIds"] = exclude_artist_ids
         if user_id is not None:
@@ -3967,11 +3961,11 @@ class Api:
             params["fields"] = fields
         return self.request("GET", endpoint, params=params)
 
-    def get_ancestors(self, item_id: str, user_id: Optional[str] = None) -> Any:
+    def get_ancestors(self, item_id: str, user_id: str | None = None) -> Any:
         """Gets all parents of an item."""
         endpoint = "/Items/{itemId}/Ancestors"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
@@ -4000,15 +3994,15 @@ class Api:
     def get_similar_items(
         self,
         item_id: str,
-        exclude_artist_ids: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
+        exclude_artist_ids: list[Any] | None = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
     ) -> Any:
         """Gets similar items."""
         endpoint = "/Items/{itemId}/Similar"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if exclude_artist_ids is not None:
             params["excludeArtistIds"] = exclude_artist_ids
         if user_id is not None:
@@ -4022,15 +4016,15 @@ class Api:
     def get_theme_media(
         self,
         item_id: str,
-        user_id: Optional[str] = None,
-        inherit_from_parent: Optional[bool] = None,
-        sort_by: Optional[List[Any]] = None,
-        sort_order: Optional[List[Any]] = None,
+        user_id: str | None = None,
+        inherit_from_parent: bool | None = None,
+        sort_by: list[Any] | None = None,
+        sort_order: list[Any] | None = None,
     ) -> Any:
         """Get theme songs and videos for an item."""
         endpoint = "/Items/{itemId}/ThemeMedia"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if inherit_from_parent is not None:
@@ -4044,15 +4038,15 @@ class Api:
     def get_theme_songs(
         self,
         item_id: str,
-        user_id: Optional[str] = None,
-        inherit_from_parent: Optional[bool] = None,
-        sort_by: Optional[List[Any]] = None,
-        sort_order: Optional[List[Any]] = None,
+        user_id: str | None = None,
+        inherit_from_parent: bool | None = None,
+        sort_by: list[Any] | None = None,
+        sort_order: list[Any] | None = None,
     ) -> Any:
         """Get theme songs for an item."""
         endpoint = "/Items/{itemId}/ThemeSongs"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if inherit_from_parent is not None:
@@ -4066,15 +4060,15 @@ class Api:
     def get_theme_videos(
         self,
         item_id: str,
-        user_id: Optional[str] = None,
-        inherit_from_parent: Optional[bool] = None,
-        sort_by: Optional[List[Any]] = None,
-        sort_order: Optional[List[Any]] = None,
+        user_id: str | None = None,
+        inherit_from_parent: bool | None = None,
+        sort_by: list[Any] | None = None,
+        sort_order: list[Any] | None = None,
     ) -> Any:
         """Get theme videos for an item."""
         endpoint = "/Items/{itemId}/ThemeVideos"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if inherit_from_parent is not None:
@@ -4086,11 +4080,11 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def get_item_counts(
-        self, user_id: Optional[str] = None, is_favorite: Optional[bool] = None
+        self, user_id: str | None = None, is_favorite: bool | None = None
     ) -> Any:
         """Get item counts."""
         endpoint = "/Items/Counts"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if is_favorite is not None:
@@ -4099,38 +4093,38 @@ class Api:
 
     def get_library_options_info(
         self,
-        library_content_type: Optional[str] = None,
-        is_new_library: Optional[bool] = None,
+        library_content_type: str | None = None,
+        is_new_library: bool | None = None,
     ) -> Any:
         """Gets the library options info."""
         endpoint = "/Libraries/AvailableOptions"
-        params = {}
+        params: dict[str, Any] = {}
         if library_content_type is not None:
             params["libraryContentType"] = library_content_type
         if is_new_library is not None:
             params["isNewLibrary"] = is_new_library
         return self.request("GET", endpoint, params=params)
 
-    def post_updated_media(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def post_updated_media(self, body: dict[str, Any] | None = None) -> Any:
         """Reports that new movies have been added by an external source."""
         endpoint = "/Library/Media/Updated"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def get_media_folders(self, is_hidden: Optional[bool] = None) -> Any:
+    def get_media_folders(self, is_hidden: bool | None = None) -> Any:
         """Gets all user media folders."""
         endpoint = "/Library/MediaFolders"
-        params = {}
+        params: dict[str, Any] = {}
         if is_hidden is not None:
             params["isHidden"] = is_hidden
         return self.request("GET", endpoint, params=params)
 
     def post_added_movies(
-        self, tmdb_id: Optional[str] = None, imdb_id: Optional[str] = None
+        self, tmdb_id: str | None = None, imdb_id: str | None = None
     ) -> Any:
         """Reports that new movies have been added by an external source."""
         endpoint = "/Library/Movies/Added"
-        params = {}
+        params: dict[str, Any] = {}
         if tmdb_id is not None:
             params["tmdbId"] = tmdb_id
         if imdb_id is not None:
@@ -4138,11 +4132,11 @@ class Api:
         return self.request("POST", endpoint, params=params)
 
     def post_updated_movies(
-        self, tmdb_id: Optional[str] = None, imdb_id: Optional[str] = None
+        self, tmdb_id: str | None = None, imdb_id: str | None = None
     ) -> Any:
         """Reports that new movies have been added by an external source."""
         endpoint = "/Library/Movies/Updated"
-        params = {}
+        params: dict[str, Any] = {}
         if tmdb_id is not None:
             params["tmdbId"] = tmdb_id
         if imdb_id is not None:
@@ -4161,18 +4155,18 @@ class Api:
         params = None
         return self.request("POST", endpoint, params=params)
 
-    def post_added_series(self, tvdb_id: Optional[str] = None) -> Any:
+    def post_added_series(self, tvdb_id: str | None = None) -> Any:
         """Reports that new episodes of a series have been added by an external source."""
         endpoint = "/Library/Series/Added"
-        params = {}
+        params: dict[str, Any] = {}
         if tvdb_id is not None:
             params["tvdbId"] = tvdb_id
         return self.request("POST", endpoint, params=params)
 
-    def post_updated_series(self, tvdb_id: Optional[str] = None) -> Any:
+    def post_updated_series(self, tvdb_id: str | None = None) -> Any:
         """Reports that new episodes of a series have been added by an external source."""
         endpoint = "/Library/Series/Updated"
-        params = {}
+        params: dict[str, Any] = {}
         if tvdb_id is not None:
             params["tvdbId"] = tvdb_id
         return self.request("POST", endpoint, params=params)
@@ -4180,15 +4174,15 @@ class Api:
     def get_similar_movies(
         self,
         item_id: str,
-        exclude_artist_ids: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
+        exclude_artist_ids: list[Any] | None = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
     ) -> Any:
         """Gets similar items."""
         endpoint = "/Movies/{itemId}/Similar"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if exclude_artist_ids is not None:
             params["excludeArtistIds"] = exclude_artist_ids
         if user_id is not None:
@@ -4202,15 +4196,15 @@ class Api:
     def get_similar_shows(
         self,
         item_id: str,
-        exclude_artist_ids: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
+        exclude_artist_ids: list[Any] | None = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
     ) -> Any:
         """Gets similar items."""
         endpoint = "/Shows/{itemId}/Similar"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if exclude_artist_ids is not None:
             params["excludeArtistIds"] = exclude_artist_ids
         if user_id is not None:
@@ -4224,15 +4218,15 @@ class Api:
     def get_similar_trailers(
         self,
         item_id: str,
-        exclude_artist_ids: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
+        exclude_artist_ids: list[Any] | None = None,
+        user_id: str | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
     ) -> Any:
         """Gets similar items."""
         endpoint = "/Trailers/{itemId}/Similar"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if exclude_artist_ids is not None:
             params["excludeArtistIds"] = exclude_artist_ids
         if user_id is not None:
@@ -4251,15 +4245,15 @@ class Api:
 
     def add_virtual_folder(
         self,
-        name: Optional[str] = None,
-        collection_type: Optional[str] = None,
-        paths: Optional[List[Any]] = None,
-        refresh_library: Optional[bool] = None,
-        body: Optional[Dict[str, Any]] = None,
+        name: str | None = None,
+        collection_type: str | None = None,
+        paths: list[Any] | None = None,
+        refresh_library: bool | None = None,
+        body: dict[str, Any] | None = None,
     ) -> Any:
         """Adds a virtual folder."""
         endpoint = "/Library/VirtualFolders"
-        params = {}
+        params: dict[str, Any] = {}
         if name is not None:
             params["name"] = name
         if collection_type is not None:
@@ -4271,18 +4265,18 @@ class Api:
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def remove_virtual_folder(
-        self, name: Optional[str] = None, refresh_library: Optional[bool] = None
+        self, name: str | None = None, refresh_library: bool | None = None
     ) -> Any:
         """Removes a virtual folder."""
         endpoint = "/Library/VirtualFolders"
-        params = {}
+        params: dict[str, Any] = {}
         if name is not None:
             params["name"] = name
         if refresh_library is not None:
             params["refreshLibrary"] = refresh_library
         return self.request("DELETE", endpoint, params=params)
 
-    def update_library_options(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def update_library_options(self, body: dict[str, Any] | None = None) -> Any:
         """Update library options."""
         endpoint = "/Library/VirtualFolders/LibraryOptions"
         params = None
@@ -4290,13 +4284,13 @@ class Api:
 
     def rename_virtual_folder(
         self,
-        name: Optional[str] = None,
-        new_name: Optional[str] = None,
-        refresh_library: Optional[bool] = None,
+        name: str | None = None,
+        new_name: str | None = None,
+        refresh_library: bool | None = None,
     ) -> Any:
         """Renames a virtual folder."""
         endpoint = "/Library/VirtualFolders/Name"
-        params = {}
+        params: dict[str, Any] = {}
         if name is not None:
             params["name"] = name
         if new_name is not None:
@@ -4307,25 +4301,25 @@ class Api:
 
     def add_media_path(
         self,
-        refresh_library: Optional[bool] = None,
-        body: Optional[Dict[str, Any]] = None,
+        refresh_library: bool | None = None,
+        body: dict[str, Any] | None = None,
     ) -> Any:
         """Add a media path to a library."""
         endpoint = "/Library/VirtualFolders/Paths"
-        params = {}
+        params: dict[str, Any] = {}
         if refresh_library is not None:
             params["refreshLibrary"] = refresh_library
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def remove_media_path(
         self,
-        name: Optional[str] = None,
-        path: Optional[str] = None,
-        refresh_library: Optional[bool] = None,
+        name: str | None = None,
+        path: str | None = None,
+        refresh_library: bool | None = None,
     ) -> Any:
         """Remove a media path."""
         endpoint = "/Library/VirtualFolders/Paths"
-        params = {}
+        params: dict[str, Any] = {}
         if name is not None:
             params["name"] = name
         if path is not None:
@@ -4334,21 +4328,21 @@ class Api:
             params["refreshLibrary"] = refresh_library
         return self.request("DELETE", endpoint, params=params)
 
-    def update_media_path(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def update_media_path(self, body: dict[str, Any] | None = None) -> Any:
         """Updates a media path."""
         endpoint = "/Library/VirtualFolders/Paths/Update"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def get_channel_mapping_options(self, provider_id: Optional[str] = None) -> Any:
+    def get_channel_mapping_options(self, provider_id: str | None = None) -> Any:
         """Get channel mapping options."""
         endpoint = "/LiveTv/ChannelMappingOptions"
-        params = {}
+        params: dict[str, Any] = {}
         if provider_id is not None:
             params["providerId"] = provider_id
         return self.request("GET", endpoint, params=params)
 
-    def set_channel_mapping(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def set_channel_mapping(self, body: dict[str, Any] | None = None) -> Any:
         """Set channel mappings."""
         endpoint = "/LiveTv/ChannelMappings"
         params = None
@@ -4356,31 +4350,31 @@ class Api:
 
     def get_live_tv_channels(
         self,
-        type: Optional[str] = None,
-        user_id: Optional[str] = None,
-        start_index: Optional[int] = None,
-        is_movie: Optional[bool] = None,
-        is_series: Optional[bool] = None,
-        is_news: Optional[bool] = None,
-        is_kids: Optional[bool] = None,
-        is_sports: Optional[bool] = None,
-        limit: Optional[int] = None,
-        is_favorite: Optional[bool] = None,
-        is_liked: Optional[bool] = None,
-        is_disliked: Optional[bool] = None,
-        enable_images: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        fields: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        sort_by: Optional[List[Any]] = None,
-        sort_order: Optional[str] = None,
-        enable_favorite_sorting: Optional[bool] = None,
-        add_current_program: Optional[bool] = None,
+        type: str | None = None,
+        user_id: str | None = None,
+        start_index: int | None = None,
+        is_movie: bool | None = None,
+        is_series: bool | None = None,
+        is_news: bool | None = None,
+        is_kids: bool | None = None,
+        is_sports: bool | None = None,
+        limit: int | None = None,
+        is_favorite: bool | None = None,
+        is_liked: bool | None = None,
+        is_disliked: bool | None = None,
+        enable_images: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        fields: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        sort_by: list[Any] | None = None,
+        sort_order: str | None = None,
+        enable_favorite_sorting: bool | None = None,
+        add_current_program: bool | None = None,
     ) -> Any:
         """Gets available live tv channels."""
         endpoint = "/LiveTv/Channels"
-        params = {}
+        params: dict[str, Any] = {}
         if type is not None:
             params["type"] = type
         if user_id is not None:
@@ -4425,11 +4419,11 @@ class Api:
             params["addCurrentProgram"] = add_current_program
         return self.request("GET", endpoint, params=params)
 
-    def get_channel(self, channel_id: str, user_id: Optional[str] = None) -> Any:
+    def get_channel(self, channel_id: str, user_id: str | None = None) -> Any:
         """Gets a live tv channel."""
         endpoint = "/LiveTv/Channels/{channelId}"
         endpoint = endpoint.replace("{channelId}", str(channel_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
@@ -4448,14 +4442,14 @@ class Api:
 
     def add_listing_provider(
         self,
-        pw: Optional[str] = None,
-        validate_listings: Optional[bool] = None,
-        validate_login: Optional[bool] = None,
-        body: Optional[Dict[str, Any]] = None,
+        pw: str | None = None,
+        validate_listings: bool | None = None,
+        validate_login: bool | None = None,
+        body: dict[str, Any] | None = None,
     ) -> Any:
         """Adds a listings provider."""
         endpoint = "/LiveTv/ListingProviders"
-        params = {}
+        params: dict[str, Any] = {}
         if pw is not None:
             params["pw"] = pw
         if validate_listings is not None:
@@ -4464,10 +4458,10 @@ class Api:
             params["validateLogin"] = validate_login
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def delete_listing_provider(self, id: Optional[str] = None) -> Any:
+    def delete_listing_provider(self, id: str | None = None) -> Any:
         """Delete listing provider."""
         endpoint = "/LiveTv/ListingProviders"
-        params = {}
+        params: dict[str, Any] = {}
         if id is not None:
             params["id"] = id
         return self.request("DELETE", endpoint, params=params)
@@ -4480,14 +4474,14 @@ class Api:
 
     def get_lineups(
         self,
-        id: Optional[str] = None,
-        type: Optional[str] = None,
-        location: Optional[str] = None,
-        country: Optional[str] = None,
+        id: str | None = None,
+        type: str | None = None,
+        location: str | None = None,
+        country: str | None = None,
     ) -> Any:
         """Gets available lineups."""
         endpoint = "/LiveTv/ListingProviders/Lineups"
-        params = {}
+        params: dict[str, Any] = {}
         if id is not None:
             params["id"] = id
         if type is not None:
@@ -4521,37 +4515,37 @@ class Api:
 
     def get_live_tv_programs(
         self,
-        channel_ids: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        min_start_date: Optional[str] = None,
-        has_aired: Optional[bool] = None,
-        is_airing: Optional[bool] = None,
-        max_start_date: Optional[str] = None,
-        min_end_date: Optional[str] = None,
-        max_end_date: Optional[str] = None,
-        is_movie: Optional[bool] = None,
-        is_series: Optional[bool] = None,
-        is_news: Optional[bool] = None,
-        is_kids: Optional[bool] = None,
-        is_sports: Optional[bool] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        sort_by: Optional[List[Any]] = None,
-        sort_order: Optional[List[Any]] = None,
-        genres: Optional[List[Any]] = None,
-        genre_ids: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        series_timer_id: Optional[str] = None,
-        library_series_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        enable_total_record_count: Optional[bool] = None,
+        channel_ids: list[Any] | None = None,
+        user_id: str | None = None,
+        min_start_date: str | None = None,
+        has_aired: bool | None = None,
+        is_airing: bool | None = None,
+        max_start_date: str | None = None,
+        min_end_date: str | None = None,
+        max_end_date: str | None = None,
+        is_movie: bool | None = None,
+        is_series: bool | None = None,
+        is_news: bool | None = None,
+        is_kids: bool | None = None,
+        is_sports: bool | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        sort_by: list[Any] | None = None,
+        sort_order: list[Any] | None = None,
+        genres: list[Any] | None = None,
+        genre_ids: list[Any] | None = None,
+        enable_images: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        series_timer_id: str | None = None,
+        library_series_id: str | None = None,
+        fields: list[Any] | None = None,
+        enable_total_record_count: bool | None = None,
     ) -> Any:
         """Gets available live tv epgs."""
         endpoint = "/LiveTv/Programs"
-        params = {}
+        params: dict[str, Any] = {}
         if channel_ids is not None:
             params["channelIds"] = channel_ids
         if user_id is not None:
@@ -4608,44 +4602,44 @@ class Api:
             params["enableTotalRecordCount"] = enable_total_record_count
         return self.request("GET", endpoint, params=params)
 
-    def get_programs(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def get_programs(self, body: dict[str, Any] | None = None) -> Any:
         """Gets available live tv epgs."""
         endpoint = "/LiveTv/Programs"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def get_program(self, program_id: str, user_id: Optional[str] = None) -> Any:
+    def get_program(self, program_id: str, user_id: str | None = None) -> Any:
         """Gets a live tv program."""
         endpoint = "/LiveTv/Programs/{programId}"
         endpoint = endpoint.replace("{programId}", str(program_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
 
     def get_recommended_programs(
         self,
-        user_id: Optional[str] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        is_airing: Optional[bool] = None,
-        has_aired: Optional[bool] = None,
-        is_series: Optional[bool] = None,
-        is_movie: Optional[bool] = None,
-        is_news: Optional[bool] = None,
-        is_kids: Optional[bool] = None,
-        is_sports: Optional[bool] = None,
-        enable_images: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        genre_ids: Optional[List[Any]] = None,
-        fields: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        enable_total_record_count: Optional[bool] = None,
+        user_id: str | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        is_airing: bool | None = None,
+        has_aired: bool | None = None,
+        is_series: bool | None = None,
+        is_movie: bool | None = None,
+        is_news: bool | None = None,
+        is_kids: bool | None = None,
+        is_sports: bool | None = None,
+        enable_images: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        genre_ids: list[Any] | None = None,
+        fields: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        enable_total_record_count: bool | None = None,
     ) -> Any:
         """Gets recommended live tv epgs."""
         endpoint = "/LiveTv/Programs/Recommended"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if start_index is not None:
@@ -4684,29 +4678,29 @@ class Api:
 
     def get_recordings(
         self,
-        channel_id: Optional[str] = None,
-        user_id: Optional[str] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        status: Optional[str] = None,
-        is_in_progress: Optional[bool] = None,
-        series_timer_id: Optional[str] = None,
-        enable_images: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        fields: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        is_movie: Optional[bool] = None,
-        is_series: Optional[bool] = None,
-        is_kids: Optional[bool] = None,
-        is_sports: Optional[bool] = None,
-        is_news: Optional[bool] = None,
-        is_library_item: Optional[bool] = None,
-        enable_total_record_count: Optional[bool] = None,
+        channel_id: str | None = None,
+        user_id: str | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        status: str | None = None,
+        is_in_progress: bool | None = None,
+        series_timer_id: str | None = None,
+        enable_images: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        fields: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        is_movie: bool | None = None,
+        is_series: bool | None = None,
+        is_kids: bool | None = None,
+        is_sports: bool | None = None,
+        is_news: bool | None = None,
+        is_library_item: bool | None = None,
+        enable_total_record_count: bool | None = None,
     ) -> Any:
         """Gets live tv recordings."""
         endpoint = "/LiveTv/Recordings"
-        params = {}
+        params: dict[str, Any] = {}
         if channel_id is not None:
             params["channelId"] = channel_id
         if user_id is not None:
@@ -4747,11 +4741,11 @@ class Api:
             params["enableTotalRecordCount"] = enable_total_record_count
         return self.request("GET", endpoint, params=params)
 
-    def get_recording(self, recording_id: str, user_id: Optional[str] = None) -> Any:
+    def get_recording(self, recording_id: str, user_id: str | None = None) -> Any:
         """Gets a live tv recording."""
         endpoint = "/LiveTv/Recordings/{recordingId}"
         endpoint = endpoint.replace("{recordingId}", str(recording_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
@@ -4763,18 +4757,18 @@ class Api:
         params = None
         return self.request("DELETE", endpoint, params=params)
 
-    def get_recording_folders(self, user_id: Optional[str] = None) -> Any:
+    def get_recording_folders(self, user_id: str | None = None) -> Any:
         """Gets recording folders."""
         endpoint = "/LiveTv/Recordings/Folders"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
 
-    def get_recording_groups(self, user_id: Optional[str] = None) -> Any:
+    def get_recording_groups(self, user_id: str | None = None) -> Any:
         """Gets live tv recording groups."""
         endpoint = "/LiveTv/Recordings/Groups"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
@@ -4788,24 +4782,24 @@ class Api:
 
     def get_recordings_series(
         self,
-        channel_id: Optional[str] = None,
-        user_id: Optional[str] = None,
-        group_id: Optional[str] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        status: Optional[str] = None,
-        is_in_progress: Optional[bool] = None,
-        series_timer_id: Optional[str] = None,
-        enable_images: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        fields: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        enable_total_record_count: Optional[bool] = None,
+        channel_id: str | None = None,
+        user_id: str | None = None,
+        group_id: str | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        status: str | None = None,
+        is_in_progress: bool | None = None,
+        series_timer_id: str | None = None,
+        enable_images: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        fields: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        enable_total_record_count: bool | None = None,
     ) -> Any:
         """Gets live tv recording series."""
         endpoint = "/LiveTv/Recordings/Series"
-        params = {}
+        params: dict[str, Any] = {}
         if channel_id is not None:
             params["channelId"] = channel_id
         if user_id is not None:
@@ -4837,18 +4831,18 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def get_series_timers(
-        self, sort_by: Optional[str] = None, sort_order: Optional[str] = None
+        self, sort_by: str | None = None, sort_order: str | None = None
     ) -> Any:
         """Gets live tv series timers."""
         endpoint = "/LiveTv/SeriesTimers"
-        params = {}
+        params: dict[str, Any] = {}
         if sort_by is not None:
             params["sortBy"] = sort_by
         if sort_order is not None:
             params["sortOrder"] = sort_order
         return self.request("GET", endpoint, params=params)
 
-    def create_series_timer(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def create_series_timer(self, body: dict[str, Any] | None = None) -> Any:
         """Creates a live tv series timer."""
         endpoint = "/LiveTv/SeriesTimers"
         params = None
@@ -4869,7 +4863,7 @@ class Api:
         return self.request("DELETE", endpoint, params=params)
 
     def update_series_timer(
-        self, timer_id: str, body: Optional[Dict[str, Any]] = None
+        self, timer_id: str, body: dict[str, Any] | None = None
     ) -> Any:
         """Updates a live tv series timer."""
         endpoint = "/LiveTv/SeriesTimers/{timerId}"
@@ -4879,14 +4873,14 @@ class Api:
 
     def get_timers(
         self,
-        channel_id: Optional[str] = None,
-        series_timer_id: Optional[str] = None,
-        is_active: Optional[bool] = None,
-        is_scheduled: Optional[bool] = None,
+        channel_id: str | None = None,
+        series_timer_id: str | None = None,
+        is_active: bool | None = None,
+        is_scheduled: bool | None = None,
     ) -> Any:
         """Gets the live tv timers."""
         endpoint = "/LiveTv/Timers"
-        params = {}
+        params: dict[str, Any] = {}
         if channel_id is not None:
             params["channelId"] = channel_id
         if series_timer_id is not None:
@@ -4897,7 +4891,7 @@ class Api:
             params["isScheduled"] = is_scheduled
         return self.request("GET", endpoint, params=params)
 
-    def create_timer(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def create_timer(self, body: dict[str, Any] | None = None) -> Any:
         """Creates a live tv timer."""
         endpoint = "/LiveTv/Timers"
         params = None
@@ -4917,31 +4911,31 @@ class Api:
         params = None
         return self.request("DELETE", endpoint, params=params)
 
-    def update_timer(self, timer_id: str, body: Optional[Dict[str, Any]] = None) -> Any:
+    def update_timer(self, timer_id: str, body: dict[str, Any] | None = None) -> Any:
         """Updates a live tv timer."""
         endpoint = "/LiveTv/Timers/{timerId}"
         endpoint = endpoint.replace("{timerId}", str(timer_id))
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def get_default_timer(self, program_id: Optional[str] = None) -> Any:
+    def get_default_timer(self, program_id: str | None = None) -> Any:
         """Gets the default values for a new timer."""
         endpoint = "/LiveTv/Timers/Defaults"
-        params = {}
+        params: dict[str, Any] = {}
         if program_id is not None:
             params["programId"] = program_id
         return self.request("GET", endpoint, params=params)
 
-    def add_tuner_host(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def add_tuner_host(self, body: dict[str, Any] | None = None) -> Any:
         """Adds a tuner host."""
         endpoint = "/LiveTv/TunerHosts"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def delete_tuner_host(self, id: Optional[str] = None) -> Any:
+    def delete_tuner_host(self, id: str | None = None) -> Any:
         """Deletes a tuner host."""
         endpoint = "/LiveTv/TunerHosts"
-        params = {}
+        params: dict[str, Any] = {}
         if id is not None:
             params["id"] = id
         return self.request("DELETE", endpoint, params=params)
@@ -4959,18 +4953,18 @@ class Api:
         params = None
         return self.request("POST", endpoint, params=params)
 
-    def discover_tuners(self, new_devices_only: Optional[bool] = None) -> Any:
+    def discover_tuners(self, new_devices_only: bool | None = None) -> Any:
         """Discover tuners."""
         endpoint = "/LiveTv/Tuners/Discover"
-        params = {}
+        params: dict[str, Any] = {}
         if new_devices_only is not None:
             params["newDevicesOnly"] = new_devices_only
         return self.request("GET", endpoint, params=params)
 
-    def discvover_tuners(self, new_devices_only: Optional[bool] = None) -> Any:
+    def discvover_tuners(self, new_devices_only: bool | None = None) -> Any:
         """Discover tuners."""
         endpoint = "/LiveTv/Tuners/Discvover"
-        params = {}
+        params: dict[str, Any] = {}
         if new_devices_only is not None:
             params["newDevicesOnly"] = new_devices_only
         return self.request("GET", endpoint, params=params)
@@ -5009,13 +5003,13 @@ class Api:
     def upload_lyrics(
         self,
         item_id: str,
-        file_name: Optional[str] = None,
-        body: Optional[Dict[str, Any]] = None,
+        file_name: str | None = None,
+        body: dict[str, Any] | None = None,
     ) -> Any:
         """Upload an external lyric file."""
         endpoint = "/Audio/{itemId}/Lyrics"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if file_name is not None:
             params["fileName"] = file_name
         return self.request("POST", endpoint, params=params, json_data=body)
@@ -5049,11 +5043,11 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def get_playback_info(self, item_id: str, user_id: Optional[str] = None) -> Any:
+    def get_playback_info(self, item_id: str, user_id: str | None = None) -> Any:
         """Gets live playback media info for an item."""
         endpoint = "/Items/{itemId}/PlaybackInfo"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
@@ -5061,26 +5055,26 @@ class Api:
     def get_posted_playback_info(
         self,
         item_id: str,
-        user_id: Optional[str] = None,
-        max_streaming_bitrate: Optional[int] = None,
-        start_time_ticks: Optional[int] = None,
-        audio_stream_index: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        max_audio_channels: Optional[int] = None,
-        media_source_id: Optional[str] = None,
-        live_stream_id: Optional[str] = None,
-        auto_open_live_stream: Optional[bool] = None,
-        enable_direct_play: Optional[bool] = None,
-        enable_direct_stream: Optional[bool] = None,
-        enable_transcoding: Optional[bool] = None,
-        allow_video_stream_copy: Optional[bool] = None,
-        allow_audio_stream_copy: Optional[bool] = None,
-        body: Optional[Dict[str, Any]] = None,
+        user_id: str | None = None,
+        max_streaming_bitrate: int | None = None,
+        start_time_ticks: int | None = None,
+        audio_stream_index: int | None = None,
+        subtitle_stream_index: int | None = None,
+        max_audio_channels: int | None = None,
+        media_source_id: str | None = None,
+        live_stream_id: str | None = None,
+        auto_open_live_stream: bool | None = None,
+        enable_direct_play: bool | None = None,
+        enable_direct_stream: bool | None = None,
+        enable_transcoding: bool | None = None,
+        allow_video_stream_copy: bool | None = None,
+        allow_audio_stream_copy: bool | None = None,
+        body: dict[str, Any] | None = None,
     ) -> Any:
         """Gets live playback media info for an item."""
         endpoint = "/Items/{itemId}/PlaybackInfo"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if max_streaming_bitrate is not None:
@@ -5111,33 +5105,33 @@ class Api:
             params["allowAudioStreamCopy"] = allow_audio_stream_copy
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def close_live_stream(self, live_stream_id: Optional[str] = None) -> Any:
+    def close_live_stream(self, live_stream_id: str | None = None) -> Any:
         """Closes a media source."""
         endpoint = "/LiveStreams/Close"
-        params = {}
+        params: dict[str, Any] = {}
         if live_stream_id is not None:
             params["liveStreamId"] = live_stream_id
         return self.request("POST", endpoint, params=params)
 
     def open_live_stream(
         self,
-        open_token: Optional[str] = None,
-        user_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        max_streaming_bitrate: Optional[int] = None,
-        start_time_ticks: Optional[int] = None,
-        audio_stream_index: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        max_audio_channels: Optional[int] = None,
-        item_id: Optional[str] = None,
-        enable_direct_play: Optional[bool] = None,
-        enable_direct_stream: Optional[bool] = None,
-        always_burn_in_subtitle_when_transcoding: Optional[bool] = None,
-        body: Optional[Dict[str, Any]] = None,
+        open_token: str | None = None,
+        user_id: str | None = None,
+        play_session_id: str | None = None,
+        max_streaming_bitrate: int | None = None,
+        start_time_ticks: int | None = None,
+        audio_stream_index: int | None = None,
+        subtitle_stream_index: int | None = None,
+        max_audio_channels: int | None = None,
+        item_id: str | None = None,
+        enable_direct_play: bool | None = None,
+        enable_direct_stream: bool | None = None,
+        always_burn_in_subtitle_when_transcoding: bool | None = None,
+        body: dict[str, Any] | None = None,
     ) -> Any:
         """Opens a media source."""
         endpoint = "/LiveStreams/Open"
-        params = {}
+        params: dict[str, Any] = {}
         if open_token is not None:
             params["openToken"] = open_token
         if user_id is not None:
@@ -5166,36 +5160,36 @@ class Api:
             )
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def get_bitrate_test_bytes(self, size: Optional[int] = None) -> Any:
+    def get_bitrate_test_bytes(self, size: int | None = None) -> Any:
         """Tests the network with a request with the size of the bitrate."""
         endpoint = "/Playback/BitrateTest"
-        params = {}
+        params: dict[str, Any] = {}
         if size is not None:
             params["size"] = size
         return self.request("GET", endpoint, params=params)
 
     def get_item_segments(
-        self, item_id: str, include_segment_types: Optional[List[Any]] = None
+        self, item_id: str, include_segment_types: list[Any] | None = None
     ) -> Any:
         """Gets all media segments based on an itemId."""
         endpoint = "/MediaSegments/{itemId}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if include_segment_types is not None:
             params["includeSegmentTypes"] = include_segment_types
         return self.request("GET", endpoint, params=params)
 
     def get_movie_recommendations(
         self,
-        user_id: Optional[str] = None,
-        parent_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        category_limit: Optional[int] = None,
-        item_limit: Optional[int] = None,
+        user_id: str | None = None,
+        parent_id: str | None = None,
+        fields: list[Any] | None = None,
+        category_limit: int | None = None,
+        item_limit: int | None = None,
     ) -> Any:
         """Gets movie recommendations."""
         endpoint = "/Movies/Recommendations"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if parent_id is not None:
@@ -5210,28 +5204,28 @@ class Api:
 
     def get_music_genres(
         self,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        search_term: Optional[str] = None,
-        parent_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        exclude_item_types: Optional[List[Any]] = None,
-        include_item_types: Optional[List[Any]] = None,
-        is_favorite: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        name_starts_with_or_greater: Optional[str] = None,
-        name_starts_with: Optional[str] = None,
-        name_less_than: Optional[str] = None,
-        sort_by: Optional[List[Any]] = None,
-        sort_order: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        enable_total_record_count: Optional[bool] = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        search_term: str | None = None,
+        parent_id: str | None = None,
+        fields: list[Any] | None = None,
+        exclude_item_types: list[Any] | None = None,
+        include_item_types: list[Any] | None = None,
+        is_favorite: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        user_id: str | None = None,
+        name_starts_with_or_greater: str | None = None,
+        name_starts_with: str | None = None,
+        name_less_than: str | None = None,
+        sort_by: list[Any] | None = None,
+        sort_order: list[Any] | None = None,
+        enable_images: bool | None = None,
+        enable_total_record_count: bool | None = None,
     ) -> Any:
         """Gets all music genres from a given item, folder, or the entire library."""
         endpoint = "/MusicGenres"
-        params = {}
+        params: dict[str, Any] = {}
         if start_index is not None:
             params["startIndex"] = start_index
         if limit is not None:
@@ -5270,11 +5264,11 @@ class Api:
             params["enableTotalRecordCount"] = enable_total_record_count
         return self.request("GET", endpoint, params=params)
 
-    def get_music_genre(self, genre_name: str, user_id: Optional[str] = None) -> Any:
+    def get_music_genre(self, genre_name: str, user_id: str | None = None) -> Any:
         """Gets a music genre, by name."""
         endpoint = "/MusicGenres/{genreName}"
         endpoint = endpoint.replace("{genreName}", str(genre_name))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
@@ -5285,11 +5279,11 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def get_package_info(self, name: str, assembly_guid: Optional[str] = None) -> Any:
+    def get_package_info(self, name: str, assembly_guid: str | None = None) -> Any:
         """Gets a package by name or assembly GUID."""
         endpoint = "/Packages/{name}"
         endpoint = endpoint.replace("{name}", str(name))
-        params = {}
+        params: dict[str, Any] = {}
         if assembly_guid is not None:
             params["assemblyGuid"] = assembly_guid
         return self.request("GET", endpoint, params=params)
@@ -5297,14 +5291,14 @@ class Api:
     def install_package(
         self,
         name: str,
-        assembly_guid: Optional[str] = None,
-        version: Optional[str] = None,
-        repository_url: Optional[str] = None,
+        assembly_guid: str | None = None,
+        version: str | None = None,
+        repository_url: str | None = None,
     ) -> Any:
         """Installs a package."""
         endpoint = "/Packages/Installed/{name}"
         endpoint = endpoint.replace("{name}", str(name))
-        params = {}
+        params: dict[str, Any] = {}
         if assembly_guid is not None:
             params["assemblyGuid"] = assembly_guid
         if version is not None:
@@ -5326,7 +5320,7 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def set_repositories(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def set_repositories(self, body: dict[str, Any] | None = None) -> Any:
         """Sets the enabled and existing package repositories."""
         endpoint = "/Repositories"
         params = None
@@ -5334,23 +5328,23 @@ class Api:
 
     def get_persons(
         self,
-        limit: Optional[int] = None,
-        search_term: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        filters: Optional[List[Any]] = None,
-        is_favorite: Optional[bool] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        exclude_person_types: Optional[List[Any]] = None,
-        person_types: Optional[List[Any]] = None,
-        appears_in_item_id: Optional[str] = None,
-        user_id: Optional[str] = None,
-        enable_images: Optional[bool] = None,
+        limit: int | None = None,
+        search_term: str | None = None,
+        fields: list[Any] | None = None,
+        filters: list[Any] | None = None,
+        is_favorite: bool | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        exclude_person_types: list[Any] | None = None,
+        person_types: list[Any] | None = None,
+        appears_in_item_id: str | None = None,
+        user_id: str | None = None,
+        enable_images: bool | None = None,
     ) -> Any:
         """Gets all persons."""
         endpoint = "/Persons"
-        params = {}
+        params: dict[str, Any] = {}
         if limit is not None:
             params["limit"] = limit
         if search_term is not None:
@@ -5379,26 +5373,26 @@ class Api:
             params["enableImages"] = enable_images
         return self.request("GET", endpoint, params=params)
 
-    def get_person(self, name: str, user_id: Optional[str] = None) -> Any:
+    def get_person(self, name: str, user_id: str | None = None) -> Any:
         """Get person by name."""
         endpoint = "/Persons/{name}"
         endpoint = endpoint.replace("{name}", str(name))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
 
     def create_playlist(
         self,
-        name: Optional[str] = None,
-        ids: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        media_type: Optional[str] = None,
-        body: Optional[Dict[str, Any]] = None,
+        name: str | None = None,
+        ids: list[Any] | None = None,
+        user_id: str | None = None,
+        media_type: str | None = None,
+        body: dict[str, Any] | None = None,
     ) -> Any:
         """Creates a new playlist."""
         endpoint = "/Playlists"
-        params = {}
+        params: dict[str, Any] = {}
         if name is not None:
             params["name"] = name
         if ids is not None:
@@ -5410,7 +5404,7 @@ class Api:
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def update_playlist(
-        self, playlist_id: str, body: Optional[Dict[str, Any]] = None
+        self, playlist_id: str, body: dict[str, Any] | None = None
     ) -> Any:
         """Updates a playlist."""
         endpoint = "/Playlists/{playlistId}"
@@ -5428,13 +5422,13 @@ class Api:
     def add_item_to_playlist(
         self,
         playlist_id: str,
-        ids: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
+        ids: list[Any] | None = None,
+        user_id: str | None = None,
     ) -> Any:
         """Adds items to a playlist."""
         endpoint = "/Playlists/{playlistId}/Items"
         endpoint = endpoint.replace("{playlistId}", str(playlist_id))
-        params = {}
+        params: dict[str, Any] = {}
         if ids is not None:
             params["ids"] = ids
         if user_id is not None:
@@ -5442,12 +5436,12 @@ class Api:
         return self.request("POST", endpoint, params=params)
 
     def remove_item_from_playlist(
-        self, playlist_id: str, entry_ids: Optional[List[Any]] = None
+        self, playlist_id: str, entry_ids: list[Any] | None = None
     ) -> Any:
         """Removes items from a playlist."""
         endpoint = "/Playlists/{playlistId}/Items"
         endpoint = endpoint.replace("{playlistId}", str(playlist_id))
-        params = {}
+        params: dict[str, Any] = {}
         if entry_ids is not None:
             params["entryIds"] = entry_ids
         return self.request("DELETE", endpoint, params=params)
@@ -5455,19 +5449,19 @@ class Api:
     def get_playlist_items(
         self,
         playlist_id: str,
-        user_id: Optional[str] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
-        enable_images: Optional[bool] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
+        user_id: str | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
+        enable_images: bool | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
     ) -> Any:
         """Gets the original items of a playlist."""
         endpoint = "/Playlists/{playlistId}/Items"
         endpoint = endpoint.replace("{playlistId}", str(playlist_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if start_index is not None:
@@ -5511,7 +5505,7 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def update_playlist_user(
-        self, playlist_id: str, user_id: str, body: Optional[Dict[str, Any]] = None
+        self, playlist_id: str, user_id: str, body: dict[str, Any] | None = None
     ) -> Any:
         """Modify a user of a playlist's users."""
         endpoint = "/Playlists/{playlistId}/Users/{userId}"
@@ -5531,18 +5525,18 @@ class Api:
     def on_playback_start(
         self,
         item_id: str,
-        media_source_id: Optional[str] = None,
-        audio_stream_index: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        play_method: Optional[str] = None,
-        live_stream_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        can_seek: Optional[bool] = None,
+        media_source_id: str | None = None,
+        audio_stream_index: int | None = None,
+        subtitle_stream_index: int | None = None,
+        play_method: str | None = None,
+        live_stream_id: str | None = None,
+        play_session_id: str | None = None,
+        can_seek: bool | None = None,
     ) -> Any:
         """Reports that a session has begun playing an item."""
         endpoint = "/PlayingItems/{itemId}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if media_source_id is not None:
             params["mediaSourceId"] = media_source_id
         if audio_stream_index is not None:
@@ -5562,16 +5556,16 @@ class Api:
     def on_playback_stopped(
         self,
         item_id: str,
-        media_source_id: Optional[str] = None,
-        next_media_type: Optional[str] = None,
-        position_ticks: Optional[int] = None,
-        live_stream_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
+        media_source_id: str | None = None,
+        next_media_type: str | None = None,
+        position_ticks: int | None = None,
+        live_stream_id: str | None = None,
+        play_session_id: str | None = None,
     ) -> Any:
         """Reports that a session has stopped playing an item."""
         endpoint = "/PlayingItems/{itemId}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if media_source_id is not None:
             params["mediaSourceId"] = media_source_id
         if next_media_type is not None:
@@ -5587,22 +5581,22 @@ class Api:
     def on_playback_progress(
         self,
         item_id: str,
-        media_source_id: Optional[str] = None,
-        position_ticks: Optional[int] = None,
-        audio_stream_index: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        volume_level: Optional[int] = None,
-        play_method: Optional[str] = None,
-        live_stream_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        repeat_mode: Optional[str] = None,
-        is_paused: Optional[bool] = None,
-        is_muted: Optional[bool] = None,
+        media_source_id: str | None = None,
+        position_ticks: int | None = None,
+        audio_stream_index: int | None = None,
+        subtitle_stream_index: int | None = None,
+        volume_level: int | None = None,
+        play_method: str | None = None,
+        live_stream_id: str | None = None,
+        play_session_id: str | None = None,
+        repeat_mode: str | None = None,
+        is_paused: bool | None = None,
+        is_muted: bool | None = None,
     ) -> Any:
         """Reports a session's playback progress."""
         endpoint = "/PlayingItems/{itemId}/Progress"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if media_source_id is not None:
             params["mediaSourceId"] = media_source_id
         if position_ticks is not None:
@@ -5627,27 +5621,27 @@ class Api:
             params["isMuted"] = is_muted
         return self.request("POST", endpoint, params=params)
 
-    def report_playback_start(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def report_playback_start(self, body: dict[str, Any] | None = None) -> Any:
         """Reports playback has started within a session."""
         endpoint = "/Sessions/Playing"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def ping_playback_session(self, play_session_id: Optional[str] = None) -> Any:
+    def ping_playback_session(self, play_session_id: str | None = None) -> Any:
         """Pings a playback session."""
         endpoint = "/Sessions/Playing/Ping"
-        params = {}
+        params: dict[str, Any] = {}
         if play_session_id is not None:
             params["playSessionId"] = play_session_id
         return self.request("POST", endpoint, params=params)
 
-    def report_playback_progress(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def report_playback_progress(self, body: dict[str, Any] | None = None) -> Any:
         """Reports playback progress within a session."""
         endpoint = "/Sessions/Playing/Progress"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def report_playback_stopped(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def report_playback_stopped(self, body: dict[str, Any] | None = None) -> Any:
         """Reports playback has stopped within a session."""
         endpoint = "/Sessions/Playing/Stopped"
         params = None
@@ -5656,24 +5650,24 @@ class Api:
     def mark_played_item(
         self,
         item_id: str,
-        user_id: Optional[str] = None,
-        date_played: Optional[str] = None,
+        user_id: str | None = None,
+        date_played: str | None = None,
     ) -> Any:
         """Marks an item as played for user."""
         endpoint = "/UserPlayedItems/{itemId}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if date_played is not None:
             params["datePlayed"] = date_played
         return self.request("POST", endpoint, params=params)
 
-    def mark_unplayed_item(self, item_id: str, user_id: Optional[str] = None) -> Any:
+    def mark_unplayed_item(self, item_id: str, user_id: str | None = None) -> Any:
         """Marks an item as unplayed for user."""
         endpoint = "/UserPlayedItems/{itemId}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("DELETE", endpoint, params=params)
@@ -5745,21 +5739,21 @@ class Api:
         return self.request("POST", endpoint, params=params)
 
     def authorize_quick_connect(
-        self, code: Optional[str] = None, user_id: Optional[str] = None
+        self, code: str | None = None, user_id: str | None = None
     ) -> Any:
         """Authorizes a pending quick connect request."""
         endpoint = "/QuickConnect/Authorize"
-        params = {}
+        params: dict[str, Any] = {}
         if code is not None:
             params["code"] = code
         if user_id is not None:
             params["userId"] = user_id
         return self.request("POST", endpoint, params=params)
 
-    def get_quick_connect_state(self, secret: Optional[str] = None) -> Any:
+    def get_quick_connect_state(self, secret: str | None = None) -> Any:
         """Attempts to retrieve authentication information."""
         endpoint = "/QuickConnect/Connect"
-        params = {}
+        params: dict[str, Any] = {}
         if secret is not None:
             params["secret"] = secret
         return self.request("GET", endpoint, params=params)
@@ -5779,16 +5773,16 @@ class Api:
     def get_remote_images(
         self,
         item_id: str,
-        type: Optional[str] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        provider_name: Optional[str] = None,
-        include_all_languages: Optional[bool] = None,
+        type: str | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        provider_name: str | None = None,
+        include_all_languages: bool | None = None,
     ) -> Any:
         """Gets available remote images for an item."""
         endpoint = "/Items/{itemId}/RemoteImages"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if type is not None:
             params["type"] = type
         if start_index is not None:
@@ -5802,12 +5796,12 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def download_remote_image(
-        self, item_id: str, type: Optional[str] = None, image_url: Optional[str] = None
+        self, item_id: str, type: str | None = None, image_url: str | None = None
     ) -> Any:
         """Downloads a remote image for an item."""
         endpoint = "/Items/{itemId}/RemoteImages/Download"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if type is not None:
             params["type"] = type
         if image_url is not None:
@@ -5822,11 +5816,11 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def get_tasks(
-        self, is_hidden: Optional[bool] = None, is_enabled: Optional[bool] = None
+        self, is_hidden: bool | None = None, is_enabled: bool | None = None
     ) -> Any:
         """Get tasks."""
         endpoint = "/ScheduledTasks"
-        params = {}
+        params: dict[str, Any] = {}
         if is_hidden is not None:
             params["isHidden"] = is_hidden
         if is_enabled is not None:
@@ -5840,7 +5834,7 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def update_task(self, task_id: str, body: Optional[Dict[str, Any]] = None) -> Any:
+    def update_task(self, task_id: str, body: dict[str, Any] | None = None) -> Any:
         """Update specified task triggers."""
         endpoint = "/ScheduledTasks/{taskId}/Triggers"
         endpoint = endpoint.replace("{taskId}", str(task_id))
@@ -5863,28 +5857,28 @@ class Api:
 
     def get_search_hints(
         self,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        user_id: Optional[str] = None,
-        search_term: Optional[str] = None,
-        include_item_types: Optional[List[Any]] = None,
-        exclude_item_types: Optional[List[Any]] = None,
-        media_types: Optional[List[Any]] = None,
-        parent_id: Optional[str] = None,
-        is_movie: Optional[bool] = None,
-        is_series: Optional[bool] = None,
-        is_news: Optional[bool] = None,
-        is_kids: Optional[bool] = None,
-        is_sports: Optional[bool] = None,
-        include_people: Optional[bool] = None,
-        include_media: Optional[bool] = None,
-        include_genres: Optional[bool] = None,
-        include_studios: Optional[bool] = None,
-        include_artists: Optional[bool] = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        user_id: str | None = None,
+        search_term: str | None = None,
+        include_item_types: list[Any] | None = None,
+        exclude_item_types: list[Any] | None = None,
+        media_types: list[Any] | None = None,
+        parent_id: str | None = None,
+        is_movie: bool | None = None,
+        is_series: bool | None = None,
+        is_news: bool | None = None,
+        is_kids: bool | None = None,
+        is_sports: bool | None = None,
+        include_people: bool | None = None,
+        include_media: bool | None = None,
+        include_genres: bool | None = None,
+        include_studios: bool | None = None,
+        include_artists: bool | None = None,
     ) -> Any:
         """Gets the search hint result."""
         endpoint = "/Search/Hints"
-        params = {}
+        params: dict[str, Any] = {}
         if start_index is not None:
             params["startIndex"] = start_index
         if limit is not None:
@@ -5937,13 +5931,13 @@ class Api:
 
     def get_sessions(
         self,
-        controllable_by_user_id: Optional[str] = None,
-        device_id: Optional[str] = None,
-        active_within_seconds: Optional[int] = None,
+        controllable_by_user_id: str | None = None,
+        device_id: str | None = None,
+        active_within_seconds: int | None = None,
     ) -> Any:
         """Gets a list of sessions."""
         endpoint = "/Sessions"
-        params = {}
+        params: dict[str, Any] = {}
         if controllable_by_user_id is not None:
             params["controllableByUserId"] = controllable_by_user_id
         if device_id is not None:
@@ -5953,7 +5947,7 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def send_full_general_command(
-        self, session_id: str, body: Optional[Dict[str, Any]] = None
+        self, session_id: str, body: dict[str, Any] | None = None
     ) -> Any:
         """Issues a full general command to a client."""
         endpoint = "/Sessions/{sessionId}/Command"
@@ -5970,7 +5964,7 @@ class Api:
         return self.request("POST", endpoint, params=params)
 
     def send_message_command(
-        self, session_id: str, body: Optional[Dict[str, Any]] = None
+        self, session_id: str, body: dict[str, Any] | None = None
     ) -> Any:
         """Issues a command to a client to display a message to the user."""
         endpoint = "/Sessions/{sessionId}/Message"
@@ -5981,18 +5975,18 @@ class Api:
     def play(
         self,
         session_id: str,
-        play_command: Optional[str] = None,
-        item_ids: Optional[List[Any]] = None,
-        start_position_ticks: Optional[int] = None,
-        media_source_id: Optional[str] = None,
-        audio_stream_index: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        start_index: Optional[int] = None,
+        play_command: str | None = None,
+        item_ids: list[Any] | None = None,
+        start_position_ticks: int | None = None,
+        media_source_id: str | None = None,
+        audio_stream_index: int | None = None,
+        subtitle_stream_index: int | None = None,
+        start_index: int | None = None,
     ) -> Any:
         """Instructs a session to play an item."""
         endpoint = "/Sessions/{sessionId}/Playing"
         endpoint = endpoint.replace("{sessionId}", str(session_id))
-        params = {}
+        params: dict[str, Any] = {}
         if play_command is not None:
             params["playCommand"] = play_command
         if item_ids is not None:
@@ -6013,14 +6007,14 @@ class Api:
         self,
         session_id: str,
         command: str,
-        seek_position_ticks: Optional[int] = None,
-        controlling_user_id: Optional[str] = None,
+        seek_position_ticks: int | None = None,
+        controlling_user_id: str | None = None,
     ) -> Any:
         """Issues a playstate command to a client."""
         endpoint = "/Sessions/{sessionId}/Playing/{command}"
         endpoint = endpoint.replace("{sessionId}", str(session_id))
         endpoint = endpoint.replace("{command}", str(command))
-        params = {}
+        params: dict[str, Any] = {}
         if seek_position_ticks is not None:
             params["seekPositionTicks"] = seek_position_ticks
         if controlling_user_id is not None:
@@ -6054,14 +6048,14 @@ class Api:
     def display_content(
         self,
         session_id: str,
-        item_type: Optional[str] = None,
-        item_id: Optional[str] = None,
-        item_name: Optional[str] = None,
+        item_type: str | None = None,
+        item_id: str | None = None,
+        item_name: str | None = None,
     ) -> Any:
         """Instructs a session to browse to an item or view."""
         endpoint = "/Sessions/{sessionId}/Viewing"
         endpoint = endpoint.replace("{sessionId}", str(session_id))
-        params = {}
+        params: dict[str, Any] = {}
         if item_type is not None:
             params["itemType"] = item_type
         if item_id is not None:
@@ -6072,15 +6066,15 @@ class Api:
 
     def post_capabilities(
         self,
-        id: Optional[str] = None,
-        playable_media_types: Optional[List[Any]] = None,
-        supported_commands: Optional[List[Any]] = None,
-        supports_media_control: Optional[bool] = None,
-        supports_persistent_identifier: Optional[bool] = None,
+        id: str | None = None,
+        playable_media_types: list[Any] | None = None,
+        supported_commands: list[Any] | None = None,
+        supports_media_control: bool | None = None,
+        supports_persistent_identifier: bool | None = None,
     ) -> Any:
         """Updates capabilities for a device."""
         endpoint = "/Sessions/Capabilities"
-        params = {}
+        params: dict[str, Any] = {}
         if id is not None:
             params["id"] = id
         if playable_media_types is not None:
@@ -6094,11 +6088,11 @@ class Api:
         return self.request("POST", endpoint, params=params)
 
     def post_full_capabilities(
-        self, id: Optional[str] = None, body: Optional[Dict[str, Any]] = None
+        self, id: str | None = None, body: dict[str, Any] | None = None
     ) -> Any:
         """Updates capabilities for a device."""
         endpoint = "/Sessions/Capabilities/Full"
-        params = {}
+        params: dict[str, Any] = {}
         if id is not None:
             params["id"] = id
         return self.request("POST", endpoint, params=params, json_data=body)
@@ -6110,11 +6104,11 @@ class Api:
         return self.request("POST", endpoint, params=params)
 
     def report_viewing(
-        self, session_id: Optional[str] = None, item_id: Optional[str] = None
+        self, session_id: str | None = None, item_id: str | None = None
     ) -> Any:
         """Reports that a session is viewing an item."""
         endpoint = "/Sessions/Viewing"
-        params = {}
+        params: dict[str, Any] = {}
         if session_id is not None:
             params["sessionId"] = session_id
         if item_id is not None:
@@ -6133,9 +6127,7 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def update_initial_configuration(
-        self, body: Optional[Dict[str, Any]] = None
-    ) -> Any:
+    def update_initial_configuration(self, body: dict[str, Any] | None = None) -> Any:
         """Sets the initial startup wizard configuration."""
         endpoint = "/Startup/Configuration"
         params = None
@@ -6147,7 +6139,7 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def set_remote_access(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def set_remote_access(self, body: dict[str, Any] | None = None) -> Any:
         """Sets remote access and UPnP."""
         endpoint = "/Startup/RemoteAccess"
         params = None
@@ -6159,7 +6151,7 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def update_startup_user(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def update_startup_user(self, body: dict[str, Any] | None = None) -> Any:
         """Sets the user name and password."""
         endpoint = "/Startup/User"
         params = None
@@ -6167,27 +6159,27 @@ class Api:
 
     def get_studios(
         self,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        search_term: Optional[str] = None,
-        parent_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        exclude_item_types: Optional[List[Any]] = None,
-        include_item_types: Optional[List[Any]] = None,
-        is_favorite: Optional[bool] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        name_starts_with_or_greater: Optional[str] = None,
-        name_starts_with: Optional[str] = None,
-        name_less_than: Optional[str] = None,
-        enable_images: Optional[bool] = None,
-        enable_total_record_count: Optional[bool] = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        search_term: str | None = None,
+        parent_id: str | None = None,
+        fields: list[Any] | None = None,
+        exclude_item_types: list[Any] | None = None,
+        include_item_types: list[Any] | None = None,
+        is_favorite: bool | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        user_id: str | None = None,
+        name_starts_with_or_greater: str | None = None,
+        name_starts_with: str | None = None,
+        name_less_than: str | None = None,
+        enable_images: bool | None = None,
+        enable_total_record_count: bool | None = None,
     ) -> Any:
         """Gets all studios from a given item, folder, or the entire library."""
         endpoint = "/Studios"
-        params = {}
+        params: dict[str, Any] = {}
         if start_index is not None:
             params["startIndex"] = start_index
         if limit is not None:
@@ -6224,11 +6216,11 @@ class Api:
             params["enableTotalRecordCount"] = enable_total_record_count
         return self.request("GET", endpoint, params=params)
 
-    def get_studio(self, name: str, user_id: Optional[str] = None) -> Any:
+    def get_studio(self, name: str, user_id: str | None = None) -> Any:
         """Gets a studio by name."""
         endpoint = "/Studios/{name}"
         endpoint = endpoint.replace("{name}", str(name))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
@@ -6247,13 +6239,13 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def search_remote_subtitles(
-        self, item_id: str, language: str, is_perfect_match: Optional[bool] = None
+        self, item_id: str, language: str, is_perfect_match: bool | None = None
     ) -> Any:
         """Search remote subtitles."""
         endpoint = "/Items/{itemId}/RemoteSearch/Subtitles/{language}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         endpoint = endpoint.replace("{language}", str(language))
-        params = {}
+        params: dict[str, Any] = {}
         if is_perfect_match is not None:
             params["isPerfectMatch"] = is_perfect_match
         return self.request("GET", endpoint, params=params)
@@ -6278,21 +6270,19 @@ class Api:
         item_id: str,
         index: int,
         media_source_id: str,
-        segment_length: Optional[int] = None,
+        segment_length: int | None = None,
     ) -> Any:
         """Gets an HLS subtitle playlist."""
         endpoint = "/Videos/{itemId}/{mediaSourceId}/Subtitles/{index}/subtitles.m3u8"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         endpoint = endpoint.replace("{index}", str(index))
         endpoint = endpoint.replace("{mediaSourceId}", str(media_source_id))
-        params = {}
+        params: dict[str, Any] = {}
         if segment_length is not None:
             params["segmentLength"] = segment_length
         return self.request("GET", endpoint, params=params)
 
-    def upload_subtitle(
-        self, item_id: str, body: Optional[Dict[str, Any]] = None
-    ) -> Any:
+    def upload_subtitle(self, item_id: str, body: dict[str, Any] | None = None) -> Any:
         """Upload an external subtitle file."""
         endpoint = "/Videos/{itemId}/Subtitles"
         endpoint = endpoint.replace("{itemId}", str(item_id))
@@ -6314,14 +6304,14 @@ class Api:
         route_index: int,
         route_start_position_ticks: int,
         route_format: str,
-        item_id: Optional[str] = None,
-        media_source_id: Optional[str] = None,
-        index: Optional[int] = None,
-        start_position_ticks: Optional[int] = None,
-        format: Optional[str] = None,
-        end_position_ticks: Optional[int] = None,
-        copy_timestamps: Optional[bool] = None,
-        add_vtt_time_map: Optional[bool] = None,
+        item_id: str | None = None,
+        media_source_id: str | None = None,
+        index: int | None = None,
+        start_position_ticks: int | None = None,
+        format: str | None = None,
+        end_position_ticks: int | None = None,
+        copy_timestamps: bool | None = None,
+        add_vtt_time_map: bool | None = None,
     ) -> Any:
         """Gets subtitles in a specified format."""
         endpoint = "/Videos/{routeItemId}/{routeMediaSourceId}/Subtitles/{routeIndex}/{routeStartPositionTicks}/Stream.{routeFormat}"
@@ -6332,7 +6322,7 @@ class Api:
             "{routeStartPositionTicks}", str(route_start_position_ticks)
         )
         endpoint = endpoint.replace("{routeFormat}", str(route_format))
-        params = {}
+        params: dict[str, Any] = {}
         if item_id is not None:
             params["itemId"] = item_id
         if media_source_id is not None:
@@ -6357,14 +6347,14 @@ class Api:
         route_media_source_id: str,
         route_index: int,
         route_format: str,
-        item_id: Optional[str] = None,
-        media_source_id: Optional[str] = None,
-        index: Optional[int] = None,
-        format: Optional[str] = None,
-        end_position_ticks: Optional[int] = None,
-        copy_timestamps: Optional[bool] = None,
-        add_vtt_time_map: Optional[bool] = None,
-        start_position_ticks: Optional[int] = None,
+        item_id: str | None = None,
+        media_source_id: str | None = None,
+        index: int | None = None,
+        format: str | None = None,
+        end_position_ticks: int | None = None,
+        copy_timestamps: bool | None = None,
+        add_vtt_time_map: bool | None = None,
+        start_position_ticks: int | None = None,
     ) -> Any:
         """Gets subtitles in a specified format."""
         endpoint = "/Videos/{routeItemId}/{routeMediaSourceId}/Subtitles/{routeIndex}/Stream.{routeFormat}"
@@ -6372,7 +6362,7 @@ class Api:
         endpoint = endpoint.replace("{routeMediaSourceId}", str(route_media_source_id))
         endpoint = endpoint.replace("{routeIndex}", str(route_index))
         endpoint = endpoint.replace("{routeFormat}", str(route_format))
-        params = {}
+        params: dict[str, Any] = {}
         if item_id is not None:
             params["itemId"] = item_id
         if media_source_id is not None:
@@ -6393,16 +6383,16 @@ class Api:
 
     def get_suggestions(
         self,
-        user_id: Optional[str] = None,
-        media_type: Optional[List[Any]] = None,
-        type: Optional[List[Any]] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        enable_total_record_count: Optional[bool] = None,
+        user_id: str | None = None,
+        media_type: list[Any] | None = None,
+        type: list[Any] | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        enable_total_record_count: bool | None = None,
     ) -> Any:
         """Gets suggestions."""
         endpoint = "/Items/Suggestions"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if media_type is not None:
@@ -6424,13 +6414,13 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def sync_play_buffering(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_buffering(self, body: dict[str, Any] | None = None) -> Any:
         """Notify SyncPlay group that member is buffering."""
         endpoint = "/SyncPlay/Buffering"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def sync_play_join_group(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_join_group(self, body: dict[str, Any] | None = None) -> Any:
         """Join an existing SyncPlay group."""
         endpoint = "/SyncPlay/Join"
         params = None
@@ -6448,21 +6438,19 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def sync_play_move_playlist_item(
-        self, body: Optional[Dict[str, Any]] = None
-    ) -> Any:
+    def sync_play_move_playlist_item(self, body: dict[str, Any] | None = None) -> Any:
         """Request to move an item in the playlist in SyncPlay group."""
         endpoint = "/SyncPlay/MovePlaylistItem"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def sync_play_create_group(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_create_group(self, body: dict[str, Any] | None = None) -> Any:
         """Create a new SyncPlay group."""
         endpoint = "/SyncPlay/New"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def sync_play_next_item(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_next_item(self, body: dict[str, Any] | None = None) -> Any:
         """Request next item in SyncPlay group."""
         endpoint = "/SyncPlay/NextItem"
         params = None
@@ -6474,69 +6462,67 @@ class Api:
         params = None
         return self.request("POST", endpoint, params=params)
 
-    def sync_play_ping(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_ping(self, body: dict[str, Any] | None = None) -> Any:
         """Update session ping."""
         endpoint = "/SyncPlay/Ping"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def sync_play_previous_item(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_previous_item(self, body: dict[str, Any] | None = None) -> Any:
         """Request previous item in SyncPlay group."""
         endpoint = "/SyncPlay/PreviousItem"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def sync_play_queue(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_queue(self, body: dict[str, Any] | None = None) -> Any:
         """Request to queue items to the playlist of a SyncPlay group."""
         endpoint = "/SyncPlay/Queue"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def sync_play_ready(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_ready(self, body: dict[str, Any] | None = None) -> Any:
         """Notify SyncPlay group that member is ready for playback."""
         endpoint = "/SyncPlay/Ready"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def sync_play_remove_from_playlist(
-        self, body: Optional[Dict[str, Any]] = None
-    ) -> Any:
+    def sync_play_remove_from_playlist(self, body: dict[str, Any] | None = None) -> Any:
         """Request to remove items from the playlist in SyncPlay group."""
         endpoint = "/SyncPlay/RemoveFromPlaylist"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def sync_play_seek(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_seek(self, body: dict[str, Any] | None = None) -> Any:
         """Request seek in SyncPlay group."""
         endpoint = "/SyncPlay/Seek"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def sync_play_set_ignore_wait(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_set_ignore_wait(self, body: dict[str, Any] | None = None) -> Any:
         """Request SyncPlay group to ignore member during group-wait."""
         endpoint = "/SyncPlay/SetIgnoreWait"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def sync_play_set_new_queue(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_set_new_queue(self, body: dict[str, Any] | None = None) -> Any:
         """Request to set new playlist in SyncPlay group."""
         endpoint = "/SyncPlay/SetNewQueue"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def sync_play_set_playlist_item(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_set_playlist_item(self, body: dict[str, Any] | None = None) -> Any:
         """Request to change playlist item in SyncPlay group."""
         endpoint = "/SyncPlay/SetPlaylistItem"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def sync_play_set_repeat_mode(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_set_repeat_mode(self, body: dict[str, Any] | None = None) -> Any:
         """Request to set repeat mode in SyncPlay group."""
         endpoint = "/SyncPlay/SetRepeatMode"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def sync_play_set_shuffle_mode(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def sync_play_set_shuffle_mode(self, body: dict[str, Any] | None = None) -> Any:
         """Request to set shuffle mode in SyncPlay group."""
         endpoint = "/SyncPlay/SetShuffleMode"
         params = None
@@ -6584,10 +6570,10 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def get_log_file(self, name: Optional[str] = None) -> Any:
+    def get_log_file(self, name: str | None = None) -> Any:
         """Gets a log file."""
         endpoint = "/System/Logs/Log"
-        params = {}
+        params: dict[str, Any] = {}
         if name is not None:
             params["name"] = name
         return self.request("GET", endpoint, params=params)
@@ -6630,94 +6616,94 @@ class Api:
 
     def get_trailers(
         self,
-        user_id: Optional[str] = None,
-        max_official_rating: Optional[str] = None,
-        has_theme_song: Optional[bool] = None,
-        has_theme_video: Optional[bool] = None,
-        has_subtitles: Optional[bool] = None,
-        has_special_feature: Optional[bool] = None,
-        has_trailer: Optional[bool] = None,
-        adjacent_to: Optional[str] = None,
-        parent_index_number: Optional[int] = None,
-        has_parental_rating: Optional[bool] = None,
-        is_hd: Optional[bool] = None,
-        is4_k: Optional[bool] = None,
-        location_types: Optional[List[Any]] = None,
-        exclude_location_types: Optional[List[Any]] = None,
-        is_missing: Optional[bool] = None,
-        is_unaired: Optional[bool] = None,
-        min_community_rating: Optional[float] = None,
-        min_critic_rating: Optional[float] = None,
-        min_premiere_date: Optional[str] = None,
-        min_date_last_saved: Optional[str] = None,
-        min_date_last_saved_for_user: Optional[str] = None,
-        max_premiere_date: Optional[str] = None,
-        has_overview: Optional[bool] = None,
-        has_imdb_id: Optional[bool] = None,
-        has_tmdb_id: Optional[bool] = None,
-        has_tvdb_id: Optional[bool] = None,
-        is_movie: Optional[bool] = None,
-        is_series: Optional[bool] = None,
-        is_news: Optional[bool] = None,
-        is_kids: Optional[bool] = None,
-        is_sports: Optional[bool] = None,
-        exclude_item_ids: Optional[List[Any]] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        recursive: Optional[bool] = None,
-        search_term: Optional[str] = None,
-        sort_order: Optional[List[Any]] = None,
-        parent_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        exclude_item_types: Optional[List[Any]] = None,
-        filters: Optional[List[Any]] = None,
-        is_favorite: Optional[bool] = None,
-        media_types: Optional[List[Any]] = None,
-        image_types: Optional[List[Any]] = None,
-        sort_by: Optional[List[Any]] = None,
-        is_played: Optional[bool] = None,
-        genres: Optional[List[Any]] = None,
-        official_ratings: Optional[List[Any]] = None,
-        tags: Optional[List[Any]] = None,
-        years: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        person: Optional[str] = None,
-        person_ids: Optional[List[Any]] = None,
-        person_types: Optional[List[Any]] = None,
-        studios: Optional[List[Any]] = None,
-        artists: Optional[List[Any]] = None,
-        exclude_artist_ids: Optional[List[Any]] = None,
-        artist_ids: Optional[List[Any]] = None,
-        album_artist_ids: Optional[List[Any]] = None,
-        contributing_artist_ids: Optional[List[Any]] = None,
-        albums: Optional[List[Any]] = None,
-        album_ids: Optional[List[Any]] = None,
-        ids: Optional[List[Any]] = None,
-        video_types: Optional[List[Any]] = None,
-        min_official_rating: Optional[str] = None,
-        is_locked: Optional[bool] = None,
-        is_place_holder: Optional[bool] = None,
-        has_official_rating: Optional[bool] = None,
-        collapse_box_set_items: Optional[bool] = None,
-        min_width: Optional[int] = None,
-        min_height: Optional[int] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        is3_d: Optional[bool] = None,
-        series_status: Optional[List[Any]] = None,
-        name_starts_with_or_greater: Optional[str] = None,
-        name_starts_with: Optional[str] = None,
-        name_less_than: Optional[str] = None,
-        studio_ids: Optional[List[Any]] = None,
-        genre_ids: Optional[List[Any]] = None,
-        enable_total_record_count: Optional[bool] = None,
-        enable_images: Optional[bool] = None,
+        user_id: str | None = None,
+        max_official_rating: str | None = None,
+        has_theme_song: bool | None = None,
+        has_theme_video: bool | None = None,
+        has_subtitles: bool | None = None,
+        has_special_feature: bool | None = None,
+        has_trailer: bool | None = None,
+        adjacent_to: str | None = None,
+        parent_index_number: int | None = None,
+        has_parental_rating: bool | None = None,
+        is_hd: bool | None = None,
+        is4_k: bool | None = None,
+        location_types: list[Any] | None = None,
+        exclude_location_types: list[Any] | None = None,
+        is_missing: bool | None = None,
+        is_unaired: bool | None = None,
+        min_community_rating: float | None = None,
+        min_critic_rating: float | None = None,
+        min_premiere_date: str | None = None,
+        min_date_last_saved: str | None = None,
+        min_date_last_saved_for_user: str | None = None,
+        max_premiere_date: str | None = None,
+        has_overview: bool | None = None,
+        has_imdb_id: bool | None = None,
+        has_tmdb_id: bool | None = None,
+        has_tvdb_id: bool | None = None,
+        is_movie: bool | None = None,
+        is_series: bool | None = None,
+        is_news: bool | None = None,
+        is_kids: bool | None = None,
+        is_sports: bool | None = None,
+        exclude_item_ids: list[Any] | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        recursive: bool | None = None,
+        search_term: str | None = None,
+        sort_order: list[Any] | None = None,
+        parent_id: str | None = None,
+        fields: list[Any] | None = None,
+        exclude_item_types: list[Any] | None = None,
+        filters: list[Any] | None = None,
+        is_favorite: bool | None = None,
+        media_types: list[Any] | None = None,
+        image_types: list[Any] | None = None,
+        sort_by: list[Any] | None = None,
+        is_played: bool | None = None,
+        genres: list[Any] | None = None,
+        official_ratings: list[Any] | None = None,
+        tags: list[Any] | None = None,
+        years: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        person: str | None = None,
+        person_ids: list[Any] | None = None,
+        person_types: list[Any] | None = None,
+        studios: list[Any] | None = None,
+        artists: list[Any] | None = None,
+        exclude_artist_ids: list[Any] | None = None,
+        artist_ids: list[Any] | None = None,
+        album_artist_ids: list[Any] | None = None,
+        contributing_artist_ids: list[Any] | None = None,
+        albums: list[Any] | None = None,
+        album_ids: list[Any] | None = None,
+        ids: list[Any] | None = None,
+        video_types: list[Any] | None = None,
+        min_official_rating: str | None = None,
+        is_locked: bool | None = None,
+        is_place_holder: bool | None = None,
+        has_official_rating: bool | None = None,
+        collapse_box_set_items: bool | None = None,
+        min_width: int | None = None,
+        min_height: int | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        is3_d: bool | None = None,
+        series_status: list[Any] | None = None,
+        name_starts_with_or_greater: str | None = None,
+        name_starts_with: str | None = None,
+        name_less_than: str | None = None,
+        studio_ids: list[Any] | None = None,
+        genre_ids: list[Any] | None = None,
+        enable_total_record_count: bool | None = None,
+        enable_images: bool | None = None,
     ) -> Any:
         """Finds movies and trailers similar to a given trailer."""
         endpoint = "/Trailers"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if max_official_rating is not None:
@@ -6893,26 +6879,26 @@ class Api:
         item_id: str,
         width: int,
         index: int,
-        media_source_id: Optional[str] = None,
+        media_source_id: str | None = None,
     ) -> Any:
         """Gets a trickplay tile image."""
         endpoint = "/Videos/{itemId}/Trickplay/{width}/{index}.jpg"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         endpoint = endpoint.replace("{width}", str(width))
         endpoint = endpoint.replace("{index}", str(index))
-        params = {}
+        params: dict[str, Any] = {}
         if media_source_id is not None:
             params["mediaSourceId"] = media_source_id
         return self.request("GET", endpoint, params=params)
 
     def get_trickplay_hls_playlist(
-        self, item_id: str, width: int, media_source_id: Optional[str] = None
+        self, item_id: str, width: int, media_source_id: str | None = None
     ) -> Any:
         """Gets an image tiles playlist for trickplay."""
         endpoint = "/Videos/{itemId}/Trickplay/{width}/tiles.m3u8"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         endpoint = endpoint.replace("{width}", str(width))
-        params = {}
+        params: dict[str, Any] = {}
         if media_source_id is not None:
             params["mediaSourceId"] = media_source_id
         return self.request("GET", endpoint, params=params)
@@ -6920,25 +6906,25 @@ class Api:
     def get_episodes(
         self,
         series_id: str,
-        user_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        season: Optional[int] = None,
-        season_id: Optional[str] = None,
-        is_missing: Optional[bool] = None,
-        adjacent_to: Optional[str] = None,
-        start_item_id: Optional[str] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        enable_images: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        sort_by: Optional[str] = None,
+        user_id: str | None = None,
+        fields: list[Any] | None = None,
+        season: int | None = None,
+        season_id: str | None = None,
+        is_missing: bool | None = None,
+        adjacent_to: str | None = None,
+        start_item_id: str | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        enable_images: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        sort_by: str | None = None,
     ) -> Any:
         """Gets episodes for a tv season."""
         endpoint = "/Shows/{seriesId}/Episodes"
         endpoint = endpoint.replace("{seriesId}", str(series_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if fields is not None:
@@ -6972,20 +6958,20 @@ class Api:
     def get_seasons(
         self,
         series_id: str,
-        user_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        is_special_season: Optional[bool] = None,
-        is_missing: Optional[bool] = None,
-        adjacent_to: Optional[str] = None,
-        enable_images: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
+        user_id: str | None = None,
+        fields: list[Any] | None = None,
+        is_special_season: bool | None = None,
+        is_missing: bool | None = None,
+        adjacent_to: str | None = None,
+        enable_images: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        enable_user_data: bool | None = None,
     ) -> Any:
         """Gets seasons for a tv series."""
         endpoint = "/Shows/{seriesId}/Seasons"
         endpoint = endpoint.replace("{seriesId}", str(series_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if fields is not None:
@@ -7008,25 +6994,25 @@ class Api:
 
     def get_next_up(
         self,
-        user_id: Optional[str] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
-        series_id: Optional[str] = None,
-        parent_id: Optional[str] = None,
-        enable_images: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        next_up_date_cutoff: Optional[str] = None,
-        enable_total_record_count: Optional[bool] = None,
-        disable_first_episode: Optional[bool] = None,
-        enable_resumable: Optional[bool] = None,
-        enable_rewatching: Optional[bool] = None,
+        user_id: str | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
+        series_id: str | None = None,
+        parent_id: str | None = None,
+        enable_images: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        next_up_date_cutoff: str | None = None,
+        enable_total_record_count: bool | None = None,
+        disable_first_episode: bool | None = None,
+        enable_resumable: bool | None = None,
+        enable_rewatching: bool | None = None,
     ) -> Any:
         """Gets a list of next up episodes."""
         endpoint = "/Shows/NextUp"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if start_index is not None:
@@ -7061,19 +7047,19 @@ class Api:
 
     def get_upcoming_episodes(
         self,
-        user_id: Optional[str] = None,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        fields: Optional[List[Any]] = None,
-        parent_id: Optional[str] = None,
-        enable_images: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
+        user_id: str | None = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        fields: list[Any] | None = None,
+        parent_id: str | None = None,
+        enable_images: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        enable_user_data: bool | None = None,
     ) -> Any:
         """Gets a list of upcoming episodes."""
         endpoint = "/Shows/Upcoming"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if start_index is not None:
@@ -7097,29 +7083,29 @@ class Api:
     def get_universal_audio_stream(
         self,
         item_id: str,
-        container: Optional[List[Any]] = None,
-        media_source_id: Optional[str] = None,
-        device_id: Optional[str] = None,
-        user_id: Optional[str] = None,
-        audio_codec: Optional[str] = None,
-        max_audio_channels: Optional[int] = None,
-        transcoding_audio_channels: Optional[int] = None,
-        max_streaming_bitrate: Optional[int] = None,
-        audio_bit_rate: Optional[int] = None,
-        start_time_ticks: Optional[int] = None,
-        transcoding_container: Optional[str] = None,
-        transcoding_protocol: Optional[str] = None,
-        max_audio_sample_rate: Optional[int] = None,
-        max_audio_bit_depth: Optional[int] = None,
-        enable_remote_media: Optional[bool] = None,
-        enable_audio_vbr_encoding: Optional[bool] = None,
-        break_on_non_key_frames: Optional[bool] = None,
-        enable_redirection: Optional[bool] = None,
+        container: list[Any] | None = None,
+        media_source_id: str | None = None,
+        device_id: str | None = None,
+        user_id: str | None = None,
+        audio_codec: str | None = None,
+        max_audio_channels: int | None = None,
+        transcoding_audio_channels: int | None = None,
+        max_streaming_bitrate: int | None = None,
+        audio_bit_rate: int | None = None,
+        start_time_ticks: int | None = None,
+        transcoding_container: str | None = None,
+        transcoding_protocol: str | None = None,
+        max_audio_sample_rate: int | None = None,
+        max_audio_bit_depth: int | None = None,
+        enable_remote_media: bool | None = None,
+        enable_audio_vbr_encoding: bool | None = None,
+        break_on_non_key_frames: bool | None = None,
+        enable_redirection: bool | None = None,
     ) -> Any:
         """Gets an audio stream."""
         endpoint = "/Audio/{itemId}/universal"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if container is not None:
             params["container"] = container
         if media_source_id is not None:
@@ -7159,11 +7145,11 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def get_users(
-        self, is_hidden: Optional[bool] = None, is_disabled: Optional[bool] = None
+        self, is_hidden: bool | None = None, is_disabled: bool | None = None
     ) -> Any:
         """Gets a list of users."""
         endpoint = "/Users"
-        params = {}
+        params: dict[str, Any] = {}
         if is_hidden is not None:
             params["isHidden"] = is_hidden
         if is_disabled is not None:
@@ -7171,11 +7157,11 @@ class Api:
         return self.request("GET", endpoint, params=params)
 
     def update_user(
-        self, user_id: Optional[str] = None, body: Optional[Dict[str, Any]] = None
+        self, user_id: str | None = None, body: dict[str, Any] | None = None
     ) -> Any:
         """Updates a user."""
         endpoint = "/Users"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("POST", endpoint, params=params, json_data=body)
@@ -7195,7 +7181,7 @@ class Api:
         return self.request("DELETE", endpoint, params=params)
 
     def update_user_policy(
-        self, user_id: str, body: Optional[Dict[str, Any]] = None
+        self, user_id: str, body: dict[str, Any] | None = None
     ) -> Any:
         """Updates a user policy."""
         endpoint = "/Users/{userId}/Policy"
@@ -7203,14 +7189,14 @@ class Api:
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def authenticate_user_by_name(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def authenticate_user_by_name(self, body: dict[str, Any] | None = None) -> Any:
         """Authenticates a user by name."""
         endpoint = "/Users/AuthenticateByName"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def authenticate_with_quick_connect(
-        self, body: Optional[Dict[str, Any]] = None
+        self, body: dict[str, Any] | None = None
     ) -> Any:
         """Authenticates a user with quick connect."""
         endpoint = "/Users/AuthenticateWithQuickConnect"
@@ -7218,22 +7204,22 @@ class Api:
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def update_user_configuration(
-        self, user_id: Optional[str] = None, body: Optional[Dict[str, Any]] = None
+        self, user_id: str | None = None, body: dict[str, Any] | None = None
     ) -> Any:
         """Updates a user configuration."""
         endpoint = "/Users/Configuration"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def forgot_password(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def forgot_password(self, body: dict[str, Any] | None = None) -> Any:
         """Initiates the forgot password process for a local user."""
         endpoint = "/Users/ForgotPassword"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
-    def forgot_password_pin(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def forgot_password_pin(self, body: dict[str, Any] | None = None) -> Any:
         """Redeems a forgot password pin."""
         endpoint = "/Users/ForgotPassword/Pin"
         params = None
@@ -7245,18 +7231,18 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def create_user_by_name(self, body: Optional[Dict[str, Any]] = None) -> Any:
+    def create_user_by_name(self, body: dict[str, Any] | None = None) -> Any:
         """Creates a user."""
         endpoint = "/Users/New"
         params = None
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def update_user_password(
-        self, user_id: Optional[str] = None, body: Optional[Dict[str, Any]] = None
+        self, user_id: str | None = None, body: dict[str, Any] | None = None
     ) -> Any:
         """Updates a user's password."""
         endpoint = "/Users/Password"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("POST", endpoint, params=params, json_data=body)
@@ -7267,50 +7253,50 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def get_intros(self, item_id: str, user_id: Optional[str] = None) -> Any:
+    def get_intros(self, item_id: str, user_id: str | None = None) -> Any:
         """Gets intros to play before the main media item plays."""
         endpoint = "/Items/{itemId}/Intros"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
 
-    def get_local_trailers(self, item_id: str, user_id: Optional[str] = None) -> Any:
+    def get_local_trailers(self, item_id: str, user_id: str | None = None) -> Any:
         """Gets local trailers for an item."""
         endpoint = "/Items/{itemId}/LocalTrailers"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
 
-    def get_special_features(self, item_id: str, user_id: Optional[str] = None) -> Any:
+    def get_special_features(self, item_id: str, user_id: str | None = None) -> Any:
         """Gets special features for an item."""
         endpoint = "/Items/{itemId}/SpecialFeatures"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
 
     def get_latest_media(
         self,
-        user_id: Optional[str] = None,
-        parent_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        include_item_types: Optional[List[Any]] = None,
-        is_played: Optional[bool] = None,
-        enable_images: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        limit: Optional[int] = None,
-        group_items: Optional[bool] = None,
+        user_id: str | None = None,
+        parent_id: str | None = None,
+        fields: list[Any] | None = None,
+        include_item_types: list[Any] | None = None,
+        is_played: bool | None = None,
+        enable_images: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        limit: int | None = None,
+        group_items: bool | None = None,
     ) -> Any:
         """Gets latest media."""
         endpoint = "/Items/Latest"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if parent_id is not None:
@@ -7335,50 +7321,48 @@ class Api:
             params["groupItems"] = group_items
         return self.request("GET", endpoint, params=params)
 
-    def get_root_folder(self, user_id: Optional[str] = None) -> Any:
+    def get_root_folder(self, user_id: str | None = None) -> Any:
         """Gets the root folder from a user's library."""
         endpoint = "/Items/Root"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
 
-    def mark_favorite_item(self, item_id: str, user_id: Optional[str] = None) -> Any:
+    def mark_favorite_item(self, item_id: str, user_id: str | None = None) -> Any:
         """Marks an item as a favorite."""
         endpoint = "/UserFavoriteItems/{itemId}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("POST", endpoint, params=params)
 
-    def unmark_favorite_item(self, item_id: str, user_id: Optional[str] = None) -> Any:
+    def unmark_favorite_item(self, item_id: str, user_id: str | None = None) -> Any:
         """Unmarks item as a favorite."""
         endpoint = "/UserFavoriteItems/{itemId}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("DELETE", endpoint, params=params)
 
-    def delete_user_item_rating(
-        self, item_id: str, user_id: Optional[str] = None
-    ) -> Any:
+    def delete_user_item_rating(self, item_id: str, user_id: str | None = None) -> Any:
         """Deletes a user's saved personal rating for an item."""
         endpoint = "/UserItems/{itemId}/Rating"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("DELETE", endpoint, params=params)
 
     def update_user_item_rating(
-        self, item_id: str, user_id: Optional[str] = None, likes: Optional[bool] = None
+        self, item_id: str, user_id: str | None = None, likes: bool | None = None
     ) -> Any:
         """Updates a user's rating for an item."""
         endpoint = "/UserItems/{itemId}/Rating"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if likes is not None:
@@ -7387,14 +7371,14 @@ class Api:
 
     def get_user_views(
         self,
-        user_id: Optional[str] = None,
-        include_external_content: Optional[bool] = None,
-        preset_views: Optional[List[Any]] = None,
-        include_hidden: Optional[bool] = None,
+        user_id: str | None = None,
+        include_external_content: bool | None = None,
+        preset_views: list[Any] | None = None,
+        include_hidden: bool | None = None,
     ) -> Any:
         """Get user views."""
         endpoint = "/UserViews"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         if include_external_content is not None:
@@ -7405,10 +7389,10 @@ class Api:
             params["includeHidden"] = include_hidden
         return self.request("GET", endpoint, params=params)
 
-    def get_grouping_options(self, user_id: Optional[str] = None) -> Any:
+    def get_grouping_options(self, user_id: str | None = None) -> Any:
         """Get user view grouping options."""
         endpoint = "/UserViews/GroupingOptions"
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
@@ -7422,11 +7406,11 @@ class Api:
         params = None
         return self.request("GET", endpoint, params=params)
 
-    def get_additional_part(self, item_id: str, user_id: Optional[str] = None) -> Any:
+    def get_additional_part(self, item_id: str, user_id: str | None = None) -> Any:
         """Gets additional parts for a video."""
         endpoint = "/Videos/{itemId}/AdditionalParts"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)
@@ -7441,62 +7425,62 @@ class Api:
     def get_video_stream(
         self,
         item_id: str,
-        container: Optional[str] = None,
-        static: Optional[bool] = None,
-        params: Optional[str] = None,
-        tag: Optional[str] = None,
-        device_profile_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        segment_container: Optional[str] = None,
-        segment_length: Optional[int] = None,
-        min_segments: Optional[int] = None,
-        media_source_id: Optional[str] = None,
-        device_id: Optional[str] = None,
-        audio_codec: Optional[str] = None,
-        enable_auto_stream_copy: Optional[bool] = None,
-        allow_video_stream_copy: Optional[bool] = None,
-        allow_audio_stream_copy: Optional[bool] = None,
-        break_on_non_key_frames: Optional[bool] = None,
-        audio_sample_rate: Optional[int] = None,
-        max_audio_bit_depth: Optional[int] = None,
-        audio_bit_rate: Optional[int] = None,
-        audio_channels: Optional[int] = None,
-        max_audio_channels: Optional[int] = None,
-        profile: Optional[str] = None,
-        level: Optional[str] = None,
-        framerate: Optional[float] = None,
-        max_framerate: Optional[float] = None,
-        copy_timestamps: Optional[bool] = None,
-        start_time_ticks: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        video_bit_rate: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        subtitle_method: Optional[str] = None,
-        max_ref_frames: Optional[int] = None,
-        max_video_bit_depth: Optional[int] = None,
-        require_avc: Optional[bool] = None,
-        de_interlace: Optional[bool] = None,
-        require_non_anamorphic: Optional[bool] = None,
-        transcoding_max_audio_channels: Optional[int] = None,
-        cpu_core_limit: Optional[int] = None,
-        live_stream_id: Optional[str] = None,
-        enable_mpegts_m2_ts_mode: Optional[bool] = None,
-        video_codec: Optional[str] = None,
-        subtitle_codec: Optional[str] = None,
-        transcode_reasons: Optional[str] = None,
-        audio_stream_index: Optional[int] = None,
-        video_stream_index: Optional[int] = None,
-        context: Optional[str] = None,
-        stream_options: Optional[Dict[str, Any]] = None,
-        enable_audio_vbr_encoding: Optional[bool] = None,
+        container: str | None = None,
+        static: bool | None = None,
+        params: str | None = None,
+        tag: str | None = None,
+        device_profile_id: str | None = None,
+        play_session_id: str | None = None,
+        segment_container: str | None = None,
+        segment_length: int | None = None,
+        min_segments: int | None = None,
+        media_source_id: str | None = None,
+        device_id: str | None = None,
+        audio_codec: str | None = None,
+        enable_auto_stream_copy: bool | None = None,
+        allow_video_stream_copy: bool | None = None,
+        allow_audio_stream_copy: bool | None = None,
+        break_on_non_key_frames: bool | None = None,
+        audio_sample_rate: int | None = None,
+        max_audio_bit_depth: int | None = None,
+        audio_bit_rate: int | None = None,
+        audio_channels: int | None = None,
+        max_audio_channels: int | None = None,
+        profile: str | None = None,
+        level: str | None = None,
+        framerate: float | None = None,
+        max_framerate: float | None = None,
+        copy_timestamps: bool | None = None,
+        start_time_ticks: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        video_bit_rate: int | None = None,
+        subtitle_stream_index: int | None = None,
+        subtitle_method: str | None = None,
+        max_ref_frames: int | None = None,
+        max_video_bit_depth: int | None = None,
+        require_avc: bool | None = None,
+        de_interlace: bool | None = None,
+        require_non_anamorphic: bool | None = None,
+        transcoding_max_audio_channels: int | None = None,
+        cpu_core_limit: int | None = None,
+        live_stream_id: str | None = None,
+        enable_mpegts_m2_ts_mode: bool | None = None,
+        video_codec: str | None = None,
+        subtitle_codec: str | None = None,
+        transcode_reasons: str | None = None,
+        audio_stream_index: int | None = None,
+        video_stream_index: int | None = None,
+        context: str | None = None,
+        stream_options: dict[str, Any] | None = None,
+        enable_audio_vbr_encoding: bool | None = None,
     ) -> Any:
         """Gets a video stream."""
         endpoint = "/Videos/{itemId}/stream"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params = {}
+        params: dict[str, Any] = {}
         if container is not None:
             params["container"] = container
         if static is not None:
@@ -7605,62 +7589,62 @@ class Api:
         self,
         item_id: str,
         container: str,
-        static: Optional[bool] = None,
-        params: Optional[str] = None,
-        tag: Optional[str] = None,
-        device_profile_id: Optional[str] = None,
-        play_session_id: Optional[str] = None,
-        segment_container: Optional[str] = None,
-        segment_length: Optional[int] = None,
-        min_segments: Optional[int] = None,
-        media_source_id: Optional[str] = None,
-        device_id: Optional[str] = None,
-        audio_codec: Optional[str] = None,
-        enable_auto_stream_copy: Optional[bool] = None,
-        allow_video_stream_copy: Optional[bool] = None,
-        allow_audio_stream_copy: Optional[bool] = None,
-        break_on_non_key_frames: Optional[bool] = None,
-        audio_sample_rate: Optional[int] = None,
-        max_audio_bit_depth: Optional[int] = None,
-        audio_bit_rate: Optional[int] = None,
-        audio_channels: Optional[int] = None,
-        max_audio_channels: Optional[int] = None,
-        profile: Optional[str] = None,
-        level: Optional[str] = None,
-        framerate: Optional[float] = None,
-        max_framerate: Optional[float] = None,
-        copy_timestamps: Optional[bool] = None,
-        start_time_ticks: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        max_width: Optional[int] = None,
-        max_height: Optional[int] = None,
-        video_bit_rate: Optional[int] = None,
-        subtitle_stream_index: Optional[int] = None,
-        subtitle_method: Optional[str] = None,
-        max_ref_frames: Optional[int] = None,
-        max_video_bit_depth: Optional[int] = None,
-        require_avc: Optional[bool] = None,
-        de_interlace: Optional[bool] = None,
-        require_non_anamorphic: Optional[bool] = None,
-        transcoding_max_audio_channels: Optional[int] = None,
-        cpu_core_limit: Optional[int] = None,
-        live_stream_id: Optional[str] = None,
-        enable_mpegts_m2_ts_mode: Optional[bool] = None,
-        video_codec: Optional[str] = None,
-        subtitle_codec: Optional[str] = None,
-        transcode_reasons: Optional[str] = None,
-        audio_stream_index: Optional[int] = None,
-        video_stream_index: Optional[int] = None,
-        context: Optional[str] = None,
-        stream_options: Optional[Dict[str, Any]] = None,
-        enable_audio_vbr_encoding: Optional[bool] = None,
+        static: bool | None = None,
+        params: str | None = None,
+        tag: str | None = None,
+        device_profile_id: str | None = None,
+        play_session_id: str | None = None,
+        segment_container: str | None = None,
+        segment_length: int | None = None,
+        min_segments: int | None = None,
+        media_source_id: str | None = None,
+        device_id: str | None = None,
+        audio_codec: str | None = None,
+        enable_auto_stream_copy: bool | None = None,
+        allow_video_stream_copy: bool | None = None,
+        allow_audio_stream_copy: bool | None = None,
+        break_on_non_key_frames: bool | None = None,
+        audio_sample_rate: int | None = None,
+        max_audio_bit_depth: int | None = None,
+        audio_bit_rate: int | None = None,
+        audio_channels: int | None = None,
+        max_audio_channels: int | None = None,
+        profile: str | None = None,
+        level: str | None = None,
+        framerate: float | None = None,
+        max_framerate: float | None = None,
+        copy_timestamps: bool | None = None,
+        start_time_ticks: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        video_bit_rate: int | None = None,
+        subtitle_stream_index: int | None = None,
+        subtitle_method: str | None = None,
+        max_ref_frames: int | None = None,
+        max_video_bit_depth: int | None = None,
+        require_avc: bool | None = None,
+        de_interlace: bool | None = None,
+        require_non_anamorphic: bool | None = None,
+        transcoding_max_audio_channels: int | None = None,
+        cpu_core_limit: int | None = None,
+        live_stream_id: str | None = None,
+        enable_mpegts_m2_ts_mode: bool | None = None,
+        video_codec: str | None = None,
+        subtitle_codec: str | None = None,
+        transcode_reasons: str | None = None,
+        audio_stream_index: int | None = None,
+        video_stream_index: int | None = None,
+        context: str | None = None,
+        stream_options: dict[str, Any] | None = None,
+        enable_audio_vbr_encoding: bool | None = None,
     ) -> Any:
         """Gets a video stream."""
         endpoint = "/Videos/{itemId}/stream.{container}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         endpoint = endpoint.replace("{container}", str(container))
-        params = {}
+        params: dict[str, Any] = {}
         if static is not None:
             params["static"] = static
         if params is not None:
@@ -7763,35 +7747,35 @@ class Api:
             params["enableAudioVbrEncoding"] = enable_audio_vbr_encoding
         return self.request("GET", endpoint, params=params)
 
-    def merge_versions(self, ids: Optional[List[Any]] = None) -> Any:
+    def merge_versions(self, ids: list[Any] | None = None) -> Any:
         """Merges videos into a single record."""
         endpoint = "/Videos/MergeVersions"
-        params = {}
+        params: dict[str, Any] = {}
         if ids is not None:
             params["ids"] = ids
         return self.request("POST", endpoint, params=params)
 
     def get_years(
         self,
-        start_index: Optional[int] = None,
-        limit: Optional[int] = None,
-        sort_order: Optional[List[Any]] = None,
-        parent_id: Optional[str] = None,
-        fields: Optional[List[Any]] = None,
-        exclude_item_types: Optional[List[Any]] = None,
-        include_item_types: Optional[List[Any]] = None,
-        media_types: Optional[List[Any]] = None,
-        sort_by: Optional[List[Any]] = None,
-        enable_user_data: Optional[bool] = None,
-        image_type_limit: Optional[int] = None,
-        enable_image_types: Optional[List[Any]] = None,
-        user_id: Optional[str] = None,
-        recursive: Optional[bool] = None,
-        enable_images: Optional[bool] = None,
+        start_index: int | None = None,
+        limit: int | None = None,
+        sort_order: list[Any] | None = None,
+        parent_id: str | None = None,
+        fields: list[Any] | None = None,
+        exclude_item_types: list[Any] | None = None,
+        include_item_types: list[Any] | None = None,
+        media_types: list[Any] | None = None,
+        sort_by: list[Any] | None = None,
+        enable_user_data: bool | None = None,
+        image_type_limit: int | None = None,
+        enable_image_types: list[Any] | None = None,
+        user_id: str | None = None,
+        recursive: bool | None = None,
+        enable_images: bool | None = None,
     ) -> Any:
         """Get years."""
         endpoint = "/Years"
-        params = {}
+        params: dict[str, Any] = {}
         if start_index is not None:
             params["startIndex"] = start_index
         if limit is not None:
@@ -7824,11 +7808,11 @@ class Api:
             params["enableImages"] = enable_images
         return self.request("GET", endpoint, params=params)
 
-    def get_year(self, year: int, user_id: Optional[str] = None) -> Any:
+    def get_year(self, year: int, user_id: str | None = None) -> Any:
         """Gets a year."""
         endpoint = "/Years/{year}"
         endpoint = endpoint.replace("{year}", str(year))
-        params = {}
+        params: dict[str, Any] = {}
         if user_id is not None:
             params["userId"] = user_id
         return self.request("GET", endpoint, params=params)

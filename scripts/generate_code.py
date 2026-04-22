@@ -44,7 +44,7 @@ def generate_api_code(spec: Dict) -> str:
     lines.append("")
     lines.append("class Api:")
     lines.append(
-        "    def __init__(self, base_url: str, token: Optional[str] = None, username: Optional[str] = None, password: Optional[str] = None, verify: bool = False):"
+        "    def __init__(self, base_url: str, token: Optional[str] | None = None, username: Optional[str] | None = None, password: Optional[str] | None = None, verify: bool = False):"
     )
     lines.append("        self.base_url = base_url")
     lines.append("        self.token = token")
@@ -57,7 +57,7 @@ def generate_api_code(spec: Dict) -> str:
     lines.append("        # TODO: Implement basic auth or login flow if needed")
     lines.append("")
     lines.append(
-        "    def request(self, method: str, endpoint: str, params: Dict = None, data: Dict = None, json_data: Dict = None) -> Any:"
+        "    def request(self, method: str, endpoint: str, params: Dict | None = None, data: Dict | None = None, json_data: Dict | None = None) -> Any:"
     )
     lines.append("        url = urljoin(self.base_url, endpoint)")
     lines.append(
@@ -129,7 +129,7 @@ def generate_api_code(spec: Dict) -> str:
                 lines.append(f'        endpoint = "{path}"')
 
             if query_params_dict:
-                lines.append("        params = {}")
+                lines.append("        params: dict[str, Any] = {}")
                 for original, clean in query_params_dict:
                     lines.append(f"        if {clean} is not None:")
                     lines.append(f"            params['{original}'] = {clean}")

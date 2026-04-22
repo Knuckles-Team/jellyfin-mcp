@@ -1,10 +1,12 @@
 import os
 import threading
+
 import requests
 from agent_utilities.base_utilities import to_boolean
-from fastmcp.utilities.logging import get_logger
-from jellyfin_mcp.api_wrapper import Api
 from agent_utilities.exceptions import AuthError, UnauthorizedError
+from fastmcp.utilities.logging import get_logger
+
+from jellyfin_mcp.api_wrapper import Api
 
 local = threading.local()
 logger = get_logger(name="JellyfinAuth")
