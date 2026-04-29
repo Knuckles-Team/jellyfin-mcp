@@ -41,8 +41,8 @@ def get_client(
         exchange_data = {
             "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
             "subject_token": mcp_token,
-            "subject_token_type": "urn:ietf:params:oauth:token-type:access_token",
-            "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",
+            "subject_token_type": "urn:ietf:params:oauth:token-type:access_token",  # nosec B105
+            "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",  # nosec B105
             "audience": config["audience"],
             "scope": config["delegated_scopes"],
         }
@@ -52,6 +52,7 @@ def get_client(
                 data=exchange_data,
                 auth=(config["oidc_client_id"], config["oidc_client_secret"]),
                 verify=verify,
+                timeout=10,
             )
             resp.raise_for_status()
             jellyfin_token = resp.json()["access_token"]
