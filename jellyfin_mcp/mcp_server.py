@@ -23,9 +23,13 @@ from typing import Any
 from agent_utilities.base_utilities import to_boolean
 from agent_utilities.mcp_utilities import (
     create_mcp_server,
+    ctx_confirm_destructive,
+    ctx_progress,
+    ctx_sample,
+    ctx_set_state,
 )
 from dotenv import find_dotenv, load_dotenv
-from fastmcp import FastMCP
+from fastmcp import Context, FastMCP
 from fastmcp.utilities.logging import get_logger
 from pydantic import Field
 
@@ -82,6 +86,9 @@ def register_activitylog_tools(mcp: FastMCP):
             default=None,
             description="Optional. Filter log entries if it has user id, or not.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets activity log entries."""
         api = get_client()
@@ -95,7 +102,11 @@ def register_activitylog_tools(mcp: FastMCP):
 
 def register_apikey_tools(mcp: FastMCP):
     @mcp.tool(name="get_keys", description="Get all keys.", tags={"ApiKey"})
-    def get_keys_tool() -> Any:
+    def get_keys_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Get all keys."""
         api = get_client()
         return api.get_keys()
@@ -105,16 +116,25 @@ def register_apikey_tools(mcp: FastMCP):
         app: str | None = Field(
             default=None, description="Name of the app using the authentication key."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Create a new api key."""
         api = get_client()
         return api.create_key(app=app)
 
     @mcp.tool(name="revoke_key", description="Remove an api key.", tags={"ApiKey"})
-    def revoke_key_tool(
+    async def revoke_key_tool(
         key: str = Field(description="The access token to delete."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Remove an api key."""
+        if not await ctx_confirm_destructive(ctx, "revoke key"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.revoke_key(key=key)
 
@@ -244,6 +264,9 @@ def register_artists_tools(mcp: FastMCP):
         enable_total_record_count: bool | None = Field(
             default=None, description="Total record count."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets all artists from a given item, folder, or the entire library."""
         api = get_client()
@@ -292,6 +315,9 @@ def register_artists_tools(mcp: FastMCP):
         user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets an artist by name."""
@@ -421,6 +447,9 @@ def register_artists_tools(mcp: FastMCP):
         ),
         enable_total_record_count: bool | None = Field(
             default=None, description="Total record count."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets all album artists from a given item, folder, or the entire library."""
@@ -635,6 +664,9 @@ def register_audio_tools(mcp: FastMCP):
         ),
         enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets an audio stream."""
@@ -868,6 +900,9 @@ def register_audio_tools(mcp: FastMCP):
         enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets an audio stream."""
         api = get_client()
@@ -931,7 +966,11 @@ def register_backup_tools(mcp: FastMCP):
         description="Gets a list of all currently present backups in the backup directory.",
         tags={"Backup"},
     )
-    def list_backups_tool() -> Any:
+    def list_backups_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets a list of all currently present backups in the backup directory."""
         api = get_client()
         return api.list_backups()
@@ -941,6 +980,9 @@ def register_backup_tools(mcp: FastMCP):
     )
     def create_backup_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Creates a new Backup."""
         api = get_client()
@@ -955,6 +997,9 @@ def register_backup_tools(mcp: FastMCP):
         path: str | None = Field(
             default=None, description="The data to start a restore process."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the descriptor from an existing archive is present."""
         api = get_client()
@@ -967,6 +1012,9 @@ def register_backup_tools(mcp: FastMCP):
     )
     def start_restore_backup_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Restores to a backup by restarting the server and applying the backup."""
         api = get_client()
@@ -979,7 +1027,11 @@ def register_branding_tools(mcp: FastMCP):
         description="Gets branding configuration.",
         tags={"Branding"},
     )
-    def get_branding_options_tool() -> Any:
+    def get_branding_options_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets branding configuration."""
         api = get_client()
         return api.get_branding_options()
@@ -987,7 +1039,11 @@ def register_branding_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_branding_css", description="Gets branding css.", tags={"Branding"}
     )
-    def get_branding_css_tool() -> Any:
+    def get_branding_css_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets branding css."""
         api = get_client()
         return api.get_branding_css()
@@ -995,7 +1051,11 @@ def register_branding_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_branding_css_2", description="Gets branding css.", tags={"Branding"}
     )
-    def get_branding_css_2_tool() -> Any:
+    def get_branding_css_2_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets branding css."""
         api = get_client()
         return api.get_branding_css_2()
@@ -1029,6 +1089,9 @@ def register_channels_tools(mcp: FastMCP):
         is_favorite: bool | None = Field(
             default=None, description="Optional. Filter by channels that are favorite."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets available channels."""
         api = get_client()
@@ -1048,6 +1111,9 @@ def register_channels_tools(mcp: FastMCP):
     )
     def get_channel_features_tool(
         channel_id: str = Field(description="Channel id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get channel features."""
         api = get_client()
@@ -1082,6 +1148,9 @@ def register_channels_tools(mcp: FastMCP):
             default=None,
             description="Optional. Specify additional fields of information to return in the output.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get channel items."""
         api = get_client()
@@ -1102,7 +1171,11 @@ def register_channels_tools(mcp: FastMCP):
         description="Get all channel features.",
         tags={"Channels"},
     )
-    def get_all_channel_features_tool() -> Any:
+    def get_all_channel_features_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Get all channel features."""
         api = get_client()
         return api.get_all_channel_features()
@@ -1133,6 +1206,9 @@ def register_channels_tools(mcp: FastMCP):
             default=None,
             description="Optional. Specify one or more channel id's, comma delimited.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets latest channel items."""
         api = get_client()
@@ -1150,6 +1226,9 @@ def register_clientlog_tools(mcp: FastMCP):
     @mcp.tool(name="log_file", description="Upload a document.", tags={"ClientLog"})
     def log_file_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Upload a document."""
         api = get_client()
@@ -1176,6 +1255,9 @@ def register_collection_tools(mcp: FastMCP):
         is_locked: bool | None = Field(
             default=None, description="Whether or not to lock the new collection."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Creates a new collection."""
         api = get_client()
@@ -1193,6 +1275,9 @@ def register_collection_tools(mcp: FastMCP):
         ids: list[Any] | None = Field(
             default=None, description="Item ids, comma delimited."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Adds items to a collection."""
         api = get_client()
@@ -1203,13 +1288,19 @@ def register_collection_tools(mcp: FastMCP):
         description="Removes items from a collection.",
         tags={"Collection"},
     )
-    def remove_from_collection_tool(
+    async def remove_from_collection_tool(
         collection_id: str = Field(description="The collection id."),
         ids: list[Any] | None = Field(
             default=None, description="Item ids, comma delimited."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Removes items from a collection."""
+        if not await ctx_confirm_destructive(ctx, "remove from collection"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.remove_from_collection(collection_id=collection_id, ids=ids)
 
@@ -1220,7 +1311,11 @@ def register_configuration_tools(mcp: FastMCP):
         description="Gets application configuration.",
         tags={"Configuration"},
     )
-    def get_configuration_tool() -> Any:
+    def get_configuration_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets application configuration."""
         api = get_client()
         return api.get_configuration()
@@ -1232,6 +1327,9 @@ def register_configuration_tools(mcp: FastMCP):
     )
     def update_configuration_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates application configuration."""
         api = get_client()
@@ -1244,6 +1342,9 @@ def register_configuration_tools(mcp: FastMCP):
     )
     def get_named_configuration_tool(
         key: str = Field(description="Configuration key."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a named configuration."""
         api = get_client()
@@ -1257,6 +1358,9 @@ def register_configuration_tools(mcp: FastMCP):
     def update_named_configuration_tool(
         key: str = Field(description="Configuration key."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates named configuration."""
         api = get_client()
@@ -1269,6 +1373,9 @@ def register_configuration_tools(mcp: FastMCP):
     )
     def update_branding_configuration_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates branding configuration."""
         api = get_client()
@@ -1279,7 +1386,11 @@ def register_configuration_tools(mcp: FastMCP):
         description="Gets a default MetadataOptions object.",
         tags={"Configuration"},
     )
-    def get_default_metadata_options_tool() -> Any:
+    def get_default_metadata_options_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets a default MetadataOptions object."""
         api = get_client()
         return api.get_default_metadata_options()
@@ -1293,6 +1404,9 @@ def register_dashboard_tools(mcp: FastMCP):
     )
     def get_dashboard_configuration_page_tool(
         name: str | None = Field(default=None, description="The name of the page."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a dashboard configuration page."""
         api = get_client()
@@ -1307,6 +1421,9 @@ def register_dashboard_tools(mcp: FastMCP):
         enable_in_main_menu: bool | None = Field(
             default=None, description="Whether to enable in the main menu."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the configuration pages."""
         api = get_client()
@@ -1319,16 +1436,25 @@ def register_devices_tools(mcp: FastMCP):
         user_id: str | None = Field(
             default=None, description="Gets or sets the user identifier."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get Devices."""
         api = get_client()
         return api.get_devices(user_id=user_id)
 
     @mcp.tool(name="delete_device", description="Deletes a device.", tags={"Devices"})
-    def delete_device_tool(
+    async def delete_device_tool(
         id: str | None = Field(default=None, description="Device Id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Deletes a device."""
+        if not await ctx_confirm_destructive(ctx, "delete device"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_device(id=id)
 
@@ -1337,6 +1463,9 @@ def register_devices_tools(mcp: FastMCP):
     )
     def get_device_info_tool(
         id: str | None = Field(default=None, description="Device Id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get info for a device."""
         api = get_client()
@@ -1349,6 +1478,9 @@ def register_devices_tools(mcp: FastMCP):
     )
     def get_device_options_tool(
         id: str | None = Field(default=None, description="Device Id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get options for a device."""
         api = get_client()
@@ -1362,6 +1494,9 @@ def register_devices_tools(mcp: FastMCP):
     def update_device_options_tool(
         id: str | None = Field(default=None, description="Device Id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Update device options."""
         api = get_client()
@@ -1378,6 +1513,9 @@ def register_displaypreferences_tools(mcp: FastMCP):
         display_preferences_id: str = Field(description="Display preferences id."),
         user_id: str | None = Field(default=None, description="User id."),
         client: str | None = Field(default=None, description="Client."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get Display Preferences."""
         api = get_client()
@@ -1397,6 +1535,9 @@ def register_displaypreferences_tools(mcp: FastMCP):
         user_id: str | None = Field(default=None, description="User Id."),
         client: str | None = Field(default=None, description="Client."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Update Display Preferences."""
         api = get_client()
@@ -1597,6 +1738,9 @@ def register_dynamichls_tools(mcp: FastMCP):
         ),
         enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets a video stream using HTTP live streaming."""
@@ -1837,6 +1981,9 @@ def register_dynamichls_tools(mcp: FastMCP):
         enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets an audio stream using HTTP live streaming."""
         api = get_client()
@@ -2073,6 +2220,9 @@ def register_dynamichls_tools(mcp: FastMCP):
         ),
         enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets an audio hls playlist stream."""
@@ -2329,6 +2479,9 @@ def register_dynamichls_tools(mcp: FastMCP):
             default=None,
             description="Whether to always burn in subtitles when transcoding.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a video stream using HTTP live streaming."""
         api = get_client()
@@ -2582,6 +2735,9 @@ def register_dynamichls_tools(mcp: FastMCP):
             default=None,
             description="Whether to always burn in subtitles when transcoding.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a hls live stream."""
         api = get_client()
@@ -2828,6 +2984,9 @@ def register_dynamichls_tools(mcp: FastMCP):
         always_burn_in_subtitle_when_transcoding: bool | None = Field(
             default=None,
             description="Whether to always burn in subtitles when transcoding.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets a video stream using HTTP live streaming."""
@@ -3081,6 +3240,9 @@ def register_dynamichls_tools(mcp: FastMCP):
             default=None,
             description="Whether to always burn in subtitles when transcoding.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a video hls playlist stream."""
         api = get_client()
@@ -3148,7 +3310,11 @@ def register_environment_tools(mcp: FastMCP):
         description="Get Default directory browser.",
         tags={"Environment"},
     )
-    def get_default_directory_browser_tool() -> Any:
+    def get_default_directory_browser_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Get Default directory browser."""
         api = get_client()
         return api.get_default_directory_browser()
@@ -3168,6 +3334,9 @@ def register_environment_tools(mcp: FastMCP):
             default=None,
             description="An optional filter to include or exclude folders from the results. true/false.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the contents of a given directory in the file system."""
         api = get_client()
@@ -3182,7 +3351,11 @@ def register_environment_tools(mcp: FastMCP):
         description="Gets available drives from the server's file system.",
         tags={"Environment"},
     )
-    def get_drives_tool() -> Any:
+    def get_drives_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets available drives from the server's file system."""
         api = get_client()
         return api.get_drives()
@@ -3192,7 +3365,11 @@ def register_environment_tools(mcp: FastMCP):
         description="Gets network paths.",
         tags={"Environment"},
     )
-    def get_network_shares_tool() -> Any:
+    def get_network_shares_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets network paths."""
         api = get_client()
         return api.get_network_shares()
@@ -3204,6 +3381,9 @@ def register_environment_tools(mcp: FastMCP):
     )
     def get_parent_path_tool(
         path: str | None = Field(default=None, description="The path."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the parent path of a given path."""
         api = get_client()
@@ -3212,6 +3392,9 @@ def register_environment_tools(mcp: FastMCP):
     @mcp.tool(name="validate_path", description="Validates path.", tags={"Environment"})
     def validate_path_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Validates path."""
         api = get_client()
@@ -3234,6 +3417,9 @@ def register_filter_tools(mcp: FastMCP):
         media_types: list[Any] | None = Field(
             default=None,
             description="Optional. Filter by MediaType. Allows multiple, comma delimited.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets legacy query filters."""
@@ -3278,6 +3464,9 @@ def register_filter_tools(mcp: FastMCP):
         ),
         recursive: bool | None = Field(
             default=None, description="Optional. Search recursive."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets query filters."""
@@ -3366,6 +3555,9 @@ def register_genres_tools(mcp: FastMCP):
         enable_total_record_count: bool | None = Field(
             default=None, description="Optional. Include total record count."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets all genres from a given item, folder, or the entire library."""
         api = get_client()
@@ -3394,6 +3586,9 @@ def register_genres_tools(mcp: FastMCP):
     def get_genre_tool(
         genre_name: str = Field(description="The genre name."),
         user_id: str | None = Field(default=None, description="The user id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a genre, by name."""
         api = get_client()
@@ -3409,6 +3604,9 @@ def register_hlssegment_tools(mcp: FastMCP):
     def get_hls_audio_segment_legacy_aac_tool(
         item_id: str = Field(description="The item id."),
         segment_id: str = Field(description="The segment id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the specified audio segment for an audio item."""
         api = get_client()
@@ -3424,6 +3622,9 @@ def register_hlssegment_tools(mcp: FastMCP):
     def get_hls_audio_segment_legacy_mp3_tool(
         item_id: str = Field(description="The item id."),
         segment_id: str = Field(description="The segment id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the specified audio segment for an audio item."""
         api = get_client()
@@ -3441,6 +3642,9 @@ def register_hlssegment_tools(mcp: FastMCP):
         playlist_id: str = Field(description="The playlist id."),
         segment_id: str = Field(description="The segment id."),
         segment_container: str = Field(description="The segment container."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a hls video segment."""
         api = get_client()
@@ -3459,6 +3663,9 @@ def register_hlssegment_tools(mcp: FastMCP):
     def get_hls_playlist_legacy_tool(
         item_id: str = Field(description="The video id."),
         playlist_id: str = Field(description="The playlist id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a hls video playlist."""
         api = get_client()
@@ -3469,7 +3676,7 @@ def register_hlssegment_tools(mcp: FastMCP):
         description="Stops an active encoding.",
         tags={"HlsSegment"},
     )
-    def stop_encoding_process_tool(
+    async def stop_encoding_process_tool(
         device_id: str | None = Field(
             default=None,
             description="The device id of the client requesting. Used to stop encoding processes when needed.",
@@ -3477,8 +3684,14 @@ def register_hlssegment_tools(mcp: FastMCP):
         play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Stops an active encoding."""
+        if not await ctx_confirm_destructive(ctx, "stop encoding process"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.stop_encoding_process(
             device_id=device_id, play_session_id=play_session_id
@@ -3539,6 +3752,9 @@ def register_image_tools(mcp: FastMCP):
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get artist image by name."""
         api = get_client()
@@ -3576,6 +3792,9 @@ def register_image_tools(mcp: FastMCP):
             default=None,
             description="Determines the output format of the image - original,gif,jpg,png.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Generates or gets the splashscreen."""
         api = get_client()
@@ -3586,11 +3805,16 @@ def register_image_tools(mcp: FastMCP):
         description="Uploads a custom splashscreen. The body is expected to the image contents base64 encoded.",
         tags={"Image"},
     )
-    def upload_custom_splashscreen_tool(
+    async def upload_custom_splashscreen_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Uploads a custom splashscreen. The body is expected to the image contents base64 encoded."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.upload_custom_splashscreen(body=body)
 
     @mcp.tool(
@@ -3598,8 +3822,15 @@ def register_image_tools(mcp: FastMCP):
         description="Delete a custom splashscreen.",
         tags={"Image"},
     )
-    def delete_custom_splashscreen_tool() -> Any:
+    async def delete_custom_splashscreen_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Delete a custom splashscreen."""
+        if not await ctx_confirm_destructive(ctx, "delete custom splashscreen"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_custom_splashscreen()
 
@@ -3656,6 +3887,9 @@ def register_image_tools(mcp: FastMCP):
             description="Optional. Apply a foreground layer on top of the image.",
         ),
         image_index: int | None = Field(default=None, description="Image index."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get genre image by name."""
         api = get_client()
@@ -3734,6 +3968,9 @@ def register_image_tools(mcp: FastMCP):
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get genre image by name."""
         api = get_client()
@@ -3760,7 +3997,12 @@ def register_image_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_item_image_infos", description="Get item image infos.", tags={"Image"}
     )
-    def get_item_image_infos_tool(item_id: str = Field(description="Item id.")) -> Any:
+    def get_item_image_infos_tool(
+        item_id: str = Field(description="Item id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Get item image infos."""
         api = get_client()
         return api.get_item_image_infos(item_id=item_id)
@@ -3768,12 +4010,18 @@ def register_image_tools(mcp: FastMCP):
     @mcp.tool(
         name="delete_item_image", description="Delete an item's image.", tags={"Image"}
     )
-    def delete_item_image_tool(
+    async def delete_item_image_tool(
         item_id: str = Field(description="Item id."),
         image_type: str = Field(description="Image type."),
         image_index: int | None = Field(default=None, description="The image index."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Delete an item's image."""
+        if not await ctx_confirm_destructive(ctx, "delete item image"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_item_image(
             item_id=item_id, image_type=image_type, image_index=image_index
@@ -3784,6 +4032,9 @@ def register_image_tools(mcp: FastMCP):
         item_id: str = Field(description="Item id."),
         image_type: str = Field(description="Image type."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Set item image."""
         api = get_client()
@@ -3842,6 +4093,9 @@ def register_image_tools(mcp: FastMCP):
             description="Optional. Apply a foreground layer on top of the image.",
         ),
         image_index: int | None = Field(default=None, description="Image index."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the item's image."""
         api = get_client()
@@ -3870,12 +4124,18 @@ def register_image_tools(mcp: FastMCP):
         description="Delete an item's image.",
         tags={"Image"},
     )
-    def delete_item_image_by_index_tool(
+    async def delete_item_image_by_index_tool(
         item_id: str = Field(description="Item id."),
         image_type: str = Field(description="Image type."),
         image_index: int = Field(description="The image index."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Delete an item's image."""
+        if not await ctx_confirm_destructive(ctx, "delete item image by index"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_item_image_by_index(
             item_id=item_id, image_type=image_type, image_index=image_index
@@ -3889,6 +4149,9 @@ def register_image_tools(mcp: FastMCP):
         image_type: str = Field(description="Image type."),
         image_index: int = Field(description="(Unused) Image index."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Set item image."""
         api = get_client()
@@ -3950,6 +4213,9 @@ def register_image_tools(mcp: FastMCP):
         foreground_layer: str | None = Field(
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets the item's image."""
@@ -4020,6 +4286,9 @@ def register_image_tools(mcp: FastMCP):
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the item's image."""
         api = get_client()
@@ -4053,6 +4322,9 @@ def register_image_tools(mcp: FastMCP):
         image_type: str = Field(description="Image type."),
         image_index: int = Field(description="Old image index."),
         new_index: int | None = Field(default=None, description="New image index."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates the index for an item image."""
         api = get_client()
@@ -4118,6 +4390,9 @@ def register_image_tools(mcp: FastMCP):
             description="Optional. Apply a foreground layer on top of the image.",
         ),
         image_index: int | None = Field(default=None, description="Image index."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get music genre image by name."""
         api = get_client()
@@ -4196,6 +4471,9 @@ def register_image_tools(mcp: FastMCP):
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get music genre image by name."""
         api = get_client()
@@ -4272,6 +4550,9 @@ def register_image_tools(mcp: FastMCP):
             description="Optional. Apply a foreground layer on top of the image.",
         ),
         image_index: int | None = Field(default=None, description="Image index."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get person image by name."""
         api = get_client()
@@ -4350,6 +4631,9 @@ def register_image_tools(mcp: FastMCP):
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get person image by name."""
         api = get_client()
@@ -4426,6 +4710,9 @@ def register_image_tools(mcp: FastMCP):
             description="Optional. Apply a foreground layer on top of the image.",
         ),
         image_index: int | None = Field(default=None, description="Image index."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get studio image by name."""
         api = get_client()
@@ -4504,6 +4791,9 @@ def register_image_tools(mcp: FastMCP):
             default=None,
             description="Optional. Apply a foreground layer on top of the image.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get studio image by name."""
         api = get_client()
@@ -4533,6 +4823,9 @@ def register_image_tools(mcp: FastMCP):
     def post_user_image_tool(
         user_id: str | None = Field(default=None, description="User Id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Sets the user image."""
         api = get_client()
@@ -4541,10 +4834,16 @@ def register_image_tools(mcp: FastMCP):
     @mcp.tool(
         name="delete_user_image", description="Delete the user's image.", tags={"Image"}
     )
-    def delete_user_image_tool(
+    async def delete_user_image_tool(
         user_id: str | None = Field(default=None, description="User Id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Delete the user's image."""
+        if not await ctx_confirm_destructive(ctx, "delete user image"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_user_image(user_id=user_id)
 
@@ -4560,6 +4859,9 @@ def register_image_tools(mcp: FastMCP):
         format: str | None = Field(
             default=None,
             description="Determines the output format of the image - original,gif,jpg,png.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Get user profile image."""
@@ -4600,6 +4902,9 @@ def register_instantmix_tools(mcp: FastMCP):
         enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Creates an instant playlist based on a given album."""
@@ -4648,6 +4953,9 @@ def register_instantmix_tools(mcp: FastMCP):
             default=None,
             description="Optional. The image types to include in the output.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Creates an instant playlist based on a given artist."""
         api = get_client()
@@ -4694,6 +5002,9 @@ def register_instantmix_tools(mcp: FastMCP):
         enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Creates an instant playlist based on a given artist."""
@@ -4742,6 +5053,9 @@ def register_instantmix_tools(mcp: FastMCP):
             default=None,
             description="Optional. The image types to include in the output.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Creates an instant playlist based on a given item."""
         api = get_client()
@@ -4788,6 +5102,9 @@ def register_instantmix_tools(mcp: FastMCP):
         enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Creates an instant playlist based on a given genre."""
@@ -4836,6 +5153,9 @@ def register_instantmix_tools(mcp: FastMCP):
             default=None,
             description="Optional. The image types to include in the output.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Creates an instant playlist based on a given genre."""
         api = get_client()
@@ -4882,6 +5202,9 @@ def register_instantmix_tools(mcp: FastMCP):
         enable_image_types: list[Any] | None = Field(
             default=None,
             description="Optional. The image types to include in the output.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Creates an instant playlist based on a given playlist."""
@@ -4930,6 +5253,9 @@ def register_instantmix_tools(mcp: FastMCP):
             default=None,
             description="Optional. The image types to include in the output.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Creates an instant playlist based on a given song."""
         api = get_client()
@@ -4951,7 +5277,12 @@ def register_itemlookup_tools(mcp: FastMCP):
         description="Get the item's external id info.",
         tags={"ItemLookup"},
     )
-    def get_external_id_infos_tool(item_id: str = Field(description="Item id.")) -> Any:
+    def get_external_id_infos_tool(
+        item_id: str = Field(description="Item id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Get the item's external id info."""
         api = get_client()
         return api.get_external_id_infos(item_id=item_id)
@@ -4968,6 +5299,9 @@ def register_itemlookup_tools(mcp: FastMCP):
             description="Optional. Whether or not to replace all images. Default: True.",
         ),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Applies search criteria to an item and refreshes metadata."""
         api = get_client()
@@ -4982,6 +5316,9 @@ def register_itemlookup_tools(mcp: FastMCP):
     )
     def get_book_remote_search_results_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get book remote search."""
         api = get_client()
@@ -4994,6 +5331,9 @@ def register_itemlookup_tools(mcp: FastMCP):
     )
     def get_box_set_remote_search_results_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get box set remote search."""
         api = get_client()
@@ -5006,6 +5346,9 @@ def register_itemlookup_tools(mcp: FastMCP):
     )
     def get_movie_remote_search_results_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get movie remote search."""
         api = get_client()
@@ -5018,6 +5361,9 @@ def register_itemlookup_tools(mcp: FastMCP):
     )
     def get_music_album_remote_search_results_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get music album remote search."""
         api = get_client()
@@ -5030,6 +5376,9 @@ def register_itemlookup_tools(mcp: FastMCP):
     )
     def get_music_artist_remote_search_results_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get music artist remote search."""
         api = get_client()
@@ -5042,6 +5391,9 @@ def register_itemlookup_tools(mcp: FastMCP):
     )
     def get_music_video_remote_search_results_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get music video remote search."""
         api = get_client()
@@ -5054,6 +5406,9 @@ def register_itemlookup_tools(mcp: FastMCP):
     )
     def get_person_remote_search_results_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get person remote search."""
         api = get_client()
@@ -5066,6 +5421,9 @@ def register_itemlookup_tools(mcp: FastMCP):
     )
     def get_series_remote_search_results_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get series remote search."""
         api = get_client()
@@ -5078,6 +5436,9 @@ def register_itemlookup_tools(mcp: FastMCP):
     )
     def get_trailer_remote_search_results_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get trailer remote search."""
         api = get_client()
@@ -5110,6 +5471,9 @@ def register_itemrefresh_tools(mcp: FastMCP):
             default=None,
             description="(Optional) Determines if trickplay images should be replaced. Only applicable if mode is FullRefresh.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Refreshes metadata for an item."""
         api = get_client()
@@ -5127,7 +5491,7 @@ def register_items_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_items", description="Gets items based on a query.", tags={"Items"}
     )
-    def get_items_tool(
+    async def get_items_tool(
         user_id: str | None = Field(
             default=None,
             description="The user id supplied as query parameter; this is required when not using an API key.",
@@ -5448,10 +5812,13 @@ def register_items_tools(mcp: FastMCP):
         enable_images: bool | None = Field(
             default=None, description="Optional, include image information in output."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets items based on a query."""
         api = get_client()
-        return api.get_items(
+        result = api.get_items(
             user_id=user_id,
             max_official_rating=max_official_rating,
             has_theme_song=has_theme_song,
@@ -5539,6 +5906,12 @@ def register_items_tools(mcp: FastMCP):
             enable_total_record_count=enable_total_record_count,
             enable_images=enable_images,
         )
+        summary = await ctx_sample(
+            ctx, f"Summarize these media items concisely: {result}"
+        )
+        if summary and isinstance(result, dict):
+            result["ai_summary"] = summary
+        return result
 
     @mcp.tool(
         name="get_item_user_data", description="Get Item User Data.", tags={"Items"}
@@ -5546,6 +5919,9 @@ def register_items_tools(mcp: FastMCP):
     def get_item_user_data_tool(
         item_id: str = Field(description="The item id."),
         user_id: str | None = Field(default=None, description="The user id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get Item User Data."""
         api = get_client()
@@ -5560,6 +5936,9 @@ def register_items_tools(mcp: FastMCP):
         item_id: str = Field(description="The item id."),
         user_id: str | None = Field(default=None, description="The user id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Update Item User Data."""
         api = get_client()
@@ -5616,6 +5995,9 @@ def register_items_tools(mcp: FastMCP):
             default=None,
             description="Optional. Whether to exclude the currently active sessions.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets items based on a query."""
         api = get_client()
@@ -5644,10 +6026,16 @@ def register_library_tools(mcp: FastMCP):
         description="Deletes items from the library and filesystem.",
         tags={"Library"},
     )
-    def delete_items_tool(
+    async def delete_items_tool(
         ids: list[Any] | None = Field(default=None, description="The item ids."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Deletes items from the library and filesystem."""
+        if not await ctx_confirm_destructive(ctx, "delete items"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_items(ids=ids)
 
@@ -5656,8 +6044,16 @@ def register_library_tools(mcp: FastMCP):
         description="Deletes an item from the library and filesystem.",
         tags={"Library"},
     )
-    def delete_item_tool(item_id: str = Field(description="The item id.")) -> Any:
+    async def delete_item_tool(
+        item_id: str = Field(description="The item id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Deletes an item from the library and filesystem."""
+        if not await ctx_confirm_destructive(ctx, "delete item"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_item(item_id=item_id)
 
@@ -5680,6 +6076,9 @@ def register_library_tools(mcp: FastMCP):
         fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets similar items."""
@@ -5712,6 +6111,9 @@ def register_library_tools(mcp: FastMCP):
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets similar items."""
         api = get_client()
@@ -5734,6 +6136,9 @@ def register_library_tools(mcp: FastMCP):
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets all parents of an item."""
         api = get_client()
@@ -5744,7 +6149,12 @@ def register_library_tools(mcp: FastMCP):
         description="Gets critic review for an item.",
         tags={"Library"},
     )
-    def get_critic_reviews_tool(item_id: str = Field(description="")) -> Any:
+    def get_critic_reviews_tool(
+        item_id: str = Field(description=""),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets critic review for an item."""
         api = get_client()
         return api.get_critic_reviews(item_id=item_id)
@@ -5752,9 +6162,16 @@ def register_library_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_download", description="Downloads item media.", tags={"Library"}
     )
-    def get_download_tool(item_id: str = Field(description="The item id.")) -> Any:
+    async def get_download_tool(
+        item_id: str = Field(description="The item id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Downloads item media."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.get_download(item_id=item_id)
 
     @mcp.tool(
@@ -5762,7 +6179,12 @@ def register_library_tools(mcp: FastMCP):
         description="Get the original file of an item.",
         tags={"Library"},
     )
-    def get_file_tool(item_id: str = Field(description="The item id.")) -> Any:
+    def get_file_tool(
+        item_id: str = Field(description="The item id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Get the original file of an item."""
         api = get_client()
         return api.get_file(item_id=item_id)
@@ -5786,6 +6208,9 @@ def register_library_tools(mcp: FastMCP):
         fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets similar items."""
@@ -5820,6 +6245,9 @@ def register_library_tools(mcp: FastMCP):
         sort_order: list[Any] | None = Field(
             default=None, description="Optional. Sort Order - Ascending, Descending."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get theme songs and videos for an item."""
         api = get_client()
@@ -5852,6 +6280,9 @@ def register_library_tools(mcp: FastMCP):
         ),
         sort_order: list[Any] | None = Field(
             default=None, description="Optional. Sort Order - Ascending, Descending."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Get theme songs for an item."""
@@ -5886,6 +6317,9 @@ def register_library_tools(mcp: FastMCP):
         sort_order: list[Any] | None = Field(
             default=None, description="Optional. Sort Order - Ascending, Descending."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get theme videos for an item."""
         api = get_client()
@@ -5906,6 +6340,9 @@ def register_library_tools(mcp: FastMCP):
         is_favorite: bool | None = Field(
             default=None, description="Optional. Get counts of favorite items."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get item counts."""
         api = get_client()
@@ -5923,6 +6360,9 @@ def register_library_tools(mcp: FastMCP):
         is_new_library: bool | None = Field(
             default=None, description="Whether this is a new library."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the library options info."""
         api = get_client()
@@ -5937,6 +6377,9 @@ def register_library_tools(mcp: FastMCP):
     )
     def post_updated_media_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Reports that new movies have been added by an external source."""
         api = get_client()
@@ -5952,6 +6395,9 @@ def register_library_tools(mcp: FastMCP):
             default=None,
             description="Optional. Filter by folders that are marked hidden, or not.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets all user media folders."""
         api = get_client()
@@ -5965,6 +6411,9 @@ def register_library_tools(mcp: FastMCP):
     def post_added_movies_tool(
         tmdb_id: str | None = Field(default=None, description="The tmdbId."),
         imdb_id: str | None = Field(default=None, description="The imdbId."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Reports that new movies have been added by an external source."""
         api = get_client()
@@ -5978,6 +6427,9 @@ def register_library_tools(mcp: FastMCP):
     def post_updated_movies_tool(
         tmdb_id: str | None = Field(default=None, description="The tmdbId."),
         imdb_id: str | None = Field(default=None, description="The imdbId."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Reports that new movies have been added by an external source."""
         api = get_client()
@@ -5988,7 +6440,11 @@ def register_library_tools(mcp: FastMCP):
         description="Gets a list of physical paths from virtual folders.",
         tags={"Library"},
     )
-    def get_physical_paths_tool() -> Any:
+    def get_physical_paths_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets a list of physical paths from virtual folders."""
         api = get_client()
         return api.get_physical_paths()
@@ -5996,7 +6452,11 @@ def register_library_tools(mcp: FastMCP):
     @mcp.tool(
         name="refresh_library", description="Starts a library scan.", tags={"Library"}
     )
-    def refresh_library_tool() -> Any:
+    def refresh_library_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Starts a library scan."""
         api = get_client()
         return api.refresh_library()
@@ -6008,6 +6468,9 @@ def register_library_tools(mcp: FastMCP):
     )
     def post_added_series_tool(
         tvdb_id: str | None = Field(default=None, description="The tvdbId."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Reports that new episodes of a series have been added by an external source."""
         api = get_client()
@@ -6020,6 +6483,9 @@ def register_library_tools(mcp: FastMCP):
     )
     def post_updated_series_tool(
         tvdb_id: str | None = Field(default=None, description="The tvdbId."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Reports that new episodes of a series have been added by an external source."""
         api = get_client()
@@ -6044,6 +6510,9 @@ def register_library_tools(mcp: FastMCP):
         fields: list[Any] | None = Field(
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets similar items."""
@@ -6076,6 +6545,9 @@ def register_library_tools(mcp: FastMCP):
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets similar items."""
         api = get_client()
@@ -6107,6 +6579,9 @@ def register_library_tools(mcp: FastMCP):
             default=None,
             description="Optional. Specify additional fields of information to return in the output. This allows multiple, comma delimited. Options: Budget, Chapters, DateCreated, Genres, HomePageUrl, IndexOptions, MediaStreams, Overview, ParentId, Path, People, ProviderIds, PrimaryImageAspectRatio, Revenue, SortName, Studios, Taglines, TrailerUrls.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets similar items."""
         api = get_client()
@@ -6124,6 +6599,9 @@ def register_itemupdate_tools(mcp: FastMCP):
     def update_item_tool(
         item_id: str = Field(description="The item id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates an item."""
         api = get_client()
@@ -6139,6 +6617,9 @@ def register_itemupdate_tools(mcp: FastMCP):
         content_type: str | None = Field(
             default=None, description="The content type of the item."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates an item's content type."""
         api = get_client()
@@ -6151,6 +6632,9 @@ def register_itemupdate_tools(mcp: FastMCP):
     )
     def get_metadata_editor_info_tool(
         item_id: str = Field(description="The item id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets metadata editor info for an item."""
         api = get_client()
@@ -6166,6 +6650,9 @@ def register_userlibrary_tools(mcp: FastMCP):
     def get_item_tool(
         item_id: str = Field(description="Item id."),
         user_id: str | None = Field(default=None, description="User id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets an item from a user's library."""
         api = get_client()
@@ -6179,6 +6666,9 @@ def register_userlibrary_tools(mcp: FastMCP):
     def get_intros_tool(
         item_id: str = Field(description="Item id."),
         user_id: str | None = Field(default=None, description="User id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets intros to play before the main media item plays."""
         api = get_client()
@@ -6192,6 +6682,9 @@ def register_userlibrary_tools(mcp: FastMCP):
     def get_local_trailers_tool(
         item_id: str = Field(description="Item id."),
         user_id: str | None = Field(default=None, description="User id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets local trailers for an item."""
         api = get_client()
@@ -6205,6 +6698,9 @@ def register_userlibrary_tools(mcp: FastMCP):
     def get_special_features_tool(
         item_id: str = Field(description="Item id."),
         user_id: str | None = Field(default=None, description="User id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets special features for an item."""
         api = get_client()
@@ -6249,6 +6745,9 @@ def register_userlibrary_tools(mcp: FastMCP):
             default=None,
             description="Whether or not to group items into a parent container.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets latest media."""
         api = get_client()
@@ -6273,6 +6772,9 @@ def register_userlibrary_tools(mcp: FastMCP):
     )
     def get_root_folder_tool(
         user_id: str | None = Field(default=None, description="User id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the root folder from a user's library."""
         api = get_client()
@@ -6286,6 +6788,9 @@ def register_userlibrary_tools(mcp: FastMCP):
     def mark_favorite_item_tool(
         item_id: str = Field(description="Item id."),
         user_id: str | None = Field(default=None, description="User id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Marks an item as a favorite."""
         api = get_client()
@@ -6299,6 +6804,9 @@ def register_userlibrary_tools(mcp: FastMCP):
     def unmark_favorite_item_tool(
         item_id: str = Field(description="Item id."),
         user_id: str | None = Field(default=None, description="User id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Unmarks item as a favorite."""
         api = get_client()
@@ -6309,11 +6817,17 @@ def register_userlibrary_tools(mcp: FastMCP):
         description="Deletes a user's saved personal rating for an item.",
         tags={"UserLibrary"},
     )
-    def delete_user_item_rating_tool(
+    async def delete_user_item_rating_tool(
         item_id: str = Field(description="Item id."),
         user_id: str | None = Field(default=None, description="User id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Deletes a user's saved personal rating for an item."""
+        if not await ctx_confirm_destructive(ctx, "delete user item rating"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_user_item_rating(user_id=user_id, item_id=item_id)
 
@@ -6329,6 +6843,9 @@ def register_userlibrary_tools(mcp: FastMCP):
             default=None,
             description="Whether this M:Jellyfin.Api.Controllers.UserLibraryController.UpdateUserItemRating(System.Nullable{System.Guid},System.Guid,System.Nullable{System.Boolean}) is likes.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates a user's rating for an item."""
         api = get_client()
@@ -6343,7 +6860,11 @@ def register_librarystructure_tools(mcp: FastMCP):
         description="Gets all virtual folders.",
         tags={"LibraryStructure"},
     )
-    def get_virtual_folders_tool() -> Any:
+    def get_virtual_folders_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets all virtual folders."""
         api = get_client()
         return api.get_virtual_folders()
@@ -6367,6 +6888,9 @@ def register_librarystructure_tools(mcp: FastMCP):
             default=None, description="Whether to refresh the library."
         ),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Adds a virtual folder."""
         api = get_client()
@@ -6383,13 +6907,19 @@ def register_librarystructure_tools(mcp: FastMCP):
         description="Removes a virtual folder.",
         tags={"LibraryStructure"},
     )
-    def remove_virtual_folder_tool(
+    async def remove_virtual_folder_tool(
         name: str | None = Field(default=None, description="The name of the folder."),
         refresh_library: bool | None = Field(
             default=None, description="Whether to refresh the library."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Removes a virtual folder."""
+        if not await ctx_confirm_destructive(ctx, "remove virtual folder"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.remove_virtual_folder(name=name, refresh_library=refresh_library)
 
@@ -6400,6 +6930,9 @@ def register_librarystructure_tools(mcp: FastMCP):
     )
     def update_library_options_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Update library options."""
         api = get_client()
@@ -6418,6 +6951,9 @@ def register_librarystructure_tools(mcp: FastMCP):
         refresh_library: bool | None = Field(
             default=None, description="Whether to refresh the library."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Renames a virtual folder."""
         api = get_client()
@@ -6435,6 +6971,9 @@ def register_librarystructure_tools(mcp: FastMCP):
             default=None, description="Whether to refresh the library."
         ),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Add a media path to a library."""
         api = get_client()
@@ -6445,14 +6984,20 @@ def register_librarystructure_tools(mcp: FastMCP):
         description="Remove a media path.",
         tags={"LibraryStructure"},
     )
-    def remove_media_path_tool(
+    async def remove_media_path_tool(
         name: str | None = Field(default=None, description="The name of the library."),
         path: str | None = Field(default=None, description="The path to remove."),
         refresh_library: bool | None = Field(
             default=None, description="Whether to refresh the library."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Remove a media path."""
+        if not await ctx_confirm_destructive(ctx, "remove media path"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.remove_media_path(
             name=name, path=path, refresh_library=refresh_library
@@ -6465,6 +7010,9 @@ def register_librarystructure_tools(mcp: FastMCP):
     )
     def update_media_path_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates a media path."""
         api = get_client()
@@ -6479,6 +7027,9 @@ def register_livetv_tools(mcp: FastMCP):
     )
     def get_channel_mapping_options_tool(
         provider_id: str | None = Field(default=None, description="Provider id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get channel mapping options."""
         api = get_client()
@@ -6489,6 +7040,9 @@ def register_livetv_tools(mcp: FastMCP):
     )
     def set_channel_mapping_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Set channel mappings."""
         api = get_client()
@@ -6573,6 +7127,9 @@ def register_livetv_tools(mcp: FastMCP):
             default=None,
             description="Optional. Adds current program info to each channel.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets available live tv channels."""
         api = get_client()
@@ -6608,13 +7165,20 @@ def register_livetv_tools(mcp: FastMCP):
         user_id: str | None = Field(
             default=None, description="Optional. Attach user data."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a live tv channel."""
         api = get_client()
         return api.get_channel(channel_id=channel_id, user_id=user_id)
 
     @mcp.tool(name="get_guide_info", description="Get guide info.", tags={"LiveTv"})
-    def get_guide_info_tool() -> Any:
+    def get_guide_info_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Get guide info."""
         api = get_client()
         return api.get_guide_info()
@@ -6624,7 +7188,11 @@ def register_livetv_tools(mcp: FastMCP):
         description="Gets available live tv services.",
         tags={"LiveTv"},
     )
-    def get_live_tv_info_tool() -> Any:
+    def get_live_tv_info_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets available live tv services."""
         api = get_client()
         return api.get_live_tv_info()
@@ -6643,6 +7211,9 @@ def register_livetv_tools(mcp: FastMCP):
             default=None, description="Validate login."
         ),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Adds a listings provider."""
         api = get_client()
@@ -6658,10 +7229,16 @@ def register_livetv_tools(mcp: FastMCP):
         description="Delete listing provider.",
         tags={"LiveTv"},
     )
-    def delete_listing_provider_tool(
+    async def delete_listing_provider_tool(
         id: str | None = Field(default=None, description="Listing provider id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Delete listing provider."""
+        if not await ctx_confirm_destructive(ctx, "delete listing provider"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_listing_provider(id=id)
 
@@ -6670,7 +7247,11 @@ def register_livetv_tools(mcp: FastMCP):
         description="Gets default listings provider info.",
         tags={"LiveTv"},
     )
-    def get_default_listing_provider_tool() -> Any:
+    def get_default_listing_provider_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets default listings provider info."""
         api = get_client()
         return api.get_default_listing_provider()
@@ -6683,6 +7264,9 @@ def register_livetv_tools(mcp: FastMCP):
         type: str | None = Field(default=None, description="Provider type."),
         location: str | None = Field(default=None, description="Location."),
         country: str | None = Field(default=None, description="Country."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets available lineups."""
         api = get_client()
@@ -6693,7 +7277,11 @@ def register_livetv_tools(mcp: FastMCP):
         description="Gets available countries.",
         tags={"LiveTv"},
     )
-    def get_schedules_direct_countries_tool() -> Any:
+    def get_schedules_direct_countries_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets available countries."""
         api = get_client()
         return api.get_schedules_direct_countries()
@@ -6705,6 +7293,9 @@ def register_livetv_tools(mcp: FastMCP):
     )
     def get_live_recording_file_tool(
         recording_id: str = Field(description="Recording id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a live tv recording stream."""
         api = get_client()
@@ -6718,6 +7309,9 @@ def register_livetv_tools(mcp: FastMCP):
     def get_live_stream_file_tool(
         stream_id: str = Field(description="Stream id."),
         container: str = Field(description="Container type."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a live tv channel stream."""
         api = get_client()
@@ -6818,6 +7412,9 @@ def register_livetv_tools(mcp: FastMCP):
         enable_total_record_count: bool | None = Field(
             default=None, description="Retrieve total record count."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets available live tv epgs."""
         api = get_client()
@@ -6856,6 +7453,9 @@ def register_livetv_tools(mcp: FastMCP):
     )
     def get_programs_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets available live tv epgs."""
         api = get_client()
@@ -6868,6 +7468,9 @@ def register_livetv_tools(mcp: FastMCP):
         program_id: str = Field(description="Program id."),
         user_id: str | None = Field(
             default=None, description="Optional. Attach user data."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets a live tv program."""
@@ -6937,6 +7540,9 @@ def register_livetv_tools(mcp: FastMCP):
         ),
         enable_total_record_count: bool | None = Field(
             default=None, description="Retrieve total record count."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets recommended live tv epgs."""
@@ -7029,6 +7635,9 @@ def register_livetv_tools(mcp: FastMCP):
         enable_total_record_count: bool | None = Field(
             default=None, description="Optional. Return total record count."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets live tv recordings."""
         api = get_client()
@@ -7062,6 +7671,9 @@ def register_livetv_tools(mcp: FastMCP):
         user_id: str | None = Field(
             default=None, description="Optional. Attach user data."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a live tv recording."""
         api = get_client()
@@ -7072,10 +7684,16 @@ def register_livetv_tools(mcp: FastMCP):
         description="Deletes a live tv recording.",
         tags={"LiveTv"},
     )
-    def delete_recording_tool(
+    async def delete_recording_tool(
         recording_id: str = Field(description="Recording id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Deletes a live tv recording."""
+        if not await ctx_confirm_destructive(ctx, "delete recording"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_recording(recording_id=recording_id)
 
@@ -7087,6 +7705,9 @@ def register_livetv_tools(mcp: FastMCP):
     def get_recording_folders_tool(
         user_id: str | None = Field(
             default=None, description="Optional. Filter by user and attach user data."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets recording folders."""
@@ -7102,6 +7723,9 @@ def register_livetv_tools(mcp: FastMCP):
         user_id: str | None = Field(
             default=None, description="Optional. Filter by user and attach user data."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets live tv recording groups."""
         api = get_client()
@@ -7110,7 +7734,12 @@ def register_livetv_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_recording_group", description="Get recording group.", tags={"LiveTv"}
     )
-    def get_recording_group_tool(group_id: str = Field(description="Group id.")) -> Any:
+    def get_recording_group_tool(
+        group_id: str = Field(description="Group id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Get recording group."""
         api = get_client()
         return api.get_recording_group(group_id=group_id)
@@ -7170,6 +7799,9 @@ def register_livetv_tools(mcp: FastMCP):
         enable_total_record_count: bool | None = Field(
             default=None, description="Optional. Return total record count."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets live tv recording series."""
         api = get_client()
@@ -7202,6 +7834,9 @@ def register_livetv_tools(mcp: FastMCP):
         sort_order: str | None = Field(
             default=None, description="Optional. Sort in Ascending or Descending order."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets live tv series timers."""
         api = get_client()
@@ -7214,6 +7849,9 @@ def register_livetv_tools(mcp: FastMCP):
     )
     def create_series_timer_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Creates a live tv series timer."""
         api = get_client()
@@ -7224,7 +7862,12 @@ def register_livetv_tools(mcp: FastMCP):
         description="Gets a live tv series timer.",
         tags={"LiveTv"},
     )
-    def get_series_timer_tool(timer_id: str = Field(description="Timer id.")) -> Any:
+    def get_series_timer_tool(
+        timer_id: str = Field(description="Timer id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets a live tv series timer."""
         api = get_client()
         return api.get_series_timer(timer_id=timer_id)
@@ -7234,8 +7877,16 @@ def register_livetv_tools(mcp: FastMCP):
         description="Cancels a live tv series timer.",
         tags={"LiveTv"},
     )
-    def cancel_series_timer_tool(timer_id: str = Field(description="Timer id.")) -> Any:
+    async def cancel_series_timer_tool(
+        timer_id: str = Field(description="Timer id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Cancels a live tv series timer."""
+        if not await ctx_confirm_destructive(ctx, "cancel series timer"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.cancel_series_timer(timer_id=timer_id)
 
@@ -7247,6 +7898,9 @@ def register_livetv_tools(mcp: FastMCP):
     def update_series_timer_tool(
         timer_id: str = Field(description="Timer id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates a live tv series timer."""
         api = get_client()
@@ -7269,6 +7923,9 @@ def register_livetv_tools(mcp: FastMCP):
         is_scheduled: bool | None = Field(
             default=None, description="Optional. Filter by timers that are scheduled."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the live tv timers."""
         api = get_client()
@@ -7284,13 +7941,21 @@ def register_livetv_tools(mcp: FastMCP):
     )
     def create_timer_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Creates a live tv timer."""
         api = get_client()
         return api.create_timer(body=body)
 
     @mcp.tool(name="get_timer", description="Gets a timer.", tags={"LiveTv"})
-    def get_timer_tool(timer_id: str = Field(description="Timer id.")) -> Any:
+    def get_timer_tool(
+        timer_id: str = Field(description="Timer id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets a timer."""
         api = get_client()
         return api.get_timer(timer_id=timer_id)
@@ -7298,8 +7963,16 @@ def register_livetv_tools(mcp: FastMCP):
     @mcp.tool(
         name="cancel_timer", description="Cancels a live tv timer.", tags={"LiveTv"}
     )
-    def cancel_timer_tool(timer_id: str = Field(description="Timer id.")) -> Any:
+    async def cancel_timer_tool(
+        timer_id: str = Field(description="Timer id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Cancels a live tv timer."""
+        if not await ctx_confirm_destructive(ctx, "cancel timer"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.cancel_timer(timer_id=timer_id)
 
@@ -7309,6 +7982,9 @@ def register_livetv_tools(mcp: FastMCP):
     def update_timer_tool(
         timer_id: str = Field(description="Timer id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates a live tv timer."""
         api = get_client()
@@ -7324,6 +8000,9 @@ def register_livetv_tools(mcp: FastMCP):
             default=None,
             description="Optional. To attach default values based on a program.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the default values for a new timer."""
         api = get_client()
@@ -7332,6 +8011,9 @@ def register_livetv_tools(mcp: FastMCP):
     @mcp.tool(name="add_tuner_host", description="Adds a tuner host.", tags={"LiveTv"})
     def add_tuner_host_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Adds a tuner host."""
         api = get_client()
@@ -7340,10 +8022,16 @@ def register_livetv_tools(mcp: FastMCP):
     @mcp.tool(
         name="delete_tuner_host", description="Deletes a tuner host.", tags={"LiveTv"}
     )
-    def delete_tuner_host_tool(
+    async def delete_tuner_host_tool(
         id: str | None = Field(default=None, description="Tuner host id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Deletes a tuner host."""
+        if not await ctx_confirm_destructive(ctx, "delete tuner host"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_tuner_host(id=id)
 
@@ -7352,14 +8040,26 @@ def register_livetv_tools(mcp: FastMCP):
         description="Get tuner host types.",
         tags={"LiveTv"},
     )
-    def get_tuner_host_types_tool() -> Any:
+    def get_tuner_host_types_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Get tuner host types."""
         api = get_client()
         return api.get_tuner_host_types()
 
     @mcp.tool(name="reset_tuner", description="Resets a tv tuner.", tags={"LiveTv"})
-    def reset_tuner_tool(tuner_id: str = Field(description="Tuner id.")) -> Any:
+    async def reset_tuner_tool(
+        tuner_id: str = Field(description="Tuner id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Resets a tv tuner."""
+        if not await ctx_confirm_destructive(ctx, "reset tuner"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.reset_tuner(tuner_id=tuner_id)
 
@@ -7367,6 +8067,9 @@ def register_livetv_tools(mcp: FastMCP):
     def discover_tuners_tool(
         new_devices_only: bool | None = Field(
             default=None, description="Only discover new tuners."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Discover tuners."""
@@ -7378,6 +8081,9 @@ def register_livetv_tools(mcp: FastMCP):
         new_devices_only: bool | None = Field(
             default=None, description="Only discover new tuners."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Discover tuners."""
         api = get_client()
@@ -7388,7 +8094,11 @@ def register_localization_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_countries", description="Gets known countries.", tags={"Localization"}
     )
-    def get_countries_tool() -> Any:
+    def get_countries_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets known countries."""
         api = get_client()
         return api.get_countries()
@@ -7396,7 +8106,11 @@ def register_localization_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_cultures", description="Gets known cultures.", tags={"Localization"}
     )
-    def get_cultures_tool() -> Any:
+    def get_cultures_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets known cultures."""
         api = get_client()
         return api.get_cultures()
@@ -7406,7 +8120,11 @@ def register_localization_tools(mcp: FastMCP):
         description="Gets localization options.",
         tags={"Localization"},
     )
-    def get_localization_options_tool() -> Any:
+    def get_localization_options_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets localization options."""
         api = get_client()
         return api.get_localization_options()
@@ -7416,7 +8134,11 @@ def register_localization_tools(mcp: FastMCP):
         description="Gets known parental ratings.",
         tags={"Localization"},
     )
-    def get_parental_ratings_tool() -> Any:
+    def get_parental_ratings_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets known parental ratings."""
         api = get_client()
         return api.get_parental_ratings()
@@ -7424,7 +8146,12 @@ def register_localization_tools(mcp: FastMCP):
 
 def register_lyrics_tools(mcp: FastMCP):
     @mcp.tool(name="get_lyrics", description="Gets an item's lyrics.", tags={"Lyrics"})
-    def get_lyrics_tool(item_id: str = Field(description="Item id.")) -> Any:
+    def get_lyrics_tool(
+        item_id: str = Field(description="Item id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets an item's lyrics."""
         api = get_client()
         return api.get_lyrics(item_id=item_id)
@@ -7434,15 +8161,20 @@ def register_lyrics_tools(mcp: FastMCP):
         description="Upload an external lyric file.",
         tags={"Lyrics"},
     )
-    def upload_lyrics_tool(
+    async def upload_lyrics_tool(
         item_id: str = Field(description="The item the lyric belongs to."),
         file_name: str | None = Field(
             default=None, description="Name of the file being uploaded."
         ),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Upload an external lyric file."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.upload_lyrics(item_id=item_id, file_name=file_name, body=body)
 
     @mcp.tool(
@@ -7450,8 +8182,16 @@ def register_lyrics_tools(mcp: FastMCP):
         description="Deletes an external lyric file.",
         tags={"Lyrics"},
     )
-    def delete_lyrics_tool(item_id: str = Field(description="The item id.")) -> Any:
+    async def delete_lyrics_tool(
+        item_id: str = Field(description="The item id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Deletes an external lyric file."""
+        if not await ctx_confirm_destructive(ctx, "delete lyrics"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_lyrics(item_id=item_id)
 
@@ -7462,6 +8202,9 @@ def register_lyrics_tools(mcp: FastMCP):
     )
     def search_remote_lyrics_tool(
         item_id: str = Field(description="The item id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Search remote lyrics."""
         api = get_client()
@@ -7472,12 +8215,17 @@ def register_lyrics_tools(mcp: FastMCP):
         description="Downloads a remote lyric.",
         tags={"Lyrics"},
     )
-    def download_remote_lyrics_tool(
+    async def download_remote_lyrics_tool(
         item_id: str = Field(description="The item id."),
         lyric_id: str = Field(description="The lyric id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Downloads a remote lyric."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.download_remote_lyrics(item_id=item_id, lyric_id=lyric_id)
 
     @mcp.tool(
@@ -7485,6 +8233,9 @@ def register_lyrics_tools(mcp: FastMCP):
     )
     def get_remote_lyrics_tool(
         lyric_id: str = Field(description="The remote provider item id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the remote lyrics."""
         api = get_client()
@@ -7500,6 +8251,9 @@ def register_mediainfo_tools(mcp: FastMCP):
     def get_playback_info_tool(
         item_id: str = Field(description="The item id."),
         user_id: str | None = Field(default=None, description="The user id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets live playback media info for an item."""
         api = get_client()
@@ -7555,6 +8309,9 @@ def register_mediainfo_tools(mcp: FastMCP):
             description="Whether to allow to copy the audio stream. Default: true.",
         ),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets live playback media info for an item."""
         api = get_client()
@@ -7582,12 +8339,18 @@ def register_mediainfo_tools(mcp: FastMCP):
         description="Closes a media source.",
         tags={"MediaInfo"},
     )
-    def close_live_stream_tool(
+    async def close_live_stream_tool(
         live_stream_id: str | None = Field(
             default=None, description="The livestream id."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Closes a media source."""
+        if not await ctx_confirm_destructive(ctx, "close live stream"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.close_live_stream(live_stream_id=live_stream_id)
 
@@ -7626,6 +8389,9 @@ def register_mediainfo_tools(mcp: FastMCP):
             default=None, description="Always burn-in subtitle when transcoding."
         ),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Opens a media source."""
         api = get_client()
@@ -7654,6 +8420,9 @@ def register_mediainfo_tools(mcp: FastMCP):
         size: int | None = Field(
             default=None, description="The bitrate. Defaults to 102400."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Tests the network with a request with the size of the bitrate."""
         api = get_client()
@@ -7670,6 +8439,9 @@ def register_mediasegments_tools(mcp: FastMCP):
         item_id: str = Field(description="The ItemId."),
         include_segment_types: list[Any] | None = Field(
             default=None, description="Optional filter of requested segment types."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets all media segments based on an itemId."""
@@ -7702,6 +8474,9 @@ def register_movies_tools(mcp: FastMCP):
         ),
         item_limit: int | None = Field(
             default=None, description="The max number of items to return per category."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets movie recommendations."""
@@ -7785,6 +8560,9 @@ def register_musicgenres_tools(mcp: FastMCP):
         enable_total_record_count: bool | None = Field(
             default=None, description="Optional. Include total record count."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets all music genres from a given item, folder, or the entire library."""
         api = get_client()
@@ -7820,6 +8598,9 @@ def register_musicgenres_tools(mcp: FastMCP):
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a music genre, by name."""
         api = get_client()
@@ -7830,7 +8611,11 @@ def register_package_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_packages", description="Gets available packages.", tags={"Package"}
     )
-    def get_packages_tool() -> Any:
+    def get_packages_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets available packages."""
         api = get_client()
         return api.get_packages()
@@ -7844,6 +8629,9 @@ def register_package_tools(mcp: FastMCP):
         name: str = Field(description="The name of the package."),
         assembly_guid: str | None = Field(
             default=None, description="The GUID of the associated assembly."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets a package by name or assembly GUID."""
@@ -7865,6 +8653,9 @@ def register_package_tools(mcp: FastMCP):
             default=None,
             description="Optional. Specify the repository to install from.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Installs a package."""
         api = get_client()
@@ -7880,10 +8671,16 @@ def register_package_tools(mcp: FastMCP):
         description="Cancels a package installation.",
         tags={"Package"},
     )
-    def cancel_package_installation_tool(
+    async def cancel_package_installation_tool(
         package_id: str = Field(description="Installation Id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Cancels a package installation."""
+        if not await ctx_confirm_destructive(ctx, "cancel package installation"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.cancel_package_installation(package_id=package_id)
 
@@ -7892,7 +8689,11 @@ def register_package_tools(mcp: FastMCP):
         description="Gets all package repositories.",
         tags={"Package"},
     )
-    def get_repositories_tool() -> Any:
+    def get_repositories_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets all package repositories."""
         api = get_client()
         return api.get_repositories()
@@ -7904,6 +8705,9 @@ def register_package_tools(mcp: FastMCP):
     )
     def set_repositories_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Sets the enabled and existing package repositories."""
         api = get_client()
@@ -7956,6 +8760,9 @@ def register_persons_tools(mcp: FastMCP):
         enable_images: bool | None = Field(
             default=None, description="Optional, include image information in output."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets all persons."""
         api = get_client()
@@ -7982,6 +8789,9 @@ def register_persons_tools(mcp: FastMCP):
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get person by name."""
         api = get_client()
@@ -8000,6 +8810,9 @@ def register_playlists_tools(mcp: FastMCP):
         user_id: str | None = Field(default=None, description="The user id."),
         media_type: str | None = Field(default=None, description="The media type."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Creates a new playlist."""
         api = get_client()
@@ -8013,6 +8826,9 @@ def register_playlists_tools(mcp: FastMCP):
     def update_playlist_tool(
         playlist_id: str = Field(description="The playlist id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates a playlist."""
         api = get_client()
@@ -8021,6 +8837,9 @@ def register_playlists_tools(mcp: FastMCP):
     @mcp.tool(name="get_playlist", description="Get a playlist.", tags={"Playlists"})
     def get_playlist_tool(
         playlist_id: str = Field(description="The playlist id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get a playlist."""
         api = get_client()
@@ -8037,6 +8856,9 @@ def register_playlists_tools(mcp: FastMCP):
             default=None, description="Item id, comma delimited."
         ),
         user_id: str | None = Field(default=None, description="The userId."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Adds items to a playlist."""
         api = get_client()
@@ -8049,13 +8871,19 @@ def register_playlists_tools(mcp: FastMCP):
         description="Removes items from a playlist.",
         tags={"Playlists"},
     )
-    def remove_item_from_playlist_tool(
+    async def remove_item_from_playlist_tool(
         playlist_id: str = Field(description="The playlist id."),
         entry_ids: list[Any] | None = Field(
             default=None, description="The item ids, comma delimited."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Removes items from a playlist."""
+        if not await ctx_confirm_destructive(ctx, "remove item from playlist"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.remove_item_from_playlist(
             playlist_id=playlist_id, entry_ids=entry_ids
@@ -8095,6 +8923,9 @@ def register_playlists_tools(mcp: FastMCP):
             default=None,
             description="Optional. The image types to include in the output.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the original items of a playlist."""
         api = get_client()
@@ -8117,6 +8948,9 @@ def register_playlists_tools(mcp: FastMCP):
         playlist_id: str = Field(description="The playlist id."),
         item_id: str = Field(description="The item id."),
         new_index: int = Field(description="The new index."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Moves a playlist item."""
         api = get_client()
@@ -8131,6 +8965,9 @@ def register_playlists_tools(mcp: FastMCP):
     )
     def get_playlist_users_tool(
         playlist_id: str = Field(description="The playlist id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get a playlist's users."""
         api = get_client()
@@ -8142,6 +8979,9 @@ def register_playlists_tools(mcp: FastMCP):
     def get_playlist_user_tool(
         playlist_id: str = Field(description="The playlist id."),
         user_id: str = Field(description="The user id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get a playlist user."""
         api = get_client()
@@ -8156,6 +8996,9 @@ def register_playlists_tools(mcp: FastMCP):
         playlist_id: str = Field(description="The playlist id."),
         user_id: str = Field(description="The user id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Modify a user of a playlist's users."""
         api = get_client()
@@ -8168,11 +9011,17 @@ def register_playlists_tools(mcp: FastMCP):
         description="Remove a user from a playlist's users.",
         tags={"Playlists"},
     )
-    def remove_user_from_playlist_tool(
+    async def remove_user_from_playlist_tool(
         playlist_id: str = Field(description="The playlist id."),
         user_id: str = Field(description="The user id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Remove a user from a playlist's users."""
+        if not await ctx_confirm_destructive(ctx, "remove user from playlist"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.remove_user_from_playlist(playlist_id=playlist_id, user_id=user_id)
 
@@ -8204,6 +9053,9 @@ def register_playstate_tools(mcp: FastMCP):
         can_seek: bool | None = Field(
             default=None, description="Indicates if the client can seek."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Reports that a session has begun playing an item."""
         api = get_client()
@@ -8223,7 +9075,7 @@ def register_playstate_tools(mcp: FastMCP):
         description="Reports that a session has stopped playing an item.",
         tags={"Playstate"},
     )
-    def on_playback_stopped_tool(
+    async def on_playback_stopped_tool(
         item_id: str = Field(description="Item id."),
         media_source_id: str | None = Field(
             default=None, description="The id of the MediaSource."
@@ -8241,8 +9093,14 @@ def register_playstate_tools(mcp: FastMCP):
         play_session_id: str | None = Field(
             default=None, description="The play session id."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Reports that a session has stopped playing an item."""
+        if not await ctx_confirm_destructive(ctx, "on playback stopped"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.on_playback_stopped(
             item_id=item_id,
@@ -8288,6 +9146,9 @@ def register_playstate_tools(mcp: FastMCP):
         is_muted: bool | None = Field(
             default=None, description="Indicates if the player is muted."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Reports a session's playback progress."""
         api = get_client()
@@ -8313,6 +9174,9 @@ def register_playstate_tools(mcp: FastMCP):
     )
     def report_playback_start_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Reports playback has started within a session."""
         api = get_client()
@@ -8327,6 +9191,9 @@ def register_playstate_tools(mcp: FastMCP):
         play_session_id: str | None = Field(
             default=None, description="Playback session id."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Pings a playback session."""
         api = get_client()
@@ -8339,6 +9206,9 @@ def register_playstate_tools(mcp: FastMCP):
     )
     def report_playback_progress_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Reports playback progress within a session."""
         api = get_client()
@@ -8349,10 +9219,16 @@ def register_playstate_tools(mcp: FastMCP):
         description="Reports playback has stopped within a session.",
         tags={"Playstate"},
     )
-    def report_playback_stopped_tool(
+    async def report_playback_stopped_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Reports playback has stopped within a session."""
+        if not await ctx_confirm_destructive(ctx, "report playback stopped"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.report_playback_stopped(body=body)
 
@@ -8366,6 +9242,9 @@ def register_playstate_tools(mcp: FastMCP):
         user_id: str | None = Field(default=None, description="User id."),
         date_played: str | None = Field(
             default=None, description="Optional. The date the item was played."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Marks an item as played for user."""
@@ -8382,6 +9261,9 @@ def register_playstate_tools(mcp: FastMCP):
     def mark_unplayed_item_tool(
         item_id: str = Field(description="Item id."),
         user_id: str | None = Field(default=None, description="User id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Marks an item as unplayed for user."""
         api = get_client()
@@ -8394,7 +9276,11 @@ def register_plugins_tools(mcp: FastMCP):
         description="Gets a list of currently installed plugins.",
         tags={"Plugins"},
     )
-    def get_plugins_tool() -> Any:
+    def get_plugins_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets a list of currently installed plugins."""
         api = get_client()
         return api.get_plugins()
@@ -8402,8 +9288,16 @@ def register_plugins_tools(mcp: FastMCP):
     @mcp.tool(
         name="uninstall_plugin", description="Uninstalls a plugin.", tags={"Plugins"}
     )
-    def uninstall_plugin_tool(plugin_id: str = Field(description="Plugin id.")) -> Any:
+    async def uninstall_plugin_tool(
+        plugin_id: str = Field(description="Plugin id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Uninstalls a plugin."""
+        if not await ctx_confirm_destructive(ctx, "uninstall plugin"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.uninstall_plugin(plugin_id=plugin_id)
 
@@ -8412,20 +9306,32 @@ def register_plugins_tools(mcp: FastMCP):
         description="Uninstalls a plugin by version.",
         tags={"Plugins"},
     )
-    def uninstall_plugin_by_version_tool(
+    async def uninstall_plugin_by_version_tool(
         plugin_id: str = Field(description="Plugin id."),
         version: str = Field(description="Plugin version."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Uninstalls a plugin by version."""
+        if not await ctx_confirm_destructive(ctx, "uninstall plugin by version"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.uninstall_plugin_by_version(plugin_id=plugin_id, version=version)
 
     @mcp.tool(name="disable_plugin", description="Disable a plugin.", tags={"Plugins"})
-    def disable_plugin_tool(
+    async def disable_plugin_tool(
         plugin_id: str = Field(description="Plugin id."),
         version: str = Field(description="Plugin version."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Disable a plugin."""
+        if not await ctx_confirm_destructive(ctx, "disable plugin"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.disable_plugin(plugin_id=plugin_id, version=version)
 
@@ -8435,6 +9341,9 @@ def register_plugins_tools(mcp: FastMCP):
     def enable_plugin_tool(
         plugin_id: str = Field(description="Plugin id."),
         version: str = Field(description="Plugin version."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Enables a disabled plugin."""
         api = get_client()
@@ -8446,6 +9355,9 @@ def register_plugins_tools(mcp: FastMCP):
     def get_plugin_image_tool(
         plugin_id: str = Field(description="Plugin id."),
         version: str = Field(description="Plugin version."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a plugin's image."""
         api = get_client()
@@ -8458,6 +9370,9 @@ def register_plugins_tools(mcp: FastMCP):
     )
     def get_plugin_configuration_tool(
         plugin_id: str = Field(description="Plugin id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets plugin configuration."""
         api = get_client()
@@ -8470,6 +9385,9 @@ def register_plugins_tools(mcp: FastMCP):
     )
     def update_plugin_configuration_tool(
         plugin_id: str = Field(description="Plugin id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates plugin configuration."""
         api = get_client()
@@ -8482,6 +9400,9 @@ def register_plugins_tools(mcp: FastMCP):
     )
     def get_plugin_manifest_tool(
         plugin_id: str = Field(description="Plugin id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a plugin's manifest."""
         api = get_client()
@@ -8502,6 +9423,9 @@ def register_quickconnect_tools(mcp: FastMCP):
             default=None,
             description="The user the authorize. Access to the requested user is required.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Authorizes a pending quick connect request."""
         api = get_client()
@@ -8517,6 +9441,9 @@ def register_quickconnect_tools(mcp: FastMCP):
             default=None,
             description="Secret previously returned from the Initiate endpoint.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Attempts to retrieve authentication information."""
         api = get_client()
@@ -8527,7 +9454,11 @@ def register_quickconnect_tools(mcp: FastMCP):
         description="Gets the current quick connect state.",
         tags={"QuickConnect"},
     )
-    def get_quick_connect_enabled_tool() -> Any:
+    def get_quick_connect_enabled_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets the current quick connect state."""
         api = get_client()
         return api.get_quick_connect_enabled()
@@ -8537,7 +9468,11 @@ def register_quickconnect_tools(mcp: FastMCP):
         description="Initiate a new quick connect request.",
         tags={"QuickConnect"},
     )
-    def initiate_quick_connect_tool() -> Any:
+    def initiate_quick_connect_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Initiate a new quick connect request."""
         api = get_client()
         return api.initiate_quick_connect()
@@ -8566,6 +9501,9 @@ def register_remoteimage_tools(mcp: FastMCP):
         include_all_languages: bool | None = Field(
             default=None, description="Optional. Include all languages."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets available remote images for an item."""
         api = get_client()
@@ -8583,13 +9521,18 @@ def register_remoteimage_tools(mcp: FastMCP):
         description="Downloads a remote image for an item.",
         tags={"RemoteImage"},
     )
-    def download_remote_image_tool(
+    async def download_remote_image_tool(
         item_id: str = Field(description="Item Id."),
         type: str | None = Field(default=None, description="The image type."),
         image_url: str | None = Field(default=None, description="The image url."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Downloads a remote image for an item."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.download_remote_image(
             item_id=item_id, type=type, image_url=image_url
         )
@@ -8601,6 +9544,9 @@ def register_remoteimage_tools(mcp: FastMCP):
     )
     def get_remote_image_providers_tool(
         item_id: str = Field(description="Item Id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets available remote image providers for an item."""
         api = get_client()
@@ -8616,13 +9562,21 @@ def register_scheduledtasks_tools(mcp: FastMCP):
         is_enabled: bool | None = Field(
             default=None, description="Optional filter tasks that are enabled, or not."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get tasks."""
         api = get_client()
         return api.get_tasks(is_hidden=is_hidden, is_enabled=is_enabled)
 
     @mcp.tool(name="get_task", description="Get task by id.", tags={"ScheduledTasks"})
-    def get_task_tool(task_id: str = Field(description="Task Id.")) -> Any:
+    def get_task_tool(
+        task_id: str = Field(description="Task Id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Get task by id."""
         api = get_client()
         return api.get_task(task_id=task_id)
@@ -8635,6 +9589,9 @@ def register_scheduledtasks_tools(mcp: FastMCP):
     def update_task_tool(
         task_id: str = Field(description="Task Id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Update specified task triggers."""
         api = get_client()
@@ -8643,7 +9600,12 @@ def register_scheduledtasks_tools(mcp: FastMCP):
     @mcp.tool(
         name="start_task", description="Start specified task.", tags={"ScheduledTasks"}
     )
-    def start_task_tool(task_id: str = Field(description="Task Id.")) -> Any:
+    def start_task_tool(
+        task_id: str = Field(description="Task Id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Start specified task."""
         api = get_client()
         return api.start_task(task_id=task_id)
@@ -8651,8 +9613,16 @@ def register_scheduledtasks_tools(mcp: FastMCP):
     @mcp.tool(
         name="stop_task", description="Stop specified task.", tags={"ScheduledTasks"}
     )
-    def stop_task_tool(task_id: str = Field(description="Task Id.")) -> Any:
+    async def stop_task_tool(
+        task_id: str = Field(description="Task Id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Stop specified task."""
+        if not await ctx_confirm_destructive(ctx, "stop task"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.stop_task(task_id=task_id)
 
@@ -8725,6 +9695,9 @@ def register_search_tools(mcp: FastMCP):
         include_artists: bool | None = Field(
             default=None, description="Optional filter whether to include artists."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the search hint result."""
         api = get_client()
@@ -8756,8 +9729,15 @@ def register_session_tools(mcp: FastMCP):
         description="Get all password reset providers.",
         tags={"Session"},
     )
-    def get_password_reset_providers_tool() -> Any:
+    async def get_password_reset_providers_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Get all password reset providers."""
+        if not await ctx_confirm_destructive(ctx, "get password reset providers"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.get_password_reset_providers()
 
@@ -8766,7 +9746,11 @@ def register_session_tools(mcp: FastMCP):
         description="Get all auth providers.",
         tags={"Session"},
     )
-    def get_auth_providers_tool() -> Any:
+    def get_auth_providers_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Get all auth providers."""
         api = get_client()
         return api.get_auth_providers()
@@ -8783,6 +9767,9 @@ def register_session_tools(mcp: FastMCP):
         active_within_seconds: int | None = Field(
             default=None,
             description="Optional. Filter by sessions that were active in the last n seconds.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets a list of sessions."""
@@ -8801,6 +9788,9 @@ def register_session_tools(mcp: FastMCP):
     def send_full_general_command_tool(
         session_id: str = Field(description="The session id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Issues a full general command to a client."""
         api = get_client()
@@ -8814,6 +9804,9 @@ def register_session_tools(mcp: FastMCP):
     def send_general_command_tool(
         session_id: str = Field(description="The session id."),
         command: str = Field(description="The command to send."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Issues a general command to a client."""
         api = get_client()
@@ -8827,6 +9820,9 @@ def register_session_tools(mcp: FastMCP):
     def send_message_command_tool(
         session_id: str = Field(description="The session id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Issues a command to a client to display a message to the user."""
         api = get_client()
@@ -8862,6 +9858,9 @@ def register_session_tools(mcp: FastMCP):
         start_index: int | None = Field(
             default=None, description="Optional. The start index."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Instructs a session to play an item."""
         api = get_client()
@@ -8892,6 +9891,9 @@ def register_session_tools(mcp: FastMCP):
         controlling_user_id: str | None = Field(
             default=None, description="The optional controlling user id."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Issues a playstate command to a client."""
         api = get_client()
@@ -8910,6 +9912,9 @@ def register_session_tools(mcp: FastMCP):
     def send_system_command_tool(
         session_id: str = Field(description="The session id."),
         command: str = Field(description="The command to send."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Issues a system command to a client."""
         api = get_client()
@@ -8923,6 +9928,9 @@ def register_session_tools(mcp: FastMCP):
     def add_user_to_session_tool(
         session_id: str = Field(description="The session id."),
         user_id: str = Field(description="The user id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Adds an additional user to a session."""
         api = get_client()
@@ -8933,11 +9941,17 @@ def register_session_tools(mcp: FastMCP):
         description="Removes an additional user from a session.",
         tags={"Session"},
     )
-    def remove_user_from_session_tool(
+    async def remove_user_from_session_tool(
         session_id: str = Field(description="The session id."),
         user_id: str = Field(description="The user id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Removes an additional user from a session."""
+        if not await ctx_confirm_destructive(ctx, "remove user from session"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.remove_user_from_session(session_id=session_id, user_id=user_id)
 
@@ -8954,6 +9968,9 @@ def register_session_tools(mcp: FastMCP):
         item_id: str | None = Field(default=None, description="The Id of the item."),
         item_name: str | None = Field(
             default=None, description="The name of the item."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Instructs a session to browse to an item or view."""
@@ -8988,6 +10005,9 @@ def register_session_tools(mcp: FastMCP):
             default=None,
             description="Determines whether the device supports a unique identifier.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates capabilities for a device."""
         api = get_client()
@@ -9007,6 +10027,9 @@ def register_session_tools(mcp: FastMCP):
     def post_full_capabilities_tool(
         id: str | None = Field(default=None, description="The session id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates capabilities for a device."""
         api = get_client()
@@ -9017,7 +10040,11 @@ def register_session_tools(mcp: FastMCP):
         description="Reports that a session has ended.",
         tags={"Session"},
     )
-    def report_session_ended_tool() -> Any:
+    def report_session_ended_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Reports that a session has ended."""
         api = get_client()
         return api.report_session_ended()
@@ -9030,6 +10057,9 @@ def register_session_tools(mcp: FastMCP):
     def report_viewing_tool(
         session_id: str | None = Field(default=None, description="The session id."),
         item_id: str | None = Field(default=None, description="The item id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Reports that a session is viewing an item."""
         api = get_client()
@@ -9042,7 +10072,11 @@ def register_startup_tools(mcp: FastMCP):
         description="Completes the startup wizard.",
         tags={"Startup"},
     )
-    def complete_wizard_tool() -> Any:
+    def complete_wizard_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Completes the startup wizard."""
         api = get_client()
         return api.complete_wizard()
@@ -9052,7 +10086,11 @@ def register_startup_tools(mcp: FastMCP):
         description="Gets the initial startup wizard configuration.",
         tags={"Startup"},
     )
-    def get_startup_configuration_tool() -> Any:
+    def get_startup_configuration_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets the initial startup wizard configuration."""
         api = get_client()
         return api.get_startup_configuration()
@@ -9064,6 +10102,9 @@ def register_startup_tools(mcp: FastMCP):
     )
     def update_initial_configuration_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Sets the initial startup wizard configuration."""
         api = get_client()
@@ -9072,7 +10113,11 @@ def register_startup_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_first_user_2", description="Gets the first user.", tags={"Startup"}
     )
-    def get_first_user_2_tool() -> Any:
+    def get_first_user_2_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets the first user."""
         api = get_client()
         return api.get_first_user_2()
@@ -9084,6 +10129,9 @@ def register_startup_tools(mcp: FastMCP):
     )
     def set_remote_access_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Sets remote access and UPnP."""
         api = get_client()
@@ -9092,7 +10140,11 @@ def register_startup_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_first_user", description="Gets the first user.", tags={"Startup"}
     )
-    def get_first_user_tool() -> Any:
+    def get_first_user_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets the first user."""
         api = get_client()
         return api.get_first_user()
@@ -9104,6 +10156,9 @@ def register_startup_tools(mcp: FastMCP):
     )
     def update_startup_user_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Sets the user name and password."""
         api = get_client()
@@ -9178,6 +10233,9 @@ def register_studios_tools(mcp: FastMCP):
         enable_total_record_count: bool | None = Field(
             default=None, description="Total record count."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets all studios from a given item, folder, or the entire library."""
         api = get_client()
@@ -9208,6 +10266,9 @@ def register_studios_tools(mcp: FastMCP):
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a studio by name."""
         api = get_client()
@@ -9220,7 +10281,11 @@ def register_subtitle_tools(mcp: FastMCP):
         description="Gets a list of available fallback font files.",
         tags={"Subtitle"},
     )
-    def get_fallback_font_list_tool() -> Any:
+    def get_fallback_font_list_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets a list of available fallback font files."""
         api = get_client()
         return api.get_fallback_font_list()
@@ -9232,6 +10297,9 @@ def register_subtitle_tools(mcp: FastMCP):
     )
     def get_fallback_font_tool(
         name: str = Field(description="The name of the fallback font file to get."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a fallback font file."""
         api = get_client()
@@ -9249,6 +10317,9 @@ def register_subtitle_tools(mcp: FastMCP):
             default=None,
             description="Optional. Only show subtitles which are a perfect match.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Search remote subtitles."""
         api = get_client()
@@ -9261,12 +10332,17 @@ def register_subtitle_tools(mcp: FastMCP):
         description="Downloads a remote subtitle.",
         tags={"Subtitle"},
     )
-    def download_remote_subtitles_tool(
+    async def download_remote_subtitles_tool(
         item_id: str = Field(description="The item id."),
         subtitle_id: str = Field(description="The subtitle id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Downloads a remote subtitle."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.download_remote_subtitles(item_id=item_id, subtitle_id=subtitle_id)
 
     @mcp.tool(
@@ -9276,6 +10352,9 @@ def register_subtitle_tools(mcp: FastMCP):
     )
     def get_remote_subtitles_tool(
         subtitle_id: str = Field(description="The item id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets the remote subtitles."""
         api = get_client()
@@ -9293,6 +10372,9 @@ def register_subtitle_tools(mcp: FastMCP):
         segment_length: int | None = Field(
             default=None, description="The subtitle segment length."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets an HLS subtitle playlist."""
         api = get_client()
@@ -9308,12 +10390,17 @@ def register_subtitle_tools(mcp: FastMCP):
         description="Upload an external subtitle file.",
         tags={"Subtitle"},
     )
-    def upload_subtitle_tool(
+    async def upload_subtitle_tool(
         item_id: str = Field(description="The item the subtitle belongs to."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Upload an external subtitle file."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.upload_subtitle(item_id=item_id, body=body)
 
     @mcp.tool(
@@ -9321,11 +10408,17 @@ def register_subtitle_tools(mcp: FastMCP):
         description="Deletes an external subtitle file.",
         tags={"Subtitle"},
     )
-    def delete_subtitle_tool(
+    async def delete_subtitle_tool(
         item_id: str = Field(description="The item id."),
         index: int = Field(description="The index of the subtitle file."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Deletes an external subtitle file."""
+        if not await ctx_confirm_destructive(ctx, "delete subtitle"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_subtitle(item_id=item_id, index=index)
 
@@ -9366,6 +10459,9 @@ def register_subtitle_tools(mcp: FastMCP):
         ),
         add_vtt_time_map: bool | None = Field(
             default=None, description="Optional. Whether to add a VTT time map."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets subtitles in a specified format."""
@@ -9421,6 +10517,9 @@ def register_subtitle_tools(mcp: FastMCP):
         start_position_ticks: int | None = Field(
             default=None, description="The start position of the subtitle in ticks."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets subtitles in a specified format."""
         api = get_client()
@@ -9457,6 +10556,9 @@ def register_suggestions_tools(mcp: FastMCP):
         enable_total_record_count: bool | None = Field(
             default=None, description="Whether to enable the total record count."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets suggestions."""
         api = get_client()
@@ -9476,11 +10578,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Gets a SyncPlay group by id.",
         tags={"SyncPlay"},
     )
-    def sync_play_get_group_tool(
+    async def sync_play_get_group_tool(
         id: str = Field(description="The id of the group."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Gets a SyncPlay group by id."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_get_group(id=id)
 
     @mcp.tool(
@@ -9488,11 +10595,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Notify SyncPlay group that member is buffering.",
         tags={"SyncPlay"},
     )
-    def sync_play_buffering_tool(
+    async def sync_play_buffering_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Notify SyncPlay group that member is buffering."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_buffering(body=body)
 
     @mcp.tool(
@@ -9500,11 +10612,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Join an existing SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_join_group_tool(
+    async def sync_play_join_group_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Join an existing SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_join_group(body=body)
 
     @mcp.tool(
@@ -9512,9 +10629,15 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Leave the joined SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_leave_group_tool() -> Any:
+    async def sync_play_leave_group_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Leave the joined SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_leave_group()
 
     @mcp.tool(
@@ -9522,9 +10645,15 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Gets all SyncPlay groups.",
         tags={"SyncPlay"},
     )
-    def sync_play_get_groups_tool() -> Any:
+    async def sync_play_get_groups_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Gets all SyncPlay groups."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_get_groups()
 
     @mcp.tool(
@@ -9532,11 +10661,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request to move an item in the playlist in SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_move_playlist_item_tool(
+    async def sync_play_move_playlist_item_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Request to move an item in the playlist in SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_move_playlist_item(body=body)
 
     @mcp.tool(
@@ -9544,11 +10678,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Create a new SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_create_group_tool(
+    async def sync_play_create_group_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Create a new SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_create_group(body=body)
 
     @mcp.tool(
@@ -9556,11 +10695,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request next item in SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_next_item_tool(
+    async def sync_play_next_item_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Request next item in SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_next_item(body=body)
 
     @mcp.tool(
@@ -9568,19 +10712,30 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request pause in SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_pause_tool() -> Any:
+    async def sync_play_pause_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Request pause in SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_pause()
 
     @mcp.tool(
         name="sync_play_ping", description="Update session ping.", tags={"SyncPlay"}
     )
-    def sync_play_ping_tool(
+    async def sync_play_ping_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Update session ping."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_ping(body=body)
 
     @mcp.tool(
@@ -9588,11 +10743,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request previous item in SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_previous_item_tool(
+    async def sync_play_previous_item_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Request previous item in SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_previous_item(body=body)
 
     @mcp.tool(
@@ -9600,11 +10760,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request to queue items to the playlist of a SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_queue_tool(
+    async def sync_play_queue_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Request to queue items to the playlist of a SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_queue(body=body)
 
     @mcp.tool(
@@ -9612,11 +10777,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Notify SyncPlay group that member is ready for playback.",
         tags={"SyncPlay"},
     )
-    def sync_play_ready_tool(
+    async def sync_play_ready_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Notify SyncPlay group that member is ready for playback."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_ready(body=body)
 
     @mcp.tool(
@@ -9624,10 +10794,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request to remove items from the playlist in SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_remove_from_playlist_tool(
+    async def sync_play_remove_from_playlist_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Request to remove items from the playlist in SyncPlay group."""
+        if not await ctx_confirm_destructive(ctx, "sync play remove from playlist"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.sync_play_remove_from_playlist(body=body)
 
@@ -9636,11 +10812,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request seek in SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_seek_tool(
+    async def sync_play_seek_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Request seek in SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_seek(body=body)
 
     @mcp.tool(
@@ -9648,11 +10829,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request SyncPlay group to ignore member during group-wait.",
         tags={"SyncPlay"},
     )
-    def sync_play_set_ignore_wait_tool(
+    async def sync_play_set_ignore_wait_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Request SyncPlay group to ignore member during group-wait."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_set_ignore_wait(body=body)
 
     @mcp.tool(
@@ -9660,11 +10846,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request to set new playlist in SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_set_new_queue_tool(
+    async def sync_play_set_new_queue_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Request to set new playlist in SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_set_new_queue(body=body)
 
     @mcp.tool(
@@ -9672,11 +10863,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request to change playlist item in SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_set_playlist_item_tool(
+    async def sync_play_set_playlist_item_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Request to change playlist item in SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_set_playlist_item(body=body)
 
     @mcp.tool(
@@ -9684,11 +10880,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request to set repeat mode in SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_set_repeat_mode_tool(
+    async def sync_play_set_repeat_mode_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Request to set repeat mode in SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_set_repeat_mode(body=body)
 
     @mcp.tool(
@@ -9696,11 +10897,16 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request to set shuffle mode in SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_set_shuffle_mode_tool(
+    async def sync_play_set_shuffle_mode_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Request to set shuffle mode in SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_set_shuffle_mode(body=body)
 
     @mcp.tool(
@@ -9708,8 +10914,15 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request stop in SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_stop_tool() -> Any:
+    async def sync_play_stop_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Request stop in SyncPlay group."""
+        if not await ctx_confirm_destructive(ctx, "sync play stop"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.sync_play_stop()
 
@@ -9718,9 +10931,15 @@ def register_syncplay_tools(mcp: FastMCP):
         description="Request unpause in SyncPlay group.",
         tags={"SyncPlay"},
     )
-    def sync_play_unpause_tool() -> Any:
+    async def sync_play_unpause_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
+        await ctx_progress(ctx, 0, 100)
         """Request unpause in SyncPlay group."""
         api = get_client()
+        await ctx_progress(ctx, 100, 100)
         return api.sync_play_unpause()
 
 
@@ -9730,7 +10949,11 @@ def register_system_tools(mcp: FastMCP):
         description="Gets information about the request endpoint.",
         tags={"System"},
     )
-    def get_endpoint_info_tool() -> Any:
+    def get_endpoint_info_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets information about the request endpoint."""
         api = get_client()
         return api.get_endpoint_info()
@@ -9740,7 +10963,11 @@ def register_system_tools(mcp: FastMCP):
         description="Gets information about the server.",
         tags={"System"},
     )
-    def get_system_info_tool() -> Any:
+    def get_system_info_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets information about the server."""
         api = get_client()
         return api.get_system_info()
@@ -9750,7 +10977,11 @@ def register_system_tools(mcp: FastMCP):
         description="Gets public information about the server.",
         tags={"System"},
     )
-    def get_public_system_info_tool() -> Any:
+    def get_public_system_info_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets public information about the server."""
         api = get_client()
         return api.get_public_system_info()
@@ -9760,7 +10991,11 @@ def register_system_tools(mcp: FastMCP):
         description="Gets information about the server.",
         tags={"System"},
     )
-    def get_system_storage_tool() -> Any:
+    def get_system_storage_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets information about the server."""
         api = get_client()
         return api.get_system_storage()
@@ -9770,7 +11005,11 @@ def register_system_tools(mcp: FastMCP):
         description="Gets a list of available server log files.",
         tags={"System"},
     )
-    def get_server_logs_tool() -> Any:
+    def get_server_logs_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets a list of available server log files."""
         api = get_client()
         return api.get_server_logs()
@@ -9780,19 +11019,30 @@ def register_system_tools(mcp: FastMCP):
         name: str | None = Field(
             default=None, description="The name of the log file to get."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a log file."""
         api = get_client()
         return api.get_log_file(name=name)
 
     @mcp.tool(name="get_ping_system", description="Pings the system.", tags={"System"})
-    def get_ping_system_tool() -> Any:
+    def get_ping_system_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Pings the system."""
         api = get_client()
         return api.get_ping_system()
 
     @mcp.tool(name="post_ping_system", description="Pings the system.", tags={"System"})
-    def post_ping_system_tool() -> Any:
+    def post_ping_system_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Pings the system."""
         api = get_client()
         return api.post_ping_system()
@@ -9802,8 +11052,15 @@ def register_system_tools(mcp: FastMCP):
         description="Restarts the application.",
         tags={"System"},
     )
-    def restart_application_tool() -> Any:
+    async def restart_application_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Restarts the application."""
+        if not await ctx_confirm_destructive(ctx, "restart application"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.restart_application()
 
@@ -9812,8 +11069,15 @@ def register_system_tools(mcp: FastMCP):
         description="Shuts down the application.",
         tags={"System"},
     )
-    def shutdown_application_tool() -> Any:
+    async def shutdown_application_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Shuts down the application."""
+        if not await ctx_confirm_destructive(ctx, "shutdown application"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.shutdown_application()
 
@@ -9822,7 +11086,11 @@ def register_timesync_tools(mcp: FastMCP):
     @mcp.tool(
         name="get_utc_time", description="Gets the current UTC time.", tags={"TimeSync"}
     )
-    def get_utc_time_tool() -> Any:
+    def get_utc_time_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets the current UTC time."""
         api = get_client()
         return api.get_utc_time()
@@ -9834,7 +11102,11 @@ def register_tmdb_tools(mcp: FastMCP):
         description="Gets the TMDb image configuration options.",
         tags={"Tmdb"},
     )
-    def tmdb_client_configuration_tool() -> Any:
+    def tmdb_client_configuration_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets the TMDb image configuration options."""
         api = get_client()
         return api.tmdb_client_configuration()
@@ -10160,6 +11432,9 @@ def register_trailers_tools(mcp: FastMCP):
         enable_images: bool | None = Field(
             default=None, description="Optional, include image information in output."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Finds movies and trailers similar to a given trailer."""
         api = get_client()
@@ -10265,6 +11540,9 @@ def register_trickplay_tools(mcp: FastMCP):
             default=None,
             description="The media version id, if using an alternate version.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a trickplay tile image."""
         api = get_client()
@@ -10283,6 +11561,9 @@ def register_trickplay_tools(mcp: FastMCP):
         media_source_id: str | None = Field(
             default=None,
             description="The media version id, if using an alternate version.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets an image tiles playlist for trickplay."""
@@ -10349,6 +11630,9 @@ def register_tvshows_tools(mcp: FastMCP):
             default=None,
             description="Optional. Specify one or more sort orders, comma delimited. Options: Album, AlbumArtist, Artist, Budget, CommunityRating, CriticRating, DateCreated, DatePlayed, PlayCount, PremiereDate, ProductionYear, SortName, Random, Revenue, Runtime.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets episodes for a tv season."""
         api = get_client()
@@ -10406,6 +11690,9 @@ def register_tvshows_tools(mcp: FastMCP):
         ),
         enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets seasons for a tv series."""
@@ -10486,6 +11773,9 @@ def register_tvshows_tools(mcp: FastMCP):
             default=None,
             description="Whether to include watched episodes in next up results.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a list of next up episodes."""
         api = get_client()
@@ -10546,6 +11836,9 @@ def register_tvshows_tools(mcp: FastMCP):
         ),
         enable_user_data: bool | None = Field(
             default=None, description="Optional. Include user data."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets a list of upcoming episodes."""
@@ -10628,6 +11921,9 @@ def register_universalaudio_tools(mcp: FastMCP):
         enable_redirection: bool | None = Field(
             default=None, description="Whether to enable redirection. Defaults to true."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets an audio stream."""
         api = get_client()
@@ -10663,6 +11959,9 @@ def register_user_tools(mcp: FastMCP):
         is_disabled: bool | None = Field(
             default=None, description="Optional filter by IsDisabled=true or false."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a list of users."""
         api = get_client()
@@ -10672,20 +11971,36 @@ def register_user_tools(mcp: FastMCP):
     def update_user_tool(
         user_id: str | None = Field(default=None, description="The user id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates a user."""
         api = get_client()
         return api.update_user(user_id=user_id, body=body)
 
     @mcp.tool(name="get_user_by_id", description="Gets a user by Id.", tags={"User"})
-    def get_user_by_id_tool(user_id: str = Field(description="The user id.")) -> Any:
+    def get_user_by_id_tool(
+        user_id: str = Field(description="The user id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets a user by Id."""
         api = get_client()
         return api.get_user_by_id(user_id=user_id)
 
     @mcp.tool(name="delete_user", description="Deletes a user.", tags={"User"})
-    def delete_user_tool(user_id: str = Field(description="The user id.")) -> Any:
+    async def delete_user_tool(
+        user_id: str = Field(description="The user id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Deletes a user."""
+        if not await ctx_confirm_destructive(ctx, "delete user"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_user(user_id=user_id)
 
@@ -10695,6 +12010,9 @@ def register_user_tools(mcp: FastMCP):
     def update_user_policy_tool(
         user_id: str = Field(description="The user id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates a user policy."""
         api = get_client()
@@ -10705,24 +12023,44 @@ def register_user_tools(mcp: FastMCP):
         description="Authenticates a user by name.",
         tags={"User"},
     )
-    def authenticate_user_by_name_tool(
+    async def authenticate_user_by_name_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Authenticates a user by name."""
         api = get_client()
-        return api.authenticate_user_by_name(body=body)
+        result = api.authenticate_user_by_name(body=body)
+        await ctx_set_state(
+            ctx,
+            "jellyfin",
+            "auth_token",
+            result.get("jwt") if isinstance(result, dict) else None,
+        )
+        return result
 
     @mcp.tool(
         name="authenticate_with_quick_connect",
         description="Authenticates a user with quick connect.",
         tags={"User"},
     )
-    def authenticate_with_quick_connect_tool(
+    async def authenticate_with_quick_connect_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Authenticates a user with quick connect."""
         api = get_client()
-        return api.authenticate_with_quick_connect(body=body)
+        result = api.authenticate_with_quick_connect(body=body)
+        await ctx_set_state(
+            ctx,
+            "jellyfin",
+            "auth_token",
+            result.get("jwt") if isinstance(result, dict) else None,
+        )
+        return result
 
     @mcp.tool(
         name="update_user_configuration",
@@ -10732,6 +12070,9 @@ def register_user_tools(mcp: FastMCP):
     def update_user_configuration_tool(
         user_id: str | None = Field(default=None, description="The user id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates a user configuration."""
         api = get_client()
@@ -10744,6 +12085,9 @@ def register_user_tools(mcp: FastMCP):
     )
     def forgot_password_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Initiates the forgot password process for a local user."""
         api = get_client()
@@ -10756,6 +12100,9 @@ def register_user_tools(mcp: FastMCP):
     )
     def forgot_password_pin_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Redeems a forgot password pin."""
         api = get_client()
@@ -10766,7 +12113,11 @@ def register_user_tools(mcp: FastMCP):
         description="Gets the user based on auth token.",
         tags={"User"},
     )
-    def get_current_user_tool() -> Any:
+    def get_current_user_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets the user based on auth token."""
         api = get_client()
         return api.get_current_user()
@@ -10774,6 +12125,9 @@ def register_user_tools(mcp: FastMCP):
     @mcp.tool(name="create_user_by_name", description="Creates a user.", tags={"User"})
     def create_user_by_name_tool(
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Creates a user."""
         api = get_client()
@@ -10787,6 +12141,9 @@ def register_user_tools(mcp: FastMCP):
     def update_user_password_tool(
         user_id: str | None = Field(default=None, description="The user id."),
         body: dict[str, Any] | None = Field(default=None, description="Request body"),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Updates a user's password."""
         api = get_client()
@@ -10797,7 +12154,11 @@ def register_user_tools(mcp: FastMCP):
         description="Gets a list of publicly visible users for display on a login screen.",
         tags={"User"},
     )
-    def get_public_users_tool() -> Any:
+    def get_public_users_tool(
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
+    ) -> Any:
         """Gets a list of publicly visible users for display on a login screen."""
         api = get_client()
         return api.get_public_users()
@@ -10817,6 +12178,9 @@ def register_userviews_tools(mcp: FastMCP):
         include_hidden: bool | None = Field(
             default=None, description="Whether or not to include hidden content."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get user views."""
         api = get_client()
@@ -10834,6 +12198,9 @@ def register_userviews_tools(mcp: FastMCP):
     )
     def get_grouping_options_tool(
         user_id: str | None = Field(default=None, description="User id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get user view grouping options."""
         api = get_client()
@@ -10850,6 +12217,9 @@ def register_videoattachments_tools(mcp: FastMCP):
         video_id: str = Field(description="Video ID."),
         media_source_id: str = Field(description="Media Source ID."),
         index: int = Field(description="Attachment Index."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get video attachment."""
         api = get_client()
@@ -10870,6 +12240,9 @@ def register_videos_tools(mcp: FastMCP):
             default=None,
             description="Optional. Filter by user id, and attach user data.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets additional parts for a video."""
         api = get_client()
@@ -10880,10 +12253,16 @@ def register_videos_tools(mcp: FastMCP):
         description="Removes alternate video sources.",
         tags={"Videos"},
     )
-    def delete_alternate_sources_tool(
+    async def delete_alternate_sources_tool(
         item_id: str = Field(description="The item id."),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Removes alternate video sources."""
+        if not await ctx_confirm_destructive(ctx, "delete alternate sources"):
+            return {"status": "cancelled", "message": "Operation cancelled by user"}
+        await ctx_progress(ctx, 0, 100)
         api = get_client()
         return api.delete_alternate_sources(item_id=item_id)
 
@@ -11071,6 +12450,9 @@ def register_videos_tools(mcp: FastMCP):
         ),
         enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets a video stream."""
@@ -11316,6 +12698,9 @@ def register_videos_tools(mcp: FastMCP):
         enable_audio_vbr_encoding: bool | None = Field(
             default=None, description="Optional. Whether to enable Audio Encoding."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Gets a video stream."""
         api = get_client()
@@ -11384,6 +12769,9 @@ def register_videos_tools(mcp: FastMCP):
             default=None,
             description="Item id list. This allows multiple, comma delimited.",
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Merges videos into a single record."""
         api = get_client()
@@ -11444,6 +12832,9 @@ def register_years_tools(mcp: FastMCP):
         enable_images: bool | None = Field(
             default=None, description="Optional. Include image information in output."
         ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
+        ),
     ) -> Any:
         """Get years."""
         api = get_client()
@@ -11471,6 +12862,9 @@ def register_years_tools(mcp: FastMCP):
         user_id: str | None = Field(
             default=None,
             description="Optional. Filter by user id, and attach user data.",
+        ),
+        ctx: Context = Field(
+            description="MCP context for progress reporting", default=None
         ),
     ) -> Any:
         """Gets a year."""
