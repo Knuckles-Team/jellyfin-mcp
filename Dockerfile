@@ -57,7 +57,7 @@ RUN apt-get update \
      && curl -sS https://starship.rs/install.sh | sh -s -- --yes \
     && mkdir -p /root/.config \
     && echo 'eval "$(starship init bash)"' >> /root/.bashrc \ \
-    uv pip install --system --upgrade --verbose --no-cache --break-system-packages --prerelease=allow jellyfin-mcp[all]>=0.2.57
+    uv pip install --system --upgrade --verbose --no-cache --break-system-packages --prerelease=allow jellyfin-mcp[all]>=0.2.58
 
 COPY starship.toml /root/.config/starship.toml
 
