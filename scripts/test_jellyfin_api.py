@@ -1,6 +1,6 @@
+import json
 import os
 import sys
-import json
 
 sys.path.append(os.getcwd())
 
@@ -12,7 +12,7 @@ def load_env(env_path=".env"):
         print(f"Warning: {env_path} not found.")
         return
 
-    with open(env_path, "r") as f:
+    with open(env_path) as f:
         for line in f:
             line = line.strip()
             if not line or line.startswith("#"):

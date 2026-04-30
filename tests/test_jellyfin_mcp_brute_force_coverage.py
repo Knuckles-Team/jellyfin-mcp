@@ -1,13 +1,13 @@
-import pytest
-from unittest.mock import patch, MagicMock
-import inspect
-import requests
 import asyncio
-import os
-from pathlib import Path
+import inspect
+from typing import Any
+from unittest.mock import MagicMock, patch
+
+import pytest
+
 
 @pytest.fixture
-def mock_session():
+def mock_session():  # vulture: ignore
     with patch("requests.Session") as mock_s:
         session_instance = mock_s.return_value
 
@@ -22,7 +22,9 @@ def mock_session():
 
         yield mock_s
 
-def test_jellyfin_api_brute_force(mock_session):
+
+@pytest.mark.usefixtures("mock_session")
+def test_jellyfin_api_brute_force():
     from jellyfin_mcp.api_client import Api
 
     api = Api(base_url="http://test", token="test")
@@ -39,14 +41,17 @@ def test_jellyfin_api_brute_force(mock_session):
         "body": {},
         "data": {},
         "payload": {},
-        "path": "/test/path"
+        "path": "/test/path",
     }
 
     for name, method in inspect.getmembers(api, predicate=inspect.ismethod):
-        if name.startswith("_") or name in ["request"]: continue
+        if name.startswith("_") or name in ["request"]:
+            continue
         print(f"Calling Api.{name}...")
         sig = inspect.signature(method)
-        has_kwargs = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
+        has_kwargs = any(
+            p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values()
+        )
         if has_kwargs:
             kwargs = common_kwargs.copy()
         else:
@@ -56,11 +61,15 @@ def test_jellyfin_api_brute_force(mock_session):
                     kwargs[p_name] = "test" if p.annotation == str else 1
         try:
             method(**kwargs)
-        except: pass
+        except:
+            pass
 
-def test_mcp_server_coverage(mock_session):
-    from jellyfin_mcp.mcp_server import get_mcp_instance
+
+@pytest.mark.usefixtures("mock_session")
+def test_mcp_server_coverage():
     from fastmcp.server.middleware.rate_limiting import RateLimitingMiddleware
+
+    from jellyfin_mcp.mcp_server import get_mcp_instance
 
     # Patch RateLimitingMiddleware to do nothing
     async def mock_on_request(self, context, call_next):
@@ -75,32 +84,51 @@ def test_mcp_server_coverage(mock_session):
             mcp = mcp_data[0] if isinstance(mcp_data, tuple) else mcp_data
 
             async def run_tools():
-                tool_objs = await mcp.list_tools() if inspect.iscoroutinefunction(mcp.list_tools) else mcp.list_tools()
+                tool_objs = (
+                    await mcp.list_tools()
+                    if inspect.iscoroutinefunction(mcp.list_tools)
+                    else mcp.list_tools()
+                )
                 for tool in tool_objs:
                     try:
-                        target_params = {
+                        target_params: dict[str, Any] = {
                             "item_id": "test_item",
                             "user_id": "test_user",
-                            "query": "test"
+                            "query": "test",
                         }
                         sig = inspect.signature(tool.fn)
                         for p_name, p in sig.parameters.items():
-                            if p.default == inspect.Parameter.empty and p_name not in ["_client", "context"]:
+                            if p.default == inspect.Parameter.empty and p_name not in [
+                                "_client",
+                                "context",
+                            ]:
                                 if p_name not in target_params:
-                                    target_params[p_name] = "test" if p.annotation == str else 1
+                                    target_params[p_name] = (
+                                        "test" if p.annotation == str else 1
+                                    )
 
-                        has_kwargs = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
+                        has_kwargs = any(
+                            p.kind == inspect.Parameter.VAR_KEYWORD
+                            for p in sig.parameters.values()
+                        )
                         if not has_kwargs:
-                            target_params = {k: v for k, v in target_params.items() if k in sig.parameters}
+                            target_params = {
+                                k: v
+                                for k, v in target_params.items()
+                                if k in sig.parameters
+                            }
 
                         await mcp.call_tool(tool.name, target_params)
-                    except: pass
+                    except:
+                        pass
 
             asyncio.run(run_tools())
 
+
 def test_agent_server_coverage():
-    from jellyfin_mcp import agent_server
     import jellyfin_mcp.agent_server as mod
+    from jellyfin_mcp import agent_server
+
     with patch("jellyfin_mcp.agent_server.create_graph_agent_server") as mock_s:
         with patch("sys.argv", ["agent_server.py"]):
             if inspect.isfunction(agent_server):

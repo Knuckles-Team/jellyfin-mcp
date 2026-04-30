@@ -1,7 +1,6 @@
 import json
 import re
 from pathlib import Path
-from typing import Dict
 
 
 def snake_case(name: str) -> str:
@@ -15,7 +14,7 @@ def clean_param_name(name: str) -> str:
     return snake_case(name).replace("-", "_")
 
 
-def get_type_annotation(param_schema: Dict) -> str:
+def get_type_annotation(param_schema: dict) -> str:
     p_type = param_schema.get("type")
 
     if p_type == "integer":
@@ -32,7 +31,7 @@ def get_type_annotation(param_schema: Dict) -> str:
         return "str"
 
 
-def generate_api_code(spec: Dict) -> str:
+def generate_api_code(spec: dict) -> str:
     lines = []
     lines.append("#!/usr/bin/env python")
     lines.append("# coding: utf-8")
@@ -113,12 +112,10 @@ def generate_api_code(spec: Dict) -> str:
             lines.append(f"    def {func_name}({args_str}) -> Any:")
             lines.append(f'        """{summary}"""')
 
-            endpoint_str = f'"{path}"'
             if path_params_list:
-                format_args = ", ".join(
+                ", ".join(
                     [f"{original}={clean}" for original, clean in path_params_list]
                 )
-                endpoint_str = f'"{path}".format({format_args})'
 
                 lines.append(f'        endpoint = "{path}"')
                 for original, clean in path_params_list:
@@ -146,7 +143,7 @@ def generate_api_code(spec: Dict) -> str:
     return "\n".join(lines)
 
 
-def generate_mcp_code(spec: Dict) -> str:
+def generate_mcp_code(spec: dict) -> str:
     lines = []
     lines.append("#!/usr/bin/env python")
     lines.append("# coding: utf-8")
@@ -175,7 +172,7 @@ def generate_mcp_code(spec: Dict) -> str:
     )
     lines.append("")
 
-    for path, path_item in spec.get("paths", {}).items():
+    for _path, path_item in spec.get("paths", {}).items():
         for method, op in path_item.items():
             if method not in ["get", "post", "put", "delete", "patch"]:
                 continue
@@ -195,7 +192,6 @@ def generate_mcp_code(spec: Dict) -> str:
             )
 
             params = op.get("parameters", [])
-            args_list = []
 
             api_call_args = []
 
@@ -211,7 +207,7 @@ def generate_mcp_code(spec: Dict) -> str:
                 p_desc = p.get("description", "")
                 p_desc = p_desc.replace("\n", " ").replace("\r", "").replace('"', '\\"')
 
-                is_required = p.get("required", False) or p_in == "path"
+                p.get("required", False) or p_in == "path"
 
                 if p_in == "query":
                     field = f'Field(default=None, description="{p_desc}")'
@@ -248,7 +244,7 @@ def main():
     root = Path(__file__).parent.parent
     openapi_path = root / "openapi.json"
 
-    with open(openapi_path, "r") as f:
+    with open(openapi_path) as f:
         spec = json.load(f)
 
     api_code = generate_api_code(spec)

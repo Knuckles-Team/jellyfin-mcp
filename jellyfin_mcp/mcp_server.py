@@ -35,7 +35,7 @@ from pydantic import Field
 
 from jellyfin_mcp.auth import get_client
 
-__version__ = "0.2.56"
+__version__ = "0.2.57"
 print(f"Jellyfin MCP v{__version__}", file=sys.stderr)
 
 logger = get_logger(name="TokenMiddleware")
@@ -675,7 +675,7 @@ def register_audio_tools(mcp: FastMCP):
             item_id=item_id,
             container=container,
             static=static,
-            params=params,
+            stream_params=params,
             tag=tag,
             device_profile_id=device_profile_id,
             play_session_id=play_session_id,
@@ -910,7 +910,7 @@ def register_audio_tools(mcp: FastMCP):
             item_id=item_id,
             container=container,
             static=static,
-            params=params,
+            stream_params=params,
             tag=tag,
             device_profile_id=device_profile_id,
             play_session_id=play_session_id,
@@ -1753,7 +1753,7 @@ def register_dynamichls_tools(mcp: FastMCP):
             runtime_ticks=runtime_ticks,
             actual_segment_length_ticks=actual_segment_length_ticks,
             static=static,
-            params=params,
+            stream_params=params,
             tag=tag,
             device_profile_id=device_profile_id,
             play_session_id=play_session_id,
@@ -1990,7 +1990,7 @@ def register_dynamichls_tools(mcp: FastMCP):
         return api.get_variant_hls_audio_playlist(
             item_id=item_id,
             static=static,
-            params=params,
+            stream_params=params,
             tag=tag,
             device_profile_id=device_profile_id,
             play_session_id=play_session_id,
@@ -2230,7 +2230,7 @@ def register_dynamichls_tools(mcp: FastMCP):
         return api.get_master_hls_audio_playlist(
             item_id=item_id,
             static=static,
-            params=params,
+            stream_params=params,
             tag=tag,
             device_profile_id=device_profile_id,
             play_session_id=play_session_id,
@@ -2493,7 +2493,7 @@ def register_dynamichls_tools(mcp: FastMCP):
             runtime_ticks=runtime_ticks,
             actual_segment_length_ticks=actual_segment_length_ticks,
             static=static,
-            params=params,
+            stream_params=params,
             tag=tag,
             device_profile_id=device_profile_id,
             play_session_id=play_session_id,
@@ -2745,7 +2745,7 @@ def register_dynamichls_tools(mcp: FastMCP):
             item_id=item_id,
             container=container,
             static=static,
-            params=params,
+            stream_params=params,
             tag=tag,
             device_profile_id=device_profile_id,
             play_session_id=play_session_id,
@@ -2994,7 +2994,7 @@ def register_dynamichls_tools(mcp: FastMCP):
         return api.get_variant_hls_video_playlist(
             item_id=item_id,
             static=static,
-            params=params,
+            stream_params=params,
             tag=tag,
             device_profile_id=device_profile_id,
             play_session_id=play_session_id,
@@ -3249,7 +3249,7 @@ def register_dynamichls_tools(mcp: FastMCP):
         return api.get_master_hls_video_playlist(
             item_id=item_id,
             static=static,
-            params=params,
+            stream_params=params,
             tag=tag,
             device_profile_id=device_profile_id,
             play_session_id=play_session_id,
@@ -12461,7 +12461,7 @@ def register_videos_tools(mcp: FastMCP):
             item_id=item_id,
             container=container,
             static=static,
-            params=params,
+            stream_params=params,
             tag=tag,
             device_profile_id=device_profile_id,
             play_session_id=play_session_id,
@@ -12708,7 +12708,7 @@ def register_videos_tools(mcp: FastMCP):
             item_id=item_id,
             container=container,
             static=static,
-            params=params,
+            stream_params=params,
             tag=tag,
             device_profile_id=device_profile_id,
             play_session_id=play_session_id,
@@ -13074,7 +13074,7 @@ def get_mcp_instance() -> tuple[Any, Any, Any, Any]:
 
     for mw in middlewares:
         mcp.add_middleware(mw)
-    registered_tags = []
+    registered_tags: list[str] = []
     return mcp, args, middlewares, registered_tags
 
 

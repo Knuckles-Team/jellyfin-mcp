@@ -3,7 +3,7 @@ import threading
 
 import requests
 from agent_utilities.base_utilities import to_boolean
-from agent_utilities.exceptions import AuthError, UnauthorizedError
+from agent_utilities.core.exceptions import AuthError, UnauthorizedError
 from fastmcp.utilities.logging import get_logger
 
 from jellyfin_mcp.api_client import Api

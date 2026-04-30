@@ -28,13 +28,13 @@ class Api:
         try:
             response = self._session.get(urljoin(self.base_url, "/System/Info"))
             if response.status_code == 401:
-                from agent_utilities.exceptions import AuthError
+                from agent_utilities.core.exceptions import AuthError
 
                 raise AuthError(
                     "Jellyfin authentication failed: Invalid token or credentials."
                 )
             elif response.status_code == 403:
-                from agent_utilities.exceptions import UnauthorizedError
+                from agent_utilities.core.exceptions import UnauthorizedError
 
                 raise UnauthorizedError(
                     "Jellyfin access forbidden: Insufficient permissions."
@@ -327,7 +327,7 @@ class Api:
         item_id: str,
         container: str | None = None,
         static: bool | None = None,
-        params: str | None = None,
+        stream_params: str | None = None,
         tag: str | None = None,
         device_profile_id: str | None = None,
         play_session_id: str | None = None,
@@ -378,15 +378,15 @@ class Api:
         """Gets an audio stream."""
         endpoint = "/Audio/{itemId}/stream"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params: dict[str, Any] = {}
+        params: dict[str, Any] = {}  # type: ignore
         if container is not None:
-            params["container"] = container
+            params["container"] = container  # type: ignore
         if static is not None:
-            params["static"] = static
-        if params is not None:
-            params["params"] = params
+            params["static"] = static  # type: ignore
+        if stream_params is not None:
+            params["params"] = stream_params  # type: ignore
         if tag is not None:
-            params["tag"] = tag
+            params["tag"] = tag  # type: ignore
         if device_profile_id is not None:
             params["deviceProfileId"] = device_profile_id
         if play_session_id is not None:
@@ -484,7 +484,7 @@ class Api:
         item_id: str,
         container: str,
         static: bool | None = None,
-        params: str | None = None,
+        stream_params: str | None = None,
         tag: str | None = None,
         device_profile_id: str | None = None,
         play_session_id: str | None = None,
@@ -539,8 +539,8 @@ class Api:
         params: dict[str, Any] = {}
         if static is not None:
             params["static"] = static
-        if params is not None:
-            params["params"] = params
+        if stream_params is not None:
+            params["params"] = stream_params
         if tag is not None:
             params["tag"] = tag
         if device_profile_id is not None:
@@ -970,7 +970,7 @@ class Api:
         runtime_ticks: int | None = None,
         actual_segment_length_ticks: int | None = None,
         static: bool | None = None,
-        params: str | None = None,
+        stream_params: str | None = None,
         tag: str | None = None,
         device_profile_id: str | None = None,
         play_session_id: str | None = None,
@@ -1032,8 +1032,8 @@ class Api:
             params["actualSegmentLengthTicks"] = actual_segment_length_ticks
         if static is not None:
             params["static"] = static
-        if params is not None:
-            params["params"] = params
+        if stream_params is not None:
+            params["params"] = stream_params
         if tag is not None:
             params["tag"] = tag
         if device_profile_id is not None:
@@ -1134,7 +1134,7 @@ class Api:
         self,
         item_id: str,
         static: bool | None = None,
-        params: str | None = None,
+        stream_params: str | None = None,
         tag: str | None = None,
         device_profile_id: str | None = None,
         play_session_id: str | None = None,
@@ -1189,8 +1189,8 @@ class Api:
         params: dict[str, Any] = {}
         if static is not None:
             params["static"] = static
-        if params is not None:
-            params["params"] = params
+        if stream_params is not None:
+            params["params"] = stream_params
         if tag is not None:
             params["tag"] = tag
         if device_profile_id is not None:
@@ -1291,7 +1291,7 @@ class Api:
         self,
         item_id: str,
         static: bool | None = None,
-        params: str | None = None,
+        stream_params: str | None = None,
         tag: str | None = None,
         device_profile_id: str | None = None,
         play_session_id: str | None = None,
@@ -1347,8 +1347,8 @@ class Api:
         params: dict[str, Any] = {}
         if static is not None:
             params["static"] = static
-        if params is not None:
-            params["params"] = params
+        if stream_params is not None:
+            params["params"] = stream_params
         if tag is not None:
             params["tag"] = tag
         if device_profile_id is not None:
@@ -1456,7 +1456,7 @@ class Api:
         runtime_ticks: int | None = None,
         actual_segment_length_ticks: int | None = None,
         static: bool | None = None,
-        params: str | None = None,
+        stream_params: str | None = None,
         tag: str | None = None,
         device_profile_id: str | None = None,
         play_session_id: str | None = None,
@@ -1520,8 +1520,8 @@ class Api:
             params["actualSegmentLengthTicks"] = actual_segment_length_ticks
         if static is not None:
             params["static"] = static
-        if params is not None:
-            params["params"] = params
+        if stream_params is not None:
+            params["params"] = stream_params
         if tag is not None:
             params["tag"] = tag
         if device_profile_id is not None:
@@ -1629,7 +1629,7 @@ class Api:
         item_id: str,
         container: str | None = None,
         static: bool | None = None,
-        params: str | None = None,
+        stream_params: str | None = None,
         tag: str | None = None,
         device_profile_id: str | None = None,
         play_session_id: str | None = None,
@@ -1689,8 +1689,8 @@ class Api:
             params["container"] = container
         if static is not None:
             params["static"] = static
-        if params is not None:
-            params["params"] = params
+        if stream_params is not None:
+            params["params"] = stream_params
         if tag is not None:
             params["tag"] = tag
         if device_profile_id is not None:
@@ -1799,7 +1799,7 @@ class Api:
         self,
         item_id: str,
         static: bool | None = None,
-        params: str | None = None,
+        stream_params: str | None = None,
         tag: str | None = None,
         device_profile_id: str | None = None,
         play_session_id: str | None = None,
@@ -1856,8 +1856,8 @@ class Api:
         params: dict[str, Any] = {}
         if static is not None:
             params["static"] = static
-        if params is not None:
-            params["params"] = params
+        if stream_params is not None:
+            params["params"] = stream_params
         if tag is not None:
             params["tag"] = tag
         if device_profile_id is not None:
@@ -1964,7 +1964,7 @@ class Api:
         self,
         item_id: str,
         static: bool | None = None,
-        params: str | None = None,
+        stream_params: str | None = None,
         tag: str | None = None,
         device_profile_id: str | None = None,
         play_session_id: str | None = None,
@@ -2023,8 +2023,8 @@ class Api:
         params: dict[str, Any] = {}
         if static is not None:
             params["static"] = static
-        if params is not None:
-            params["params"] = params
+        if stream_params is not None:
+            params["params"] = stream_params
         if tag is not None:
             params["tag"] = tag
         if device_profile_id is not None:
@@ -7427,7 +7427,7 @@ class Api:
         item_id: str,
         container: str | None = None,
         static: bool | None = None,
-        params: str | None = None,
+        stream_params: str | None = None,
         tag: str | None = None,
         device_profile_id: str | None = None,
         play_session_id: str | None = None,
@@ -7485,8 +7485,8 @@ class Api:
             params["container"] = container
         if static is not None:
             params["static"] = static
-        if params is not None:
-            params["params"] = params
+        if stream_params is not None:
+            params["params"] = stream_params
         if tag is not None:
             params["tag"] = tag
         if device_profile_id is not None:
@@ -7590,7 +7590,7 @@ class Api:
         item_id: str,
         container: str,
         static: bool | None = None,
-        params: str | None = None,
+        stream_params: str | None = None,
         tag: str | None = None,
         device_profile_id: str | None = None,
         play_session_id: str | None = None,
@@ -7647,8 +7647,8 @@ class Api:
         params: dict[str, Any] = {}
         if static is not None:
             params["static"] = static
-        if params is not None:
-            params["params"] = params
+        if stream_params is not None:
+            params["params"] = stream_params
         if tag is not None:
             params["tag"] = tag
         if device_profile_id is not None:
