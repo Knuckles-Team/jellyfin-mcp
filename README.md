@@ -21,7 +21,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/jellyfin-mcp)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/jellyfin-mcp)
 
-*Version: 0.6.0*
+*Version: 0.7.0*
 
 ## Overview
 
@@ -294,3 +294,210 @@ uv pip install jellyfin-mcp
 
 ![GitHub followers](https://img.shields.io/github/followers/Knucklessg1)
 ![GitHub User's stars](https://img.shields.io/github/stars/Knucklessg1)
+
+
+## MCP Configuration Examples
+
+### 1. Standard IO (stdio) Deployment
+
+```json
+{
+  "mcpServers": {
+    "jellyfin-mcp": {
+      "command": "uv",
+      "args": [
+        "run",
+        "jellyfin-mcp"
+      ],
+      "env": {
+        "ACTIVITYLOGTOOL": "True",
+        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
+        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
+        "APIKEYTOOL": "True",
+        "ARTISTSTOOL": "True",
+        "AUDIOTOOL": "True",
+        "BACKUPTOOL": "True",
+        "BRANDINGTOOL": "True",
+        "CHANNELSTOOL": "True",
+        "CLIENTLOGTOOL": "True",
+        "COLLECTIONTOOL": "True",
+        "CONFIGURATIONTOOL": "True",
+        "DASHBOARDTOOL": "True",
+        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
+        "DELEGATED_SCOPES": "<YOUR_DELEGATED_SCOPES>",
+        "DEVICESTOOL": "True",
+        "DISPLAYPREFERENCESTOOL": "True",
+        "DYNAMICHLSTOOL": "True",
+        "ENABLE_DELEGATION": "<YOUR_ENABLE_DELEGATION>",
+        "ENVIRONMENTTOOL": "True",
+        "FILTERTOOL": "True",
+        "GENRESTOOL": "True",
+        "HLSSEGMENTTOOL": "True",
+        "IMAGETOOL": "True",
+        "INSTANTMIXTOOL": "True",
+        "ITEMLOOKUPTOOL": "True",
+        "ITEMREFRESHTOOL": "True",
+        "ITEMSTOOL": "True",
+        "ITEMUPDATETOOL": "True",
+        "JELLYFIN_ACCESS_TOKEN": "<YOUR_JELLYFIN_ACCESS_TOKEN>",
+        "JELLYFIN_API_KEY": "<YOUR_JELLYFIN_API_KEY>",
+        "JELLYFIN_AUDIENCE": "<YOUR_JELLYFIN_AUDIENCE>",
+        "JELLYFIN_BASE_URL": "<YOUR_JELLYFIN_BASE_URL>",
+        "JELLYFIN_INSTANCE": "<YOUR_JELLYFIN_INSTANCE>",
+        "JELLYFIN_PASSWORD": "<YOUR_JELLYFIN_PASSWORD>",
+        "JELLYFIN_SSL_VERIFY": "<YOUR_JELLYFIN_SSL_VERIFY>",
+        "JELLYFIN_TOKEN": "<YOUR_JELLYFIN_TOKEN>",
+        "JELLYFIN_URL": "<YOUR_JELLYFIN_URL>",
+        "JELLYFIN_USERNAME": "<YOUR_JELLYFIN_USERNAME>",
+        "JELLYFIN_VERIFY": "<YOUR_JELLYFIN_VERIFY>",
+        "LIBRARYSTRUCTURETOOL": "True",
+        "LIBRARYTOOL": "True",
+        "LIVETVTOOL": "True",
+        "LOCALIZATIONTOOL": "True",
+        "LYRICSTOOL": "True",
+        "MEDIAINFOTOOL": "True",
+        "MEDIASEGMENTSTOOL": "True",
+        "MISCTOOL": "True",
+        "MOVIESTOOL": "True",
+        "MUSICGENRESTOOL": "True",
+        "OIDC_CLIENT_ID": "<YOUR_OIDC_CLIENT_ID>",
+        "OIDC_CLIENT_SECRET": "<YOUR_OIDC_CLIENT_SECRET>",
+        "OIDC_TOKEN_ENDPOINT": "<YOUR_OIDC_TOKEN_ENDPOINT>",
+        "PACKAGETOOL": "True",
+        "PERSONSTOOL": "True",
+        "PLAYLISTSTOOL": "True",
+        "PLAYSTATETOOL": "True",
+        "PLUGINSTOOL": "True",
+        "QUICKCONNECTTOOL": "True",
+        "REMOTEIMAGETOOL": "True",
+        "SCHEDULEDTASKSTOOL": "True",
+        "SEARCHTOOL": "True",
+        "SESSIONTOOL": "True",
+        "STARTUPTOOL": "True",
+        "STUDIOSTOOL": "True",
+        "SUBTITLETOOL": "True",
+        "SUGGESTIONSTOOL": "True",
+        "SYNCPLAYTOOL": "True",
+        "SYSTEMTOOL": "True",
+        "TIMESYNCTOOL": "True",
+        "TMDBTOOL": "True",
+        "TRAILERSTOOL": "True",
+        "TRICKPLAYTOOL": "True",
+        "TVSHOWSTOOL": "True",
+        "UNIVERSALAUDIOTOOL": "True",
+        "USERLIBRARYTOOL": "True",
+        "USERTOOL": "True",
+        "USERVIEWSTOOL": "True",
+        "VIDEOATTACHMENTSTOOL": "True",
+        "VIDEOSTOOL": "True",
+        "YEARSTOOL": "True"
+      }
+    }
+  }
+}
+```
+
+### 2. Streamable HTTP (SSE) Deployment
+
+```json
+{
+  "mcpServers": {
+    "jellyfin-mcp": {
+      "command": "uv",
+      "args": [
+        "run",
+        "jellyfin-mcp",
+        "--transport",
+        "http",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000"
+      ],
+      "env": {
+        "ACTIVITYLOGTOOL": "True",
+        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
+        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
+        "APIKEYTOOL": "True",
+        "ARTISTSTOOL": "True",
+        "AUDIOTOOL": "True",
+        "BACKUPTOOL": "True",
+        "BRANDINGTOOL": "True",
+        "CHANNELSTOOL": "True",
+        "CLIENTLOGTOOL": "True",
+        "COLLECTIONTOOL": "True",
+        "CONFIGURATIONTOOL": "True",
+        "DASHBOARDTOOL": "True",
+        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
+        "DELEGATED_SCOPES": "<YOUR_DELEGATED_SCOPES>",
+        "DEVICESTOOL": "True",
+        "DISPLAYPREFERENCESTOOL": "True",
+        "DYNAMICHLSTOOL": "True",
+        "ENABLE_DELEGATION": "<YOUR_ENABLE_DELEGATION>",
+        "ENVIRONMENTTOOL": "True",
+        "FILTERTOOL": "True",
+        "GENRESTOOL": "True",
+        "HLSSEGMENTTOOL": "True",
+        "IMAGETOOL": "True",
+        "INSTANTMIXTOOL": "True",
+        "ITEMLOOKUPTOOL": "True",
+        "ITEMREFRESHTOOL": "True",
+        "ITEMSTOOL": "True",
+        "ITEMUPDATETOOL": "True",
+        "JELLYFIN_ACCESS_TOKEN": "<YOUR_JELLYFIN_ACCESS_TOKEN>",
+        "JELLYFIN_API_KEY": "<YOUR_JELLYFIN_API_KEY>",
+        "JELLYFIN_AUDIENCE": "<YOUR_JELLYFIN_AUDIENCE>",
+        "JELLYFIN_BASE_URL": "<YOUR_JELLYFIN_BASE_URL>",
+        "JELLYFIN_INSTANCE": "<YOUR_JELLYFIN_INSTANCE>",
+        "JELLYFIN_PASSWORD": "<YOUR_JELLYFIN_PASSWORD>",
+        "JELLYFIN_SSL_VERIFY": "<YOUR_JELLYFIN_SSL_VERIFY>",
+        "JELLYFIN_TOKEN": "<YOUR_JELLYFIN_TOKEN>",
+        "JELLYFIN_URL": "<YOUR_JELLYFIN_URL>",
+        "JELLYFIN_USERNAME": "<YOUR_JELLYFIN_USERNAME>",
+        "JELLYFIN_VERIFY": "<YOUR_JELLYFIN_VERIFY>",
+        "LIBRARYSTRUCTURETOOL": "True",
+        "LIBRARYTOOL": "True",
+        "LIVETVTOOL": "True",
+        "LOCALIZATIONTOOL": "True",
+        "LYRICSTOOL": "True",
+        "MEDIAINFOTOOL": "True",
+        "MEDIASEGMENTSTOOL": "True",
+        "MISCTOOL": "True",
+        "MOVIESTOOL": "True",
+        "MUSICGENRESTOOL": "True",
+        "OIDC_CLIENT_ID": "<YOUR_OIDC_CLIENT_ID>",
+        "OIDC_CLIENT_SECRET": "<YOUR_OIDC_CLIENT_SECRET>",
+        "OIDC_TOKEN_ENDPOINT": "<YOUR_OIDC_TOKEN_ENDPOINT>",
+        "PACKAGETOOL": "True",
+        "PERSONSTOOL": "True",
+        "PLAYLISTSTOOL": "True",
+        "PLAYSTATETOOL": "True",
+        "PLUGINSTOOL": "True",
+        "QUICKCONNECTTOOL": "True",
+        "REMOTEIMAGETOOL": "True",
+        "SCHEDULEDTASKSTOOL": "True",
+        "SEARCHTOOL": "True",
+        "SESSIONTOOL": "True",
+        "STARTUPTOOL": "True",
+        "STUDIOSTOOL": "True",
+        "SUBTITLETOOL": "True",
+        "SUGGESTIONSTOOL": "True",
+        "SYNCPLAYTOOL": "True",
+        "SYSTEMTOOL": "True",
+        "TIMESYNCTOOL": "True",
+        "TMDBTOOL": "True",
+        "TRAILERSTOOL": "True",
+        "TRICKPLAYTOOL": "True",
+        "TVSHOWSTOOL": "True",
+        "UNIVERSALAUDIOTOOL": "True",
+        "USERLIBRARYTOOL": "True",
+        "USERTOOL": "True",
+        "USERVIEWSTOOL": "True",
+        "VIDEOATTACHMENTSTOOL": "True",
+        "VIDEOSTOOL": "True",
+        "YEARSTOOL": "True"
+      }
+    }
+  }
+}
+```
