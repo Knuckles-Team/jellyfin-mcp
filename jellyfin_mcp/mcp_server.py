@@ -35,7 +35,7 @@ from pydantic import Field
 
 from jellyfin_mcp.auth import get_client
 
-__version__ = "0.10.0"
+__version__ = "0.11.0"
 print(f"Jellyfin MCP v{__version__}", file=sys.stderr)
 
 logger = get_logger(name="TokenMiddleware")
