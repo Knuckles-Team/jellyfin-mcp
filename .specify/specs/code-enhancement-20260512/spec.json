@@ -1,0 +1,182 @@
+{
+  "feature_id": "code-enhancement-20260512",
+  "title": "Code Enhancement: jellyfin-mcp",
+  "created": "2026-05-12T14:14:40.997795+00:00",
+  "overview": "Automated code enhancement review for jellyfin-mcp. Covers 17 analysis domains.",
+  "user_stories": [
+    {
+      "role": "developer",
+      "action": "address Project Analysis findings (grade: C, score: 74)",
+      "value": "improve project project analysis from C to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Codebase Optimization findings (grade: F, score: 55)",
+      "value": "improve project codebase optimization from F to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Test Coverage findings (grade: D, score: 65)",
+      "value": "improve project test coverage from D to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Architecture & Design Patterns findings (grade: C, score: 75)",
+      "value": "improve project architecture & design patterns from C to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Concept Traceability findings (grade: F, score: 42)",
+      "value": "improve project concept traceability from F to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Linting & Formatting findings (grade: F, score: 0)",
+      "value": "improve project linting & formatting from F to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Changelog Audit findings (grade: C, score: 75)",
+      "value": "improve project changelog audit from C to at least B (80+)"
+    }
+  ],
+  "functional_requirements": [
+    {
+      "id": "FR-001",
+      "description": "34 functions exceed 200 lines (actionable refactoring targets): register_dynamichls_tools (1753L), register_image_tools (1169L), register_livetv_tools (1069L), register_library_tools (572L), register_videos_tools (548L)",
+      "testable": true
+    },
+    {
+      "id": "FR-002",
+      "description": "Monolithic: mcp_server.py (13101L) \u2014 19 functions with high complexity (worst: register_dynamichls_tools at 1753L, CC=1); Low cohesion: 67 distinct concepts in one file",
+      "testable": true
+    },
+    {
+      "id": "FR-003",
+      "description": "Monolithic: api_client.py (7818L) \u2014 32 functions with high complexity (worst: Api.get_items at 265L, CC=87); God class: Api (370 methods) \u2014 consider mixins/composition",
+      "testable": true
+    },
+    {
+      "id": "FR-004",
+      "description": "6 functions with nesting depth >4",
+      "testable": true
+    },
+    {
+      "id": "FR-005",
+      "description": "Test suite lacks intent diversity (only one type)",
+      "testable": true
+    },
+    {
+      "id": "FR-006",
+      "description": "23 potential doc-test drift items",
+      "testable": true
+    },
+    {
+      "id": "FR-007",
+      "description": "README.md missing sections: installation",
+      "testable": true
+    },
+    {
+      "id": "FR-008",
+      "description": "README missing: Has a Table of Contents",
+      "testable": true
+    },
+    {
+      "id": "FR-009",
+      "description": "README missing: References /docs directory material",
+      "testable": true
+    },
+    {
+      "id": "FR-010",
+      "description": "SRP: 2 modules exceed 500 lines (god modules)",
+      "testable": true
+    },
+    {
+      "id": "FR-011",
+      "description": "SRP: 1 classes have >15 methods",
+      "testable": true
+    },
+    {
+      "id": "FR-012",
+      "description": "No discernible layer architecture (no domain/service/adapter separation)",
+      "testable": true
+    },
+    {
+      "id": "FR-013",
+      "description": "Low traceability ratio: 0% concepts fully traced",
+      "testable": true
+    },
+    {
+      "id": "FR-014",
+      "description": "4 test functions missing concept markers",
+      "testable": true
+    },
+    {
+      "id": "FR-015",
+      "description": "462 significant functions (>10 lines) missing concept markers in docstrings",
+      "testable": true
+    },
+    {
+      "id": "FR-016",
+      "description": "Total lint findings: 368 (high/error: 368, medium/warning: 0, low: 0)",
+      "testable": true
+    },
+    {
+      "id": "FR-017",
+      "description": "2 hook(s) may be outdated: ruff-pre-commit, uv-pre-commit",
+      "testable": true
+    },
+    {
+      "id": "FR-018",
+      "description": "1 rogue/throwaway scripts detected (fix_*, validate_*, patch_*, etc.): scripts/validate_a2a_agent.py",
+      "testable": true
+    },
+    {
+      "id": "FR-019",
+      "description": "CHANGELOG.md exists but could not be parsed \u2014 check format compliance",
+      "testable": true
+    },
+    {
+      "id": "FR-020",
+      "description": "No changelog entries within the last 30 days",
+      "testable": true
+    },
+    {
+      "id": "FR-021",
+      "description": "keepachangelog not installed \u2014 pip install 'universal-skills[code-enhancer]'",
+      "testable": true
+    },
+    {
+      "id": "FR-022",
+      "description": "2 tests have no assertions",
+      "testable": true
+    },
+    {
+      "id": "FR-023",
+      "description": "Undocumented env vars: ALLOWED_CLIENT_REDIRECT_URIS, AUTH_TYPE, EUNOMIA_POLICY_FILE, EUNOMIA_REMOTE_URL, EUNOMIA_TYPE, OAUTH_BASE_URL, OAUTH_UPSTREAM_AUTH_ENDPOINT, OAUTH_UPSTREAM_CLIENT_ID, OAUTH_UPSTREAM_CLIENT_SECRET, OAUTH_UPSTREAM_TOKEN_ENDPOINT",
+      "testable": true
+    },
+    {
+      "id": "FR-024",
+      "description": "75 Python env vars not in .env.example: ACTIVITYLOGTOOL, APIKEYTOOL, ARTISTSTOOL, AUDIOTOOL, BACKUPTOOL",
+      "testable": true
+    }
+  ],
+  "success_criteria": [
+    {
+      "metric": "Overall GPA",
+      "current": 2.59,
+      "target": 3.0
+    },
+    {
+      "metric": "Domains at B or above",
+      "current": 10,
+      "target": 17
+    },
+    {
+      "metric": "Actionable findings",
+      "current": 24,
+      "target": 0
+    }
+  ]
+}

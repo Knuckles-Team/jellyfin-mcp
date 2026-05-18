@@ -42,44 +42,72 @@ This repository is actively maintained - Contributions are welcome!
 
 ## MCP
 
-### MCP Tools
+### Available MCP Tools
 
-The system exposes a comprehensive set of tools, organized by domain. These can be used directly by an MCP client or orchestrated by the A2A Agent.
+This server utilizes dynamic Action-Routed tools to optimize token overhead and maximize IDE compatibility.
 
-| Domain | Description | Key Tags |
-|:---|:---|:---|
-| **Media** | Managing content (Movies, TV, Music), libraries, and metadata. | `Library`, `Items`, `Movies`, `TvShows`, `Music` |
-| **System** | Server configuration, logs, plugins, tasks, and system info. | `System`, `Configuration`, `ActivityLog`, `ScheduledTasks` |
-| **User** | User supervision, session management, and playstate control. | `User`, `Session`, `Playstate`, `DisplayPreferences` |
-| **LiveTV** | Managing Live TV channels, tuners, and recordings. | `LiveTv`, `Channels` |
-| **Device** | Managing connected client devices and remote control. | `Devices`, `QuickConnect` |
-
-### Using as an MCP Server
-
-The MCP Server can be run in two modes: `stdio` (for local testing) or `http` (for networked access).
-
-#### Environment Variables
-The following environment variables are required to connect to your Jellyfin instance:
-
-*   `JELLYFIN_BASE_URL`: The URL of your Jellyfin server (e.g., `http://192.168.1.10:8096`).
-*   `JELLYFIN_TOKEN`: Your Jellyfin API Token.
-*   **OR**
-*   `JELLYFIN_USERNAME`: Your Jellyfin Username.
-*   `JELLYFIN_PASSWORD`: Your Jellyfin Password.
-
-#### Run in stdio mode (default):
-```bash
-export JELLYFIN_BASE_URL="http://localhost:8096"
-export JELLYFIN_TOKEN="your_api_token"
-jellyfin-mcp --transport "stdio"
-```
-
-#### Run in HTTP mode:
-```bash
-export JELLYFIN_BASE_URL="http://localhost:8096"
-export JELLYFIN_TOKEN="your_api_token"
-jellyfin-mcp --transport "http" --host "0.0.0.0" --port "8000"
-```
+| Tool Name | Description |
+|-----------|-------------|
+| `jellyfin_activitylog` | Consolidated Action-Routed tool for ActivityLog. Methods: get_log_entries |
+| `jellyfin_apikey` | Consolidated Action-Routed tool for ApiKey. Methods: get_keys, create_key |
+| `jellyfin_artists` | Consolidated Action-Routed tool for Artists. Methods: get_artists, get_artist_by_name, get_album_artists |
+| `jellyfin_audio` | Consolidated Action-Routed tool for Audio. Methods: get_audio_stream, get_audio_stream_by_container |
+| `jellyfin_backup` | Consolidated Action-Routed tool for Backup. Methods: list_backups, create_backup, get_backup, start_restore_backup |
+| `jellyfin_branding` | Consolidated Action-Routed tool for Branding. Methods: get_branding_options, get_branding_css, get_branding_css_2 |
+| `jellyfin_channels` | Consolidated Action-Routed tool for Channels. Methods: get_channels, get_channel_features, get_channel_items, get_all_channel_features, get_latest_channel_items |
+| `jellyfin_clientlog` | Consolidated Action-Routed tool for ClientLog. Methods: log_file |
+| `jellyfin_collection` | Consolidated Action-Routed tool for Collection. Methods: create_collection, add_to_collection |
+| `jellyfin_configuration` | Consolidated Action-Routed tool for Configuration. Methods: get_configuration, update_configuration, get_named_configuration, update_named_configuration, update_branding_configuration, get_default_metadata_options |
+| `jellyfin_dashboard` | Consolidated Action-Routed tool for Dashboard. Methods: get_dashboard_configuration_page, get_configuration_pages |
+| `jellyfin_devices` | Consolidated Action-Routed tool for Devices. Methods: get_devices, get_device_info, get_device_options, update_device_options |
+| `jellyfin_displaypreferences` | Consolidated Action-Routed tool for DisplayPreferences. Methods: get_display_preferences, update_display_preferences |
+| `jellyfin_dynamichls` | Consolidated Action-Routed tool for DynamicHls. Methods: get_hls_audio_segment, get_variant_hls_audio_playlist, get_master_hls_audio_playlist, get_hls_video_segment, get_live_hls_stream, get_variant_hls_video_playlist, get_master_hls_video_playlist |
+| `jellyfin_environment` | Consolidated Action-Routed tool for Environment. Methods: get_default_directory_browser, get_directory_contents, get_drives, get_network_shares, get_parent_path, validate_path |
+| `jellyfin_filter` | Consolidated Action-Routed tool for Filter. Methods: get_query_filters_legacy, get_query_filters |
+| `jellyfin_genres` | Consolidated Action-Routed tool for Genres. Methods: get_genres, get_genre |
+| `jellyfin_hlssegment` | Consolidated Action-Routed tool for HlsSegment. Methods: get_hls_audio_segment_legacy_aac, get_hls_audio_segment_legacy_mp3, get_hls_video_segment_legacy, get_hls_playlist_legacy |
+| `jellyfin_image` | Consolidated Action-Routed tool for Image. Methods: get_artist_image, get_splashscreen, get_genre_image, get_genre_image_by_index, get_item_image_infos, set_item_image, get_item_image, set_item_image_by_index, get_item_image_by_index, get_item_image2, update_item_image_index, get_music_genre_image, get_music_genre_image_by_index, get_person_image, get_person_image_by_index, get_studio_image, get_studio_image_by_index, post_user_image, get_user_image |
+| `jellyfin_instantmix` | Consolidated Action-Routed tool for InstantMix. Methods: get_instant_mix_from_album, get_instant_mix_from_artists, get_instant_mix_from_artists2, get_instant_mix_from_item, get_instant_mix_from_music_genre_by_name, get_instant_mix_from_music_genre_by_id, get_instant_mix_from_playlist, get_instant_mix_from_song |
+| `jellyfin_itemlookup` | Consolidated Action-Routed tool for ItemLookup. Methods: get_external_id_infos, apply_search_criteria, get_book_remote_search_results, get_box_set_remote_search_results, get_movie_remote_search_results, get_music_album_remote_search_results, get_music_artist_remote_search_results, get_music_video_remote_search_results, get_person_remote_search_results, get_series_remote_search_results, get_trailer_remote_search_results |
+| `jellyfin_itemrefresh` | Consolidated Action-Routed tool for ItemRefresh. Methods: refresh_item |
+| `jellyfin_items` | Consolidated Action-Routed tool for Items. Methods: get_item_user_data, update_item_user_data, get_resume_items |
+| `jellyfin_itemupdate` | Consolidated Action-Routed tool for ItemUpdate. Methods: update_item, update_item_content_type, get_metadata_editor_info |
+| `jellyfin_library` | Consolidated Action-Routed tool for Library. Methods: get_similar_albums, get_similar_artists, get_ancestors, get_critic_reviews, get_file, get_similar_items, get_theme_media, get_theme_songs, get_theme_videos, get_item_counts, get_library_options_info, post_updated_media, get_media_folders, post_added_movies, post_updated_movies, get_physical_paths, refresh_library, post_added_series, post_updated_series, get_similar_movies, get_similar_shows, get_similar_trailers |
+| `jellyfin_librarystructure` | Consolidated Action-Routed tool for LibraryStructure. Methods: get_virtual_folders, add_virtual_folder, update_library_options, rename_virtual_folder, add_media_path, update_media_path |
+| `jellyfin_livetv` | Consolidated Action-Routed tool for LiveTv. Methods: get_channel_mapping_options, set_channel_mapping, get_live_tv_channels, get_channel, get_guide_info, get_live_tv_info, add_listing_provider, get_default_listing_provider, get_lineups, get_schedules_direct_countries, get_live_recording_file, get_live_stream_file, get_live_tv_programs, get_programs, get_program, get_recommended_programs, get_recordings, get_recording, get_recording_folders, get_recording_groups, get_recording_group, get_recordings_series, get_series_timers, create_series_timer, get_series_timer, update_series_timer, get_timers, create_timer, get_timer, update_timer, get_default_timer, add_tuner_host, get_tuner_host_types, discover_tuners, discvover_tuners |
+| `jellyfin_localization` | Consolidated Action-Routed tool for Localization. Methods: get_countries, get_cultures, get_localization_options, get_parental_ratings |
+| `jellyfin_lyrics` | Consolidated Action-Routed tool for Lyrics. Methods: get_lyrics, search_remote_lyrics, get_remote_lyrics |
+| `jellyfin_mediainfo` | Consolidated Action-Routed tool for MediaInfo. Methods: get_playback_info, get_posted_playback_info, open_live_stream, get_bitrate_test_bytes |
+| `jellyfin_mediasegments` | Consolidated Action-Routed tool for MediaSegments. Methods: get_item_segments |
+| `jellyfin_movies` | Consolidated Action-Routed tool for Movies. Methods: get_movie_recommendations |
+| `jellyfin_musicgenres` | Consolidated Action-Routed tool for MusicGenres. Methods: get_music_genres, get_music_genre |
+| `jellyfin_package` | Consolidated Action-Routed tool for Package. Methods: get_packages, get_package_info, install_package, get_repositories, set_repositories |
+| `jellyfin_persons` | Consolidated Action-Routed tool for Persons. Methods: get_persons, get_person |
+| `jellyfin_playlists` | Consolidated Action-Routed tool for Playlists. Methods: create_playlist, update_playlist, get_playlist, add_item_to_playlist, get_playlist_items, move_item, get_playlist_users, get_playlist_user, update_playlist_user |
+| `jellyfin_playstate` | Consolidated Action-Routed tool for Playstate. Methods: on_playback_start, on_playback_progress, report_playback_start, ping_playback_session, report_playback_progress, mark_played_item, mark_unplayed_item |
+| `jellyfin_plugins` | Consolidated Action-Routed tool for Plugins. Methods: get_plugins, enable_plugin, get_plugin_image, get_plugin_configuration, update_plugin_configuration, get_plugin_manifest |
+| `jellyfin_quickconnect` | Consolidated Action-Routed tool for QuickConnect. Methods: authorize_quick_connect, get_quick_connect_state, get_quick_connect_enabled, initiate_quick_connect |
+| `jellyfin_remoteimage` | Consolidated Action-Routed tool for RemoteImage. Methods: get_remote_images, get_remote_image_providers |
+| `jellyfin_scheduledtasks` | Consolidated Action-Routed tool for ScheduledTasks. Methods: get_tasks, get_task, update_task, start_task |
+| `jellyfin_search` | Consolidated Action-Routed tool for Search. Methods: get_search_hints |
+| `jellyfin_session` | Consolidated Action-Routed tool for Session. Methods: get_auth_providers, get_sessions, send_full_general_command, send_general_command, send_message_command, play, send_playstate_command, send_system_command, add_user_to_session, display_content, post_capabilities, post_full_capabilities, report_session_ended, report_viewing |
+| `jellyfin_startup` | Consolidated Action-Routed tool for Startup. Methods: complete_wizard, get_startup_configuration, update_initial_configuration, get_first_user_2, set_remote_access, get_first_user, update_startup_user |
+| `jellyfin_studios` | Consolidated Action-Routed tool for Studios. Methods: get_studios, get_studio |
+| `jellyfin_subtitle` | Consolidated Action-Routed tool for Subtitle. Methods: get_fallback_font_list, get_fallback_font, search_remote_subtitles, get_remote_subtitles, get_subtitle_playlist, get_subtitle_with_ticks, get_subtitle |
+| `jellyfin_suggestions` | Consolidated Action-Routed tool for Suggestions. Methods: get_suggestions |
+| `jellyfin_system` | Consolidated Action-Routed tool for System. Methods: get_endpoint_info, get_system_info, get_public_system_info, get_system_storage, get_server_logs, get_log_file, get_ping_system, post_ping_system |
+| `jellyfin_timesync` | Consolidated Action-Routed tool for TimeSync. Methods: get_utc_time |
+| `jellyfin_tmdb` | Consolidated Action-Routed tool for Tmdb. Methods: tmdb_client_configuration |
+| `jellyfin_trailers` | Consolidated Action-Routed tool for Trailers. Methods: get_trailers |
+| `jellyfin_trickplay` | Consolidated Action-Routed tool for Trickplay. Methods: get_trickplay_tile_image, get_trickplay_hls_playlist |
+| `jellyfin_tvshows` | Consolidated Action-Routed tool for TvShows. Methods: get_episodes, get_seasons, get_next_up, get_upcoming_episodes |
+| `jellyfin_universalaudio` | Consolidated Action-Routed tool for UniversalAudio. Methods: get_universal_audio_stream |
+| `jellyfin_user` | Consolidated Action-Routed tool for User. Methods: get_users, update_user, get_user_by_id, update_user_policy, update_user_configuration, forgot_password, forgot_password_pin, get_current_user, create_user_by_name, update_user_password, get_public_users |
+| `jellyfin_userlibrary` | Consolidated Action-Routed tool for UserLibrary. Methods: get_item, get_intros, get_local_trailers, get_special_features, get_latest_media, get_root_folder, mark_favorite_item, unmark_favorite_item, update_user_item_rating |
+| `jellyfin_userviews` | Consolidated Action-Routed tool for UserViews. Methods: get_user_views, get_grouping_options |
+| `jellyfin_videoattachments` | Consolidated Action-Routed tool for VideoAttachments. Methods: get_attachment |
+| `jellyfin_videos` | Consolidated Action-Routed tool for Videos. Methods: get_additional_part, get_video_stream, get_video_stream_by_container, merge_versions |
+| `jellyfin_years` | Consolidated Action-Routed tool for Years. Methods: get_years, get_year |
 
 ## A2A Agent
 

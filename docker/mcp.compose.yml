@@ -3,8 +3,8 @@ services:
   jellyfin-mcp:
     # image: docker.io/knucklessg1/jellyfin:latest
     build:
-      context: . # Debug
-      dockerfile: debug.Dockerfile
+      context: .. # Debug
+      dockerfile: docker/debug.Dockerfile
     container_name: jellyfin-mcp
     hostname: jellyfin-mcp
     command: [ "jellyfin-mcp" ]
@@ -17,7 +17,7 @@ services:
         max-file: "3"
     restart: always
     env_file:
-      - .env
+      - ../.env
     environment:
       - "HOST=0.0.0.0"
       - "PORT=8056"
@@ -51,8 +51,8 @@ services:
   jellyfin-agent:
     # image: docker.io/knucklessg1/jellyfin:latest
     build:
-      context: . # Debug
-      dockerfile: debug.Dockerfile
+      context: .. # Debug
+      dockerfile: docker/debug.Dockerfile
     container_name: jellyfin-agent
     hostname: jellyfin-agent
     command: [ "jellyfin-agent" ]
@@ -67,7 +67,7 @@ services:
         max-file: "3"
     restart: always
     env_file:
-      - .env
+      - ../.env
     environment:
       - "HOST=0.0.0.0"
       - "PORT=9056"

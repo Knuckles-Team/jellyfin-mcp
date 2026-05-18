@@ -1,0 +1,53 @@
+# Tasks: Code Enhancement: jellyfin-mcp
+
+Generated: 2026-05-12T14:14:40.997795+00:00
+Skipped informational: 5
+
+- [ ] [P] **T001** [Codebase Optimization] 34 functions exceed 200 lines (actionable refactoring targets): register_dynamic
+  - Priority: P2-Medium | Effort: Large
+- [ ] [P] **T002** [Codebase Optimization] Monolithic: mcp_server.py (13101L) — 19 functions with high complexity (worst: r
+  - Priority: P1-High | Effort: Large
+- [ ] [P] **T003** [Codebase Optimization] Monolithic: api_client.py (7818L) — 32 functions with high complexity (worst: Ap
+  - Priority: P1-High | Effort: Large
+- [ ] [P] **T004** [Codebase Optimization] 6 functions with nesting depth >4
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T005** [Test Coverage] Test suite lacks intent diversity (only one type)
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T006** [Test Coverage] 23 potential doc-test drift items
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T007** [Documentation & Governance] README.md missing sections: installation
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T008** [Documentation & Governance] README missing: Has a Table of Contents
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T009** [Documentation & Governance] README missing: References /docs directory material
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T010** [Architecture & Design Patterns] SRP: 2 modules exceed 500 lines (god modules)
+  - Priority: P2-Medium | Effort: Large
+- [ ] [P] **T011** [Architecture & Design Patterns] SRP: 1 classes have >15 methods
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T012** [Architecture & Design Patterns] No discernible layer architecture (no domain/service/adapter separation)
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T013** [Concept Traceability] Low traceability ratio: 0% concepts fully traced
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T014** [Concept Traceability] 4 test functions missing concept markers
+  - Priority: P4-Enhancement | Effort: Small
+- [ ] [P] **T015** [Concept Traceability] 462 significant functions (>10 lines) missing concept markers in docstrings
+  - Priority: P4-Enhancement | Effort: Small
+- [ ] [P] **T016** [Linting & Formatting] Total lint findings: 368 (high/error: 368, medium/warning: 0, low: 0)
+  - Priority: P1-High | Effort: Medium
+- [ ] [P] **T017** [Pre-Commit Compliance] 2 hook(s) may be outdated: ruff-pre-commit, uv-pre-commit
+  - Priority: P2-Medium | Effort: Small
+- [ ] [P] **T018** [Directory Organization] 1 rogue/throwaway scripts detected (fix_*, validate_*, patch_*, etc.): scripts/v
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T019** [Changelog Audit] CHANGELOG.md exists but could not be parsed — check format compliance
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T020** [Changelog Audit] No changelog entries within the last 30 days
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T021** [Changelog Audit] keepachangelog not installed — pip install 'universal-skills[code-enhancer]'
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T022** [Pytest Quality] 2 tests have no assertions
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T023** [Environment Variables] Undocumented env vars: ALLOWED_CLIENT_REDIRECT_URIS, AUTH_TYPE, EUNOMIA_POLICY_F
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T024** [Environment Variables] 75 Python env vars not in .env.example: ACTIVITYLOGTOOL, APIKEYTOOL, ARTISTSTOOL
+  - Priority: P3-Low | Effort: Medium
