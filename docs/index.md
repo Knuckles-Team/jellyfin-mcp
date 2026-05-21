@@ -311,8 +311,6 @@ uv pip install jellyfin-mcp
       ],
       "env": {
         "ACTIVITYLOGTOOL": "True",
-        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
-        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
         "APIKEYTOOL": "True",
         "ARTISTSTOOL": "True",
         "AUDIOTOOL": "True",
@@ -323,7 +321,6 @@ uv pip install jellyfin-mcp
         "COLLECTIONTOOL": "True",
         "CONFIGURATIONTOOL": "True",
         "DASHBOARDTOOL": "True",
-        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
         "DELEGATED_SCOPES": "<YOUR_DELEGATED_SCOPES>",
         "DEVICESTOOL": "True",
         "DISPLAYPREFERENCESTOOL": "True",
@@ -416,8 +413,6 @@ uv pip install jellyfin-mcp
       ],
       "env": {
         "ACTIVITYLOGTOOL": "True",
-        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
-        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
         "APIKEYTOOL": "True",
         "ARTISTSTOOL": "True",
         "AUDIOTOOL": "True",
@@ -428,7 +423,6 @@ uv pip install jellyfin-mcp
         "COLLECTIONTOOL": "True",
         "CONFIGURATIONTOOL": "True",
         "DASHBOARDTOOL": "True",
-        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
         "DELEGATED_SCOPES": "<YOUR_DELEGATED_SCOPES>",
         "DEVICESTOOL": "True",
         "DISPLAYPREFERENCESTOOL": "True",

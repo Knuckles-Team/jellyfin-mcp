@@ -21,7 +21,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/jellyfin-mcp)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/jellyfin-mcp)
 
-*Version: 0.12.0*
+*Version: 0.12.1*
 
 ## Overview
 
@@ -247,6 +247,42 @@ export JELLYFIN_TOKEN="your_token"
 jellyfin-agent --provider openai --model-id gpt-4o --api-key sk-...
 ```
 
+## Security & Governance
+
+This project is built on [`agent-utilities`](https://github.com/Knuckles-Team/agent-utilities), inheriting enterprise-grade security and governance features.
+
+### Authentication & Authorization
+| Feature | Description |
+|---------|-------------|
+| **OIDC Token Delegation** | RFC 8693 token exchange for user-context propagation from A2A → MCP |
+| **Eunomia Policies** | Fine-grained, policy-driven tool authorization (`none`, `embedded`, `remote`) |
+| **Scoped Credentials** | Tools execute with the caller's scoped identity where possible |
+| **3LO / OAuth / API Token** | Multiple auth strategies with graceful fallback |
+
+### Eunomia Policy Enforcement
+Eunomia provides a policy enforcement point for all tool calls:
+- **Embedded mode**: Load local `mcp_policies.json` for role-based access, sensitivity gating, and audit logging
+- **Remote mode**: Forward authorization decisions to a central Eunomia policy server for multi-agent governance
+- Enable via CLI: `--eunomia-type embedded --eunomia-policy-file mcp_policies.json`
+
+### Runtime Protections
+| Protection | Description |
+|------------|-------------|
+| **Tool Guard** | Sensitivity detection with human-in-the-loop approval gating |
+| **Prompt Injection Defense** | Input scanning and repetition/loop guards |
+| **Content Filtering** | Output schema enforcement and cost budget controls |
+| **Stuck Loop Detection** | Automatic detection and recovery from agent loops |
+| **Context Limit Warnings** | Proactive alerts before context window exhaustion |
+
+### Graph Agent Architecture
+The A2A agent uses `pydantic-graph` orchestration with:
+- **RouterNode**: Lightweight classifier that routes queries to specialized domains
+- **DomainNode**: Focused executor with only relevant tools loaded, preventing tool hallucination
+- **Approval Gates**: Policy-driven approval workflows before sensitive operations
+- **Usage Guards**: Budget and rate limiting enforcement
+
+> **Production Recommendation**: Enable `--eunomia-type embedded` (or `remote`) + OIDC delegation + containerized deployment. See [`agent-utilities` documentation](https://github.com/Knuckles-Team/agent-utilities) for full policy configuration.
+
 ## Docker
 
 ### Build
@@ -326,205 +362,28 @@ uv pip install jellyfin-mcp
 
 ## MCP Configuration Examples
 
-### 1. Standard IO (stdio) Deployment
-
+### stdio (recommended for local development)
 ```json
 {
   "mcpServers": {
-    "jellyfin-mcp": {
-      "command": "uv",
-      "args": [
-        "run",
-        "jellyfin-mcp"
-      ],
+    "jellyfin": {
+      "command": ".venv/bin/jellyfin-mcp",
+      "args": [],
       "env": {
-        "ACTIVITYLOGTOOL": "True",
-        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
-        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
-        "APIKEYTOOL": "True",
-        "ARTISTSTOOL": "True",
-        "AUDIOTOOL": "True",
-        "BACKUPTOOL": "True",
-        "BRANDINGTOOL": "True",
-        "CHANNELSTOOL": "True",
-        "CLIENTLOGTOOL": "True",
-        "COLLECTIONTOOL": "True",
-        "CONFIGURATIONTOOL": "True",
-        "DASHBOARDTOOL": "True",
-        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
-        "DELEGATED_SCOPES": "<YOUR_DELEGATED_SCOPES>",
-        "DEVICESTOOL": "True",
-        "DISPLAYPREFERENCESTOOL": "True",
-        "DYNAMICHLSTOOL": "True",
-        "ENABLE_DELEGATION": "<YOUR_ENABLE_DELEGATION>",
-        "ENVIRONMENTTOOL": "True",
-        "FILTERTOOL": "True",
-        "GENRESTOOL": "True",
-        "HLSSEGMENTTOOL": "True",
-        "IMAGETOOL": "True",
-        "INSTANTMIXTOOL": "True",
-        "ITEMLOOKUPTOOL": "True",
-        "ITEMREFRESHTOOL": "True",
-        "ITEMSTOOL": "True",
-        "ITEMUPDATETOOL": "True",
-        "JELLYFIN_ACCESS_TOKEN": "<YOUR_JELLYFIN_ACCESS_TOKEN>",
-        "JELLYFIN_API_KEY": "<YOUR_JELLYFIN_API_KEY>",
-        "JELLYFIN_AUDIENCE": "<YOUR_JELLYFIN_AUDIENCE>",
-        "JELLYFIN_BASE_URL": "<YOUR_JELLYFIN_BASE_URL>",
-        "JELLYFIN_INSTANCE": "<YOUR_JELLYFIN_INSTANCE>",
-        "JELLYFIN_PASSWORD": "<YOUR_JELLYFIN_PASSWORD>",
-        "JELLYFIN_SSL_VERIFY": "<YOUR_JELLYFIN_SSL_VERIFY>",
-        "JELLYFIN_TOKEN": "<YOUR_JELLYFIN_TOKEN>",
-        "JELLYFIN_URL": "<YOUR_JELLYFIN_URL>",
-        "JELLYFIN_USERNAME": "<YOUR_JELLYFIN_USERNAME>",
-        "JELLYFIN_VERIFY": "<YOUR_JELLYFIN_VERIFY>",
-        "LIBRARYSTRUCTURETOOL": "True",
-        "LIBRARYTOOL": "True",
-        "LIVETVTOOL": "True",
-        "LOCALIZATIONTOOL": "True",
-        "LYRICSTOOL": "True",
-        "MEDIAINFOTOOL": "True",
-        "MEDIASEGMENTSTOOL": "True",
-        "MISCTOOL": "True",
-        "MOVIESTOOL": "True",
-        "MUSICGENRESTOOL": "True",
-        "OIDC_CLIENT_ID": "<YOUR_OIDC_CLIENT_ID>",
-        "OIDC_CLIENT_SECRET": "<YOUR_OIDC_CLIENT_SECRET>",
-        "OIDC_TOKEN_ENDPOINT": "<YOUR_OIDC_TOKEN_ENDPOINT>",
-        "PACKAGETOOL": "True",
-        "PERSONSTOOL": "True",
-        "PLAYLISTSTOOL": "True",
-        "PLAYSTATETOOL": "True",
-        "PLUGINSTOOL": "True",
-        "QUICKCONNECTTOOL": "True",
-        "REMOTEIMAGETOOL": "True",
-        "SCHEDULEDTASKSTOOL": "True",
-        "SEARCHTOOL": "True",
-        "SESSIONTOOL": "True",
-        "STARTUPTOOL": "True",
-        "STUDIOSTOOL": "True",
-        "SUBTITLETOOL": "True",
-        "SUGGESTIONSTOOL": "True",
-        "SYNCPLAYTOOL": "True",
-        "SYSTEMTOOL": "True",
-        "TIMESYNCTOOL": "True",
-        "TMDBTOOL": "True",
-        "TRAILERSTOOL": "True",
-        "TRICKPLAYTOOL": "True",
-        "TVSHOWSTOOL": "True",
-        "UNIVERSALAUDIOTOOL": "True",
-        "USERLIBRARYTOOL": "True",
-        "USERTOOL": "True",
-        "USERVIEWSTOOL": "True",
-        "VIDEOATTACHMENTSTOOL": "True",
-        "VIDEOSTOOL": "True",
-        "YEARSTOOL": "True"
-      }
+        "JELLYFIN_URL": "",
+        "JELLYFIN_API_KEY": ""
+}
     }
   }
 }
 ```
 
-### 2. Streamable HTTP (SSE) Deployment
-
+### Streamable HTTP (recommended for production)
 ```json
 {
   "mcpServers": {
-    "jellyfin-mcp": {
-      "command": "uv",
-      "args": [
-        "run",
-        "jellyfin-mcp",
-        "--transport",
-        "http",
-        "--host",
-        "0.0.0.0",
-        "--port",
-        "8000"
-      ],
-      "env": {
-        "ACTIVITYLOGTOOL": "True",
-        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
-        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
-        "APIKEYTOOL": "True",
-        "ARTISTSTOOL": "True",
-        "AUDIOTOOL": "True",
-        "BACKUPTOOL": "True",
-        "BRANDINGTOOL": "True",
-        "CHANNELSTOOL": "True",
-        "CLIENTLOGTOOL": "True",
-        "COLLECTIONTOOL": "True",
-        "CONFIGURATIONTOOL": "True",
-        "DASHBOARDTOOL": "True",
-        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
-        "DELEGATED_SCOPES": "<YOUR_DELEGATED_SCOPES>",
-        "DEVICESTOOL": "True",
-        "DISPLAYPREFERENCESTOOL": "True",
-        "DYNAMICHLSTOOL": "True",
-        "ENABLE_DELEGATION": "<YOUR_ENABLE_DELEGATION>",
-        "ENVIRONMENTTOOL": "True",
-        "FILTERTOOL": "True",
-        "GENRESTOOL": "True",
-        "HLSSEGMENTTOOL": "True",
-        "IMAGETOOL": "True",
-        "INSTANTMIXTOOL": "True",
-        "ITEMLOOKUPTOOL": "True",
-        "ITEMREFRESHTOOL": "True",
-        "ITEMSTOOL": "True",
-        "ITEMUPDATETOOL": "True",
-        "JELLYFIN_ACCESS_TOKEN": "<YOUR_JELLYFIN_ACCESS_TOKEN>",
-        "JELLYFIN_API_KEY": "<YOUR_JELLYFIN_API_KEY>",
-        "JELLYFIN_AUDIENCE": "<YOUR_JELLYFIN_AUDIENCE>",
-        "JELLYFIN_BASE_URL": "<YOUR_JELLYFIN_BASE_URL>",
-        "JELLYFIN_INSTANCE": "<YOUR_JELLYFIN_INSTANCE>",
-        "JELLYFIN_PASSWORD": "<YOUR_JELLYFIN_PASSWORD>",
-        "JELLYFIN_SSL_VERIFY": "<YOUR_JELLYFIN_SSL_VERIFY>",
-        "JELLYFIN_TOKEN": "<YOUR_JELLYFIN_TOKEN>",
-        "JELLYFIN_URL": "<YOUR_JELLYFIN_URL>",
-        "JELLYFIN_USERNAME": "<YOUR_JELLYFIN_USERNAME>",
-        "JELLYFIN_VERIFY": "<YOUR_JELLYFIN_VERIFY>",
-        "LIBRARYSTRUCTURETOOL": "True",
-        "LIBRARYTOOL": "True",
-        "LIVETVTOOL": "True",
-        "LOCALIZATIONTOOL": "True",
-        "LYRICSTOOL": "True",
-        "MEDIAINFOTOOL": "True",
-        "MEDIASEGMENTSTOOL": "True",
-        "MISCTOOL": "True",
-        "MOVIESTOOL": "True",
-        "MUSICGENRESTOOL": "True",
-        "OIDC_CLIENT_ID": "<YOUR_OIDC_CLIENT_ID>",
-        "OIDC_CLIENT_SECRET": "<YOUR_OIDC_CLIENT_SECRET>",
-        "OIDC_TOKEN_ENDPOINT": "<YOUR_OIDC_TOKEN_ENDPOINT>",
-        "PACKAGETOOL": "True",
-        "PERSONSTOOL": "True",
-        "PLAYLISTSTOOL": "True",
-        "PLAYSTATETOOL": "True",
-        "PLUGINSTOOL": "True",
-        "QUICKCONNECTTOOL": "True",
-        "REMOTEIMAGETOOL": "True",
-        "SCHEDULEDTASKSTOOL": "True",
-        "SEARCHTOOL": "True",
-        "SESSIONTOOL": "True",
-        "STARTUPTOOL": "True",
-        "STUDIOSTOOL": "True",
-        "SUBTITLETOOL": "True",
-        "SUGGESTIONSTOOL": "True",
-        "SYNCPLAYTOOL": "True",
-        "SYSTEMTOOL": "True",
-        "TIMESYNCTOOL": "True",
-        "TMDBTOOL": "True",
-        "TRAILERSTOOL": "True",
-        "TRICKPLAYTOOL": "True",
-        "TVSHOWSTOOL": "True",
-        "UNIVERSALAUDIOTOOL": "True",
-        "USERLIBRARYTOOL": "True",
-        "USERTOOL": "True",
-        "USERVIEWSTOOL": "True",
-        "VIDEOATTACHMENTSTOOL": "True",
-        "VIDEOSTOOL": "True",
-        "YEARSTOOL": "True"
-      }
+    "jellyfin": {
+      "url": "http://localhost:8080/jellyfin-mcp/mcp"
     }
   }
 }
