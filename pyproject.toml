@@ -20,7 +20,8 @@ text = "MIT"
 [project.optional-dependencies]
 agent = [ "agent-utilities[agent,logfire]>=0.11.0",]
 all = [ "agent-utilities[mcp,agent,logfire]>=0.11.0",]
-test = [ "pytest", "pytest-asyncio", "pytest-cov",]
+test = [
+    "pytest-xdist>=3.6.0", "pytest", "pytest-asyncio", "pytest-cov",]
 
 [project.scripts]
 jellyfin-mcp = "jellyfin_mcp.mcp_server:mcp_server"
