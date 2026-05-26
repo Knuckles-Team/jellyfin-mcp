@@ -25,40 +25,57 @@ def mock_session():  # vulture: ignore
 
 @pytest.mark.usefixtures("mock_session")
 def test_jellyfin_api_brute_force():
+    """Brute force coverage verification of the Jellyfin client API library.
+
+    CONCEPT:JELLYFIN-1.0 — Lazy Initialization
+    """
     from jellyfin_mcp.api_client import Api
 
     api = Api(base_url="http://test", token="test")
-
-    common_kwargs = {
-        "item_id": "test_item",
-        "container": "mp4",
-        "name": "test_name",
-        "user_id": "test_user",
-        "limit": 10,
-        "start_index": 0,
-        "query": "test",
-        "ids": ["1", "2"],
-        "body": {},
-        "data": {},
-        "payload": {},
-        "path": "/test/path",
-    }
 
     for name, method in inspect.getmembers(api, predicate=inspect.ismethod):
         if name.startswith("_") or name in ["request"]:
             continue
         print(f"Calling Api.{name}...")
         sig = inspect.signature(method)
-        has_kwargs = any(
-            p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values()
-        )
-        if has_kwargs:
-            kwargs = common_kwargs.copy()
-        else:
-            kwargs = {k: v for k, v in common_kwargs.items() if k in sig.parameters}
-            for p_name, p in sig.parameters.items():
-                if p.default == inspect.Parameter.empty and p_name not in kwargs:
-                    kwargs[p_name] = "test" if p.annotation == str else 1
+        kwargs: dict[str, Any] = {}
+        for p_name, p in sig.parameters.items():
+            if p_name in ["self", "args", "kwargs"]:
+                continue
+            # Synthesize non-None values to trigger conditional parameter blocks
+            if (
+                p.annotation == bool
+                or p_name.startswith("is_")
+                or p_name.startswith("supports_")
+                or "enable" in p_name
+                or "allow" in p_name
+            ):
+                kwargs[p_name] = True
+            elif (
+                p.annotation == int
+                or p_name.endswith("_id")
+                or p_name in ["limit", "start_index"]
+                or "limit" in p_name
+                or "index" in p_name
+            ):
+                kwargs[p_name] = 1
+            elif p.annotation == float or "rating" in p_name:
+                kwargs[p_name] = 5.0
+            elif (
+                p.annotation == list
+                or p_name.endswith("s")
+                or p_name in ["ids", "fields", "filters", "tags", "years", "studios"]
+            ):
+                kwargs[p_name] = ["test"]
+            elif p.annotation == dict or p_name in [
+                "body",
+                "data",
+                "payload",
+                "stream_options",
+            ]:
+                kwargs[p_name] = {"key": "val"}
+            else:
+                kwargs[p_name] = "test"
         try:
             method(**kwargs)
         except:
@@ -67,6 +84,10 @@ def test_jellyfin_api_brute_force():
 
 @pytest.mark.usefixtures("mock_session")
 def test_mcp_server_coverage():
+    """Brute force call execution coverage for all registered MCP server tools.
+
+    CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
+    """
     from fastmcp.server.middleware.rate_limiting import RateLimitingMiddleware
 
     from jellyfin_mcp.mcp_server import get_mcp_instance
@@ -126,6 +147,10 @@ def test_mcp_server_coverage():
 
 
 def test_agent_server_coverage():
+    """Agent server configuration and execution initialization coverage.
+
+    CONCEPT:JELLYFIN-3.0 — A2A Agent Interface
+    """
     with (
         patch("agent_utilities.initialize_workspace"),
         patch("agent_utilities.load_identity", return_value={"name": "test"}),
@@ -159,8 +184,11 @@ def test_agent_server_coverage():
 
         # Force reimport with mocked dependencies
         import importlib
+        import sys
 
-        import jellyfin_mcp.agent_server as mod
+        mod = sys.modules.get("jellyfin_mcp.agent_server")
+        if not mod:
+            mod = importlib.import_module("jellyfin_mcp.agent_server")
 
         importlib.reload(mod)
         mod.agent_server()

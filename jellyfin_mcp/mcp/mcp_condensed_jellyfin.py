@@ -1,49 +1,21 @@
-#!/usr/bin/python
-"""Jellyfin MCP Server module.
+"""MCP tools for condensed jellyfin operations.
 
-Dynamic Tool Routing
+Auto-generated from mcp_server.py during ecosystem standardization.
 """
 
-import warnings
+from typing import Any
 
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
-from fastmcp.utilities.logging import get_logger
 from pydantic import Field
-
-# Filter RequestsDependencyWarning early to prevent log spam
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-    try:
-        from requests.exceptions import RequestsDependencyWarning
-
-        warnings.filterwarnings("ignore", category=RequestsDependencyWarning)
-    except ImportError:
-        pass
-
-warnings.filterwarnings("ignore", message=".*urllib3.*or chardet.*")
-warnings.filterwarnings("ignore", message=".*urllib3.*or charset_normalizer.*")
-
-import logging
-import sys
-from typing import Any
-
-from agent_utilities.mcp_utilities import create_mcp_server
-from dotenv import find_dotenv, load_dotenv
-from starlette.requests import Request
-from starlette.responses import JSONResponse
 
 from jellyfin_mcp.auth import get_client
 
-__version__ = "0.15.0"
-
-logger = get_logger(name="jellyfin-mcp")
-logger.setLevel(logging.INFO)
 
 def register_condensed_jellyfin_tools(mcp: FastMCP):
     """Register highly optimized, condensed tools mapping dynamically to Jellyfin client methods.
 
-    Dynamic Tool Routing
+    CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
     """
 
     @mcp.tool(tags={"Media"})
@@ -62,7 +34,7 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
     ) -> Any:
         """Execute media playback, stream, artist, playlist, and audio/video queries dynamically.
 
-        Dynamic Tool Routing
+        CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
         """
         if ctx and hasattr(ctx, "info"):
             await ctx.info(f"Executing media action: {action}...")
@@ -99,7 +71,7 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
     ) -> Any:
         """Execute library searches, items, collection updates, and catalog queries dynamically.
 
-        Dynamic Tool Routing
+        CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
         """
         if ctx and hasattr(ctx, "info"):
             await ctx.info(f"Executing library action: {action}...")
@@ -136,7 +108,7 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
     ) -> Any:
         """Execute administrative actions, system status, configurations, backups, and user management.
 
-        Dynamic Tool Routing
+        CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
         """
         if ctx and hasattr(ctx, "info"):
             await ctx.info(f"Executing system action: {action}...")
@@ -156,50 +128,3 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
             return method(**kwargs)
         except Exception as e:
             return {"error": f"System action failed: {str(e)}"}
-
-def get_mcp_instance() -> tuple[Any, ...]:
-    """Initialize and return the MCP instance.
-
-    Dynamic Tool Routing
-    """
-    load_dotenv(find_dotenv())
-    args, mcp, middlewares = create_mcp_server(
-        name="jellyfin-mcp MCP",
-        version=__version__,
-        instructions="jellyfin-mcp MCP Server — Condensed Action-Routed Tools.",
-    )
-
-    @mcp.custom_route("/health", methods=["GET"])
-    async def health_check(request: Request) -> JSONResponse:
-        return JSONResponse({"status": "OK"})
-
-    # Always register optimized condensed tools
-    register_condensed_jellyfin_tools(mcp)
-
-    for mw in middlewares:
-        mcp.add_middleware(mw)
-    return mcp, args, middlewares
-
-def mcp_server() -> None:
-    """Run the MCP server.
-
-    Dynamic Tool Routing
-    """
-    mcp, args, middlewares = get_mcp_instance()
-    print(f"jellyfin-mcp MCP v{__version__}", file=sys.stderr)
-    print("\nStarting MCP Server", file=sys.stderr)
-    print(f"  Transport: {args.transport.upper()}", file=sys.stderr)
-    print(f"  Auth: {args.auth_type}", file=sys.stderr)
-
-    if args.transport == "stdio":
-        mcp.run(transport="stdio")
-    elif args.transport == "streamable-http":
-        mcp.run(transport="streamable-http", host=args.host, port=args.port)
-    elif args.transport == "sse":
-        mcp.run(transport="sse", host=args.host, port=args.port)
-    else:
-        logger.error("Invalid transport", extra={"transport": args.transport})
-        sys.exit(1)
-
-if __name__ == "__main__":
-    mcp_server()

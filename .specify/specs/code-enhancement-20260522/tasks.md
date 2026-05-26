@@ -1,0 +1,65 @@
+# Tasks: Code Enhancement: jellyfin-mcp
+
+Generated: 2026-05-22T22:14:37.427880+00:00
+Skipped informational: 4
+
+- [ ] [P] **T001** [Codebase Optimization] 2 functions exceed 200 lines (actionable refactoring targets): get_items (265L),
+  - Priority: P2-Medium | Effort: Large
+- [ ] [P] **T002** [Codebase Optimization] Monolithic: api_client_library.py (2223L) — 11 functions with high complexity (w
+  - Priority: P1-High | Effort: Large
+- [ ] [P] **T003** [Codebase Optimization] Monolithic: api_client_media.py (4668L) — 21 functions with high complexity (wor
+  - Priority: P1-High | Effort: Large
+- [ ] [P] **T004** [Codebase Optimization] 9 functions with nesting depth >4
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T005** [Test Coverage] Test suite lacks intent diversity (only one type)
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T006** [Test Coverage] 15 potential doc-test drift items
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T007** [Architecture & Design Patterns] SRP: 3 modules exceed 500 lines (god modules)
+  - Priority: P2-Medium | Effort: Large
+- [ ] [P] **T008** [Architecture & Design Patterns] SRP: 4 classes have >15 methods
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T009** [Architecture & Design Patterns] No discernible layer architecture (no domain/service/adapter separation)
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T010** [Concept Traceability] Low traceability ratio: 0% concepts fully traced
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T011** [Concept Traceability] 7 orphaned concepts (only in one source)
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T012** [Concept Traceability] 18 test functions missing concept markers
+  - Priority: P4-Enhancement | Effort: Small
+- [ ] [P] **T013** [Concept Traceability] 153 significant functions (>10 lines) missing concept markers in docstrings
+  - Priority: P4-Enhancement | Effort: Small
+- [ ] [P] **T014** [Linting & Formatting] Total lint findings: 0 (high/error: 0, medium/warning: 0, low: 0)
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T015** [Pre-Commit Compliance] 2 hook(s) may be outdated: ruff-pre-commit, uv-pre-commit
+  - Priority: P2-Medium | Effort: Small
+- [ ] [P] **T016** [Directory Organization] 1 rogue/throwaway scripts detected (fix_*, validate_*, patch_*, etc.): scripts/v
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T017** [Version Sync Analysis] Found 1 file(s) with version '0.15.0' that are NOT tracked in .bumpversion.cfg:
+  - Priority: P2-Medium | Effort: Small
+- [ ] [P] **T018** [Version Sync Analysis]   - .specify/jellyfin-mcp/results.json
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T019** [Changelog Audit] CHANGELOG.md exists but could not be parsed — check format compliance
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T020** [Changelog Audit] No changelog entries within the last 30 days
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T021** [Changelog Audit] keepachangelog not installed — pip install 'universal-skills[code-enhancer]'
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T022** [Pytest Quality] 1 test files exceed 500 lines — split into focused modules
+  - Priority: P2-Medium | Effort: Large
+- [ ] [P] **T023** [Pytest Quality] Low fixture usage: only 0% of tests use fixtures
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T024** [Pytest Quality] No @pytest.mark.parametrize usage — consider data-driven tests
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T025** [Pytest Quality] No shared fixtures in conftest.py
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T026** [Pytest Quality] 4 tests have no assertions
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T027** [Pytest Quality] 4 tests have excessive mocking (>5 mocks) — test behavior, not implementation
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T028** [Environment Variables] Partial env var documentation: 37% coverage
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T029** [Environment Variables] Undocumented env vars: AUTH_TYPE, DEFAULT_AGENT_NAME, DELEGATED_SCOPES, ENABLE_D
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T030** [Environment Variables] 7 Python env vars not in .env.example: JELLYFIN_AUDIENCE, JELLYFIN_INSTANCE, JEL
+  - Priority: P2-Medium | Effort: Medium

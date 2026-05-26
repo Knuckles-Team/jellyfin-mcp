@@ -1,0 +1,31 @@
+{
+  "comparison": [
+    {
+      "project": "jellyfin-mcp",
+      "gpa": 2.5,
+      "project_analysis": "C",
+      "dependency_audit": "A",
+      "codebase_optimization": "D",
+      "security_analysis": "A",
+      "test_coverage": "C",
+      "documentation_and_governance": "A",
+      "architecture_and_design_patterns": "C",
+      "concept_traceability": "F",
+      "linting_and_formatting": "A",
+      "pre-commit_compliance": "B",
+      "test_execution": "A",
+      "directory_organization": "A",
+      "version_sync_analysis": "D",
+      "changelog_audit": "C",
+      "pytest_quality": "D",
+      "environment_variables": "C"
+    }
+  ],
+  "integration": {},
+  "metadata": {
+    "projects_analyzed": 1,
+    "errors": 0,
+    "elapsed_seconds": 54.1,
+    "concurrency": 4
+  }
+}

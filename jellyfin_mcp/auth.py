@@ -1,3 +1,8 @@
+"""Jellyfin client authentication and access token delegation.
+
+CONCEPT:JELLYFIN-4.0 — Access Delegation
+"""
+
 import os
 import threading
 
@@ -21,6 +26,8 @@ def get_client(
 ) -> Api:
     """
     Single entry point for Jellyfin clients.
+
+    CONCEPT:JELLYFIN-4.0 — Access Delegation
     """
     config = {
         "enable_delegation": to_boolean(os.environ.get("ENABLE_DELEGATION", "False")),
@@ -38,6 +45,18 @@ def get_client(
 
     if config.get("enable_delegation", False) and mcp_token:
         logger.info("Delegating MCP token to Jellyfin")
+        token_endpoint = config.get("token_endpoint")
+        client_id = config.get("oidc_client_id")
+        client_secret = config.get("oidc_client_secret")
+        if (
+            not isinstance(token_endpoint, str)
+            or not isinstance(client_id, str)
+            or not isinstance(client_secret, str)
+        ):
+            raise RuntimeError(
+                "OIDC delegation configuration is incomplete. Must specify OIDC_TOKEN_ENDPOINT, OIDC_CLIENT_ID, and OIDC_CLIENT_SECRET."
+            )
+
         exchange_data = {
             "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
             "subject_token": mcp_token,
@@ -48,9 +67,9 @@ def get_client(
         }
         try:
             resp = requests.post(
-                config["token_endpoint"],
+                token_endpoint,
                 data=exchange_data,
-                auth=(config["oidc_client_id"], config["oidc_client_secret"]),
+                auth=(client_id, client_secret),
                 verify=verify,
                 timeout=10,
             )

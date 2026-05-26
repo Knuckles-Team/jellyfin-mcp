@@ -1,0 +1,79 @@
+# Tasks: Code Enhancement: jellyfin-mcp
+
+Generated: 2026-05-24T04:17:16.193330+00:00
+Skipped informational: 5
+
+- [ ] [P] **T001** [Dependency Audit] Minor update: agent-utilities 0.2.40 (installed) -> 0.16.0
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T002** [Dependency Audit] Minor update: pytest-xdist 3.6.0 (constraint — not installed) -> 3.8.0
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T003** [Codebase Optimization] 2 functions exceed 200 lines (actionable refactoring targets): get_items (265L),
+  - Priority: P2-Medium | Effort: Large
+- [ ] [P] **T004** [Codebase Optimization] Monolithic: api_client_library.py (2223L) — 11 functions with high complexity (w
+  - Priority: P1-High | Effort: Large
+- [ ] [P] **T005** [Codebase Optimization] Monolithic: api_client_media.py (4668L) — 21 functions with high complexity (wor
+  - Priority: P1-High | Effort: Large
+- [ ] [P] **T006** [Codebase Optimization] 9 functions with nesting depth >4
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T007** [Test Coverage] Test suite lacks intent diversity (only one type)
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T008** [Test Coverage] 14 potential doc-test drift items
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T009** [Architecture & Design Patterns] SRP: 3 modules exceed 500 lines (god modules)
+  - Priority: P2-Medium | Effort: Large
+- [ ] [P] **T010** [Architecture & Design Patterns] SRP: 4 classes have >15 methods
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T011** [Architecture & Design Patterns] No discernible layer architecture (no domain/service/adapter separation)
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T012** [Concept Traceability] 9 orphaned concepts (only in one source)
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T013** [Concept Traceability] 3 test functions missing concept markers
+  - Priority: P4-Enhancement | Effort: Small
+- [ ] [P] **T014** [Concept Traceability] 144 significant functions (>10 lines) missing concept markers in docstrings
+  - Priority: P4-Enhancement | Effort: Small
+- [ ] [P] **T015** [Linting & Formatting] Total lint findings: 0 (high/error: 0, medium/warning: 0, low: 0)
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T016** [Pre-Commit Compliance] 2 hook(s) may be outdated: ruff-pre-commit, uv-pre-commit
+  - Priority: P2-Medium | Effort: Small
+- [ ] [P] **T017** [Directory Organization] 1 rogue/throwaway scripts detected (fix_*, validate_*, patch_*, etc.): scripts/v
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T018** [Version Sync Analysis] Found 5 file(s) with version '0.15.0' that are NOT tracked in .bumpversion.cfg:
+  - Priority: P2-Medium | Effort: Small
+- [ ] [P] **T019** [Version Sync Analysis]   - .specify/jellyfin-mcp/results.json
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T020** [Version Sync Analysis]   - .specify/specs/code-enhancement-20260522/tasks.json
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T021** [Version Sync Analysis]   - .specify/specs/code-enhancement-20260522/tasks.md
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T022** [Version Sync Analysis]   - .specify/specs/code-enhancement-20260522/spec.md
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T023** [Version Sync Analysis]   - .specify/specs/code-enhancement-20260522/spec.json
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T024** [Changelog Audit] CHANGELOG.md exists but could not be parsed — check format compliance
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T025** [Changelog Audit] No changelog entries within the last 30 days
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T026** [Changelog Audit] keepachangelog not installed — pip install 'universal-skills[code-enhancer]'
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T027** [Pytest Quality] 1 test files exceed 500 lines — split into focused modules
+  - Priority: P2-Medium | Effort: Large
+- [ ] [P] **T028** [Pytest Quality] Low fixture usage: only 11% of tests use fixtures
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T029** [Pytest Quality] No @pytest.mark.parametrize usage — consider data-driven tests
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T030** [Pytest Quality] No shared fixtures in conftest.py
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T031** [Pytest Quality] 4 tests have no assertions
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T032** [Pytest Quality] 4 tests have excessive mocking (>5 mocks) — test behavior, not implementation
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T033** [Pytest Quality] 1 tests exceed 100 lines — likely doing too much per test
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T034** [Environment Variables] Partial env var documentation: 37% coverage
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T035** [Environment Variables] Undocumented env vars: AUTH_TYPE, DEFAULT_AGENT_NAME, DELEGATED_SCOPES, ENABLE_D
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T036** [Environment Variables] 7 Python env vars not in .env.example: JELLYFIN_AUDIENCE, JELLYFIN_INSTANCE, JEL
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T037** [analyze_xdg_kg] Analysis error: No module named 'agent_utilities.knowledge_graph'
+  - Priority: P1-High | Effort: Medium

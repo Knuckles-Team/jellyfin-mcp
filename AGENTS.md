@@ -136,3 +136,11 @@ To run tests with a timeout to prevent hanging, use the `pytest-timeout` plugin.
 ```bash
 uv run pytest --timeout=60 -k "test_name_pattern"
 ```
+
+## Concept Registry
+
+This project implements or inherits the following ecosystem concepts:
+- <!-- CONCEPT:JELLYFIN-1.0 --> **JELLYFIN-1.0**: Lazy Initialization
+- <!-- CONCEPT:JELLYFIN-2.0 --> **JELLYFIN-2.0**: Dynamic Tool Routing
+- <!-- CONCEPT:JELLYFIN-3.0 --> **JELLYFIN-3.0**: A2A Agent Interface
+- <!-- CONCEPT:JELLYFIN-4.0 --> **JELLYFIN-4.0**: Access Delegation

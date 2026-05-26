@@ -24,9 +24,58 @@
 
 ---
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [CLI or API](#cli-or-api)
+- [MCP Integration](#mcp)
+  - [Available MCP Tools](#available-mcp-tools)
+  - [MCP Configuration Examples](#mcp-configuration-examples)
+- [Agent Capabilities](#agent)
+  - [Running the Agent CLI](#running-the-agent-cli)
+  - [Docker Compose Orchestration](#docker-compose-orchestration)
+- [Security & Governance](#security--governance)
+- [Contribute](#contribute)
+
+---
+
 ## Overview
 
 **Jellyfin Mcp** is a production-grade Agent and Model Context Protocol (MCP) server designed to interface directly with Jellyfin MCP Server for Agentic AI!.
+
+---
+
+## Quick Start
+
+### 1. Installation
+Install the package directly from PyPI:
+```bash
+uv pip install jellyfin-mcp[all]
+```
+
+### 2. Configure Environment
+Set up your connection keys and Jellyfin host details (see `.env.example` for comprehensive list):
+```bash
+export JELLYFIN_URL="http://localhost:8096"
+export JELLYFIN_API_KEY="your_api_key_here"
+```
+
+### 3. Run the MCP Server
+Launch the server over standard standard I/O (stdio) transport:
+```bash
+jellyfin-mcp
+```
+
+### 4. Run the Agent CLI
+To launch the interactive Graph Agent terminal interface:
+```bash
+jellyfin-agent --provider openai --model-id gpt-4o
+```
+
+---
 
 ---
 
@@ -43,7 +92,7 @@
 
 This agent wraps the Jellyfin MCP Server for Agentic AI! API. You can interact with it programmatically or via its integrated execution entrypoints.
 
-Detailed instructions on how to use the underlying API wrappers, extended schema bindings, and developer SDK references are maintained in [docs/index.md](file:///home/apps/workspace/agent-packages/agents/jellyfin-mcp/docs/index.md).
+Detailed instructions on how to use the underlying API wrappers, extended schema bindings, and developer SDK references are maintained in [docs/index.md](docs/index.md).
 
 ---
 
@@ -56,7 +105,28 @@ This server utilizes dynamic Action-Routed tools to optimize token overhead and 
 |-------------|----------------|--------------------|------------------------------|
 | **Condensed Jellyfin** | `CONDENSED_JELLYFIN_TOOL` | `True` | Register highly optimized, condensed tools mapping dynamically to Jellyfin client methods. |
 
-Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/mcp.md](file:///home/apps/workspace/agent-packages/agents/jellyfin-mcp/docs/mcp.md).
+Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/index.md#mcp](docs/index.md#mcp).
+
+### Dynamic Tool Selection & Visibility
+
+This MCP server supports dynamic toolset selection and visibility filtering at runtime. This allows you to restrict the set of exposed tools in order to prevent blowing up the LLM's context window.
+
+You can configure tool filtering via multiple input channels:
+
+- **CLI Arguments:** Pass `--tools` or `--toolsets` (or their disabled counterparts `--disabled-tools` and `--disabled-toolsets`) during startup.
+- **Environment Variables:** Define standard environment variables:
+  - `MCP_ENABLED_TOOLS` / `MCP_DISABLED_TOOLS`
+  - `MCP_ENABLED_TAGS` / `MCP_DISABLED_TAGS`
+- **HTTP SSE Request Headers:** Pass custom headers during transport initialization:
+  - `x-mcp-enabled-tools` / `x-mcp-disabled-tools`
+  - `x-mcp-enabled-tags` / `x-mcp-disabled-tags`
+- **HTTP SSE Request Query Parameters:** Append query parameters directly to your transport connection URL:
+  - `?tools=tool1,tool2`
+  - `?tags=tag1`
+
+When query strings or parameters are supplied, an LLM-free **Knowledge Graph resolution layer** (using `DynamicToolOrchestrator`) matches query intents against known tool tags, names, or descriptions, with safe fallback and automated 24-hour background cache refreshing.
+
+---
 
 ### MCP Configuration Examples
 
@@ -226,7 +296,7 @@ services:
 
 ```
 
-Detailed graph node architecture explanations, custom skill configurations, and agentic trace guides are available in [docs/agent.md](file:///home/apps/workspace/agent-packages/agents/jellyfin-mcp/docs/agent.md).
+Detailed graph node architecture explanations, custom skill configurations, and agentic trace guides are available in [docs/index.md#a2a-agent](docs/index.md#a2a-agent).
 
 ---
 

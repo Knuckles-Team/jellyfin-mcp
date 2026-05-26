@@ -1,0 +1,2251 @@
+{
+  "project": "jellyfin-mcp",
+  "path": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp",
+  "domain_results": [
+    {
+      "domain": "Project Analysis",
+      "score": 74,
+      "grade": "C",
+      "findings": [
+        "Detected ecosystem marker: agent-utilities \u2192 Agent-Utilities Ecosystem",
+        "Protocol support: MCP"
+      ],
+      "justifications": [
+        {
+          "criterion": "has_pyproject",
+          "points": 10,
+          "evidence": "pyproject.toml and requirements.txt",
+          "reasoning": "Both pyproject.toml and requirements.txt exist, fulfilling mandatory Python project requirements"
+        },
+        {
+          "criterion": "project_type_detected",
+          "points": 10,
+          "evidence": "Agent-Utilities Ecosystem",
+          "reasoning": "Identified 1 ecosystem marker(s) in dependencies"
+        },
+        {
+          "criterion": "externalized_prompts",
+          "points": 0,
+          "evidence": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp",
+          "reasoning": "No prompts/ directory found. Prompts may be hardcoded in source."
+        },
+        {
+          "criterion": "observability",
+          "points": 0,
+          "evidence": "dependency list",
+          "reasoning": "No observability tools (logfire, sentry, opentelemetry) found"
+        },
+        {
+          "criterion": "testing_suite",
+          "points": 10,
+          "evidence": "tests dir: True, pytest dep: True",
+          "reasoning": "Tests directory exists, pytest in dependencies"
+        },
+        {
+          "criterion": "agents_md",
+          "points": 10,
+          "evidence": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/AGENTS.md (5277 bytes)",
+          "reasoning": "AGENTS.md exists with comprehensive content"
+        },
+        {
+          "criterion": "pre_commit_hooks",
+          "points": 10,
+          "evidence": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/.pre-commit-config.yaml",
+          "reasoning": "Pre-commit configuration found for automated code quality checks"
+        },
+        {
+          "criterion": "gitignore",
+          "points": 10,
+          "evidence": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/.gitignore",
+          "reasoning": ".gitignore exists to prevent committing build artifacts and secrets"
+        },
+        {
+          "criterion": "env_template",
+          "points": 10,
+          "evidence": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/.env.example",
+          "reasoning": "Environment template exists for onboarding and secret management"
+        },
+        {
+          "criterion": "protocol_support",
+          "points": 4,
+          "evidence": "MCP",
+          "reasoning": "1 communication protocol(s) detected"
+        }
+      ],
+      "details": {
+        "has_pyproject": true,
+        "has_requirements": true,
+        "dep_count": 5,
+        "project_types": [
+          "Agent-Utilities Ecosystem"
+        ],
+        "has_agent_skills": false
+      }
+    },
+    {
+      "domain": "Dependency Audit",
+      "score": 100,
+      "grade": "A",
+      "findings": [],
+      "justifications": [
+        {
+          "criterion": "dependency_freshness",
+          "points": 100,
+          "evidence": "source=/home/apps/workspace/agent-packages/agents/jellyfin-mcp/pyproject.toml total=5 major=0 minor=0 patch=0 not_installed=0",
+          "reasoning": "Audited 5 deps (5 installed, 0 constraint-only). 0 major, 0 minor, 0 patch updates."
+        }
+      ],
+      "packages": {
+        "agent-utilities": {
+          "current": "0.16.0",
+          "constraint": "0.16.0",
+          "installed": "0.16.0",
+          "latest": "0.16.0",
+          "status": "up-to-date",
+          "version_source": "installed",
+          "summary": "Agent Utilities for Pydantic AI Agents"
+        },
+        "pytest-xdist": {
+          "current": "3.8.0",
+          "constraint": "3.6.0",
+          "installed": "3.8.0",
+          "latest": "3.8.0",
+          "status": "up-to-date",
+          "version_source": "installed",
+          "summary": "pytest xdist plugin for distributed testing, most importantly across multiple CPUs"
+        },
+        "pytest-asyncio": {
+          "current": "1.3.0",
+          "constraint": "Any",
+          "installed": "1.3.0",
+          "latest": "1.3.0",
+          "status": "up-to-date",
+          "version_source": "installed",
+          "summary": "Pytest support for asyncio"
+        },
+        "pytest": {
+          "current": "9.0.3",
+          "constraint": "Any",
+          "installed": "9.0.3",
+          "latest": "9.0.3",
+          "status": "up-to-date",
+          "version_source": "installed",
+          "summary": "pytest: simple powerful testing with Python"
+        },
+        "pytest-cov": {
+          "current": "7.1.0",
+          "constraint": "Any",
+          "installed": "7.1.0",
+          "latest": "7.1.0",
+          "status": "up-to-date",
+          "version_source": "installed",
+          "summary": "Pytest plugin for measuring coverage."
+        }
+      }
+    },
+    {
+      "domain": "Codebase Optimization",
+      "score": 61,
+      "grade": "D",
+      "findings": [
+        "2 functions exceed 200 lines (actionable refactoring targets): get_items (265L), get_trailers (259L)",
+        "Monolithic: api_client_library.py (2223L) \u2014 11 functions with high complexity (worst: LibraryClient.get_items at 265L, CC=87); God class: LibraryClient (98 methods) \u2014 consider mixins/composition",
+        "Monolithic: api_client_media.py (4668L) \u2014 21 functions with high complexity (worst: MediaClient.get_trailers at 259L, CC=85); God class: MediaClient (162 methods) \u2014 consider mixins/composition",
+        "9 functions with nesting depth >4"
+      ],
+      "justifications": [
+        {
+          "criterion": "code_quality",
+          "points": 61,
+          "evidence": "{\"file_count\": 20, \"total_lines\": 9832, \"function_count\": 433, \"avg_complexity\": 5.52, \"max_complexity\": 87, \"avg_function_length\": 21.3, \"max_function_length\": 265, \"max_nesting_depth\": 15, \"duplication_ratio\": 0.004, \"long_functions\": 48, \"complex_functions\": 55, \"deep_nesting_functions\": 9, \"parse_errors\": 0, \"structural_issues\": 2, \"truly_monolithic\": 2}",
+          "reasoning": "Analyzed 20 files, 433 functions. Avg CC=5.5, max length=265, duplication=0.4%, 2 structural issues (2 monolithic)."
+        }
+      ],
+      "metrics": {
+        "file_count": 20,
+        "total_lines": 9832,
+        "function_count": 433,
+        "avg_complexity": 5.52,
+        "max_complexity": 87,
+        "avg_function_length": 21.3,
+        "max_function_length": 265,
+        "max_nesting_depth": 15,
+        "duplication_ratio": 0.004,
+        "long_functions": 48,
+        "complex_functions": 55,
+        "deep_nesting_functions": 9,
+        "parse_errors": 0,
+        "structural_issues": 2,
+        "truly_monolithic": 2
+      },
+      "top_complex": [
+        {
+          "name": "get_items",
+          "line": 891,
+          "length": 265,
+          "complexity": 87,
+          "nesting_depth": 1,
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py"
+        },
+        {
+          "name": "get_trailers",
+          "line": 3950,
+          "length": 259,
+          "complexity": 85,
+          "nesting_depth": 1,
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+        },
+        {
+          "name": "get_hls_video_segment",
+          "line": 1160,
+          "length": 176,
+          "complexity": 54,
+          "nesting_depth": 1,
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+        },
+        {
+          "name": "get_live_hls_stream",
+          "line": 1337,
+          "length": 170,
+          "complexity": 54,
+          "nesting_depth": 1,
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+        },
+        {
+          "name": "get_master_hls_video_playlist",
+          "line": 1673,
+          "length": 170,
+          "complexity": 54,
+          "nesting_depth": 1,
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+        }
+      ],
+      "top_long": [
+        {
+          "name": "get_items",
+          "line": 891,
+          "length": 265,
+          "complexity": 87,
+          "nesting_depth": 1,
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py"
+        },
+        {
+          "name": "get_trailers",
+          "line": 3950,
+          "length": 259,
+          "complexity": 85,
+          "nesting_depth": 1,
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+        },
+        {
+          "name": "get_hls_video_segment",
+          "line": 1160,
+          "length": 176,
+          "complexity": 54,
+          "nesting_depth": 1,
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+        },
+        {
+          "name": "get_live_hls_stream",
+          "line": 1337,
+          "length": 170,
+          "complexity": 54,
+          "nesting_depth": 1,
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+        },
+        {
+          "name": "get_master_hls_video_playlist",
+          "line": 1673,
+          "length": 170,
+          "complexity": 54,
+          "nesting_depth": 1,
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+        }
+      ],
+      "structural_issues": [
+        {
+          "file": "api_client_library.py",
+          "path": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
+          "lines": 2223,
+          "issues": [
+            "11 functions with high complexity (worst: LibraryClient.get_items at 265L, CC=87)",
+            "God class: LibraryClient (98 methods) \u2014 consider mixins/composition"
+          ],
+          "func_issues": [
+            {
+              "name": "LibraryClient.get_genres",
+              "lines": 61,
+              "complexity": 19,
+              "nesting": 1
+            },
+            {
+              "name": "LibraryClient.get_genre_image",
+              "lines": 56,
+              "complexity": 16,
+              "nesting": 1
+            },
+            {
+              "name": "LibraryClient.get_item_image",
+              "lines": 56,
+              "complexity": 16,
+              "nesting": 1
+            },
+            {
+              "name": "LibraryClient.get_person_image",
+              "lines": 56,
+              "complexity": 16,
+              "nesting": 1
+            },
+            {
+              "name": "LibraryClient.get_studio_image",
+              "lines": 56,
+              "complexity": 16,
+              "nesting": 1
+            }
+          ],
+          "classification": "monolithic"
+        },
+        {
+          "file": "api_client_media.py",
+          "path": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py",
+          "lines": 4668,
+          "issues": [
+            "21 functions with high complexity (worst: MediaClient.get_trailers at 259L, CC=85)",
+            "God class: MediaClient (162 methods) \u2014 consider mixins/composition"
+          ],
+          "func_issues": [
+            {
+              "name": "MediaClient.get_artists",
+              "lines": 103,
+              "complexity": 33,
+              "nesting": 1
+            },
+            {
+              "name": "MediaClient.get_album_artists",
+              "lines": 103,
+              "complexity": 33,
+              "nesting": 1
+            },
+            {
+              "name": "MediaClient.get_audio_stream",
+              "lines": 156,
+              "complexity": 50,
+              "nesting": 1
+            },
+            {
+              "name": "MediaClient.get_audio_stream_by_container",
+              "lines": 155,
+              "complexity": 49,
+              "nesting": 1
+            },
+            {
+              "name": "MediaClient.get_hls_audio_segment",
+              "lines": 168,
+              "complexity": 52,
+              "nesting": 1
+            }
+          ],
+          "classification": "monolithic"
+        }
+      ],
+      "flat_directories": []
+    },
+    {
+      "domain": "Security Analysis",
+      "score": 100,
+      "grade": "A",
+      "findings": [],
+      "justifications": [
+        {
+          "criterion": "security_posture",
+          "points": 100,
+          "evidence": "high=0 med=0 low=0 attack_surface={\"subprocess_calls\": 0, \"file_io_calls\": 9, \"network_endpoints\": 0, \"eval_exec_usage\": 0, \"sql_usage\": 0}",
+          "reasoning": "Scanned 20 files. Found 0 security findings. High: -0pts, Med: -0pts, Low: -0pts."
+        }
+      ],
+      "vulnerabilities": [],
+      "attack_surface": {
+        "subprocess_calls": 0,
+        "file_io_calls": 9,
+        "network_endpoints": 0,
+        "eval_exec_usage": 0,
+        "sql_usage": 0
+      }
+    },
+    {
+      "domain": "Test Coverage",
+      "score": 75,
+      "grade": "C",
+      "findings": [
+        "Test suite lacks intent diversity (only one type)",
+        "15 potential doc-test drift items"
+      ],
+      "justifications": [
+        {
+          "criterion": "test_coverage_quality",
+          "points": 75,
+          "evidence": "{\"test_file_count\": 4, \"test_count\": 24, \"source_file_count\": 20, \"test_to_source_ratio\": 1.2, \"intent_distribution\": {\"unit\": 24}, \"tests_without_assertions\": 4, \"concept_traced_tests\": 6, \"drift_items\": 15}",
+          "reasoning": "24 tests across 4 files. Ratio: 1.20. Intent: {'unit': 24}. 4 without assertions, 15 drift items."
+        }
+      ],
+      "metrics": {
+        "test_file_count": 4,
+        "test_count": 24,
+        "source_file_count": 20,
+        "test_to_source_ratio": 1.2,
+        "intent_distribution": {
+          "unit": 24
+        },
+        "tests_without_assertions": 4,
+        "concept_traced_tests": 6,
+        "drift_items": 15
+      },
+      "tests": [
+        {
+          "name": "test_init_module_lazy_attributes",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 13,
+          "length": 22,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "JELLYFIN-1.0",
+          "has_assertions": true
+        },
+        {
+          "name": "test_init_module_missing_availability",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 37,
+          "length": 10,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "JELLYFIN-1.0",
+          "has_assertions": true
+        },
+        {
+          "name": "test_init_lazy_import_failure",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 49,
+          "length": 18,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "JELLYFIN-1.0",
+          "has_assertions": true
+        },
+        {
+          "name": "test_init_lazy_expose_members",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 69,
+          "length": 15,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "JELLYFIN-1.0",
+          "has_assertions": true
+        },
+        {
+          "name": "test_auth_empty_params",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 89,
+          "length": 4,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": true
+        },
+        {
+          "name": "test_auth_missing_url",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 95,
+          "length": 4,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": true
+        },
+        {
+          "name": "test_auth_oidc_delegation_success",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 101,
+          "length": 35,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": true
+        },
+        {
+          "name": "test_auth_oidc_delegation_failure",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 138,
+          "length": 24,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "JELLYFIN-4.0",
+          "has_assertions": true
+        },
+        {
+          "name": "test_auth_oidc_delegation_invalid_credentials_on_api",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 164,
+          "length": 29,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "JELLYFIN-4.0",
+          "has_assertions": true
+        },
+        {
+          "name": "test_auth_credentials_invalid",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 195,
+          "length": 6,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": true
+        },
+        {
+          "name": "test_mcp_server_custom_route",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 206,
+          "length": 29,
+          "intent": "unit",
+          "markers": [
+            "asyncio"
+          ],
+          "concept_id": "",
+          "has_assertions": true
+        },
+        {
+          "name": "test_mcp_server_tools_exception_handling",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 238,
+          "length": 79,
+          "intent": "unit",
+          "markers": [
+            "asyncio"
+          ],
+          "concept_id": "",
+          "has_assertions": true
+        },
+        {
+          "name": "test_mcp_server_import_error_handling",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 320,
+          "length": 15,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": false
+        },
+        {
+          "name": "test_mcp_server_startup_transports",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 337,
+          "length": 34,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": true
+        },
+        {
+          "name": "test_mcp_server_main_execution",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 373,
+          "length": 16,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": true
+        },
+        {
+          "name": "test_agent_server_debug_mode",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 393,
+          "length": 40,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": true
+        },
+        {
+          "name": "test_agent_server_main_execution",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 435,
+          "length": 31,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": true
+        },
+        {
+          "name": "test_main_module",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 470,
+          "length": 4,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": true
+        },
+        {
+          "name": "test_api_client_error_coverage",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 476,
+          "length": 43,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": true
+        },
+        {
+          "name": "test_server_startup",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_startup.py",
+          "line": 1,
+          "length": 12,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": false
+        },
+        {
+          "name": "test_jellyfin_api_brute_force",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
+          "line": 27,
+          "length": 31,
+          "intent": "unit",
+          "markers": [
+            "usefixtures"
+          ],
+          "concept_id": "",
+          "has_assertions": false
+        },
+        {
+          "name": "test_mcp_server_coverage",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
+          "line": 61,
+          "length": 57,
+          "intent": "unit",
+          "markers": [
+            "usefixtures"
+          ],
+          "concept_id": "",
+          "has_assertions": false
+        },
+        {
+          "name": "test_agent_server_coverage",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
+          "line": 120,
+          "length": 43,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": true
+        },
+        {
+          "name": "test_concept_parity",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_concept_parity.py",
+          "line": 58,
+          "length": 30,
+          "intent": "unit",
+          "markers": [],
+          "concept_id": "",
+          "has_assertions": true
+        }
+      ],
+      "drift": [
+        {
+          "type": "untested_feature",
+          "source": "README.md",
+          "feature": "table of contents",
+          "detail": "Feature heading in README has no corresponding test"
+        },
+        {
+          "type": "untested_feature",
+          "source": "README.md",
+          "feature": "overview",
+          "detail": "Feature heading in README has no corresponding test"
+        },
+        {
+          "type": "untested_feature",
+          "source": "README.md",
+          "feature": "1. installation",
+          "detail": "Feature heading in README has no corresponding test"
+        },
+        {
+          "type": "untested_feature",
+          "source": "README.md",
+          "feature": "2. configure environment",
+          "detail": "Feature heading in README has no corresponding test"
+        },
+        {
+          "type": "untested_feature",
+          "source": "README.md",
+          "feature": "key features",
+          "detail": "Feature heading in README has no corresponding test"
+        },
+        {
+          "type": "untested_feature",
+          "source": "README.md",
+          "feature": "cli or api",
+          "detail": "Feature heading in README has no corresponding test"
+        },
+        {
+          "type": "untested_feature",
+          "source": "README.md",
+          "feature": "mcp",
+          "detail": "Feature heading in README has no corresponding test"
+        },
+        {
+          "type": "untested_feature",
+          "source": "README.md",
+          "feature": "mcp configuration examples",
+          "detail": "Feature heading in README has no corresponding test"
+        },
+        {
+          "type": "untested_feature",
+          "source": "README.md",
+          "feature": "docker compose orchestration",
+          "detail": "Feature heading in README has no corresponding test"
+        },
+        {
+          "type": "untested_feature",
+          "source": "README.md",
+          "feature": "security & governance",
+          "detail": "Feature heading in README has no corresponding test"
+        }
+      ]
+    },
+    {
+      "domain": "Documentation & Governance",
+      "score": 100,
+      "grade": "A",
+      "findings": [],
+      "justifications": [
+        {
+          "criterion": "documentation_quality",
+          "points": 100,
+          "evidence": "{\"README.md\": {\"exists\": true, \"missing\": []}, \"AGENTS.md\": {\"exists\": true, \"missing\": []}, \"STANDARDS.md\": {\"exists\": false, \"missing\": []}, \"CONTRIBUTING.md\": {\"exists\": false, \"missing\": []}, \"CHANGELOG.md\": {\"exists\": true, \"missing\": []}, \"LICENSE\": {\"exists\": true, \"missing\": []}, \"docs/\": {\"exists\": true, \"missing\": []}}",
+          "reasoning": "Audited 6 standard docs + docs/ directory. 0 broken references, 5 docs present. README industry grade: A (96.9%)."
+        }
+      ],
+      "doc_results": {
+        "README.md": {
+          "exists": true,
+          "size": 10630,
+          "headings": [
+            "Jellyfin Mcp",
+            "CLI or API | MCP | Agent",
+            "Table of Contents",
+            "Overview",
+            "Quick Start",
+            "1. Installation",
+            "2. Configure Environment",
+            "3. Run the MCP Server",
+            "4. Run the Agent CLI",
+            "Key Features",
+            "CLI or API",
+            "MCP",
+            "Available MCP Tools",
+            "MCP Configuration Examples",
+            "stdio Transport (Recommended for local IDEs e.g., Cursor, Claude Desktop)",
+            "Streamable-HTTP Transport (Recommended for production deployments)",
+            "Agent",
+            "Running the Agent CLI",
+            "Set credentials",
+            "Run the agent server"
+          ],
+          "missing_sections": [],
+          "heading_count": 29,
+          "stale": false,
+          "last_modified": "2026-05-22 08:19:36 -0500",
+          "category": "project_overview"
+        },
+        "AGENTS.md": {
+          "exists": true,
+          "size": 5009,
+          "headings": [
+            "AGENTS.md",
+            "Tech Stack & Architecture",
+            "Architecture Diagram",
+            "Workflow Diagram",
+            "Commands (run these exactly)",
+            "Installation",
+            "Quality & Linting (run from project root)",
+            "Execution Commands",
+            "jellyfin-mcp\\njellyfin_mcp.mcp:mcp_server\\n# jellyfin-agent\\njellyfin_mcp.agent:agent_server",
+            "Project Structure Quick Reference",
+            "File Tree",
+            "Code Style & Conventions",
+            "Dos and Don'ts",
+            "Safety & Boundaries",
+            "When Stuck",
+            "Graph Architecture",
+            "Testing with Timeout"
+          ],
+          "missing_sections": [],
+          "heading_count": 17,
+          "stale": false,
+          "last_modified": "2026-05-05 09:28:14 -0500",
+          "category": "agentic_metadata"
+        },
+        "STANDARDS.md": {
+          "exists": false,
+          "missing_sections": [],
+          "size": 0,
+          "headings": [],
+          "stale": true,
+          "last_modified": "unknown",
+          "category": "standards"
+        },
+        "CONTRIBUTING.md": {
+          "exists": false,
+          "missing_sections": [],
+          "size": 0,
+          "headings": [],
+          "stale": true,
+          "last_modified": "unknown",
+          "category": "contributing"
+        },
+        "CHANGELOG.md": {
+          "exists": true,
+          "size": 1292,
+          "headings": [
+            "Changelog",
+            "[Unreleased]",
+            "Added",
+            "[0.15.0] - 2026-05-22",
+            "Added",
+            "Changed",
+            "Fixed",
+            "[0.2.56] - 2026-04-29",
+            "Added"
+          ],
+          "missing_sections": [],
+          "heading_count": 9,
+          "stale": false,
+          "last_modified": "2026-05-18 02:18:46 -0500",
+          "category": "changelog"
+        },
+        "LICENSE": {
+          "exists": true,
+          "size": 1070,
+          "headings": [],
+          "missing_sections": [],
+          "heading_count": 0,
+          "stale": false,
+          "last_modified": "2026-01-31 22:36:22 -0600",
+          "category": "license"
+        },
+        "docs/": {
+          "exists": true,
+          "file_count": 3,
+          "files": [
+            "docs/legacy_readme.md",
+            "docs/overview.md",
+            "docs/index.md"
+          ]
+        }
+      },
+      "drift": [
+        {
+          "type": "info",
+          "doc": "README.md",
+          "reference": "jellyfin-mcp[all], jellyfin-mcp[all], jellyfin-mcp[all]",
+          "detail": "README references 3 install commands"
+        }
+      ],
+      "readme_grade": {
+        "score": 31,
+        "max_score": 32,
+        "percentage": 96.9,
+        "grade": "A",
+        "criteria": {
+          "has_title": true,
+          "has_badges": true,
+          "has_description": true,
+          "has_toc": true,
+          "has_installation": true,
+          "has_usage": true,
+          "has_api_docs": true,
+          "has_architecture": true,
+          "has_contributing": true,
+          "has_license": false,
+          "has_code_blocks": true,
+          "has_docs_refs": true,
+          "no_broken_links": true,
+          "reasonable_length": true,
+          "has_cli_api_details": true,
+          "has_mcp_configs": true,
+          "has_agent_configs": true,
+          "has_env_var_docs": true,
+          "has_mcp_tool_table": true,
+          "has_deployment_docs": true
+        },
+        "findings": []
+      }
+    },
+    {
+      "domain": "Architecture & Design Patterns",
+      "score": 70,
+      "grade": "C",
+      "findings": [
+        "SRP: 3 modules exceed 500 lines (god modules)",
+        "SRP: 4 classes have >15 methods",
+        "No discernible layer architecture (no domain/service/adapter separation)"
+      ],
+      "justifications": [
+        {
+          "criterion": "architecture_quality",
+          "points": 70,
+          "evidence": "{\"layers\": 0, \"di_ratio\": 0.12, \"solid_violations\": 2}",
+          "reasoning": "Analyzed 20 files. 0/5 architecture layers present, DI ratio: 12%, 2 SOLID violations."
+        }
+      ],
+      "analysis": {
+        "solid_findings": [
+          {
+            "principle": "SRP",
+            "status": "violation",
+            "detail": "3 modules exceed 500 lines (god modules)",
+            "items": [
+              {
+                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+                "lines": 518
+              },
+              {
+                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
+                "lines": 2223
+              },
+              {
+                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py",
+                "lines": 4668
+              }
+            ]
+          },
+          {
+            "principle": "SRP",
+            "status": "violation",
+            "detail": "4 classes have >15 methods",
+            "items": [
+              {
+                "class": "LibraryClient",
+                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
+                "method_count": 98
+              },
+              {
+                "class": "UserClient",
+                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_user.py",
+                "method_count": 45
+              },
+              {
+                "class": "MediaClient",
+                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py",
+                "method_count": 162
+              },
+              {
+                "class": "SystemClient",
+                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_system.py",
+                "method_count": 63
+              }
+            ]
+          }
+        ],
+        "layer_architecture": {
+          "has_domain_layer": false,
+          "has_adapter_layer": false,
+          "has_port_interfaces": false,
+          "has_service_layer": false,
+          "has_model_layer": false
+        },
+        "dependency_injection": {
+          "total_classes": 8,
+          "di_classes": 1,
+          "di_ratio": 0.12
+        },
+        "event_driven": {
+          "event_classes": 0,
+          "callback_patterns": 0,
+          "observer_patterns": 0,
+          "signal_patterns": 0
+        },
+        "file_count": 20
+      }
+    },
+    {
+      "domain": "Concept Traceability",
+      "score": 23,
+      "grade": "F",
+      "findings": [
+        "Low traceability ratio: 0% concepts fully traced",
+        "7 orphaned concepts (only in one source)",
+        "18 test functions missing concept markers",
+        "153 significant functions (>10 lines) missing concept markers in docstrings"
+      ],
+      "justifications": [
+        {
+          "criterion": "concept_traceability",
+          "points": 23,
+          "evidence": "{\"total_concepts\": 9, \"well_traced\": 0, \"orphans\": 7, \"drift\": 2, \"code_concepts\": 10, \"doc_concepts\": 7, \"test_concepts\": 12, \"decorator_concepts\": 6, \"tests_missing_markers\": 18, \"functions_missing_docstrings\": 153, \"registry_concepts\": 0, \"unimplemented_concepts\": 0}",
+          "reasoning": "9 unique concepts found. 0 fully traced (code+docs+tests), 7 orphans, 2 drifted. 18 tests without concept markers. 153 functions without concept docstrings."
+        }
+      ],
+      "metrics": {
+        "total_concepts": 9,
+        "well_traced": 0,
+        "orphans": 7,
+        "drift": 2,
+        "code_concepts": 10,
+        "doc_concepts": 7,
+        "test_concepts": 12,
+        "decorator_concepts": 6,
+        "tests_missing_markers": 18,
+        "functions_missing_docstrings": 153,
+        "registry_concepts": 0,
+        "unimplemented_concepts": 0
+      },
+      "concept_map": {
+        "JELLYFIN-1.0": {
+          "code": 5,
+          "docs": 0,
+          "test": 4,
+          "test_decorator": 0,
+          "test_docstring": 4
+        },
+        "JELLYFIN-4.0": {
+          "code": 3,
+          "docs": 0,
+          "test": 2,
+          "test_decorator": 0,
+          "test_docstring": 2
+        },
+        "JELLYFIN-2.0": {
+          "code": 1,
+          "docs": 0,
+          "test": 0,
+          "test_decorator": 0,
+          "test_docstring": 0
+        },
+        "JELLYFIN-3.0": {
+          "code": 1,
+          "docs": 0,
+          "test": 0,
+          "test_decorator": 0,
+          "test_docstring": 0
+        },
+        "OS-5.4": {
+          "code": 0,
+          "docs": 2,
+          "test": 0,
+          "test_decorator": 0,
+          "test_docstring": 0
+        },
+        "OS-5.1": {
+          "code": 0,
+          "docs": 1,
+          "test": 0,
+          "test_decorator": 0,
+          "test_docstring": 0
+        },
+        "OS-5.3": {
+          "code": 0,
+          "docs": 2,
+          "test": 0,
+          "test_decorator": 0,
+          "test_docstring": 0
+        },
+        "ORCH-1.4": {
+          "code": 0,
+          "docs": 1,
+          "test": 0,
+          "test_decorator": 0,
+          "test_docstring": 0
+        },
+        "OS-5.2": {
+          "code": 0,
+          "docs": 1,
+          "test": 0,
+          "test_decorator": 0,
+          "test_docstring": 0
+        }
+      },
+      "orphans": [
+        {
+          "concept_id": "JELLYFIN-2.0",
+          "present_in": [
+            "code"
+          ],
+          "missing_from": [
+            "docs",
+            "test"
+          ]
+        },
+        {
+          "concept_id": "JELLYFIN-3.0",
+          "present_in": [
+            "code"
+          ],
+          "missing_from": [
+            "docs",
+            "test"
+          ]
+        },
+        {
+          "concept_id": "OS-5.4",
+          "present_in": [
+            "docs"
+          ],
+          "missing_from": [
+            "code",
+            "test"
+          ]
+        },
+        {
+          "concept_id": "OS-5.1",
+          "present_in": [
+            "docs"
+          ],
+          "missing_from": [
+            "code",
+            "test"
+          ]
+        },
+        {
+          "concept_id": "OS-5.3",
+          "present_in": [
+            "docs"
+          ],
+          "missing_from": [
+            "code",
+            "test"
+          ]
+        },
+        {
+          "concept_id": "ORCH-1.4",
+          "present_in": [
+            "docs"
+          ],
+          "missing_from": [
+            "code",
+            "test"
+          ]
+        },
+        {
+          "concept_id": "OS-5.2",
+          "present_in": [
+            "docs"
+          ],
+          "missing_from": [
+            "code",
+            "test"
+          ]
+        }
+      ],
+      "drift": [
+        {
+          "concept_id": "JELLYFIN-1.0",
+          "present_in": [
+            "code",
+            "test",
+            "test_docstring"
+          ],
+          "missing_from": [
+            "docs"
+          ]
+        },
+        {
+          "concept_id": "JELLYFIN-4.0",
+          "present_in": [
+            "code",
+            "test",
+            "test_docstring"
+          ],
+          "missing_from": [
+            "docs"
+          ]
+        }
+      ],
+      "tests_missing_markers": [
+        {
+          "test_name": "test_auth_empty_params",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 89
+        },
+        {
+          "test_name": "test_auth_missing_url",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 95
+        },
+        {
+          "test_name": "test_auth_oidc_delegation_success",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 101
+        },
+        {
+          "test_name": "test_auth_credentials_invalid",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 195
+        },
+        {
+          "test_name": "test_mcp_server_custom_route",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 206
+        },
+        {
+          "test_name": "test_mcp_server_tools_exception_handling",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 238
+        },
+        {
+          "test_name": "test_mcp_server_import_error_handling",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 320
+        },
+        {
+          "test_name": "test_mcp_server_startup_transports",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 337
+        },
+        {
+          "test_name": "test_mcp_server_main_execution",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 373
+        },
+        {
+          "test_name": "test_agent_server_debug_mode",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 393
+        },
+        {
+          "test_name": "test_agent_server_main_execution",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 435
+        },
+        {
+          "test_name": "test_main_module",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 470
+        },
+        {
+          "test_name": "test_api_client_error_coverage",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "line": 476
+        },
+        {
+          "test_name": "test_server_startup",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_startup.py",
+          "line": 1
+        },
+        {
+          "test_name": "test_jellyfin_api_brute_force",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
+          "line": 27
+        },
+        {
+          "test_name": "test_mcp_server_coverage",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
+          "line": 61
+        },
+        {
+          "test_name": "test_agent_server_coverage",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
+          "line": 120
+        },
+        {
+          "test_name": "test_concept_parity",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_concept_parity.py",
+          "line": 58
+        }
+      ],
+      "functions_missing_docstrings": [
+        {
+          "function": "parse_api_client",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/verify_api_integration.py",
+          "line": 33,
+          "length": 26
+        },
+        {
+          "function": "parse_mcp_server",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/verify_api_integration.py",
+          "line": 94,
+          "length": 41
+        },
+        {
+          "function": "verify_agent",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/verify_api_integration.py",
+          "line": 137,
+          "length": 38
+        },
+        {
+          "function": "main",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/verify_api_integration.py",
+          "line": 177,
+          "length": 99
+        },
+        {
+          "function": "main",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/validate_a2a_agent.py",
+          "line": 11,
+          "length": 125
+        },
+        {
+          "function": "get_type_annotation",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/generate_code.py",
+          "line": 17,
+          "length": 15
+        },
+        {
+          "function": "generate_api_code",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/generate_code.py",
+          "line": 34,
+          "length": 110
+        },
+        {
+          "function": "generate_mcp_code",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/generate_code.py",
+          "line": 146,
+          "length": 95
+        },
+        {
+          "function": "main",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/generate_code.py",
+          "line": 243,
+          "length": 18
+        },
+        {
+          "function": "register_condensed_jellyfin_tools",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
+          "line": 44,
+          "length": 104
+        },
+        {
+          "function": "get_mcp_instance",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
+          "line": 150,
+          "length": 19
+        },
+        {
+          "function": "mcp_server",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
+          "line": 171,
+          "length": 16
+        },
+        {
+          "function": "jellyfin_media",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
+          "line": 48,
+          "length": 32
+        },
+        {
+          "function": "jellyfin_library",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
+          "line": 82,
+          "length": 32
+        },
+        {
+          "function": "jellyfin_system",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
+          "line": 116,
+          "length": 32
+        },
+        {
+          "function": "get_client",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/auth.py",
+          "line": 20,
+          "length": 87
+        },
+        {
+          "function": "agent_server",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/agent_server.py",
+          "line": 46,
+          "length": 34
+        },
+        {
+          "function": "__getattr__",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/__init__.py",
+          "line": 50,
+          "length": 26
+        },
+        {
+          "function": "create_collection",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
+          "line": 8,
+          "length": 19
+        },
+        {
+          "function": "add_to_collection",
+          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
+          "line": 28,
+          "length": 10
+        }
+      ],
+      "unimplemented_concepts": []
+    },
+    {
+      "domain": "Linting & Formatting",
+      "score": 100,
+      "grade": "A",
+      "findings": [
+        "Total lint findings: 0 (high/error: 0, medium/warning: 0, low: 0)"
+      ],
+      "justifications": [
+        {
+          "criterion": "lint_compliance",
+          "points": 100,
+          "evidence": "ruff=0, bandit=0, mypy=0",
+          "reasoning": "0 total findings across 3 tools. High/error: -0pts, Med/warning: -0pts, Low: -0pt."
+        }
+      ],
+      "tool_results": {
+        "ruff": {
+          "available": true,
+          "finding_count": 0,
+          "returncode": 1
+        },
+        "bandit": {
+          "available": true,
+          "finding_count": 0,
+          "returncode": 1
+        },
+        "mypy": {
+          "available": true,
+          "finding_count": 0,
+          "returncode": 1
+        }
+      },
+      "all_findings": []
+    },
+    {
+      "domain": "Pre-Commit Compliance",
+      "score": 89,
+      "grade": "B",
+      "findings": [
+        "1/27 pre-commit hooks failed: don't commit to branch",
+        "2 hook(s) may be outdated: ruff-pre-commit, uv-pre-commit",
+        "Pytest hooks skipped (handled by CE-016 Test Execution): pytest, local-pytest"
+      ],
+      "justifications": [
+        {
+          "criterion": "precommit_compliance",
+          "points": 89,
+          "evidence": "{\"total_hooks\": 27, \"passed\": 25, \"failed\": 1, \"skipped\": 1, \"outdated_hooks\": 2, \"pytest_hooks_skipped\": 2, \"exit_code\": 1}",
+          "reasoning": "Ran pre-commit with 27 hooks: 25 passed, 1 failed, 1 skipped. 2 potentially outdated. 2 pytest hooks deferred to CE-016."
+        }
+      ],
+      "hook_results": [
+        {
+          "hook": "check for added large files",
+          "status": "passed"
+        },
+        {
+          "hook": "check python ast",
+          "status": "passed"
+        },
+        {
+          "hook": "check yaml",
+          "status": "passed"
+        },
+        {
+          "hook": "check toml",
+          "status": "passed"
+        },
+        {
+          "hook": "check json",
+          "status": "passed"
+        },
+        {
+          "hook": "fix utf-8 byte order marker",
+          "status": "passed"
+        },
+        {
+          "hook": "check for merge conflicts",
+          "status": "passed"
+        },
+        {
+          "hook": "detect private key",
+          "status": "passed"
+        },
+        {
+          "hook": "trim trailing whitespace",
+          "status": "passed"
+        },
+        {
+          "hook": "fix end of files",
+          "status": "passed"
+        },
+        {
+          "hook": "don't commit to branch",
+          "status": "failed"
+        },
+        {
+          "hook": "ruff check",
+          "status": "passed"
+        },
+        {
+          "hook": "ruff format",
+          "status": "passed"
+        },
+        {
+          "hook": "mypy",
+          "status": "passed"
+        },
+        {
+          "hook": "vulture",
+          "status": "passed"
+        },
+        {
+          "hook": "codespell",
+          "status": "passed"
+        },
+        {
+          "hook": "bandit",
+          "status": "passed"
+        },
+        {
+          "hook": "nbqa-ruff",
+          "status": "passed"
+        },
+        {
+          "hook": "uv-lock",
+          "status": "passed"
+        },
+        {
+          "hook": "mermaid-validate",
+          "status": "passed"
+        },
+        {
+          "hook": "check agent standards",
+          "status": "passed"
+        },
+        {
+          "hook": "check cli help",
+          "status": "passed"
+        },
+        {
+          "hook": "validate bumpversion config",
+          "status": "passed"
+        },
+        {
+          "hook": "pytest",
+          "status": "skipped"
+        },
+        {
+          "hook": "Hadolint",
+          "status": "passed"
+        },
+        {
+          "hook": "Validate docker compose files",
+          "status": "passed"
+        },
+        {
+          "hook": "Verify API-to-MCP Integration Coverage",
+          "status": "passed"
+        }
+      ],
+      "pytest_hooks_skipped": [
+        "pytest",
+        "local-pytest"
+      ],
+      "outdated_hooks": [
+        {
+          "repo": "https://github.com/astral-sh/ruff-pre-commit",
+          "current_rev": "v0.15.14",
+          "issue": "Pre-1.0 version \u2014 check for updates"
+        },
+        {
+          "repo": "https://github.com/astral-sh/uv-pre-commit",
+          "current_rev": "0.11.16",
+          "issue": "Pre-1.0 version \u2014 check for updates"
+        }
+      ],
+      "metrics": {
+        "total_hooks": 27,
+        "passed": 25,
+        "failed": 1,
+        "skipped": 1,
+        "outdated_hooks": 2,
+        "pytest_hooks_skipped": 2,
+        "exit_code": 1
+      }
+    },
+    {
+      "domain": "Test Execution",
+      "score": 100,
+      "grade": "A",
+      "findings": [],
+      "justifications": [
+        {
+          "criterion": "test_execution",
+          "points": 100,
+          "evidence": "{\"frameworks_detected\": 1, \"total_passed\": 24, \"total_failed\": 0, \"total_errors\": 0, \"pass_rate\": 1.0, \"timeout\": 300}",
+          "reasoning": "Executed 1 framework(s). 24 passed, 0 failed, 0 errors. Pass rate: 100%."
+        }
+      ],
+      "framework_results": [
+        {
+          "language": "python",
+          "framework": "pytest",
+          "command": [
+            "/home/apps/workspace/.venv/bin/python3",
+            "-m",
+            "pytest",
+            "--tb=line",
+            "-q",
+            "--timeout=300",
+            "--no-header"
+          ],
+          "status": "passed",
+          "exit_code": 0,
+          "parsed": {
+            "passed": 24,
+            "failed": 0,
+            "errors": 0,
+            "warnings": 4,
+            "skipped": 0,
+            "failures": []
+          }
+        }
+      ],
+      "metrics": {
+        "frameworks_detected": 1,
+        "total_passed": 24,
+        "total_failed": 0,
+        "total_errors": 0,
+        "pass_rate": 1.0,
+        "timeout": 300
+      }
+    },
+    {
+      "domain": "Directory Organization",
+      "score": 97,
+      "grade": "A",
+      "findings": [
+        "1 rogue/throwaway scripts detected (fix_*, validate_*, patch_*, etc.): scripts/validate_a2a_agent.py"
+      ],
+      "justifications": [
+        {
+          "criterion": "directory_organization",
+          "points": 97,
+          "evidence": "{\"total_source_files\": 52, \"total_directories\": 12, \"max_depth\": 3, \"avg_depth\": 1.4, \"crowded_dirs_20plus\": 0, \"severely_crowded_40plus\": 0, \"monolithic_dirs\": 0, \"empty_dirs\": 1, \"avg_files_per_dir\": 4.3, \"rogue_scripts\": 1}",
+          "reasoning": "52 files across 12 directories. Max depth: 3, avg files/dir: 4.3. 0 crowded, 0 severely crowded, 0 monolithic, 1 rogue scripts."
+        }
+      ],
+      "metrics": {
+        "total_source_files": 52,
+        "total_directories": 12,
+        "max_depth": 3,
+        "avg_depth": 1.4,
+        "crowded_dirs_20plus": 0,
+        "severely_crowded_40plus": 0,
+        "monolithic_dirs": 0,
+        "empty_dirs": 1,
+        "avg_files_per_dir": 4.3,
+        "rogue_scripts": 1
+      },
+      "crowded_dirs": [],
+      "monolithic_dirs": [],
+      "suggestions": [],
+      "rogue_scripts": [
+        {
+          "file": "scripts/validate_a2a_agent.py",
+          "prefix": "validate",
+          "recommendation": "Remove or integrate into project modules"
+        }
+      ]
+    },
+    {
+      "domain": "Version Sync Analysis",
+      "score": 60,
+      "grade": "D",
+      "findings": [
+        "Found 1 file(s) with version '0.15.0' that are NOT tracked in .bumpversion.cfg:",
+        "  - .specify/jellyfin-mcp/results.json"
+      ],
+      "justifications": [
+        {
+          "criterion": "bumpversion_exists",
+          "points": 20,
+          "evidence": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/.bumpversion.cfg",
+          "reasoning": ".bumpversion.cfg found"
+        },
+        {
+          "criterion": "current_version_defined",
+          "points": 20,
+          "evidence": "0.15.0",
+          "reasoning": "Current version tracked is 0.15.0"
+        },
+        {
+          "criterion": "files_tracked",
+          "points": 20,
+          "evidence": "5 files tracked",
+          "reasoning": "Found 5 files tracked in .bumpversion.cfg"
+        },
+        {
+          "criterion": "version_drift_check",
+          "points": 0,
+          "evidence": "1 untracked files",
+          "reasoning": "Version definitions found in codebase that are missing from .bumpversion.cfg"
+        }
+      ],
+      "details": {
+        "tracked_files": [
+          "pyproject.toml",
+          "README.md",
+          "docker/Dockerfile",
+          "jellyfin_mcp/agent_server.py",
+          "jellyfin_mcp/mcp_server.py"
+        ],
+        "drifted_files": [
+          ".specify/jellyfin-mcp/results.json"
+        ]
+      }
+    },
+    {
+      "domain": "Changelog Audit",
+      "score": 75,
+      "grade": "C",
+      "findings": [
+        "CHANGELOG.md exists but could not be parsed \u2014 check format compliance",
+        "No changelog entries within the last 30 days",
+        "keepachangelog not installed \u2014 pip install 'universal-skills[code-enhancer]'"
+      ],
+      "justifications": [
+        {
+          "criterion": "changelog_quality",
+          "points": 75,
+          "evidence": "{\"exists\": true, \"parseable\": false, \"version_count\": 0, \"has_drift\": false, \"dep_deltas_found\": 0}",
+          "reasoning": "CHANGELOG.md exists. 0 versions tracked. 0 dependency changelogs analyzed."
+        }
+      ],
+      "format_validation": {
+        "exists": true,
+        "parseable": false,
+        "has_unreleased": false,
+        "version_count": 0,
+        "uses_semver": true,
+        "valid_categories": true,
+        "has_dates": true,
+        "has_header": true,
+        "issues": [
+          "keepachangelog not installed \u2014 pip install 'universal-skills[code-enhancer]'"
+        ]
+      },
+      "version_drift": {
+        "has_drift": false,
+        "changelog_version": null,
+        "pyproject_version": "0.15.0"
+      },
+      "dependency_deltas": {}
+    },
+    {
+      "domain": "Pytest Quality",
+      "score": 68,
+      "grade": "D",
+      "findings": [
+        "1 test files exceed 500 lines \u2014 split into focused modules",
+        "Low fixture usage: only 0% of tests use fixtures",
+        "No @pytest.mark.parametrize usage \u2014 consider data-driven tests",
+        "No shared fixtures in conftest.py",
+        "4 tests have no assertions",
+        "4 tests have excessive mocking (>5 mocks) \u2014 test behavior, not implementation"
+      ],
+      "justifications": [
+        {
+          "criterion": "pytest_quality",
+          "points": 68,
+          "evidence": "{\"test_files\": 4, \"total_tests\": 24, \"descriptive_name_ratio\": 1.0, \"generic_names\": 0, \"fixture_usage_ratio\": 0.0, \"parametrize_users\": 0, \"conftest_fixtures\": 0, \"no_assertion_tests\": 4, \"weak_assertion_tests\": 1, \"duplicate_groups\": 0, \"large_files\": 1, \"over_mocked_tests\": 4, \"very_long_tests\": 0, \"subscores\": {\"naming\": 20, \"structure\": 17, \"fixtures\": 3, \"assertions\": 12, \"ai_slop\": 16}}",
+          "reasoning": "24 tests across 4 files. Naming: 20/20, Structure: 17/20, Fixtures: 3/20, Assertions: 12/20, AI Slop: 16/20."
+        }
+      ],
+      "metrics": {
+        "test_files": 4,
+        "total_tests": 24,
+        "descriptive_name_ratio": 1.0,
+        "generic_names": 0,
+        "fixture_usage_ratio": 0.0,
+        "parametrize_users": 0,
+        "conftest_fixtures": 0,
+        "no_assertion_tests": 4,
+        "weak_assertion_tests": 1,
+        "duplicate_groups": 0,
+        "large_files": 1,
+        "over_mocked_tests": 4,
+        "very_long_tests": 0,
+        "subscores": {
+          "naming": 20,
+          "structure": 17,
+          "fixtures": 3,
+          "assertions": 12,
+          "ai_slop": 16
+        }
+      },
+      "conftest": {
+        "conftest_count": 1,
+        "total_shared_fixtures": 0,
+        "has_root_conftest": true
+      },
+      "duplicates": [],
+      "large_files": [
+        {
+          "file": "test_coverage_gap_fillers.py",
+          "lines": 518
+        }
+      ]
+    },
+    {
+      "domain": "Environment Variables",
+      "score": 75,
+      "grade": "C",
+      "findings": [
+        "Partial env var documentation: 37% coverage",
+        "Undocumented env vars: AUTH_TYPE, DEFAULT_AGENT_NAME, DELEGATED_SCOPES, ENABLE_DELEGATION, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, JELLYFIN_ACCESS_TOKEN, JELLYFIN_AUDIENCE, JELLYFIN_BASE_URL, JELLYFIN_INSTANCE",
+        "7 Python env vars not in .env.example: JELLYFIN_AUDIENCE, JELLYFIN_INSTANCE, JELLYFIN_VERIFY, KNOWLEDGE_GRAPH_SYNC_BACKGROUND, OIDC_CLIENT_ID"
+      ],
+      "justifications": [
+        {
+          "criterion": "env_var_documentation",
+          "points": 75,
+          "evidence": "{\"total_vars\": 27, \"python_vars\": 18, \"dockerfile_vars\": 4, \"compose_vars\": 0, \"dotenv_vars\": 20, \"readme_documented\": 10, \"readme_undocumented\": 17, \"documentation_coverage\": 0.37}",
+          "reasoning": "Found 27 unique env vars across 59 occurrences. README documents 10/27. Has .env.example."
+        }
+      ],
+      "metrics": {
+        "total_vars": 27,
+        "python_vars": 18,
+        "dockerfile_vars": 4,
+        "compose_vars": 0,
+        "dotenv_vars": 20,
+        "readme_documented": 10,
+        "readme_undocumented": 17,
+        "documentation_coverage": 0.37
+      },
+      "variables": {
+        "JELLYFIN_INSTANCE": {
+          "name": "JELLYFIN_INSTANCE",
+          "sources": [
+            "scripts/test_jellyfin_api.py:28"
+          ],
+          "defaults": [],
+          "source_types": [
+            "python"
+          ]
+        },
+        "JELLYFIN_ACCESS_TOKEN": {
+          "name": "JELLYFIN_ACCESS_TOKEN",
+          "sources": [
+            "scripts/test_jellyfin_api.py:29",
+            ".env.example:37"
+          ],
+          "defaults": [
+            "your_jellyfin_access_token_here"
+          ],
+          "source_types": [
+            "dotenv",
+            "python"
+          ]
+        },
+        "JELLYFIN_BASE_URL": {
+          "name": "JELLYFIN_BASE_URL",
+          "sources": [
+            "scripts/generate_code.py:161",
+            ".env.example:32"
+          ],
+          "defaults": [
+            "http://localhost:8096"
+          ],
+          "source_types": [
+            "dotenv",
+            "python"
+          ]
+        },
+        "JELLYFIN_TOKEN": {
+          "name": "JELLYFIN_TOKEN",
+          "sources": [
+            "scripts/generate_code.py:162",
+            ".env:26"
+          ],
+          "defaults": [
+            "your_jellyfin_token_here"
+          ],
+          "source_types": [
+            "dotenv",
+            "python"
+          ]
+        },
+        "JELLYFIN_USERNAME": {
+          "name": "JELLYFIN_USERNAME",
+          "sources": [
+            "scripts/generate_code.py:163",
+            "jellyfin_mcp/auth.py:23",
+            ".env:24",
+            ".env.example:42"
+          ],
+          "defaults": [
+            "None",
+            "admin"
+          ],
+          "source_types": [
+            "dotenv",
+            "python"
+          ]
+        },
+        "JELLYFIN_PASSWORD": {
+          "name": "JELLYFIN_PASSWORD",
+          "sources": [
+            "scripts/generate_code.py:164",
+            "jellyfin_mcp/auth.py:24",
+            ".env:25"
+          ],
+          "defaults": [
+            "None",
+            "your_password_here"
+          ],
+          "source_types": [
+            "dotenv",
+            "python"
+          ]
+        },
+        "JELLYFIN_VERIFY": {
+          "name": "JELLYFIN_VERIFY",
+          "sources": [
+            "scripts/generate_code.py:165"
+          ],
+          "defaults": [
+            "False"
+          ],
+          "source_types": [
+            "python"
+          ]
+        },
+        "KNOWLEDGE_GRAPH_SYNC_BACKGROUND": {
+          "name": "KNOWLEDGE_GRAPH_SYNC_BACKGROUND",
+          "sources": [
+            "tests/conftest.py:7"
+          ],
+          "defaults": [],
+          "source_types": [
+            "python"
+          ]
+        },
+        "JELLYFIN_URL": {
+          "name": "JELLYFIN_URL",
+          "sources": [
+            "jellyfin_mcp/auth.py:21",
+            ".env:23",
+            ".env.example:31"
+          ],
+          "defaults": [
+            "None",
+            "http://localhost:8096"
+          ],
+          "source_types": [
+            "dotenv",
+            "python"
+          ]
+        },
+        "JELLYFIN_API_KEY": {
+          "name": "JELLYFIN_API_KEY",
+          "sources": [
+            "jellyfin_mcp/auth.py:22",
+            ".env.example:36"
+          ],
+          "defaults": [
+            "your_jellyfin_api_key_here",
+            "None"
+          ],
+          "source_types": [
+            "dotenv",
+            "python"
+          ]
+        },
+        "JELLYFIN_SSL_VERIFY": {
+          "name": "JELLYFIN_SSL_VERIFY",
+          "sources": [
+            "jellyfin_mcp/auth.py:25",
+            ".env.example:46"
+          ],
+          "defaults": [
+            "True"
+          ],
+          "source_types": [
+            "dotenv",
+            "python"
+          ]
+        },
+        "ENABLE_DELEGATION": {
+          "name": "ENABLE_DELEGATION",
+          "sources": [
+            "jellyfin_mcp/auth.py:31",
+            ".env.example:49"
+          ],
+          "defaults": [
+            "False"
+          ],
+          "source_types": [
+            "dotenv",
+            "python"
+          ]
+        },
+        "JELLYFIN_AUDIENCE": {
+          "name": "JELLYFIN_AUDIENCE",
+          "sources": [
+            "jellyfin_mcp/auth.py:32"
+          ],
+          "defaults": [
+            "None"
+          ],
+          "source_types": [
+            "python"
+          ]
+        },
+        "DELEGATED_SCOPES": {
+          "name": "DELEGATED_SCOPES",
+          "sources": [
+            "jellyfin_mcp/auth.py:33",
+            ".env.example:50"
+          ],
+          "defaults": [
+            "api"
+          ],
+          "source_types": [
+            "dotenv",
+            "python"
+          ]
+        },
+        "OIDC_TOKEN_ENDPOINT": {
+          "name": "OIDC_TOKEN_ENDPOINT",
+          "sources": [
+            "jellyfin_mcp/auth.py:34"
+          ],
+          "defaults": [
+            "None"
+          ],
+          "source_types": [
+            "python"
+          ]
+        },
+        "OIDC_CLIENT_ID": {
+          "name": "OIDC_CLIENT_ID",
+          "sources": [
+            "jellyfin_mcp/auth.py:35"
+          ],
+          "defaults": [
+            "None"
+          ],
+          "source_types": [
+            "python"
+          ]
+        },
+        "OIDC_CLIENT_SECRET": {
+          "name": "OIDC_CLIENT_SECRET",
+          "sources": [
+            "jellyfin_mcp/auth.py:36"
+          ],
+          "defaults": [
+            "None"
+          ],
+          "source_types": [
+            "python"
+          ]
+        },
+        "DEFAULT_AGENT_NAME": {
+          "name": "DEFAULT_AGENT_NAME",
+          "sources": [
+            "jellyfin_mcp/agent_server.py:32",
+            ".env.example:11"
+          ],
+          "defaults": [
+            "meta.get(",
+            "Jellyfin MCP Agent\" # Displayed name of the integrated Graph Agent"
+          ],
+          "source_types": [
+            "dotenv",
+            "python"
+          ]
+        },
+        "HOST": {
+          "name": "HOST",
+          "sources": [
+            "docker/Dockerfile:8",
+            "docker/Dockerfile:3",
+            "docker/debug.Dockerfile:8",
+            "docker/debug.Dockerfile:3",
+            ".env:6"
+          ],
+          "defaults": [
+            "0.0.0.0"
+          ],
+          "source_types": [
+            "dockerfile",
+            "dotenv"
+          ]
+        },
+        "PORT": {
+          "name": "PORT",
+          "sources": [
+            "docker/Dockerfile:4",
+            "docker/debug.Dockerfile:4",
+            ".env:7",
+            ".env.example:7"
+          ],
+          "defaults": [
+            "8000"
+          ],
+          "source_types": [
+            "dockerfile",
+            "dotenv"
+          ]
+        },
+        "TRANSPORT": {
+          "name": "TRANSPORT",
+          "sources": [
+            "docker/Dockerfile:5",
+            "docker/debug.Dockerfile:5",
+            ".env:8",
+            ".env.example:8"
+          ],
+          "defaults": [
+            "stdio # options: stdio, streamable-http, sse",
+            "stdio"
+          ],
+          "source_types": [
+            "dockerfile",
+            "dotenv"
+          ]
+        },
+        "AUTH_TYPE": {
+          "name": "AUTH_TYPE",
+          "sources": [
+            "docker/Dockerfile:6",
+            "docker/debug.Dockerfile:6",
+            ".env.example:27"
+          ],
+          "defaults": [
+            "apiKey"
+          ],
+          "source_types": [
+            "dockerfile",
+            "dotenv"
+          ]
+        },
+        "ENABLE_OTEL": {
+          "name": "ENABLE_OTEL",
+          "sources": [
+            ".env:11",
+            ".env.example:14"
+          ],
+          "defaults": [
+            "True"
+          ],
+          "source_types": [
+            "dotenv"
+          ]
+        },
+        "OTEL_EXPORTER_OTLP_ENDPOINT": {
+          "name": "OTEL_EXPORTER_OTLP_ENDPOINT",
+          "sources": [
+            ".env:12"
+          ],
+          "defaults": [
+            "http://langfuse.arpa/api/public/otel"
+          ],
+          "source_types": [
+            "dotenv"
+          ]
+        },
+        "EUNOMIA_TYPE": {
+          "name": "EUNOMIA_TYPE",
+          "sources": [
+            ".env:18",
+            ".env.example:21"
+          ],
+          "defaults": [
+            "none",
+            "none # options: none, embedded, remote"
+          ],
+          "source_types": [
+            "dotenv"
+          ]
+        },
+        "EUNOMIA_POLICY_FILE": {
+          "name": "EUNOMIA_POLICY_FILE",
+          "sources": [
+            ".env:19",
+            ".env.example:22"
+          ],
+          "defaults": [
+            "mcp_policies.json"
+          ],
+          "source_types": [
+            "dotenv"
+          ]
+        },
+        "CONDENSED_JELLYFIN_TOOL": {
+          "name": "CONDENSED_JELLYFIN_TOOL",
+          "sources": [
+            ".env:29",
+            ".env.example:57"
+          ],
+          "defaults": [
+            "True"
+          ],
+          "source_types": [
+            "dotenv"
+          ]
+        }
+      },
+      "readme_coverage": {
+        "documented": [
+          "CONDENSED_JELLYFIN_TOOL",
+          "ENABLE_OTEL",
+          "HOST",
+          "JELLYFIN_API_KEY",
+          "JELLYFIN_PASSWORD",
+          "JELLYFIN_TOKEN",
+          "JELLYFIN_URL",
+          "JELLYFIN_USERNAME",
+          "PORT",
+          "TRANSPORT"
+        ],
+        "undocumented": [
+          "AUTH_TYPE",
+          "DEFAULT_AGENT_NAME",
+          "DELEGATED_SCOPES",
+          "ENABLE_DELEGATION",
+          "EUNOMIA_POLICY_FILE",
+          "EUNOMIA_TYPE",
+          "JELLYFIN_ACCESS_TOKEN",
+          "JELLYFIN_AUDIENCE",
+          "JELLYFIN_BASE_URL",
+          "JELLYFIN_INSTANCE",
+          "JELLYFIN_SSL_VERIFY",
+          "JELLYFIN_VERIFY",
+          "KNOWLEDGE_GRAPH_SYNC_BACKGROUND",
+          "OIDC_CLIENT_ID",
+          "OIDC_CLIENT_SECRET",
+          "OIDC_TOKEN_ENDPOINT",
+          "OTEL_EXPORTER_OTLP_ENDPOINT"
+        ],
+        "coverage": 0.37037037037037035
+      }
+    }
+  ],
+  "gpa": 2.5,
+  "domain_count": 16,
+  "timing": {
+    "analyze_project": 0.18,
+    "audit_dependencies": 0.28,
+    "analyze_codebase": 1.37,
+    "analyze_security": 0.72,
+    "analyze_tests": 0.3,
+    "audit_documentation": 0.94,
+    "analyze_architecture": 0.5,
+    "trace_concepts": 0.99,
+    "run_linters": 0.37,
+    "run_precommit": 22.98,
+    "run_tests": 19.71,
+    "analyze_directory_density": 1.46,
+    "analyze_ui": 1.29,
+    "analyze_version_sync": 1.02,
+    "audit_changelog": 0.0,
+    "grade_pytest": 0.25,
+    "scan_env_vars": 1.45
+  }
+}
