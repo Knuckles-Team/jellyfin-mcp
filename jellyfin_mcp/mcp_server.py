@@ -35,10 +35,11 @@ from starlette.responses import JSONResponse
 
 from jellyfin_mcp.auth import get_client
 
-__version__ = "0.15.0"
+__version__ = "0.16.0"
 
 logger = get_logger(name="jellyfin-mcp")
 logger.setLevel(logging.INFO)
+
 
 def register_condensed_jellyfin_tools(mcp: FastMCP):
     """Register highly optimized, condensed tools mapping dynamically to Jellyfin client methods.
@@ -157,6 +158,7 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
         except Exception as e:
             return {"error": f"System action failed: {str(e)}"}
 
+
 def get_mcp_instance() -> tuple[Any, ...]:
     """Initialize and return the MCP instance.
 
@@ -180,6 +182,7 @@ def get_mcp_instance() -> tuple[Any, ...]:
         mcp.add_middleware(mw)
     return mcp, args, middlewares
 
+
 def mcp_server() -> None:
     """Run the MCP server.
 
@@ -200,6 +203,7 @@ def mcp_server() -> None:
     else:
         logger.error("Invalid transport", extra={"transport": args.transport})
         sys.exit(1)
+
 
 if __name__ == "__main__":
     mcp_server()
