@@ -35,7 +35,7 @@ from starlette.responses import JSONResponse
 
 from jellyfin_mcp.auth import get_client
 
-__version__ = "0.33.3"
+__version__ = "0.33.4"
 
 logger = get_logger(name="jellyfin-mcp")
 logger.setLevel(logging.INFO)
