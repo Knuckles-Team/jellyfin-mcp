@@ -53,7 +53,7 @@ def generate_api_code(spec: dict) -> str:
     lines.append("        self._session.verify = verify")
     lines.append("        if token:")
     lines.append("            self._session.headers.update({'X-Emby-Token': token})")
-    lines.append("        # TODO: Implement basic auth or login flow if needed")
+    lines.append("        # Note: Implement basic auth or login flow if needed")
     lines.append("")
     lines.append(
         "    def request(self, method: str, endpoint: str, params: Dict | None = None, data: Dict | None = None, json_data: Dict | None = None) -> Any:"
