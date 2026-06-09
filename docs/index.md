@@ -1,497 +1,63 @@
-# Jellyfin - A2A | AG-UI | MCP
+# jellyfin-mcp
 
-![PyPI - Version](https://img.shields.io/pypi/v/jellyfin-mcp)
+Jellyfin media-server **API + MCP Server + A2A Agent** for the agent-utilities
+ecosystem — a typed, deterministic tool surface over the Jellyfin REST API for
+agentic media management.
+
+!!! info "Official documentation"
+    This site is the canonical reference for `jellyfin-mcp`, maintained alongside every
+    release.
+
+[![PyPI](https://img.shields.io/pypi/v/jellyfin-mcp)](https://pypi.org/project/jellyfin-mcp/)
 ![MCP Server](https://badge.mcpx.dev?type=server 'MCP Server')
-![PyPI - Downloads](https://img.shields.io/pypi/dd/jellyfin-mcp)
-![GitHub Repo stars](https://img.shields.io/github/stars/Knuckles-Team/jellyfin-mcp)
-![GitHub forks](https://img.shields.io/github/forks/Knuckles-Team/jellyfin-mcp)
-![GitHub contributors](https://img.shields.io/github/contributors/Knuckles-Team/jellyfin-mcp)
-![PyPI - License](https://img.shields.io/pypi/l/jellyfin-mcp)
-![GitHub](https://img.shields.io/github/license/Knuckles-Team/jellyfin-mcp)
-
-![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/Knuckles-Team/jellyfin-mcp)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/Knuckles-Team/jellyfin-mcp)
-![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Knuckles-Team/jellyfin-mcp)
-![GitHub issues](https://img.shields.io/github/issues/Knuckles-Team/jellyfin-mcp)
-
-![GitHub top language](https://img.shields.io/github/languages/top/Knuckles-Team/jellyfin-mcp)
-![GitHub language count](https://img.shields.io/github/languages/count/Knuckles-Team/jellyfin-mcp)
-![GitHub repo size](https://img.shields.io/github/repo-size/Knuckles-Team/jellyfin-mcp)
-![GitHub repo file count (file type)](https://img.shields.io/github/directory-file-count/Knuckles-Team/jellyfin-mcp)
-![PyPI - Wheel](https://img.shields.io/pypi/wheel/jellyfin-mcp)
-![PyPI - Implementation](https://img.shields.io/pypi/implementation/jellyfin-mcp)
-
-*Version: 0.9.0*
+[![License](https://img.shields.io/pypi/l/jellyfin-mcp)](https://github.com/Knuckles-Team/jellyfin-mcp/blob/main/LICENSE)
+[![GitHub](https://img.shields.io/badge/source-GitHub-181717?logo=github)](https://github.com/Knuckles-Team/jellyfin-mcp)
 
 ## Overview
 
-**Jellyfin MCP Server + A2A Agent**
+`jellyfin-mcp` wraps the Jellyfin media server's REST surface with consolidated,
+action-routed MCP tools, and ships an integrated Pydantic-AI graph agent. It provides:
 
-This repository implements a **Model Context Protocol (MCP)** server and an intelligent **Agent-to-Agent (A2A)** system for interacting with a **Jellyfin Media Server**.
+- **`Api`** — a unified Python client composed of modular media, library, system, and
+  user sub-clients over the Jellyfin REST API.
+- **Condensed, action-routed MCP tools** — `jellyfin_media`, `jellyfin_library`, and
+  `jellyfin_system` dispatch dynamically to the client methods, minimizing tool bloat
+  in the LLM context window.
+- **An A2A graph agent** (`jellyfin-agent` console script) — a Pydantic-AI agent with a
+  confidence-gated router, optional Web UI (AG-UI), and OpenTelemetry tracing.
 
-It allows AI agents to manage your media library, control playback, query system status, and interact with connected devices using natural language.
+Credentials are read from the environment; the server **remains inactive when
+credentials are absent** rather than failing at import time.
 
-This repository is actively maintained - Contributions are welcome!
+## Explore the documentation
 
-### Capabilities:
-- **Media Management**: Search and retrieve Movies, TV Shows, Music, and more.
-- **System Control**: Check server status, configuration, and logs.
-- **User & Session Management**: Manage users, view active sessions, and control playback.
-- **Live TV**: Access channels, tuners, and guide information.
-- **Device Control**: Interact with devices connected to the Jellyfin server.
+<div class="grid cards" markdown>
 
-## MCP
+- :material-rocket-launch: **[Installation](installation.md)** — pip, source, extras, and the prebuilt Docker image.
+- :material-server-network: **[Deployment](deployment.md)** — run the MCP and agent servers, Docker Compose, Caddy + Technitium.
+- :material-console: **[Usage](usage.md)** — the MCP tools, the `Api` client, and the agent CLI.
+- :material-movie-open: **[Backing Platform](platform.md)** — deploy a Jellyfin media server with Docker.
+- :material-sitemap: **[Architecture](overview.md)** — the agent-package pattern and MCP configuration.
+- :material-tag-multiple: **[Concepts](concepts.md)** — the `CONCEPT:JELLYFIN-*` registry.
 
-### MCP Tools
+</div>
 
-The system exposes a comprehensive set of tools, organized by domain. These can be used directly by an MCP client or orchestrated by the A2A Agent.
-
-| Domain | Description | Key Tags |
-|:---|:---|:---|
-| **Media** | Managing content (Movies, TV, Music), libraries, and metadata. | `Library`, `Items`, `Movies`, `TvShows`, `Music` |
-| **System** | Server configuration, logs, plugins, tasks, and system info. | `System`, `Configuration`, `ActivityLog`, `ScheduledTasks` |
-| **User** | User supervision, session management, and playstate control. | `User`, `Session`, `Playstate`, `DisplayPreferences` |
-| **LiveTV** | Managing Live TV channels, tuners, and recordings. | `LiveTv`, `Channels` |
-| **Device** | Managing connected client devices and remote control. | `Devices`, `QuickConnect` |
-
-### Using as an MCP Server
-
-The MCP Server can be run in two modes: `stdio` (for local testing) or `http` (for networked access).
-
-#### Environment Variables
-The following environment variables are required to connect to your Jellyfin instance:
-
-*   `JELLYFIN_BASE_URL`: The URL of your Jellyfin server (e.g., `http://192.168.1.10:8096`).
-*   `JELLYFIN_TOKEN`: Your Jellyfin API Token.
-*   **OR**
-*   `JELLYFIN_USERNAME`: Your Jellyfin Username.
-*   `JELLYFIN_PASSWORD`: Your Jellyfin Password.
-
-#### Run in stdio mode (default):
-```bash
-export JELLYFIN_BASE_URL="http://localhost:8096"
-export JELLYFIN_TOKEN="your_api_token"
-jellyfin-mcp --transport "stdio"
-```
-
-#### Run in HTTP mode:
-```bash
-export JELLYFIN_BASE_URL="http://localhost:8096"
-export JELLYFIN_TOKEN="your_api_token"
-jellyfin-mcp --transport "http" --host "0.0.0.0" --port "8000"
-```
-
-## A2A Agent
-
-This package includes a sophisticated **Supervisor Agent** that delegates tasks to specialized sub-agents based on the user's intent.
-
-### Agent Architecture
-
-*   **Supervisor Agent**: The entry point. Analyzes the request and routes it to the correct specialist.
-*   **Media Agent**: Handles content queries ("Play Inception", "Find movies from 1999").
-*   **System Agent**: Handles server ops ("Restart the server", "Check logs").
-*   **User Agent**: Handles user data ("Create a new user", "What is Bob watching?").
-*   **LiveTV Agent**: Handles TV ("What's on channel 5?").
-*   **Device Agent**: Handles hardware ("Cast to Living Room TV").
-
-```mermaid
----
-config:
-  layout: dagre
----
-flowchart TB
- subgraph subGraph0["Agent Capabilities"]
-        C["Supervisor Agent"]
-        B["A2A Server - Uvicorn/FastAPI"]
-        D["Sub-Agents"]
-        F["MCP Tools"]
-  end
-    C --> D
-    D --> F
-    A["User Query"] --> B
-    B --> C
-    F --> E["Jellyfin API"]
-
-     C:::agent
-     D:::agent
-     B:::server
-     A:::server
-     classDef server fill:#f9f,stroke:#333
-     classDef agent fill:#bbf,stroke:#333,stroke-width:2px
-     style B stroke:#000000,fill:#FFD600
-     style F stroke:#000000,fill:#BBDEFB
-     style A fill:#C8E6C9
-     style subGraph0 fill:#FFF9C4
-```
-
-### Component Interaction Diagram
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Server as A2A Server
-    participant Supervisor as Supervisor Agent
-    participant MediaAgent as Media Agent
-    participant MCP as MCP Tools
-
-    User->>Server: "Play the movie Inception"
-    Server->>Supervisor: Invoke Agent
-    Supervisor->>Supervisor: Analyze Intent (Media)
-    Supervisor->>MediaAgent: Delegate Task
-    MediaAgent->>MCP: get_items(search_term="Inception")
-    MCP-->>MediaAgent: Item Details
-    MediaAgent-->>Supervisor: Found "Inception", triggering playback...
-    Supervisor-->>Server: Final Response
-    Server-->>User: Output
-```
-
-
-## Graph Architecture
-
-This agent uses `pydantic-graph` orchestration for intelligent routing and optimal context management.
-
-```mermaid
----
-title: Jellyfin MCP Graph Agent
----
-stateDiagram-v2
-  [*] --> RouterNode: User Query
-  RouterNode --> DomainNode: Classified Domain
-  RouterNode --> [*]: Low confidence / Error
-  DomainNode --> [*]: Domain Result
-```
-
-- **RouterNode**: A fast, lightweight LLM (e.g., `nvidia/nemotron-3-super`) that classifies the user's query into one of the specialized domains.
-- **DomainNode**: The executor node. For the selected domain, it dynamically sets environment variables to temporarily enable ONLY the tools relevant to that domain, creating a highly focused sub-agent (e.g., `gpt-4o`) to complete the request. This preserves LLM context and prevents tool hallucination.
-
-## Usage
-
-### MCP CLI
-
-| Short Flag | Long Flag                          | Description                                                                 |
-|------------|------------------------------------|-----------------------------------------------------------------------------|
-| -h         | --help                             | Display help information                                                    |
-| -t         | --transport                        | Transport method: 'stdio', 'http', or 'sse' [legacy] (default: stdio)       |
-| -s         | --host                             | Host address for HTTP transport (default: 0.0.0.0)                          |
-| -p         | --port                             | Port number for HTTP transport (default: 8000)                              |
-|            | --auth-type                        | Authentication type: 'none', 'static', 'jwt', 'oauth-proxy', 'oidc-proxy', 'remote-oauth' (default: none) |
-|            | --token-jwks-uri                   | JWKS URI for JWT verification                                              |
-|            | --token-issuer                     | Issuer for JWT verification                                                |
-|            | --token-audience                   | Audience for JWT verification                                              |
-|            | --oauth-upstream-auth-endpoint     | Upstream authorization endpoint for OAuth Proxy                             |
-|            | --oauth-upstream-token-endpoint    | Upstream token endpoint for OAuth Proxy                                    |
-|            | --oauth-upstream-client-id         | Upstream client ID for OAuth Proxy                                         |
-|            | --oauth-upstream-client-secret     | Upstream client secret for OAuth Proxy                                     |
-|            | --oauth-base-url                   | Base URL for OAuth Proxy                                                   |
-|            | --oidc-config-url                  | OIDC configuration URL                                                     |
-|            | --oidc-client-id                   | OIDC client ID                                                             |
-|            | --oidc-client-secret               | OIDC client secret                                                         |
-|            | --oidc-base-url                    | Base URL for OIDC Proxy                                                    |
-|            | --remote-auth-servers              | Comma-separated list of authorization servers for Remote OAuth             |
-|            | --remote-base-url                  | Base URL for Remote OAuth                                                  |
-|            | --allowed-client-redirect-uris     | Comma-separated list of allowed client redirect URIs                       |
-|            | --eunomia-type                     | Eunomia authorization type: 'none', 'embedded', 'remote' (default: none)   |
-|            | --eunomia-policy-file              | Policy file for embedded Eunomia (default: mcp_policies.json)              |
-|            | --eunomia-remote-url               | URL for remote Eunomia server                                              |
-
-
-### A2A CLI
-#### Endpoints
-- **Web UI**: `http://localhost:8000/` (if enabled)
-- **A2A**: `http://localhost:8000/a2a` (Discovery: `/a2a/.well-known/agent.json`)
-- **AG-UI**: `http://localhost:8000/ag-ui` (POST)
-
-| Short Flag | Long Flag | Description |
-|------------|-----------|-------------|
-| -h | --help | Display help information |
-| | --host | Host to bind the server to (default: 0.0.0.0) |
-| | --port | Port to bind the server to (default: 9001) |
-| | --provider | LLM Provider: 'openai', 'anthropic', 'google', 'huggingface' |
-| | --model-id | LLM Model ID |
-| | --mcp-config | Path to MCP config file |
-
-### Examples
-
-#### Run A2A Server
-```bash
-export JELLYFIN_BASE_URL="http://localhost:8096"
-export JELLYFIN_TOKEN="your_token"
-jellyfin-agent --provider openai --model-id gpt-4o --api-key sk-...
-```
-
-## Docker
-
-### Build
+## Quick start
 
 ```bash
-docker build -t jellyfin-mcp .
+pip install jellyfin-mcp
+jellyfin-mcp                       # stdio MCP server (default transport)
 ```
 
-### Run MCP Server
+Connect it to a Jellyfin server:
 
 ```bash
-docker run -d \
-  --name jellyfin-mcp \
-  -p 8000:8000 \
-  -e TRANSPORT=http \
-  -e JELLYFIN_BASE_URL="http://192.168.1.10:8096" \
-  -e JELLYFIN_TOKEN="your_token" \
-  knucklessg1/jellyfin-mcp:latest
+export JELLYFIN_URL=http://your-jellyfin:8096
+export JELLYFIN_API_KEY=your_api_key
+jellyfin-mcp --transport streamable-http --host 0.0.0.0 --port 8000
 ```
 
-### Deploy with Docker Compose
-
-Create a `docker-compose.yml` file:
-
-```yaml
-services:
-  jellyfin-mcp:
-    image: knucklessg1/jellyfin-mcp:latest
-    environment:
-      - HOST=0.0.0.0
-      - PORT=8000
-      - TRANSPORT=http
-      - JELLYFIN_BASE_URL=http://your-jellyfin-ip:8096
-      - JELLYFIN_TOKEN=your_api_token
-    ports:
-      - 8000:8000
-```
-
-#### Configure `mcp.json` for AI Integration (e.g. Claude Desktop)
-
-```json
-{
-  "mcpServers": {
-    "jellyfin": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--with",
-        "jellyfin-mcp",
-        "jellyfin-mcp"
-      ],
-      "env": {
-        "JELLYFIN_BASE_URL": "http://your-jellyfin-ip:8096",
-        "JELLYFIN_TOKEN": "your_api_token"
-      }
-    }
-  }
-}
-```
-
-## Install Python Package
-
-```bash
-python -m pip install jellyfin-mcp
-```
-```bash
-uv pip install jellyfin-mcp
-```
-
-## Repository Owners
-
-<img width="100%" height="180em" src="https://github-readme-stats.vercel.app/api?username=Knucklessg1&show_icons=true&hide_border=true&&count_private=true&include_all_commits=true" />
-
-![GitHub followers](https://img.shields.io/github/followers/Knucklessg1)
-![GitHub User's stars](https://img.shields.io/github/stars/Knucklessg1)
-
-
-## MCP Configuration Examples
-
-### 1. Standard IO (stdio) Deployment
-
-```json
-{
-  "mcpServers": {
-    "jellyfin-mcp": {
-      "command": "uv",
-      "args": [
-        "run",
-        "jellyfin-mcp"
-      ],
-      "env": {
-        "ACTIVITYLOGTOOL": "True",
-        "APIKEYTOOL": "True",
-        "ARTISTSTOOL": "True",
-        "AUDIOTOOL": "True",
-        "BACKUPTOOL": "True",
-        "BRANDINGTOOL": "True",
-        "CHANNELSTOOL": "True",
-        "CLIENTLOGTOOL": "True",
-        "COLLECTIONTOOL": "True",
-        "CONFIGURATIONTOOL": "True",
-        "DASHBOARDTOOL": "True",
-        "DELEGATED_SCOPES": "<YOUR_DELEGATED_SCOPES>",
-        "DEVICESTOOL": "True",
-        "DISPLAYPREFERENCESTOOL": "True",
-        "DYNAMICHLSTOOL": "True",
-        "ENABLE_DELEGATION": "<YOUR_ENABLE_DELEGATION>",
-        "ENVIRONMENTTOOL": "True",
-        "FILTERTOOL": "True",
-        "GENRESTOOL": "True",
-        "HLSSEGMENTTOOL": "True",
-        "IMAGETOOL": "True",
-        "INSTANTMIXTOOL": "True",
-        "ITEMLOOKUPTOOL": "True",
-        "ITEMREFRESHTOOL": "True",
-        "ITEMSTOOL": "True",
-        "ITEMUPDATETOOL": "True",
-        "JELLYFIN_ACCESS_TOKEN": "<YOUR_JELLYFIN_ACCESS_TOKEN>",
-        "JELLYFIN_API_KEY": "<YOUR_JELLYFIN_API_KEY>",
-        "JELLYFIN_AUDIENCE": "<YOUR_JELLYFIN_AUDIENCE>",
-        "JELLYFIN_BASE_URL": "<YOUR_JELLYFIN_BASE_URL>",
-        "JELLYFIN_INSTANCE": "<YOUR_JELLYFIN_INSTANCE>",
-        "JELLYFIN_PASSWORD": "<YOUR_JELLYFIN_PASSWORD>",
-        "JELLYFIN_SSL_VERIFY": "<YOUR_JELLYFIN_SSL_VERIFY>",
-        "JELLYFIN_TOKEN": "<YOUR_JELLYFIN_TOKEN>",
-        "JELLYFIN_URL": "<YOUR_JELLYFIN_URL>",
-        "JELLYFIN_USERNAME": "<YOUR_JELLYFIN_USERNAME>",
-        "JELLYFIN_VERIFY": "<YOUR_JELLYFIN_VERIFY>",
-        "LIBRARYSTRUCTURETOOL": "True",
-        "LIBRARYTOOL": "True",
-        "LIVETVTOOL": "True",
-        "LOCALIZATIONTOOL": "True",
-        "LYRICSTOOL": "True",
-        "MEDIAINFOTOOL": "True",
-        "MEDIASEGMENTSTOOL": "True",
-        "MISCTOOL": "True",
-        "MOVIESTOOL": "True",
-        "MUSICGENRESTOOL": "True",
-        "OIDC_CLIENT_ID": "<YOUR_OIDC_CLIENT_ID>",
-        "OIDC_CLIENT_SECRET": "<YOUR_OIDC_CLIENT_SECRET>",
-        "OIDC_TOKEN_ENDPOINT": "<YOUR_OIDC_TOKEN_ENDPOINT>",
-        "PACKAGETOOL": "True",
-        "PERSONSTOOL": "True",
-        "PLAYLISTSTOOL": "True",
-        "PLAYSTATETOOL": "True",
-        "PLUGINSTOOL": "True",
-        "QUICKCONNECTTOOL": "True",
-        "REMOTEIMAGETOOL": "True",
-        "SCHEDULEDTASKSTOOL": "True",
-        "SEARCHTOOL": "True",
-        "SESSIONTOOL": "True",
-        "STARTUPTOOL": "True",
-        "STUDIOSTOOL": "True",
-        "SUBTITLETOOL": "True",
-        "SUGGESTIONSTOOL": "True",
-        "SYNCPLAYTOOL": "True",
-        "SYSTEMTOOL": "True",
-        "TIMESYNCTOOL": "True",
-        "TMDBTOOL": "True",
-        "TRAILERSTOOL": "True",
-        "TRICKPLAYTOOL": "True",
-        "TVSHOWSTOOL": "True",
-        "UNIVERSALAUDIOTOOL": "True",
-        "USERLIBRARYTOOL": "True",
-        "USERTOOL": "True",
-        "USERVIEWSTOOL": "True",
-        "VIDEOATTACHMENTSTOOL": "True",
-        "VIDEOSTOOL": "True",
-        "YEARSTOOL": "True"
-      }
-    }
-  }
-}
-```
-
-### 2. Streamable HTTP (SSE) Deployment
-
-```json
-{
-  "mcpServers": {
-    "jellyfin-mcp": {
-      "command": "uv",
-      "args": [
-        "run",
-        "jellyfin-mcp",
-        "--transport",
-        "http",
-        "--host",
-        "0.0.0.0",
-        "--port",
-        "8000"
-      ],
-      "env": {
-        "ACTIVITYLOGTOOL": "True",
-        "APIKEYTOOL": "True",
-        "ARTISTSTOOL": "True",
-        "AUDIOTOOL": "True",
-        "BACKUPTOOL": "True",
-        "BRANDINGTOOL": "True",
-        "CHANNELSTOOL": "True",
-        "CLIENTLOGTOOL": "True",
-        "COLLECTIONTOOL": "True",
-        "CONFIGURATIONTOOL": "True",
-        "DASHBOARDTOOL": "True",
-        "DELEGATED_SCOPES": "<YOUR_DELEGATED_SCOPES>",
-        "DEVICESTOOL": "True",
-        "DISPLAYPREFERENCESTOOL": "True",
-        "DYNAMICHLSTOOL": "True",
-        "ENABLE_DELEGATION": "<YOUR_ENABLE_DELEGATION>",
-        "ENVIRONMENTTOOL": "True",
-        "FILTERTOOL": "True",
-        "GENRESTOOL": "True",
-        "HLSSEGMENTTOOL": "True",
-        "IMAGETOOL": "True",
-        "INSTANTMIXTOOL": "True",
-        "ITEMLOOKUPTOOL": "True",
-        "ITEMREFRESHTOOL": "True",
-        "ITEMSTOOL": "True",
-        "ITEMUPDATETOOL": "True",
-        "JELLYFIN_ACCESS_TOKEN": "<YOUR_JELLYFIN_ACCESS_TOKEN>",
-        "JELLYFIN_API_KEY": "<YOUR_JELLYFIN_API_KEY>",
-        "JELLYFIN_AUDIENCE": "<YOUR_JELLYFIN_AUDIENCE>",
-        "JELLYFIN_BASE_URL": "<YOUR_JELLYFIN_BASE_URL>",
-        "JELLYFIN_INSTANCE": "<YOUR_JELLYFIN_INSTANCE>",
-        "JELLYFIN_PASSWORD": "<YOUR_JELLYFIN_PASSWORD>",
-        "JELLYFIN_SSL_VERIFY": "<YOUR_JELLYFIN_SSL_VERIFY>",
-        "JELLYFIN_TOKEN": "<YOUR_JELLYFIN_TOKEN>",
-        "JELLYFIN_URL": "<YOUR_JELLYFIN_URL>",
-        "JELLYFIN_USERNAME": "<YOUR_JELLYFIN_USERNAME>",
-        "JELLYFIN_VERIFY": "<YOUR_JELLYFIN_VERIFY>",
-        "LIBRARYSTRUCTURETOOL": "True",
-        "LIBRARYTOOL": "True",
-        "LIVETVTOOL": "True",
-        "LOCALIZATIONTOOL": "True",
-        "LYRICSTOOL": "True",
-        "MEDIAINFOTOOL": "True",
-        "MEDIASEGMENTSTOOL": "True",
-        "MISCTOOL": "True",
-        "MOVIESTOOL": "True",
-        "MUSICGENRESTOOL": "True",
-        "OIDC_CLIENT_ID": "<YOUR_OIDC_CLIENT_ID>",
-        "OIDC_CLIENT_SECRET": "<YOUR_OIDC_CLIENT_SECRET>",
-        "OIDC_TOKEN_ENDPOINT": "<YOUR_OIDC_TOKEN_ENDPOINT>",
-        "PACKAGETOOL": "True",
-        "PERSONSTOOL": "True",
-        "PLAYLISTSTOOL": "True",
-        "PLAYSTATETOOL": "True",
-        "PLUGINSTOOL": "True",
-        "QUICKCONNECTTOOL": "True",
-        "REMOTEIMAGETOOL": "True",
-        "SCHEDULEDTASKSTOOL": "True",
-        "SEARCHTOOL": "True",
-        "SESSIONTOOL": "True",
-        "STARTUPTOOL": "True",
-        "STUDIOSTOOL": "True",
-        "SUBTITLETOOL": "True",
-        "SUGGESTIONSTOOL": "True",
-        "SYNCPLAYTOOL": "True",
-        "SYSTEMTOOL": "True",
-        "TIMESYNCTOOL": "True",
-        "TMDBTOOL": "True",
-        "TRAILERSTOOL": "True",
-        "TRICKPLAYTOOL": "True",
-        "TVSHOWSTOOL": "True",
-        "UNIVERSALAUDIOTOOL": "True",
-        "USERLIBRARYTOOL": "True",
-        "USERTOOL": "True",
-        "USERVIEWSTOOL": "True",
-        "VIDEOATTACHMENTSTOOL": "True",
-        "VIDEOSTOOL": "True",
-        "YEARSTOOL": "True"
-      }
-    }
-  }
-}
-```
+See **[Installation](installation.md)** and **[Deployment](deployment.md)** for the
+full matrix (PyPI extras, Docker image, all transports, the agent server, reverse
+proxy, DNS).
+</content>

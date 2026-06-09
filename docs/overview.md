@@ -36,7 +36,7 @@ This project implements or inherits the following ecosystem concepts:
 | CONCEPT:JELLYFIN-3.0 | A2A Agent Interface | `jellyfin-mcp` (local) |
 | CONCEPT:JELLYFIN-4.0 | Access Delegation | `jellyfin-mcp` (local) |
 
-> 📖 **Full Registry**: See [`agent-utilities/docs/overview.md`](https://github.com/Knuckles-Team/agent-utilities/blob/main/docs/overview.md) for the complete 5-Pillar concept index.
+> **Full Registry**: See [`agent-utilities/docs/overview.md`](https://github.com/Knuckles-Team/agent-utilities/blob/main/docs/overview.md) for the complete 5-Pillar concept index.
 
 ## Architecture
 

@@ -22,6 +22,10 @@
 
 *Version: 0.40.0*
 
+> **Documentation** — Installation, deployment, usage across the MCP, API, and A2A
+> agent interfaces, and guidance for provisioning the Jellyfin media server are
+> maintained in the [official documentation](https://knuckles-team.github.io/jellyfin-mcp/).
+
 ---
 
 ## Table of Contents
@@ -38,6 +42,7 @@
   - [Running the Agent CLI](#running-the-agent-cli)
   - [Docker Compose Orchestration](#docker-compose-orchestration)
 - [Security & Governance](#security--governance)
+- [Documentation](#documentation)
 - [Contribute](#contribute)
 
 ---
@@ -315,6 +320,23 @@ Built directly upon the enterprise-ready [`agent-utilities`](https://github.com/
 | **Tool Guard** | Sensitivity inspection with human-in-the-loop validation | Enabled by default |
 | **Prompt Injection Defense** | Input scanning, repetition monitoring, and recursive loop blocks | Enabled by default |
 | **Context Safety Guard** | Stuck-loop detectors and contextual overflow preemptive alerts | Enabled by default |
+
+---
+
+## Documentation
+
+The complete documentation is published as the
+[official documentation site](https://knuckles-team.github.io/jellyfin-mcp/) and is the
+recommended reference for installation, deployment, and day-to-day operation.
+
+| Page | Contents |
+|---|---|
+| [Installation](https://knuckles-team.github.io/jellyfin-mcp/installation/) | pip, source, extras, prebuilt Docker image |
+| [Deployment](https://knuckles-team.github.io/jellyfin-mcp/deployment/) | run the MCP and agent servers, Compose, Caddy + Technitium, env config |
+| [Usage](https://knuckles-team.github.io/jellyfin-mcp/usage/) | the MCP tools, the `Api` client, the agent CLI |
+| [Backing Platform](https://knuckles-team.github.io/jellyfin-mcp/platform/) | deploy a Jellyfin media server with Docker |
+| [Overview](https://knuckles-team.github.io/jellyfin-mcp/overview/) | the agent-package pattern and MCP configuration |
+| [Concepts](https://knuckles-team.github.io/jellyfin-mcp/concepts/) | concept registry (`CONCEPT:JELLYFIN-*`) |
 
 ---
 
