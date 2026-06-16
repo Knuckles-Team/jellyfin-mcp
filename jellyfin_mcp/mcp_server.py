@@ -28,7 +28,7 @@ import logging
 import sys
 from typing import Any
 
-from agent_utilities.mcp_utilities import create_mcp_server, dispatch
+from agent_utilities.mcp_utilities import create_mcp_server, dispatch, run_blocking
 from dotenv import find_dotenv, load_dotenv
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -76,7 +76,9 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
         try:
-            return dispatch(client, action, kwargs, service="jellyfin-mcp")
+            return await run_blocking(
+                dispatch, client, action, kwargs, service="jellyfin-mcp"
+            )
         except ValueError as e:
             return {"error": str(e)}
         except Exception as e:
@@ -111,7 +113,9 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
         try:
-            return dispatch(client, action, kwargs, service="jellyfin-mcp")
+            return await run_blocking(
+                dispatch, client, action, kwargs, service="jellyfin-mcp"
+            )
         except ValueError as e:
             return {"error": str(e)}
         except Exception as e:
@@ -146,7 +150,9 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
         try:
-            return dispatch(client, action, kwargs, service="jellyfin-mcp")
+            return await run_blocking(
+                dispatch, client, action, kwargs, service="jellyfin-mcp"
+            )
         except ValueError as e:
             return {"error": str(e)}
         except Exception as e:

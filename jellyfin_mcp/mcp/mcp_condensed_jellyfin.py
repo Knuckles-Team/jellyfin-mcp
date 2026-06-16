@@ -5,7 +5,7 @@ Auto-generated from mcp_server.py during ecosystem standardization.
 
 from typing import Any
 
-from agent_utilities.mcp_utilities import dispatch
+from agent_utilities.mcp_utilities import dispatch, run_blocking
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -48,7 +48,9 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
         try:
-            return dispatch(client, action, kwargs, service="jellyfin-mcp")
+            return await run_blocking(
+                dispatch, client, action, kwargs, service="jellyfin-mcp"
+            )
         except ValueError as e:
             return {"error": str(e)}
         except Exception as e:
@@ -83,7 +85,9 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
         try:
-            return dispatch(client, action, kwargs, service="jellyfin-mcp")
+            return await run_blocking(
+                dispatch, client, action, kwargs, service="jellyfin-mcp"
+            )
         except ValueError as e:
             return {"error": str(e)}
         except Exception as e:
@@ -118,7 +122,9 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
         try:
-            return dispatch(client, action, kwargs, service="jellyfin-mcp")
+            return await run_blocking(
+                dispatch, client, action, kwargs, service="jellyfin-mcp"
+            )
         except ValueError as e:
             return {"error": str(e)}
         except Exception as e:
