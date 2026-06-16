@@ -5,6 +5,7 @@ Auto-generated from mcp_server.py during ecosystem standardization.
 
 from typing import Any
 
+from agent_utilities.mcp_utilities import dispatch
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -46,12 +47,10 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
             return {"error": f"Invalid params_json JSON: {e}"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
-        method = getattr(client, action, None)
-        if not method or not callable(method):
-            return {"error": f"Unknown or invalid media action: {action}"}
-
         try:
-            return method(**kwargs)
+            return dispatch(client, action, kwargs, service="jellyfin-mcp")
+        except ValueError as e:
+            return {"error": str(e)}
         except Exception as e:
             return {"error": f"Media action failed: {str(e)}"}
 
@@ -83,12 +82,10 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
             return {"error": f"Invalid params_json JSON: {e}"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
-        method = getattr(client, action, None)
-        if not method or not callable(method):
-            return {"error": f"Unknown or invalid library action: {action}"}
-
         try:
-            return method(**kwargs)
+            return dispatch(client, action, kwargs, service="jellyfin-mcp")
+        except ValueError as e:
+            return {"error": str(e)}
         except Exception as e:
             return {"error": f"Library action failed: {str(e)}"}
 
@@ -120,11 +117,9 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
             return {"error": f"Invalid params_json JSON: {e}"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
-        method = getattr(client, action, None)
-        if not method or not callable(method):
-            return {"error": f"Unknown or invalid system action: {action}"}
-
         try:
-            return method(**kwargs)
+            return dispatch(client, action, kwargs, service="jellyfin-mcp")
+        except ValueError as e:
+            return {"error": str(e)}
         except Exception as e:
             return {"error": f"System action failed: {str(e)}"}

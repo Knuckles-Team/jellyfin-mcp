@@ -321,11 +321,17 @@ async def test_mcp_server_tools_exception_handling():
         action="non_existent_method", params_json="{}", client=mock_client
     )
     assert "error" in res
-    assert "Unknown or invalid media action" in res["error"]
+    assert "Unknown action 'non_existent_method'" in res["error"]
+    assert "list_actions" in res["error"]
+
+    # Discovery: list_actions returns the available action names
+    res = await media_tool(action="list_actions", params_json="{}", client=mock_client)
+    assert res["service"] == "jellyfin-mcp"
+    assert "get_system_info" in res["actions"]
 
     # Action raises standard error
     mock_error_client = MagicMock(spec=["get_system_info"])
-    mock_error_client.get_system_info.side_effect = ValueError("Mocked action error")
+    mock_error_client.get_system_info.side_effect = RuntimeError("Mocked action error")
     res = await media_tool(
         action="get_system_info", params_json="{}", client=mock_error_client
     )
@@ -347,10 +353,11 @@ async def test_mcp_server_tools_exception_handling():
         action="non_existent_method", params_json="{}", client=mock_client
     )
     assert "error" in res
-    assert "Unknown or invalid library action" in res["error"]
+    assert "Unknown action 'non_existent_method'" in res["error"]
+    assert "list_actions" in res["error"]
 
     mock_error_client = MagicMock(spec=["get_items"])
-    mock_error_client.get_items.side_effect = ValueError("Library error")
+    mock_error_client.get_items.side_effect = RuntimeError("Library error")
     res = await library_tool(
         action="get_items", params_json="{}", client=mock_error_client
     )
@@ -372,10 +379,11 @@ async def test_mcp_server_tools_exception_handling():
         action="non_existent_method", params_json="{}", client=mock_client
     )
     assert "error" in res
-    assert "Unknown or invalid system action" in res["error"]
+    assert "Unknown action 'non_existent_method'" in res["error"]
+    assert "list_actions" in res["error"]
 
     mock_error_client = MagicMock(spec=["get_system_info"])
-    mock_error_client.get_system_info.side_effect = ValueError("System error")
+    mock_error_client.get_system_info.side_effect = RuntimeError("System error")
     res = await system_tool(
         action="get_system_info", params_json="{}", client=mock_error_client
     )
