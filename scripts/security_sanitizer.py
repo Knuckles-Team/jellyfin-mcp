@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import os
 import re
-import sys
 import subprocess
+import sys
 from pathlib import Path
 
 # Config
@@ -75,7 +75,7 @@ def get_repo_files(repo_path: Path):
                 if not any(part in EXCLUDED_DIRS for part in parts):
                     files.append(repo_path / line.strip())
         return files
-    except Exception as e:
+    except Exception:
         # Fallback to manual recursive scan
         files = []
         for root, dirs, walk_files in os.walk(str(repo_path)):
