@@ -3,11 +3,10 @@
 CONCEPT:JELLYFIN-4.0 — Access Delegation
 """
 
-import os
 import threading
 
 import requests
-from agent_utilities.base_utilities import to_boolean
+from agent_utilities.core.config import setting
 from agent_utilities.core.exceptions import AuthError, UnauthorizedError
 from fastmcp.utilities.logging import get_logger
 
@@ -18,24 +17,29 @@ logger = get_logger(name="JellyfinAuth")
 
 
 def get_client(
-    base_url=os.getenv("JELLYFIN_URL", None),
-    token=os.getenv("JELLYFIN_API_KEY", None),
-    username=os.getenv("JELLYFIN_USERNAME", None),
-    password=os.getenv("JELLYFIN_PASSWORD", None),
-    verify: bool = to_boolean(string=os.getenv("JELLYFIN_SSL_VERIFY", "True")),
+    base_url=None,
+    token=None,
+    username=None,
+    password=None,
+    verify: bool | None = None,
 ) -> Api:
     """
     Single entry point for Jellyfin clients.
 
     CONCEPT:JELLYFIN-4.0 — Access Delegation
     """
+    base_url = base_url if base_url is not None else setting("JELLYFIN_URL", None)
+    token = token if token is not None else setting("JELLYFIN_API_KEY", None)
+    username = username if username is not None else setting("JELLYFIN_USERNAME", None)
+    password = password if password is not None else setting("JELLYFIN_PASSWORD", None)
+    verify = verify if verify is not None else setting("JELLYFIN_SSL_VERIFY", True)
     config = {
-        "enable_delegation": to_boolean(os.environ.get("ENABLE_DELEGATION", "False")),
-        "audience": os.environ.get("JELLYFIN_AUDIENCE", None),
-        "delegated_scopes": os.environ.get("DELEGATED_SCOPES", "api"),
-        "token_endpoint": os.environ.get("OIDC_TOKEN_ENDPOINT", None),
-        "oidc_client_id": os.environ.get("OIDC_CLIENT_ID", None),
-        "oidc_client_secret": os.environ.get("OIDC_CLIENT_SECRET", None),
+        "enable_delegation": setting("ENABLE_DELEGATION", False),
+        "audience": setting("JELLYFIN_AUDIENCE", None),
+        "delegated_scopes": setting("DELEGATED_SCOPES", "api"),
+        "token_endpoint": setting("OIDC_TOKEN_ENDPOINT", None),
+        "oidc_client_id": setting("OIDC_CLIENT_ID", None),
+        "oidc_client_secret": setting("OIDC_CLIENT_SECRET", None),
     }
 
     if not base_url:

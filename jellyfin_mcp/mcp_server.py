@@ -32,11 +32,13 @@ from agent_utilities.mcp_utilities import (
     create_mcp_server,
     dispatch,
     load_config,
+    register_tool_surface,
     run_blocking,
 )
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+from jellyfin_mcp.api_client import Api
 from jellyfin_mcp.auth import get_client
 
 __version__ = "0.45.0"
@@ -179,8 +181,13 @@ def get_mcp_instance() -> tuple[Any, ...]:
     async def health_check(request: Request) -> JSONResponse:
         return JSONResponse({"status": "OK"})
 
-    # Always register optimized condensed tools
-    register_condensed_jellyfin_tools(mcp)
+    register_tool_surface(
+        mcp,
+        client_cls=Api,
+        get_client=get_client,
+        service="jellyfin-mcp",
+        tools_module=sys.modules[__name__],
+    )
 
     for mw in middlewares:
         mcp.add_middleware(mw)
