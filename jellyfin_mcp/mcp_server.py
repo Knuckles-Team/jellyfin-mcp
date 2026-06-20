@@ -28,8 +28,12 @@ import logging
 import sys
 from typing import Any
 
-from agent_utilities.mcp_utilities import create_mcp_server, dispatch, run_blocking
-from dotenv import find_dotenv, load_dotenv
+from agent_utilities.mcp_utilities import (
+    create_mcp_server,
+    dispatch,
+    load_config,
+    run_blocking,
+)
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
@@ -164,7 +168,7 @@ def get_mcp_instance() -> tuple[Any, ...]:
 
     Dynamic Tool Routing
     """
-    load_dotenv(find_dotenv())
+    load_config()
     args, mcp, middlewares = create_mcp_server(
         name="jellyfin-mcp MCP",
         version=__version__,
