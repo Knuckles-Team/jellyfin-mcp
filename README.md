@@ -106,9 +106,19 @@ Detailed instructions on how to use the underlying API wrappers, extended schema
 This server utilizes dynamic Action-Routed tools to optimize token overhead and maximize IDE compatibility.
 
 ### Available MCP Tools
-| Tool Module | Toggle Env Var | Enabled by Default | Description & Nested Methods |
-|-------------|----------------|--------------------|------------------------------|
-| **Condensed Jellyfin** | `CONDENSED_JELLYFIN_TOOL` | `True` | Register highly optimized, condensed tools mapping dynamically to Jellyfin client methods. |
+
+_Auto-generated from the live MCP server — do not edit by hand._
+
+<!-- MCP-TOOLS-TABLE:START -->
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `jellyfin_library` | `LIBRARYTOOL` | Execute library searches, items, collection updates, and catalog queries dynamically. |
+| `jellyfin_media` | `MEDIATOOL` | Execute media playback, stream, artist, playlist, and audio/video queries dynamically. |
+| `jellyfin_system` | `SYSTEMTOOL` | Execute administrative actions, system status, configurations, backups, and user management. |
+
+_3 action-routed tools (default `MCP_TOOL_MODE=condensed`). Each is enabled unless its toggle is set false; set `MCP_TOOL_MODE=verbose` (or `both`) for the 1:1 per-operation surface. Auto-generated — do not edit._
+<!-- MCP-TOOLS-TABLE:END -->
 
 Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/index.md#mcp](docs/index.md#mcp).
 
