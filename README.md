@@ -113,9 +113,9 @@ _Auto-generated from the live MCP server — do not edit by hand._
 
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
-| `jellyfin_library` | `LIBRARYTOOL` | Execute library searches, items, collection updates, and catalog queries dynamically. |
-| `jellyfin_media` | `MEDIATOOL` | Execute media playback, stream, artist, playlist, and audio/video queries dynamically. |
-| `jellyfin_system` | `SYSTEMTOOL` | Execute administrative actions, system status, configurations, backups, and user management. |
+| `jellyfin_library` | `CONDENSED_JELLYFINTOOL` | Execute library searches, items, collection updates, and catalog queries dynamically. |
+| `jellyfin_media` | `CONDENSED_JELLYFINTOOL` | Execute media playback, stream, artist, playlist, and audio/video queries dynamically. |
+| `jellyfin_system` | `CONDENSED_JELLYFINTOOL` | Execute administrative actions, system status, configurations, backups, and user management. |
 
 _3 action-routed tools (default `MCP_TOOL_MODE=condensed`). Each is enabled unless its toggle is set false; set `MCP_TOOL_MODE=verbose` (or `both`) for the 1:1 per-operation surface. Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
