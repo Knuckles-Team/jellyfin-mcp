@@ -28,10 +28,10 @@ jellyfin-mcp = "jellyfin_mcp.mcp_server:mcp_server"
 jellyfin-agent = "jellyfin_mcp.agent_server:agent_server"
 
 [project.entry-points."agent_utilities.skill_providers"]
-modular-contrib = "jellyfin_mcp.skills"
+jellyfin-mcp = "jellyfin_mcp.skills"
 
 [project.entry-points."agent_utilities.prompt_providers"]
-modular-contrib = "jellyfin_mcp.prompts"
+jellyfin-mcp = "jellyfin_mcp.prompts"
 
 [tool.setuptools]
 include-package-data = true
