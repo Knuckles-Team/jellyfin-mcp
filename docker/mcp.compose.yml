@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   jellyfin-mcp-mcp:
-    image: knucklessg1/jellyfin-mcp:latest
+    image: knucklessg1/jellyfin-mcp:mcp
     container_name: jellyfin-mcp-mcp
     hostname: jellyfin-mcp-mcp
     restart: always
