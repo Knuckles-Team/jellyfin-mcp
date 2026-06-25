@@ -18,6 +18,7 @@ email = "knucklessg1@gmail.com"
 text = "MIT"
 
 [project.optional-dependencies]
+mcp = [ "agent-utilities[mcp]>=0.51.0",]
 agent = [ "agent-utilities[agent,logfire]>=0.51.0",]
 all = [ "agent-utilities[mcp,agent,logfire]>=0.51.0",]
 test = [

@@ -11,7 +11,6 @@
     - `mcp_server.py`: Main MCP server entry point and tool registration.
     - `agent_server.py`: Pydantic AI agent definition and logic.
     - `skills/`: Directory containing modular agent skills (if applicable).
-    - `agent/`: Internal agent logic and prompt templates.
 
 ### Architecture Diagram
 ```mermaid
@@ -61,7 +60,7 @@ pre-commit run --all-files
 
 ### File Tree
 ```text
-├── .bumpversion.cfg\n├── .dockerignore\n├── .env\n├── .gitattributes\n├── .github\n│   └── workflows\n│       └── pipeline.yml\n├── .gitignore\n├── .pre-commit-config.yaml\n├── AGENTS.md\n├── Dockerfile\n├── LICENSE\n├── README.md\n├── compose.yml\n├── debug.Dockerfile\n├── jellyfin_mcp\n│   ├── __init__.py\n│   ├── agent\n│   │   ├── AGENTS.md\n│   │   ├── CRON.md\n│   │   ├── HEARTBEAT.md\n│   │   ├── IDENTITY.md\n│   │   ├── MEMORY.md\n│   │   ├── USER.md\n│   │   └── templates.py\n│   ├── agent_server.py\n│   ├── auth.py\n│   ├── api_wrapper.py\n│   └── mcp_server.py\n├── mcp.compose.yml\n├── pyproject.toml\n├── requirements.txt\n└── scripts\n    ├── generate_code.py\n    ├── test_api_wrapper.py\n    └── validate_a2a_agent_server.py
+├── .bumpversion.cfg\n├── .dockerignore\n├── .env\n├── .gitattributes\n├── .github\n│   └── workflows\n│       └── pipeline.yml\n├── .gitignore\n├── .pre-commit-config.yaml\n├── AGENTS.md\n├── Dockerfile\n├── LICENSE\n├── README.md\n├── compose.yml\n├── debug.Dockerfile\n├── jellyfin_mcp\n│   ├── __init__.py\n│   ├── agent_server.py\n│   ├── auth.py\n│   ├── api_wrapper.py\n│   └── mcp_server.py\n├── mcp.compose.yml\n├── pyproject.toml\n├── requirements.txt\n└── scripts\n    ├── generate_code.py\n    ├── test_api_wrapper.py\n    └── validate_a2a_agent_server.py
 ```
 
 ## Code Style & Conventions
