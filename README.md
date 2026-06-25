@@ -432,6 +432,62 @@ The slim `[mcp]` server does **not** require the database.
 
 ## Environment Variables
 
+<!-- ENV-VARS-TABLE:START -->
+
+#### Package environment variables
+
+| Variable | Example | Description |
+|----------|---------|-------------|
+| `HOST` | `0.0.0.0` |  |
+| `PORT` | `8000` |  |
+| `TRANSPORT` | `stdio` | options: stdio, streamable-http, sse |
+| `DEFAULT_AGENT_NAME` | `"Jellyfin MCP Agent"` | Displayed name of the integrated Graph Agent |
+| `ENABLE_OTEL` | `True` |  |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://localhost:8080/api/public/otel` |  |
+| `OTEL_EXPORTER_OTLP_PUBLIC_KEY` | `pk-...` |  |
+| `OTEL_EXPORTER_OTLP_SECRET_KEY` | `sk-...` |  |
+| `OTEL_EXPORTER_OTLP_PROTOCOL` | `http/protobuf` |  |
+| `EUNOMIA_TYPE` | `none` | options: none, embedded, remote |
+| `EUNOMIA_POLICY_FILE` | `mcp_policies.json` |  |
+| `EUNOMIA_REMOTE_URL` | `http://eunomia-server:8000` |  |
+| `AUTH_TYPE` | `apiKey` | AUTH_TYPE defines the authorization flow: 'apiKey', 'credentials', or 'delegated' (OIDC) |
+| `JELLYFIN_URL` | `http://localhost:8096` | Both URL structures are supported; standard runtime maps to JELLYFIN_URL |
+| `JELLYFIN_BASE_URL` | `http://localhost:8096` |  |
+| `JELLYFIN_API_KEY` | `your_jellyfin_api_key_here` | API key / access token standard inputs: |
+| `JELLYFIN_ACCESS_TOKEN` | `your_jellyfin_access_token_here` |  |
+| `JELLYFIN_TOKEN` | `your_jellyfin_token_here` | JELLYFIN_TOKEN is also checked as a fallback |
+| `JELLYFIN_USERNAME` | `admin` | Credential-based login (used if API key / Token is not provided): |
+| `JELLYFIN_PASSWORD` | `your_jellyfin_password_here` |  |
+| `JELLYFIN_SSL_VERIFY` | `True` | SSL connection validation (True by default, set to False to bypass local certificate checks) |
+| `ENABLE_DELEGATION` | `False` |  |
+| `DELEGATED_SCOPES` | `api` |  |
+| `JELLYFIN_AUDIENCE` | `https://jellyfin.example.com` |  |
+| `OIDC_TOKEN_ENDPOINT` | `https://identity.example.com/oauth2/token` |  |
+| `OIDC_CLIENT_ID` | `your-oidc-client-id` |  |
+| `OIDC_CLIENT_SECRET` | `your-oidc-client-secret` |  |
+| `CONDENSED_JELLYFINTOOL` | `True` |  |
+
+#### Inherited agent-utilities variables (apply to every connector)
+
+| Variable | Example | Description |
+|----------|---------|-------------|
+| `MCP_TOOL_MODE` | `condensed` | Tool surface: `condensed` | `verbose` | `both` |
+| `MCP_ENABLED_TOOLS` | — | Comma-separated tool allow-list |
+| `MCP_DISABLED_TOOLS` | — | Comma-separated tool deny-list |
+| `MCP_ENABLED_TAGS` | — | Comma-separated tag allow-list |
+| `MCP_DISABLED_TAGS` | — | Comma-separated tag deny-list |
+| `MCP_CLIENT_AUTH` | — | Outbound MCP auth (`oidc-client-credentials` for fleet calls) |
+| `DEBUG` | `False` | Verbose logging |
+| `PYTHONUNBUFFERED` | `1` | Unbuffered stdout (recommended in containers) |
+| `MCP_URL` | `http://localhost:8000/mcp` | URL of the MCP server the agent connects to |
+| `PROVIDER` | `openai` | LLM provider for the agent |
+| `MODEL_ID` | `gpt-4o` | Model id for the agent |
+| `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
+
+_28 package + 12 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+<!-- ENV-VARS-TABLE:END -->
+
+
 Every variable the server reads, grouped by purpose.
 
 ### Connection & Credentials (Jellyfin)
