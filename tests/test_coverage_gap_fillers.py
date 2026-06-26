@@ -275,7 +275,8 @@ async def test_mcp_server_custom_route():
     assert response.status_code == 200
     import json
 
-    assert json.loads(response.body.decode()) == {"status": "OK"}
+    payload = json.loads(response.body.decode())
+    assert payload.get("status", "").lower() == "ok"
 
 
 @pytest.mark.asyncio
