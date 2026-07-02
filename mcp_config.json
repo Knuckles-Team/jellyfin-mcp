@@ -7,22 +7,16 @@
         "jellyfin-mcp"
       ],
       "env": {
-        "JELLYFIN_URL": "<YOUR_JELLYFIN_URL>",
-        "JELLYFIN_API_KEY": "<YOUR_JELLYFIN_API_KEY>",
-        "JELLYFIN_USERNAME": "<YOUR_JELLYFIN_USERNAME>",
-        "JELLYFIN_PASSWORD": "<YOUR_JELLYFIN_PASSWORD>",
-        "JELLYFIN_SSL_VERIFY": "<YOUR_JELLYFIN_SSL_VERIFY>",
         "MCP_TOOL_MODE": "condensed",
-        "ENABLE_DELEGATION": "<YOUR_ENABLE_DELEGATION>",
-        "DELEGATED_SCOPES": "<YOUR_DELEGATED_SCOPES>",
-        "JELLYFIN_AUDIENCE": "<YOUR_JELLYFIN_AUDIENCE>",
-        "OIDC_TOKEN_ENDPOINT": "<YOUR_OIDC_TOKEN_ENDPOINT>",
-        "OIDC_CLIENT_ID": "<YOUR_OIDC_CLIENT_ID>",
-        "OIDC_CLIENT_SECRET": "<YOUR_OIDC_CLIENT_SECRET>",
-        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
-        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
-        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
-        "CONDENSED_JELLYFINTOOL": "True"
+        "CONDENSED_JELLYFINTOOL": "True",
+        "DELEGATED_SCOPES": "api",
+        "ENABLE_DELEGATION": "False",
+        "JELLYFIN_API_KEY": "your_jellyfin_api_key_here",
+        "JELLYFIN_AUDIENCE": "https://jellyfin.example.com",
+        "JELLYFIN_PASSWORD": "your_jellyfin_password_here",
+        "JELLYFIN_URL": "http://localhost:8096",
+        "JELLYFIN_USERNAME": "admin",
+        "OIDC_TOKEN_ENDPOINT": "https://identity.example.com/oauth2/token"
       }
     }
   }
