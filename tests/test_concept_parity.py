@@ -60,7 +60,7 @@ def test_concept_parity():
     Enforces that all concepts documented or used in jellyfin-mcp
     exist in the master agent-utilities registry.
 
-    CONCEPT:JELLYFIN-1.0 — Lazy Initialization
+    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
     """
     master_concepts = extract_concepts_from_overview(MASTER_OVERVIEW_PATH)
 

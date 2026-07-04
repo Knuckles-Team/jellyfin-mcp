@@ -1,6 +1,6 @@
 """Jellyfin client authentication and access token delegation.
 
-CONCEPT:JELLYFIN-4.0 — Access Delegation
+CONCEPT:JF-OS.identity.access-delegation — Access Delegation
 """
 
 import threading
@@ -26,7 +26,7 @@ def get_client(
     """
     Single entry point for Jellyfin clients.
 
-    CONCEPT:JELLYFIN-4.0 — Access Delegation
+    CONCEPT:JF-OS.identity.access-delegation — Access Delegation
     """
     base_url = base_url if base_url is not None else setting("JELLYFIN_URL", None)
     token = token if token is not None else setting("JELLYFIN_API_KEY", None)

@@ -1,7 +1,7 @@
 def test_server_startup():
     """Validates that the server module can start successfully.
 
-    CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
+    CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
     """
     # If this is not an agent, just pass
     import os

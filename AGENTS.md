@@ -142,10 +142,10 @@ uv run pytest --timeout=60 -k "test_name_pattern"
 ## Concept Registry
 
 This project implements or inherits the following ecosystem concepts:
-- <!-- CONCEPT:JELLYFIN-1.0 --> **JELLYFIN-1.0**: Lazy Initialization
-- <!-- CONCEPT:JELLYFIN-2.0 --> **JELLYFIN-2.0**: Dynamic Tool Routing
-- <!-- CONCEPT:JELLYFIN-3.0 --> **JELLYFIN-3.0**: A2A Agent Interface
-- <!-- CONCEPT:JELLYFIN-4.0 --> **JELLYFIN-4.0**: Access Delegation
+- <!-- CONCEPT:JF-OS.governance.lazy-initialization --> **JF-OS.governance.lazy-initialization**: Lazy Initialization
+- <!-- CONCEPT:JF-OS.config.dynamic-tool-routing --> **JF-OS.config.dynamic-tool-routing**: Dynamic Tool Routing
+- <!-- CONCEPT:JF-OS.config.a2a-agent-interface --> **JF-OS.config.a2a-agent-interface**: A2A Agent Interface
+- <!-- CONCEPT:JF-OS.identity.access-delegation --> **JF-OS.identity.access-delegation**: Access Delegation
 
 ## ⛔ No Scratch or Temporary Files in Repository
 
@@ -269,7 +269,7 @@ alone).
 Working in parallel with other sessions/worktrees? **Reserve a concept id before you write its `CONCEPT:` marker** so two sessions never collide:
 
 ```bash
-agent-utilities --json concept reserve --ns KG-2   # or a package prefix, e.g. KEY
+agent-utilities --json concept reserve --ns EG-KG.compute.backend   # or a package prefix, e.g. KEY
 ```
 
 Full protocol (ledger, merge=union, reconcile, MCP/REST): <https://knuckles-team.github.io/agent-utilities/concept_coordination/>

@@ -27,7 +27,7 @@ def mock_session():  # vulture: ignore
 def test_jellyfin_api_brute_force():
     """Brute force coverage verification of the Jellyfin client API library.
 
-    CONCEPT:JELLYFIN-1.0 — Lazy Initialization
+    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
     """
     from jellyfin_mcp.api_client import Api
 
@@ -86,7 +86,7 @@ def test_jellyfin_api_brute_force():
 def test_mcp_server_coverage():
     """Brute force call execution coverage for all registered MCP server tools.
 
-    CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
+    CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
     """
     from fastmcp.server.middleware.rate_limiting import RateLimitingMiddleware
 
@@ -149,7 +149,7 @@ def test_mcp_server_coverage():
 def test_agent_server_coverage():
     """Agent server configuration and execution initialization coverage.
 
-    CONCEPT:JELLYFIN-3.0 — A2A Agent Interface
+    CONCEPT:JF-OS.config.a2a-agent-interface — A2A Agent Interface
     """
     with (
         patch("agent_utilities.initialize_workspace"),

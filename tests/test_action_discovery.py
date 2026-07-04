@@ -3,7 +3,7 @@
 Verifies the shared agent-utilities ``dispatch`` helper provides ``list_actions``
 discovery and rich did-you-mean errors across the action-routed tools.
 
-CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
+CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
 """
 
 from unittest.mock import MagicMock

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Jellyfin MCP client package initialization.
 
-CONCEPT:JELLYFIN-1.0 — Lazy Initialization
+CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
 """
 
 import importlib
@@ -50,7 +50,7 @@ def _import_module_safely(module_name: str):
 def __getattr__(name: str) -> Any:
     """Dynamically load optional modules.
 
-    CONCEPT:JELLYFIN-1.0 — Lazy Initialization
+    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
     """
     # Handle availability flags dynamically without eager imports
     if name == "_MCP_AVAILABLE":

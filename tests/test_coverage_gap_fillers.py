@@ -14,7 +14,7 @@ from starlette.requests import Request
 def test_init_module_lazy_attributes():
     """Verify lazy-loading attribute resolution.
 
-    CONCEPT:JELLYFIN-1.0 — Lazy Initialization
+    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
     """
     import jellyfin_mcp
 
@@ -38,7 +38,7 @@ def test_init_module_lazy_attributes():
 def test_init_module_missing_availability():
     """Verify availability status returns False if modules are missing.
 
-    CONCEPT:JELLYFIN-1.0 — Lazy Initialization
+    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
     """
     import jellyfin_mcp
 
@@ -51,7 +51,7 @@ def test_init_module_missing_availability():
 def test_init_lazy_import_failure():
     """Verify import safety wrapper handles missing modules.
 
-    CONCEPT:JELLYFIN-1.0 — Lazy Initialization
+    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
     """
     # Mock importlib.import_module to raise ImportError for optional modules
     import importlib
@@ -72,7 +72,7 @@ def test_init_lazy_import_failure():
 def test_init_lazy_expose_members():
     """Verify global namespace registration on demand.
 
-    CONCEPT:JELLYFIN-1.0 — Lazy Initialization
+    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
     """
     import jellyfin_mcp
 
@@ -98,7 +98,7 @@ def test_init_lazy_expose_members():
 def test_auth_empty_params():
     """Verify empty parameters fail authentication.
 
-    CONCEPT:JELLYFIN-4.0 — Access Delegation
+    CONCEPT:JF-OS.identity.access-delegation — Access Delegation
     """
     from jellyfin_mcp.auth import get_client
 
@@ -109,7 +109,7 @@ def test_auth_empty_params():
 def test_auth_missing_url():
     """Verify missing URL error behavior.
 
-    CONCEPT:JELLYFIN-4.0 — Access Delegation
+    CONCEPT:JF-OS.identity.access-delegation — Access Delegation
     """
     from jellyfin_mcp.auth import get_client
 
@@ -120,7 +120,7 @@ def test_auth_missing_url():
 def test_auth_oidc_delegation_success():
     """Verify successful OIDC delegation client setup.
 
-    CONCEPT:JELLYFIN-4.0 — Access Delegation
+    CONCEPT:JF-OS.identity.access-delegation — Access Delegation
     """
     from jellyfin_mcp.auth import get_client, local
 
@@ -161,7 +161,7 @@ def test_auth_oidc_delegation_success():
 def test_auth_oidc_delegation_failure():
     """Verify error propagation on delegation failures.
 
-    CONCEPT:JELLYFIN-4.0 — Access Delegation
+    CONCEPT:JF-OS.identity.access-delegation — Access Delegation
     """
     from jellyfin_mcp.auth import get_client, local
 
@@ -187,7 +187,7 @@ def test_auth_oidc_delegation_failure():
 def test_auth_oidc_delegation_invalid_credentials_on_api():
     """Verify access errors raise standard RuntimeErrors with custom messages.
 
-    CONCEPT:JELLYFIN-4.0 — Access Delegation
+    CONCEPT:JF-OS.identity.access-delegation — Access Delegation
     """
     from jellyfin_mcp.auth import get_client, local
 
@@ -223,7 +223,7 @@ def test_auth_oidc_delegation_invalid_credentials_on_api():
 def test_auth_credentials_invalid():
     """Verify invalid credentials raise standard auth error.
 
-    CONCEPT:JELLYFIN-4.0 — Access Delegation
+    CONCEPT:JF-OS.identity.access-delegation — Access Delegation
     """
     from jellyfin_mcp.auth import get_client
 
@@ -244,7 +244,7 @@ def test_auth_credentials_invalid():
 async def test_mcp_server_custom_route():
     """Verify custom routes (e.g. /health) inside MCP instance.
 
-    CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
+    CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
     """
     from jellyfin_mcp.mcp_server import get_mcp_instance
 
@@ -283,7 +283,7 @@ async def test_mcp_server_custom_route():
 async def test_mcp_server_tools_exception_handling():
     """Verify tool execution safety & exception handling.
 
-    CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
+    CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
     """
     from fastmcp import FastMCP
 
@@ -395,7 +395,7 @@ async def test_mcp_server_tools_exception_handling():
 def test_mcp_server_import_error_handling():
     """Verify dependency import fallback block safety.
 
-    CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
+    CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
     """
     # Force ImportError in RequestsDependencyWarning block of mcp_server.py
     import builtins
@@ -418,7 +418,7 @@ def test_mcp_server_import_error_handling():
 def test_mcp_server_startup_transports():
     """Verify startup transport command-line flag handling.
 
-    CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
+    CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
     """
     from jellyfin_mcp.mcp_server import mcp_server
 
@@ -463,7 +463,7 @@ def test_mcp_server_startup_transports():
 def test_mcp_server_main_execution():
     """Verify main block execution of the MCP server module.
 
-    CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
+    CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
     """
     mock_args = MagicMock()
     mock_args.transport = "stdio"
@@ -491,7 +491,7 @@ def test_mcp_server_main_execution():
 def test_agent_server_debug_mode():
     """Verify agent server debug mode activation.
 
-    CONCEPT:JELLYFIN-3.0 — A2A Agent Interface
+    CONCEPT:JF-OS.config.a2a-agent-interface — A2A Agent Interface
     """
     with (
         patch("agent_utilities.initialize_workspace"),
@@ -539,7 +539,7 @@ def test_agent_server_debug_mode():
 def test_agent_server_main_execution():
     """Verify agent server main execution setup.
 
-    CONCEPT:JELLYFIN-3.0 — A2A Agent Interface
+    CONCEPT:JF-OS.config.a2a-agent-interface — A2A Agent Interface
     """
     with (
         patch("agent_utilities.initialize_workspace"),
@@ -581,7 +581,7 @@ def test_agent_server_main_execution():
 def test_main_module():
     """Verify primary __main__ module entry delegation.
 
-    CONCEPT:JELLYFIN-1.0 — Lazy Initialization
+    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
     """
     with patch("jellyfin_mcp.agent_server.agent_server") as mock_agent_server:
         runpy.run_module("jellyfin_mcp.__main__", run_name="__main__")
@@ -591,7 +591,7 @@ def test_main_module():
 def test_api_client_error_coverage():
     """Verify ApiClient error states and non-JSON output mapping.
 
-    CONCEPT:JELLYFIN-1.0 — Lazy Initialization
+    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
     """
     from agent_utilities.core.exceptions import AuthError, UnauthorizedError
 

@@ -1,4 +1,4 @@
-"""Media & Downloads ontology contribution (CONCEPT:KG-2.325).
+"""Media & Downloads ontology contribution (CONCEPT:JF-KG.ontology.kg).
 
 Data-only subpackage: it carries ``media.ttl`` (the ``owl:Ontology``
 ``http://knuckles.team/kg/media`` module — media asset management and download

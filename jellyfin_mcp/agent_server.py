@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """Jellyfin dynamic agent server.
 
-CONCEPT:JELLYFIN-3.0 — A2A Agent Interface
+CONCEPT:JF-OS.config.a2a-agent-interface — A2A Agent Interface
 """
 
 import logging
@@ -46,7 +46,7 @@ DEFAULT_AGENT_SYSTEM_PROMPT = os.getenv(
 def agent_server():
     """Run the dynamic agent server.
 
-    CONCEPT:JELLYFIN-3.0 — A2A Agent Interface
+    CONCEPT:JF-OS.config.a2a-agent-interface — A2A Agent Interface
     """
     warnings.filterwarnings("ignore", message=".*urllib3.*or chardet.*")
     warnings.filterwarnings("ignore", category=DeprecationWarning, module="fastmcp")

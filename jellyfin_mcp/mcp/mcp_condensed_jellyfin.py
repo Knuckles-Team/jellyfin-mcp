@@ -16,7 +16,7 @@ from jellyfin_mcp.auth import get_client
 def register_condensed_jellyfin_tools(mcp: FastMCP):
     """Register highly optimized, condensed tools mapping dynamically to Jellyfin client methods.
 
-    CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
+    CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
     """
 
     @mcp.tool(tags={"Media"})
@@ -35,7 +35,7 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
     ) -> Any:
         """Execute media playback, stream, artist, playlist, and audio/video queries dynamically.
 
-        CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
+        CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
         """
         if ctx and hasattr(ctx, "info"):
             await ctx.info(f"Executing media action: {action}...")
@@ -72,7 +72,7 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
     ) -> Any:
         """Execute library searches, items, collection updates, and catalog queries dynamically.
 
-        CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
+        CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
         """
         if ctx and hasattr(ctx, "info"):
             await ctx.info(f"Executing library action: {action}...")
@@ -109,7 +109,7 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
     ) -> Any:
         """Execute administrative actions, system status, configurations, backups, and user management.
 
-        CONCEPT:JELLYFIN-2.0 — Dynamic Tool Routing
+        CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
         """
         if ctx and hasattr(ctx, "info"):
             await ctx.info(f"Executing system action: {action}...")
