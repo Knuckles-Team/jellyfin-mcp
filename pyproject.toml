@@ -34,6 +34,12 @@ jellyfin-mcp = "jellyfin_mcp.skills"
 [project.entry-points."agent_utilities.prompt_providers"]
 jellyfin-mcp = "jellyfin_mcp.prompts"
 
+# CONCEPT:KG-2.325 — federate this package's OWL/RDF ontology module into the
+# agent-utilities hub (http://knuckles.team/kg/media). Resolved via
+# iter_provider_dirs like the skill/prompt providers.
+[project.entry-points."agent_utilities.ontology_providers"]
+jellyfin-mcp = "jellyfin_mcp.ontology"
+
 [tool.setuptools]
 include-package-data = true
 
@@ -52,7 +58,7 @@ dev = [
 ]
 
 [tool.setuptools.package-data]
-jellyfin_mcp = [ "mcp_config.json", "agent_data/**", "prompts/**", "skills/**",]
+jellyfin_mcp = [ "mcp_config.json", "agent_data/**", "prompts/**", "skills/**", "ontology/**",]
 
 [tool.ruff.lint]
 select = [ "E", "F", "I", "UP", "B",]
