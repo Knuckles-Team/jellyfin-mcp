@@ -1,0 +1,14 @@
+{
+  "_comment": "Tier-1 mcp_tool source presets for jellyfin-mcp (AU-KG.ingest.mcp-tool-connector). Syncs a Jellyfin library into the KG as media documents via the jellyfin-mcp MCP server. Contributed presets win over the central MCP_TOOL_PRESETS. The typed-node/blob path is the native jellyfin_ingest_library / jellyfin_ingest_posters tools in kg_ingest.py / kg_media.py.",
+  "jellyfin-library": {
+    "server": "jellyfin-mcp",
+    "tool": "jellyfin_library",
+    "action": "get_items",
+    "records_path": "Items",
+    "id_field": "Id",
+    "title_field": "Name",
+    "text_field": "Overview",
+    "updated_field": "DateCreated",
+    "doc_type": "media"
+  }
+}

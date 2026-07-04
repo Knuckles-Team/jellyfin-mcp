@@ -169,3 +169,53 @@ Aligned to schema:MediaObject.""" ;
     rdfs:seeAlso schema:MediaObject ;
     rdfs:subClassOf :Dataset .
 
+:Artist a owl:Class ;
+    rdfs:label "Artist" ;
+    rdfs:comment """A performer / musical artist credited on one or more :MediaAsset
+items in a Jellyfin :MediaLibrary (audio tracks, albums, music videos). Aligned to
+schema:MusicGroup / foaf:Agent (CONCEPT:KG-2.163).""" ;
+    rdfs:seeAlso schema:MusicGroup ;
+    rdfs:subClassOf foaf:Agent .
+
+:Genre a owl:Class ;
+    rdfs:label "Genre" ;
+    rdfs:comment """A media genre (e.g. Drama, Jazz, Science Fiction) tagged on a
+:MediaAsset. A SKOS concept in the media classification scheme.""" ;
+    rdfs:seeAlso skos:Concept ;
+    rdfs:subClassOf skos:Concept .
+
+:itemKind a owl:DatatypeProperty ;
+    rdfs:label "item kind" ;
+    rdfs:comment """The Jellyfin item type of a :MediaAsset: Movie, Episode, Series,
+Audio, MusicAlbum, Book, etc.""" ;
+    rdfs:domain :MediaAsset ;
+    rdfs:range xsd:string .
+
+:communityRating a owl:DatatypeProperty ;
+    rdfs:label "community rating" ;
+    rdfs:domain :MediaAsset ;
+    rdfs:range xsd:float .
+
+:productionYear a owl:DatatypeProperty ;
+    rdfs:label "production year" ;
+    rdfs:domain :MediaAsset ;
+    rdfs:range xsd:integer .
+
+:hasGenre a owl:ObjectProperty ;
+    rdfs:label "has genre" ;
+    rdfs:comment "Links a :MediaAsset to a :Genre it is classified under." ;
+    rdfs:domain :MediaAsset ;
+    rdfs:range :Genre .
+
+:performedBy a owl:ObjectProperty ;
+    rdfs:label "performed by" ;
+    rdfs:comment "Links an audio :MediaAsset to the :Artist that performed it." ;
+    rdfs:domain :MediaAsset ;
+    rdfs:range :Artist .
+
+:authoredBy a owl:ObjectProperty ;
+    rdfs:label "authored by" ;
+    rdfs:comment "Links a :Book to its :Author." ;
+    rdfs:domain :Book ;
+    rdfs:range :Author .
+

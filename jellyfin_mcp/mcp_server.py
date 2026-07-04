@@ -165,6 +165,89 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
             return {"error": f"System action failed: {str(e)}"}
 
 
+def register_kg_ingest_tools(mcp: FastMCP):
+    """Register native epistemic-graph ingestion tools (Wire-First).
+
+    CONCEPT:AU-KG.ingest.enterprise-source-extractor. Lists the real Jellyfin library
+    via the client and pushes it into the knowledge graph as typed :MediaAsset/:Book/
+    :Artist/:Genre nodes (+ item overviews as :Document, + posters as :Blob).
+    """
+
+    @mcp.tool(tags={"misc", "kg"})
+    async def jellyfin_ingest_library(
+        params_json: str = Field(
+            default="{}",
+            description="JSON string of get_items filters (e.g. include_item_types, "
+            "parent_id, limit, recursive).",
+        ),
+        client=Depends(get_client),
+        ctx: Context | None = None,
+    ) -> Any:
+        """Natively ingest the Jellyfin library into epistemic-graph as typed nodes.
+
+        Lists items via ``get_items`` and pushes them (with :hasGenre/:performedBy/
+        :authoredBy links + item overviews as :Document) into the knowledge graph.
+        Best-effort: ``ingested`` is ``None`` when no engine is reachable.
+        CONCEPT:AU-KG.ingest.enterprise-source-extractor.
+        """
+        import json as _json
+
+        from jellyfin_mcp.kg_ingest import ingest_items
+
+        try:
+            kwargs = _json.loads(params_json) if params_json else {}
+        except Exception as e:
+            return {"error": f"Invalid params_json JSON: {e}"}
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+        try:
+            resp = await run_blocking(client.get_items, **kwargs)
+        except Exception as e:
+            return {"error": f"get_items failed: {e}"}
+        data = getattr(resp, "data", resp)
+        items = data.get("Items", []) if isinstance(data, dict) else data
+        items = items if isinstance(items, list) else [items]
+        result = ingest_items(items)
+        return {"listed": len(items), "ingested": result}
+
+    @mcp.tool(tags={"misc", "kg"})
+    async def jellyfin_ingest_posters(
+        item_ids: list[str] = Field(
+            default_factory=list,
+            description="Jellyfin item Ids whose primary poster image to ingest as blobs.",
+        ),
+        image_type: str = Field(default="Primary", description="Jellyfin image type."),
+        client=Depends(get_client),
+        ctx: Context | None = None,
+    ) -> Any:
+        """Ingest item posters as content-addressed :Blob + :MediaAsset (best-effort).
+
+        CONCEPT:AU-KG.ingest.list-durable-media.
+        """
+        from jellyfin_mcp.kg_media import ingest_image_bytes, media_store
+
+        store = media_store()
+        stored: list[dict[str, Any]] = []
+        for iid in item_ids or []:
+            try:
+                raw = await run_blocking(
+                    client.get_item_image, item_id=iid, image_type=image_type
+                )
+            except Exception as e:
+                logger.debug("poster fetch failed for %s: %s", iid, e)
+                continue
+            data = raw if isinstance(raw, bytes) else None
+            if data is None and isinstance(raw, str):
+                data = raw.encode("latin-1", "ignore")
+            res = ingest_image_bytes(
+                data, item_id=iid, image_type=image_type, store=store
+            )
+            if res:
+                stored.append(res)
+        return {"requested": len(item_ids or []), "stored": stored}
+
+    return None
+
+
 def get_mcp_instance() -> tuple[Any, ...]:
     """Initialize and return the MCP instance.
 
