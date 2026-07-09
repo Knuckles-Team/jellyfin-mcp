@@ -1,5 +1,6 @@
 ---
 name: jellyfin-media-playback
+skill_type: skill
 description: >-
   Stream and control Jellyfin playback and browse music via the jellyfin-mcp MCP
   server — list artists, albums, and music genres, resolve audio/video streams,

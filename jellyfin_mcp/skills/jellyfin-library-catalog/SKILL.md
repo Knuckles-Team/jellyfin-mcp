@@ -1,5 +1,6 @@
 ---
 name: jellyfin-library-catalog
+skill_type: skill
 description: >-
   Browse and search a Jellyfin media library via the jellyfin-mcp MCP server —
   list library items (movies, series, episodes, audio, books), fetch one item by

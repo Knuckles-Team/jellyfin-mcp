@@ -1,5 +1,6 @@
 ---
 name: jellyfin-kg-ingestion
+skill_type: skill
 description: >-
   Natively ingest a Jellyfin library into the epistemic-graph knowledge graph via
   the jellyfin-mcp MCP server — push library items as typed :MediaAsset/:Book
