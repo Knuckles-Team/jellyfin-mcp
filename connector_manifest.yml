@@ -1,0 +1,308 @@
+connector: jellyfin-mcp
+ontology_source: media
+schema_version: '1'
+resources:
+- name: Artist
+  label: Artist
+  id_prefix: artist
+  relations: []
+- name: Author
+  label: Author
+  id_prefix: author
+  relations: []
+- name: Blob
+  label: Blob
+  id_prefix: blob
+  relations: []
+- name: Book
+  label: Book
+  id_prefix: book
+  relations:
+  - name: authoredBy
+    label: authored by
+    target: Author
+    lpg_rel_type: ''
+- name: DownloadJob
+  label: Download Job
+  id_prefix: downloadjob
+  relations:
+  - name: producedAsset
+    label: produced asset
+    target: MediaAsset
+    lpg_rel_type: ''
+  - name: requestedBy
+    label: requested by
+    target: Person
+    lpg_rel_type: ''
+- name: Genre
+  label: Genre
+  id_prefix: genre
+  relations: []
+- name: Library
+  label: Library
+  id_prefix: library
+  relations: []
+- name: MediaAsset
+  label: Media Asset
+  id_prefix: mediaasset
+  relations:
+  - name: attachedToMessage
+    label: attached to message
+    target: Memory
+    lpg_rel_type: ''
+  - name: belongsToCollection
+    label: belongs to collection
+    target: MediaCollection
+    lpg_rel_type: ''
+  - name: downloadedVia
+    label: downloaded via
+    target: System
+    lpg_rel_type: ''
+  - name: hasBlob
+    label: has blob
+    target: Blob
+    lpg_rel_type: ''
+  - name: hasGenre
+    label: has genre
+    target: Genre
+    lpg_rel_type: ''
+  - name: managedBy
+    label: managed by
+    target: MediaLibrary
+    lpg_rel_type: ''
+  - name: performedBy
+    label: performed by
+    target: Artist
+    lpg_rel_type: ''
+- name: MediaCollection
+  label: Media Collection
+  id_prefix: mediacollection
+  relations: []
+- name: MediaLibrary
+  label: Media Library
+  id_prefix: medialibrary
+  relations: []
+actions:
+- id: run_graph_flow
+  name: Graph Flow Execution
+  description: Execute a workflow through the agent's graph orchestration engine
+events:
+- name: jellyfin-library.updated
+  resource: media
+  description: "Watermark event for 'jellyfin-library' \u2014 advances on DateCreated (mcp_source_presets.json)."
+identity:
+  id_field:
+    media: Id
+  title_field:
+    media: Name
+  text_field:
+    media: Overview
+  updated_field:
+    media: DateCreated
+permissions:
+  acl_fields: []
+  tenant_field: null
+  read_roles: []
+schema_mappings:
+  Artist:
+    ontology_class: Agent
+    fields:
+      addedDate: xsd:dateTime
+      communityRating: xsd:float
+      completedDate: xsd:dateTime
+      contentDigest: xsd:string
+      downloadProgress: xsd:float
+      downloadStatus: xsd:string
+      downloadUrl: xsd:anyURI
+      fileSizeBytes: xsd:long
+      itemKind: xsd:string
+      mediaType: xsd:string
+      productionYear: xsd:integer
+  Author:
+    ontology_class: Person
+    fields:
+      addedDate: xsd:dateTime
+      communityRating: xsd:float
+      completedDate: xsd:dateTime
+      contentDigest: xsd:string
+      downloadProgress: xsd:float
+      downloadStatus: xsd:string
+      downloadUrl: xsd:anyURI
+      fileSizeBytes: xsd:long
+      itemKind: xsd:string
+      mediaType: xsd:string
+      productionYear: xsd:integer
+  Blob:
+    ontology_class: Dataset
+    fields:
+      addedDate: xsd:dateTime
+      communityRating: xsd:float
+      completedDate: xsd:dateTime
+      contentDigest: xsd:string
+      downloadProgress: xsd:float
+      downloadStatus: xsd:string
+      downloadUrl: xsd:anyURI
+      fileSizeBytes: xsd:long
+      itemKind: xsd:string
+      mediaType: xsd:string
+      productionYear: xsd:integer
+  Book:
+    ontology_class: MediaAsset
+    fields:
+      addedDate: xsd:dateTime
+      communityRating: xsd:float
+      completedDate: xsd:dateTime
+      contentDigest: xsd:string
+      downloadProgress: xsd:float
+      downloadStatus: xsd:string
+      downloadUrl: xsd:anyURI
+      fileSizeBytes: xsd:long
+      itemKind: xsd:string
+      mediaType: xsd:string
+      productionYear: xsd:integer
+  DownloadJob:
+    ontology_class: Action
+    fields:
+      addedDate: xsd:dateTime
+      communityRating: xsd:float
+      completedDate: xsd:dateTime
+      contentDigest: xsd:string
+      downloadProgress: xsd:float
+      downloadStatus: xsd:string
+      downloadUrl: xsd:anyURI
+      fileSizeBytes: xsd:long
+      itemKind: xsd:string
+      mediaType: xsd:string
+      productionYear: xsd:integer
+  Genre:
+    ontology_class: Concept
+    fields:
+      addedDate: xsd:dateTime
+      communityRating: xsd:float
+      completedDate: xsd:dateTime
+      contentDigest: xsd:string
+      downloadProgress: xsd:float
+      downloadStatus: xsd:string
+      downloadUrl: xsd:anyURI
+      fileSizeBytes: xsd:long
+      itemKind: xsd:string
+      mediaType: xsd:string
+      productionYear: xsd:integer
+  Library:
+    ontology_class: System
+    fields:
+      addedDate: xsd:dateTime
+      communityRating: xsd:float
+      completedDate: xsd:dateTime
+      contentDigest: xsd:string
+      downloadProgress: xsd:float
+      downloadStatus: xsd:string
+      downloadUrl: xsd:anyURI
+      fileSizeBytes: xsd:long
+      itemKind: xsd:string
+      mediaType: xsd:string
+      productionYear: xsd:integer
+  MediaAsset:
+    ontology_class: Dataset
+    fields:
+      addedDate: xsd:dateTime
+      communityRating: xsd:float
+      completedDate: xsd:dateTime
+      contentDigest: xsd:string
+      downloadProgress: xsd:float
+      downloadStatus: xsd:string
+      downloadUrl: xsd:anyURI
+      fileSizeBytes: xsd:long
+      itemKind: xsd:string
+      mediaType: xsd:string
+      productionYear: xsd:integer
+  MediaCollection:
+    ontology_class: Dataset
+    fields:
+      addedDate: xsd:dateTime
+      communityRating: xsd:float
+      completedDate: xsd:dateTime
+      contentDigest: xsd:string
+      downloadProgress: xsd:float
+      downloadStatus: xsd:string
+      downloadUrl: xsd:anyURI
+      fileSizeBytes: xsd:long
+      itemKind: xsd:string
+      mediaType: xsd:string
+      productionYear: xsd:integer
+  MediaLibrary:
+    ontology_class: System
+    fields:
+      addedDate: xsd:dateTime
+      communityRating: xsd:float
+      completedDate: xsd:dateTime
+      contentDigest: xsd:string
+      downloadProgress: xsd:float
+      downloadStatus: xsd:string
+      downloadUrl: xsd:anyURI
+      fileSizeBytes: xsd:long
+      itemKind: xsd:string
+      mediaType: xsd:string
+      productionYear: xsd:integer
+sync:
+- preset: jellyfin-library
+  server: jellyfin-mcp
+  tool: jellyfin_library
+  action: get_items
+  records_path: Items
+  id_field: Id
+  title_field: Name
+  text_field: Overview
+  updated_field: DateCreated
+  pagination: null
+  doc_type: media
+  raw:
+    server: jellyfin-mcp
+    tool: jellyfin_library
+    action: get_items
+    records_path: Items
+    id_field: Id
+    title_field: Name
+    text_field: Overview
+    updated_field: DateCreated
+    doc_type: media
+provenance:
+  generated_by: scripts/generate_connector_manifests.py
+  generated_at: '2026-07-09T00:00:00Z'
+  source_artifacts:
+  - a2a.json
+  - jellyfin_mcp/connectors/mcp_source_presets.json
+  - jellyfin_mcp/ontology/media.ttl
+  integrity:
+    algorithm: urdna2015-sha256
+    hash: 73f0f22a416927d8d737963cbe9096ab2faef983182449275d38ca48f1f9a83e
+    triple_count: 117
+  signer: ontology-manifest-generator
+  signature: aa49b4d2df34e3614fd2a8f707f4b30f5b840ab56e62e9dbf74bcd5f95494e08
+policy:
+  pii_fields: {}
+  tenant_boundary: null
+  rls: []
+review_todos:
+- "policy.rls / policy.tenant_boundary are unset \u2014 no row-level-security predicate has been reviewed\
+  \ for this connector."
+- "schema_mappings.Artist.ontology_class = 'Agent' [source ttl rdfs:subClassOf] \u2014 verify manually\
+  \ before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.Author.ontology_class = 'Person' [source ttl rdfs:subClassOf] \u2014 verify manually\
+  \ before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.Blob.ontology_class = 'Dataset' [source ttl rdfs:subClassOf] \u2014 verify manually\
+  \ before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.Book.ontology_class = 'MediaAsset' [source ttl rdfs:subClassOf] \u2014 verify manually\
+  \ before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.DownloadJob.ontology_class = 'Action' [source ttl rdfs:subClassOf] \u2014 verify manually\
+  \ before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.Genre.ontology_class = 'Concept' [source ttl rdfs:subClassOf] \u2014 verify manually\
+  \ before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.Library.ontology_class = 'System' [source ttl rdfs:subClassOf] \u2014 verify manually\
+  \ before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.MediaAsset.ontology_class = 'Dataset' [source ttl rdfs:subClassOf] \u2014 verify manually\
+  \ before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.MediaCollection.ontology_class = 'Dataset' [source ttl rdfs:subClassOf] \u2014 verify\
+  \ manually before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.MediaLibrary.ontology_class = 'System' [source ttl rdfs:subClassOf] \u2014 verify manually\
+  \ before relying on this crosswalk for reasoning/joins."
