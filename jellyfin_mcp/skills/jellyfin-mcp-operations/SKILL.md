@@ -1,5 +1,6 @@
 ---
 name: jellyfin-mcp-operations
+skill_type: skill
 description: >-
   Operate jellyfin-mcp through its governed MCP and GraphOS capabilities, including jellyfin kg ingestion, jellyfin library catalog, jellyfin media playback. Use when a request requires this provider's read, change, automation, ingestion, troubleshooting, or evidence workflows.
 ---
