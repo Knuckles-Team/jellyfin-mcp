@@ -1,6 +1,6 @@
 {
   "project": "jellyfin-mcp",
-  "path": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp",
+  "path": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp",
   "domain_results": [
     {
       "domain": "Project Analysis",
@@ -26,7 +26,7 @@
         {
           "criterion": "externalized_prompts",
           "points": 0,
-          "evidence": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp",
+          "evidence": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp",
           "reasoning": "No prompts/ directory found. Prompts may be hardcoded in source."
         },
         {
@@ -44,25 +44,25 @@
         {
           "criterion": "agents_md",
           "points": 10,
-          "evidence": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/AGENTS.md (5277 bytes)",
+          "evidence": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/AGENTS.md (5277 bytes)",
           "reasoning": "AGENTS.md exists with comprehensive content"
         },
         {
           "criterion": "pre_commit_hooks",
           "points": 10,
-          "evidence": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/.pre-commit-config.yaml",
+          "evidence": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/.pre-commit-config.yaml",
           "reasoning": "Pre-commit configuration found for automated code quality checks"
         },
         {
           "criterion": "gitignore",
           "points": 10,
-          "evidence": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/.gitignore",
+          "evidence": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/.gitignore",
           "reasoning": ".gitignore exists to prevent committing build artifacts and secrets"
         },
         {
           "criterion": "env_template",
           "points": 10,
-          "evidence": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/.env.example",
+          "evidence": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/.env.example",
           "reasoning": "Environment template exists for onboarding and secret management"
         },
         {
@@ -91,7 +91,7 @@
         {
           "criterion": "dependency_freshness",
           "points": 100,
-          "evidence": "source=/home/apps/workspace/agent-packages/agents/jellyfin-mcp/pyproject.toml total=5 major=0 minor=0 patch=0 not_installed=0",
+          "evidence": "source=${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/pyproject.toml total=5 major=0 minor=0 patch=0 not_installed=0",
           "reasoning": "Audited 5 deps (5 installed, 0 constraint-only). 0 major, 0 minor, 0 patch updates."
         }
       ],
@@ -185,7 +185,7 @@
           "length": 265,
           "complexity": 87,
           "nesting_depth": 1,
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py"
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py"
         },
         {
           "name": "get_trailers",
@@ -193,7 +193,7 @@
           "length": 259,
           "complexity": 85,
           "nesting_depth": 1,
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
         },
         {
           "name": "get_hls_video_segment",
@@ -201,7 +201,7 @@
           "length": 176,
           "complexity": 54,
           "nesting_depth": 1,
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
         },
         {
           "name": "get_live_hls_stream",
@@ -209,7 +209,7 @@
           "length": 170,
           "complexity": 54,
           "nesting_depth": 1,
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
         },
         {
           "name": "get_master_hls_video_playlist",
@@ -217,7 +217,7 @@
           "length": 170,
           "complexity": 54,
           "nesting_depth": 1,
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
         }
       ],
       "top_long": [
@@ -227,7 +227,7 @@
           "length": 265,
           "complexity": 87,
           "nesting_depth": 1,
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py"
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py"
         },
         {
           "name": "get_trailers",
@@ -235,7 +235,7 @@
           "length": 259,
           "complexity": 85,
           "nesting_depth": 1,
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
         },
         {
           "name": "get_hls_video_segment",
@@ -243,7 +243,7 @@
           "length": 176,
           "complexity": 54,
           "nesting_depth": 1,
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
         },
         {
           "name": "get_live_hls_stream",
@@ -251,7 +251,7 @@
           "length": 170,
           "complexity": 54,
           "nesting_depth": 1,
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
         },
         {
           "name": "get_master_hls_video_playlist",
@@ -259,13 +259,13 @@
           "length": 170,
           "complexity": 54,
           "nesting_depth": 1,
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py"
         }
       ],
       "structural_issues": [
         {
           "file": "api_client_library.py",
-          "path": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
+          "path": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
           "lines": 2223,
           "issues": [
             "11 functions with high complexity (worst: LibraryClient.get_items at 265L, CC=87)",
@@ -307,7 +307,7 @@
         },
         {
           "file": "api_client_media.py",
-          "path": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py",
+          "path": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py",
           "lines": 4668,
           "issues": [
             "21 functions with high complexity (worst: MediaClient.get_trailers at 259L, CC=85)",
@@ -403,7 +403,7 @@
       "tests": [
         {
           "name": "test_init_module_lazy_attributes",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 13,
           "length": 22,
           "intent": "unit",
@@ -413,7 +413,7 @@
         },
         {
           "name": "test_init_module_missing_availability",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 37,
           "length": 10,
           "intent": "unit",
@@ -423,7 +423,7 @@
         },
         {
           "name": "test_init_lazy_import_failure",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 49,
           "length": 18,
           "intent": "unit",
@@ -433,7 +433,7 @@
         },
         {
           "name": "test_init_lazy_expose_members",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 69,
           "length": 15,
           "intent": "unit",
@@ -443,7 +443,7 @@
         },
         {
           "name": "test_auth_empty_params",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 89,
           "length": 4,
           "intent": "unit",
@@ -453,7 +453,7 @@
         },
         {
           "name": "test_auth_missing_url",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 95,
           "length": 4,
           "intent": "unit",
@@ -463,7 +463,7 @@
         },
         {
           "name": "test_auth_oidc_delegation_success",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 101,
           "length": 35,
           "intent": "unit",
@@ -473,7 +473,7 @@
         },
         {
           "name": "test_auth_oidc_delegation_failure",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 138,
           "length": 24,
           "intent": "unit",
@@ -483,7 +483,7 @@
         },
         {
           "name": "test_auth_oidc_delegation_invalid_credentials_on_api",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 164,
           "length": 29,
           "intent": "unit",
@@ -493,7 +493,7 @@
         },
         {
           "name": "test_auth_credentials_invalid",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 195,
           "length": 6,
           "intent": "unit",
@@ -503,7 +503,7 @@
         },
         {
           "name": "test_mcp_server_custom_route",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 206,
           "length": 29,
           "intent": "unit",
@@ -515,7 +515,7 @@
         },
         {
           "name": "test_mcp_server_tools_exception_handling",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 238,
           "length": 79,
           "intent": "unit",
@@ -527,7 +527,7 @@
         },
         {
           "name": "test_mcp_server_import_error_handling",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 320,
           "length": 15,
           "intent": "unit",
@@ -537,7 +537,7 @@
         },
         {
           "name": "test_mcp_server_startup_transports",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 337,
           "length": 34,
           "intent": "unit",
@@ -547,7 +547,7 @@
         },
         {
           "name": "test_mcp_server_main_execution",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 373,
           "length": 16,
           "intent": "unit",
@@ -557,7 +557,7 @@
         },
         {
           "name": "test_agent_server_debug_mode",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 393,
           "length": 40,
           "intent": "unit",
@@ -567,7 +567,7 @@
         },
         {
           "name": "test_agent_server_main_execution",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 435,
           "length": 31,
           "intent": "unit",
@@ -577,7 +577,7 @@
         },
         {
           "name": "test_main_module",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 470,
           "length": 4,
           "intent": "unit",
@@ -587,7 +587,7 @@
         },
         {
           "name": "test_api_client_error_coverage",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 476,
           "length": 43,
           "intent": "unit",
@@ -597,7 +597,7 @@
         },
         {
           "name": "test_server_startup",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_startup.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_startup.py",
           "line": 1,
           "length": 12,
           "intent": "unit",
@@ -607,7 +607,7 @@
         },
         {
           "name": "test_jellyfin_api_brute_force",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
           "line": 27,
           "length": 31,
           "intent": "unit",
@@ -619,7 +619,7 @@
         },
         {
           "name": "test_mcp_server_coverage",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
           "line": 61,
           "length": 57,
           "intent": "unit",
@@ -631,7 +631,7 @@
         },
         {
           "name": "test_agent_server_coverage",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
           "line": 120,
           "length": 43,
           "intent": "unit",
@@ -641,7 +641,7 @@
         },
         {
           "name": "test_concept_parity",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_concept_parity.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_concept_parity.py",
           "line": 58,
           "length": 30,
           "intent": "unit",
@@ -907,15 +907,15 @@
             "detail": "3 modules exceed 500 lines (god modules)",
             "items": [
               {
-                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+                "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
                 "lines": 518
               },
               {
-                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
+                "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
                 "lines": 2223
               },
               {
-                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py",
+                "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py",
                 "lines": 4668
               }
             ]
@@ -927,22 +927,22 @@
             "items": [
               {
                 "class": "LibraryClient",
-                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
+                "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
                 "method_count": 98
               },
               {
                 "class": "UserClient",
-                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_user.py",
+                "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_user.py",
                 "method_count": 45
               },
               {
                 "class": "MediaClient",
-                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py",
+                "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_media.py",
                 "method_count": 162
               },
               {
                 "class": "SystemClient",
-                "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_system.py",
+                "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_system.py",
                 "method_count": 63
               }
             ]
@@ -1165,213 +1165,213 @@
       "tests_missing_markers": [
         {
           "test_name": "test_auth_empty_params",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 89
         },
         {
           "test_name": "test_auth_missing_url",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 95
         },
         {
           "test_name": "test_auth_oidc_delegation_success",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 101
         },
         {
           "test_name": "test_auth_credentials_invalid",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 195
         },
         {
           "test_name": "test_mcp_server_custom_route",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 206
         },
         {
           "test_name": "test_mcp_server_tools_exception_handling",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 238
         },
         {
           "test_name": "test_mcp_server_import_error_handling",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 320
         },
         {
           "test_name": "test_mcp_server_startup_transports",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 337
         },
         {
           "test_name": "test_mcp_server_main_execution",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 373
         },
         {
           "test_name": "test_agent_server_debug_mode",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 393
         },
         {
           "test_name": "test_agent_server_main_execution",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 435
         },
         {
           "test_name": "test_main_module",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 470
         },
         {
           "test_name": "test_api_client_error_coverage",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_coverage_gap_fillers.py",
           "line": 476
         },
         {
           "test_name": "test_server_startup",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_startup.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_startup.py",
           "line": 1
         },
         {
           "test_name": "test_jellyfin_api_brute_force",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
           "line": 27
         },
         {
           "test_name": "test_mcp_server_coverage",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
           "line": 61
         },
         {
           "test_name": "test_agent_server_coverage",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_jellyfin_mcp_brute_force_coverage.py",
           "line": 120
         },
         {
           "test_name": "test_concept_parity",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/tests/test_concept_parity.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/tests/test_concept_parity.py",
           "line": 58
         }
       ],
       "functions_missing_docstrings": [
         {
           "function": "parse_api_client",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/verify_api_integration.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/scripts/verify_api_integration.py",
           "line": 33,
           "length": 26
         },
         {
           "function": "parse_mcp_server",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/verify_api_integration.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/scripts/verify_api_integration.py",
           "line": 94,
           "length": 41
         },
         {
           "function": "verify_agent",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/verify_api_integration.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/scripts/verify_api_integration.py",
           "line": 137,
           "length": 38
         },
         {
           "function": "main",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/verify_api_integration.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/scripts/verify_api_integration.py",
           "line": 177,
           "length": 99
         },
         {
           "function": "main",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/validate_a2a_agent.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/scripts/validate_a2a_agent.py",
           "line": 11,
           "length": 125
         },
         {
           "function": "get_type_annotation",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/generate_code.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/scripts/generate_code.py",
           "line": 17,
           "length": 15
         },
         {
           "function": "generate_api_code",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/generate_code.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/scripts/generate_code.py",
           "line": 34,
           "length": 110
         },
         {
           "function": "generate_mcp_code",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/generate_code.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/scripts/generate_code.py",
           "line": 146,
           "length": 95
         },
         {
           "function": "main",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/scripts/generate_code.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/scripts/generate_code.py",
           "line": 243,
           "length": 18
         },
         {
           "function": "register_condensed_jellyfin_tools",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
           "line": 44,
           "length": 104
         },
         {
           "function": "get_mcp_instance",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
           "line": 150,
           "length": 19
         },
         {
           "function": "mcp_server",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
           "line": 171,
           "length": 16
         },
         {
           "function": "jellyfin_media",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
           "line": 48,
           "length": 32
         },
         {
           "function": "jellyfin_library",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
           "line": 82,
           "length": 32
         },
         {
           "function": "jellyfin_system",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/mcp_server.py",
           "line": 116,
           "length": 32
         },
         {
           "function": "get_client",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/auth.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/auth.py",
           "line": 20,
           "length": 87
         },
         {
           "function": "agent_server",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/agent_server.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/agent_server.py",
           "line": 46,
           "length": 34
         },
         {
           "function": "__getattr__",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/__init__.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/__init__.py",
           "line": 50,
           "length": 26
         },
         {
           "function": "create_collection",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
           "line": 8,
           "length": 19
         },
         {
           "function": "add_to_collection",
-          "file": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
+          "file": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/jellyfin_mcp/api/api_client_library.py",
           "line": 28,
           "length": 10
         }
@@ -1583,7 +1583,7 @@
           "language": "python",
           "framework": "pytest",
           "command": [
-            "/home/apps/workspace/.venv/bin/python3",
+            "${WORKSPACE_ROOT}/.venv/bin/python3",
             "-m",
             "pytest",
             "--tb=line",
@@ -1662,7 +1662,7 @@
         {
           "criterion": "bumpversion_exists",
           "points": 20,
-          "evidence": "/home/apps/workspace/agent-packages/agents/jellyfin-mcp/.bumpversion.cfg",
+          "evidence": "${WORKSPACE_ROOT}/agent-packages/agents/jellyfin-mcp/.bumpversion.cfg",
           "reasoning": ".bumpversion.cfg found"
         },
         {
