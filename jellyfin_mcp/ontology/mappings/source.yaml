@@ -1,0 +1,20 @@
+schema_version: '1'
+connector: jellyfin-mcp
+ontology_source: media
+sync:
+- preset: jellyfin-library
+  server: jellyfin-mcp
+  tool: jellyfin_library
+  action: get_items
+  records_path: Items
+  id_field: Id
+  title_field: Name
+  text_field: Overview
+  updated_field: DateCreated
+  doc_type: media
+  tool_schema_sha256: b566892c3942b578cac9d7396b9561748bf8f8c92bfd090fc4481cff8e5f4c73
+governance:
+  default_acl: quarantine
+  identity: opaque-reference
+  tenant: required-at-materialization
+  provenance: required-at-materialization

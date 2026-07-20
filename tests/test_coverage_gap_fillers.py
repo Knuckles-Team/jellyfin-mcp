@@ -137,23 +137,19 @@ def test_auth_oidc_delegation_success():
     mock_resp.status_code = 200
     mock_resp.json.return_value = {"access_token": "delegated_access_token"}
 
-    mock_api_resp = MagicMock()
-    mock_api_resp.status_code = 200
-    mock_api_resp.json.return_value = {"Version": "10.8.0"}
-
     with (
         patch.dict(os.environ, env_mock),
-        patch("requests.post", return_value=mock_resp) as mock_post,
         patch("requests.Session") as mock_session,
+        patch("jellyfin_mcp.auth.Api") as mock_api,
     ):
-        mock_s_instance = mock_session.return_value
-        mock_s_instance.get.return_value = mock_api_resp
+        delegation_session = mock_session.return_value.__enter__.return_value
+        delegation_session.post.return_value = mock_resp
 
         local.user_token = "mcp_token"
         try:
             client = get_client(base_url="http://jellyfin-server")
-            assert client is not None
-            mock_post.assert_called_once()
+            assert client is mock_api.return_value
+            delegation_session.post.assert_called_once()
         finally:
             local.user_token = None
 
@@ -174,11 +170,14 @@ def test_auth_oidc_delegation_failure():
 
     with (
         patch.dict(os.environ, env_mock),
-        patch("requests.post", side_effect=Exception("Connection timed out")),
+        patch("requests.Session") as mock_session,
     ):
+        mock_session.return_value.__enter__.return_value.post.side_effect = Exception(
+            "Connection timed out"
+        )
         local.user_token = "mcp_token"
         try:
-            with pytest.raises(Exception, match="Connection timed out"):
+            with pytest.raises(RuntimeError, match="^Credential delegation failed$"):
                 get_client(base_url="http://jellyfin-server")
         finally:
             local.user_token = None
@@ -204,11 +203,12 @@ def test_auth_oidc_delegation_invalid_credentials_on_api():
 
     with (
         patch.dict(os.environ, env_mock),
-        patch("requests.post", return_value=mock_resp),
+        patch("requests.Session") as mock_session,
         patch(
             "jellyfin_mcp.auth.Api", side_effect=AuthError("Invalid delegated token")
         ),
     ):
+        mock_session.return_value.__enter__.return_value.post.return_value = mock_resp
         local.user_token = "mcp_token"
         try:
             with pytest.raises(
@@ -232,7 +232,7 @@ def test_auth_credentials_invalid():
     ):
         with pytest.raises(
             RuntimeError,
-            match="AUTHENTICATION ERROR: The Jellyfin credentials provided are not valid",
+            match="AUTHENTICATION ERROR: The configured Jellyfin credentials are not valid",
         ):
             get_client(base_url="http://jellyfin-server", token="invalid-token")
 
@@ -476,7 +476,7 @@ def test_mcp_server_main_execution():
 
     with (
         patch(
-            "agent_utilities.mcp_utilities.create_mcp_server",
+            "agent_utilities.mcp.server_factory.create_mcp_server",
             return_value=(mock_args, mock_mcp, []),
         ),
         patch("sys.exit"),

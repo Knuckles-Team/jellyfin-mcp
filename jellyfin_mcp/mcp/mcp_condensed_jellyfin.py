@@ -5,7 +5,7 @@ Auto-generated from mcp_server.py during ecosystem standardization.
 
 from typing import Any
 
-from agent_utilities.mcp_utilities import dispatch, run_blocking
+from agent_utilities.mcp.action_dispatch import dispatch_async, parse_json_object
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -39,22 +39,20 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
         """
         if ctx and hasattr(ctx, "info"):
             await ctx.info(f"Executing media action: {action}...")
-        import json
-
         try:
-            kwargs = json.loads(params_json) if params_json else {}
-        except Exception as e:
-            return {"error": f"Invalid params_json JSON: {e}"}
+            kwargs = parse_json_object(params_json)
+        except ValueError:
+            return {"error": "Operation failed"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
         try:
-            return await run_blocking(
-                dispatch, client, action, kwargs, service="jellyfin-mcp"
+            return await dispatch_async(
+                client, action, kwargs, service="jellyfin-mcp", ctx=ctx
             )
-        except ValueError as e:
-            return {"error": str(e)}
+        except ValueError:
+            return {"error": "Operation failed"}
         except Exception as e:
-            return {"error": f"Media action failed: {str(e)}"}
+            return {"error": f"Media action failed: {type(e).__name__}"}
 
     @mcp.tool(tags={"Library"})
     async def jellyfin_library(
@@ -76,22 +74,20 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
         """
         if ctx and hasattr(ctx, "info"):
             await ctx.info(f"Executing library action: {action}...")
-        import json
-
         try:
-            kwargs = json.loads(params_json) if params_json else {}
-        except Exception as e:
-            return {"error": f"Invalid params_json JSON: {e}"}
+            kwargs = parse_json_object(params_json)
+        except ValueError:
+            return {"error": "Operation failed"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
         try:
-            return await run_blocking(
-                dispatch, client, action, kwargs, service="jellyfin-mcp"
+            return await dispatch_async(
+                client, action, kwargs, service="jellyfin-mcp", ctx=ctx
             )
-        except ValueError as e:
-            return {"error": str(e)}
+        except ValueError:
+            return {"error": "Operation failed"}
         except Exception as e:
-            return {"error": f"Library action failed: {str(e)}"}
+            return {"error": f"Library action failed: {type(e).__name__}"}
 
     @mcp.tool(tags={"System"})
     async def jellyfin_system(
@@ -113,19 +109,17 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
         """
         if ctx and hasattr(ctx, "info"):
             await ctx.info(f"Executing system action: {action}...")
-        import json
-
         try:
-            kwargs = json.loads(params_json) if params_json else {}
-        except Exception as e:
-            return {"error": f"Invalid params_json JSON: {e}"}
+            kwargs = parse_json_object(params_json)
+        except ValueError:
+            return {"error": "Operation failed"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
         try:
-            return await run_blocking(
-                dispatch, client, action, kwargs, service="jellyfin-mcp"
+            return await dispatch_async(
+                client, action, kwargs, service="jellyfin-mcp", ctx=ctx
             )
-        except ValueError as e:
-            return {"error": str(e)}
+        except ValueError:
+            return {"error": "Operation failed"}
         except Exception as e:
-            return {"error": f"System action failed: {str(e)}"}
+            return {"error": f"System action failed: {type(e).__name__}"}

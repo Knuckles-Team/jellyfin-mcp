@@ -21,10 +21,10 @@ foaf:Person (CONCEPT:KG-2.163).""" ;
 :Book a owl:Class ;
     rdfs:label "Book" ;
     rdfs:comment """A book / audiobook item in an Audiobookshelf :Library, authored_by an
-:Author. A specialization of :MediaAsset. Aligned to schema:Book / bibo:Book
+:Author. A specialization of :MediaItem. Aligned to schema:Book / bibo:Book
 (CONCEPT:KG-2.163).""" ;
     rdfs:seeAlso schema:Book ;
-    rdfs:subClassOf :MediaAsset .
+    rdfs:subClassOf :MediaItem .
 
 :Library a owl:Class ;
     rdfs:label "Library" ;
@@ -40,15 +40,15 @@ media type — audiobooks or ebooks). BFO:IndependentContinuant via System
 
 :attachedToMessage a owl:ObjectProperty ;
     rdfs:label "attached to message" ;
-    rdfs:comment """Links a :MediaAsset to the chat :Memory (ChatMessage) it arrived on,
+    rdfs:comment """Links an :AssetOccurrence to the chat :Memory (ChatMessage) it arrived on,
 so "show me the chart they sent yesterday" resolves media from the conversation
 (CONCEPT:KG-2.251).""" ;
-    rdfs:domain :MediaAsset ;
+    rdfs:domain :AssetOccurrence ;
     rdfs:range :Memory .
 
 :belongsToCollection a owl:ObjectProperty ;
     rdfs:label "belongs to collection" ;
-    rdfs:domain :MediaAsset ;
+    rdfs:domain :MediaItem ;
     rdfs:range :MediaCollection .
 
 :completedDate a owl:DatatypeProperty ;
@@ -81,40 +81,40 @@ substrate — the stable, dedup key the bytes are fetched back by (CONCEPT:KG-2.
 
 :downloadedVia a owl:ObjectProperty ;
     rdfs:label "downloaded via" ;
-    rdfs:comment "Links a MediaAsset to the download System used." ;
-    rdfs:domain :MediaAsset ;
+    rdfs:comment "Links an AssetOccurrence to the download System used." ;
+    rdfs:domain :AssetOccurrence ;
     rdfs:range :System .
 
 :fileSizeBytes a owl:DatatypeProperty ;
     rdfs:label "file size (bytes)" ;
-    rdfs:domain :MediaAsset ;
+    rdfs:domain :AssetOccurrence ;
     rdfs:range xsd:long .
 
 :hasBlob a owl:ObjectProperty ;
     rdfs:label "has blob" ;
-    rdfs:comment """Links a :MediaAsset to the content-addressed :Blob holding its bytes.
+    rdfs:comment """Links an :AssetOccurrence to the content-addressed :Blob holding its bytes.
 Maintains the engine blob refcount (BlobRef) so a referenced blob is never GC'd
 (CONCEPT:KG-2.251).""" ;
-    rdfs:domain :MediaAsset ;
+    rdfs:domain :AssetOccurrence ;
     rdfs:range :Blob .
 
 :managedBy a owl:ObjectProperty ;
     rdfs:label "managed by" ;
-    rdfs:comment "Links a MediaAsset to its MediaLibrary." ;
-    rdfs:domain :MediaAsset ;
+    rdfs:comment "Links a MediaItem to its MediaLibrary." ;
+    rdfs:domain :MediaItem ;
     rdfs:range :MediaLibrary .
 
 :mediaType a owl:DatatypeProperty ;
     rdfs:label "media type" ;
     rdfs:comment "MIME type or category: video/mp4, audio/flac, application/pdf." ;
-    rdfs:domain :MediaAsset ;
+    rdfs:domain :AssetOccurrence ;
     rdfs:range xsd:string .
 
 :producedAsset a owl:ObjectProperty ;
     rdfs:label "produced asset" ;
-    rdfs:comment "Links a DownloadJob to the MediaAsset it created." ;
+    rdfs:comment "Links a DownloadJob to the AssetOccurrence it created." ;
     rdfs:domain :DownloadJob ;
-    rdfs:range :MediaAsset .
+    rdfs:range :AssetOccurrence .
 
 :requestedBy a owl:ObjectProperty ;
     rdfs:label "requested by" ;
@@ -141,14 +141,14 @@ Standards alignment: schema:MediaObject, schema:DownloadAction.""" ;
 :MediaLibrary a owl:Class ;
     rdfs:label "Media Library" ;
     rdfs:comment """A media management system (Jellyfin, Plex). Organizes
-MediaAssets into collections. BFO:IndependentContinuant via System.""" ;
+MediaItems into collections. BFO:IndependentContinuant via System.""" ;
     rdfs:subClassOf :System .
 
 :Blob a owl:Class ;
     rdfs:label "Blob" ;
     rdfs:comment """A content-addressed, deduplicated binary stored in the engine BLOB
 substrate (CONCEPT:KG-2.206), keyed by its content digest. The same bytes (an image,
-a voice note, a chart) resolve to ONE :Blob no matter how many :MediaAssets reference
+a voice note, a chart) resolve to ONE :Blob no matter how many :AssetOccurrences reference
 it. The bytes live in the engine, beside the graph; this node is the graph-side handle
 (its digest) so the blob is discoverable + GC-refcounted from the ontology
 (CONCEPT:KG-2.251).""" ;
@@ -161,17 +161,18 @@ BFO:Process via Action. Aligned to schema:DownloadAction.""" ;
     rdfs:seeAlso schema:DownloadAction ;
     rdfs:subClassOf :Action .
 
-:MediaAsset a owl:Class ;
-    rdfs:label "Media Asset" ;
-    rdfs:comment """A downloaded or managed media file (video, audio, document).
-BFO:GenericallyDependentContinuant via Dataset.
+:MediaItem a owl:Class ;
+    rdfs:label "Media Item" ;
+    rdfs:comment """A catalog item managed by a media library (video, audio, book,
+series, or collection entry). Its source-system identity is distinct from any
+:AssetOccurrence that records observed bytes such as artwork or a downloaded file.
 Aligned to schema:MediaObject.""" ;
     rdfs:seeAlso schema:MediaObject ;
     rdfs:subClassOf :Dataset .
 
 :Artist a owl:Class ;
     rdfs:label "Artist" ;
-    rdfs:comment """A performer / musical artist credited on one or more :MediaAsset
+    rdfs:comment """A performer / musical artist credited on one or more :MediaItem
 items in a Jellyfin :MediaLibrary (audio tracks, albums, music videos). Aligned to
 schema:MusicGroup / foaf:Agent (CONCEPT:KG-2.163).""" ;
     rdfs:seeAlso schema:MusicGroup ;
@@ -180,37 +181,37 @@ schema:MusicGroup / foaf:Agent (CONCEPT:KG-2.163).""" ;
 :Genre a owl:Class ;
     rdfs:label "Genre" ;
     rdfs:comment """A media genre (e.g. Drama, Jazz, Science Fiction) tagged on a
-:MediaAsset. A SKOS concept in the media classification scheme.""" ;
+:MediaItem. A SKOS concept in the media classification scheme.""" ;
     rdfs:seeAlso skos:Concept ;
     rdfs:subClassOf skos:Concept .
 
 :itemKind a owl:DatatypeProperty ;
     rdfs:label "item kind" ;
-    rdfs:comment """The Jellyfin item type of a :MediaAsset: Movie, Episode, Series,
+    rdfs:comment """The Jellyfin item type of a :MediaItem: Movie, Episode, Series,
 Audio, MusicAlbum, Book, etc.""" ;
-    rdfs:domain :MediaAsset ;
+    rdfs:domain :MediaItem ;
     rdfs:range xsd:string .
 
 :communityRating a owl:DatatypeProperty ;
     rdfs:label "community rating" ;
-    rdfs:domain :MediaAsset ;
+    rdfs:domain :MediaItem ;
     rdfs:range xsd:float .
 
 :productionYear a owl:DatatypeProperty ;
     rdfs:label "production year" ;
-    rdfs:domain :MediaAsset ;
+    rdfs:domain :MediaItem ;
     rdfs:range xsd:integer .
 
 :hasGenre a owl:ObjectProperty ;
     rdfs:label "has genre" ;
-    rdfs:comment "Links a :MediaAsset to a :Genre it is classified under." ;
-    rdfs:domain :MediaAsset ;
+    rdfs:comment "Links a :MediaItem to a :Genre it is classified under." ;
+    rdfs:domain :MediaItem ;
     rdfs:range :Genre .
 
 :performedBy a owl:ObjectProperty ;
     rdfs:label "performed by" ;
-    rdfs:comment "Links an audio :MediaAsset to the :Artist that performed it." ;
-    rdfs:domain :MediaAsset ;
+    rdfs:comment "Links an audio :MediaItem to the :Artist that performed it." ;
+    rdfs:domain :MediaItem ;
     rdfs:range :Artist .
 
 :authoredBy a owl:ObjectProperty ;
@@ -218,4 +219,3 @@ Audio, MusicAlbum, Book, etc.""" ;
     rdfs:comment "Links a :Book to its :Author." ;
     rdfs:domain :Book ;
     rdfs:range :Author .
-

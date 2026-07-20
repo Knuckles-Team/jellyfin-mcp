@@ -25,7 +25,7 @@ Install an extra only when you need the integrated agent or the test tooling:
 | Extra | Install | Pulls in |
 |---|---|---|
 | _(base)_ | `pip install jellyfin-mcp` | FastMCP MCP-server runtime (`agent-utilities[mcp]`) |
-| `agent` | `pip install "jellyfin-mcp[agent]"` | Pydantic-AI agent + Logfire tracing (`agent-utilities[agent,logfire]`) |
+| `agent` | `pip install "jellyfin-mcp[agent]"` | Pydantic-AI agent + Logfire tracing (`agent-utilities[agent-runtime,logfire]`) |
 | `all` | `pip install "jellyfin-mcp[all]"` | MCP server **and** the agent runtime |
 | `test` | `pip install "jellyfin-mcp[test]"` | `pytest`, `pytest-asyncio`, `pytest-cov`, `pytest-xdist` |
 
@@ -51,16 +51,16 @@ uv run jellyfin-mcp
 
 ## Prebuilt Docker image
 
-A multi-stage, slim image is published on every release (installs
+A multi-stage runtime image is published on every release (installs
 `jellyfin-mcp[all]`, entrypoint `jellyfin-mcp`):
 
 ```bash
-docker pull knucklessg1/jellyfin-mcp:latest
+docker pull example/jellyfin-mcp@sha256:<digest>
 
 docker run --rm -i \
   -e JELLYFIN_URL=http://your-jellyfin:8096 \
   -e JELLYFIN_API_KEY=your_api_key \
-  knucklessg1/jellyfin-mcp:latest        # stdio transport (default)
+  example/jellyfin-mcp@sha256:<digest>        # stdio transport (default)
 ```
 
 For an HTTP server with a published port, and for the agent server, see

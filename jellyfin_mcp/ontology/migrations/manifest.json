@@ -1,0 +1,6 @@
+{
+  "connector": "jellyfin-mcp",
+  "current_ontology_source": "media",
+  "migrations": [],
+  "schema_version": "1"
+}

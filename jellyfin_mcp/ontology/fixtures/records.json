@@ -1,0 +1,21 @@
+{
+  "connector": "jellyfin-mcp",
+  "fixtures": [
+    {
+      "expected": {
+        "acl_state": "quarantine",
+        "id": "fixture-record",
+        "title": "Synthetic certification record"
+      },
+      "preset": "jellyfin-library",
+      "record": {
+        "DateCreated": "2000-01-01T00:00:00Z",
+        "Id": "fixture-record",
+        "Name": "Synthetic certification record",
+        "Overview": "Synthetic content used only for contract validation.",
+        "acl_public": false
+      }
+    }
+  ],
+  "schema_version": "1"
+}

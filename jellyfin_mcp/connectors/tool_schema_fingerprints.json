@@ -1,0 +1,8 @@
+{
+  "algorithm": "agent-utilities:mcp-tool-schema-compat:v1",
+  "connector": "jellyfin-mcp",
+  "schema_version": "1",
+  "tools": {
+    "jellyfin_library": "b566892c3942b578cac9d7396b9561748bf8f8c92bfd090fc4481cff8e5f4c73"
+  }
+}

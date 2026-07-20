@@ -45,7 +45,7 @@
 - **FR-027**: 4 tests have excessive mocking (>5 mocks) — test behavior, not implementation
 - **FR-028**: Partial env var documentation: 37% coverage
 - **FR-029**: Undocumented env vars: AUTH_TYPE, DEFAULT_AGENT_NAME, DELEGATED_SCOPES, ENABLE_DELEGATION, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, JELLYFIN_ACCESS_TOKEN, JELLYFIN_AUDIENCE, JELLYFIN_BASE_URL, JELLYFIN_INSTANCE
-- **FR-030**: 7 Python env vars not in .env.example: JELLYFIN_AUDIENCE, JELLYFIN_INSTANCE, JELLYFIN_VERIFY, KNOWLEDGE_GRAPH_SYNC_BACKGROUND, OIDC_CLIENT_ID
+- **FR-030**: 7 Python env vars not in .env.example: JELLYFIN_AUDIENCE, JELLYFIN_INSTANCE, TLS_PROFILE, KNOWLEDGE_GRAPH_SYNC_BACKGROUND, OIDC_CLIENT_ID
 
 ## Success Criteria
 

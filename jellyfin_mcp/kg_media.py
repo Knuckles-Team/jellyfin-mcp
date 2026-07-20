@@ -2,7 +2,7 @@
 
 CONCEPT:AU-KG.ingest.list-durable-media. A Jellyfin item's **poster / primary image**
 (or any downloaded bytes) is stored as a content-addressed :Blob with a linked
-:MediaAsset graph node in ONE cross-modal ACID commit, via the agent-utilities
+:AssetOccurrence graph node in ONE cross-modal ACID commit, via the agent-utilities
 ``MediaStore``. This makes the raw artwork bytes — not just an image URL — durable,
 deduped, and queryable inside the knowledge graph beside the typed library nodes that
 ``jellyfin_mcp.kg_ingest`` writes.
@@ -41,14 +41,14 @@ def media_store() -> Any | None:
 
         return native_ingest.media_store()
     except Exception as e:  # noqa: BLE001 — shared primitive absent
-        logger.debug("shared media_store unavailable: %s", e)
+        logger.debug("Operation failed: error_type=%s", type(e).__name__)
     try:
         from agent_utilities.knowledge_graph.core.graph_compute import (
             GraphComputeEngine,
         )
         from agent_utilities.knowledge_graph.memory.media_store import MediaStore
     except Exception as e:  # noqa: BLE001 — KG stack absent
-        logger.debug("KG media ingest unavailable (import): %s", e)
+        logger.debug("Operation failed: error_type=%s", type(e).__name__)
         return None
     try:
         engine = GraphComputeEngine()
@@ -56,7 +56,7 @@ def media_store() -> Any | None:
             return None
         return MediaStore(engine)
     except Exception as e:  # noqa: BLE001 — no reachable engine
-        logger.debug("KG media ingest: engine unreachable: %s", e)
+        logger.debug("Operation failed: error_type=%s", type(e).__name__)
         return None
 
 
@@ -69,7 +69,7 @@ def ingest_image_bytes(
     image_type: str = "Primary",
     store: Any | None = None,
 ) -> dict[str, Any] | None:
-    """Store Jellyfin item artwork as a :Blob + :MediaAsset in the knowledge graph.
+    """Store Jellyfin item artwork as a :Blob + :AssetOccurrence in the knowledge graph.
 
     Returns ``{asset_id, digest, size_bytes, media_type}`` on success, or ``None``
     when there is no engine, no bytes, or the store failed (never raises).
@@ -97,7 +97,7 @@ def ingest_image_bytes(
             extra=extra,
         )
     except Exception as e:  # noqa: BLE001 — engine/store failure is non-fatal
-        logger.warning("KG media ingest: store_media failed: %s", e)
+        logger.warning("Operation failed: error_type=%s", type(e).__name__)
         return None
     if stored is None:
         return None

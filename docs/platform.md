@@ -20,7 +20,7 @@ on `:8096`, with persistent config/cache volumes and bind-mounted media librarie
 # docker/jellyfin.compose.yml
 services:
   jellyfin:
-    image: docker.io/jellyfin/jellyfin:latest
+    image: docker.io/jellyfin/jellyfin@sha256:<digest>
     container_name: jellyfin
     hostname: jellyfin
     restart: unless-stopped
@@ -57,7 +57,7 @@ it as `JELLYFIN_API_KEY`.
 ```bash
 export JELLYFIN_URL=http://localhost:8096
 export JELLYFIN_API_KEY=your_api_key
-export JELLYFIN_SSL_VERIFY=True
+# Optional: JELLYFIN_TLS_PROFILE_REF=secret://runtime/jellyfin-tls
 
 jellyfin-mcp --transport streamable-http --host 0.0.0.0 --port 8000
 ```
@@ -71,7 +71,7 @@ so the connector reaches Jellyfin by container name:
 # docker/stack.compose.yml
 services:
   jellyfin:
-    image: docker.io/jellyfin/jellyfin:latest
+    image: docker.io/jellyfin/jellyfin@sha256:<digest>
     hostname: jellyfin
     ports: ["8096:8096"]
     volumes:
@@ -79,7 +79,7 @@ services:
       - jellyfin_cache:/cache
 
   jellyfin-mcp:
-    image: knucklessg1/jellyfin-mcp:latest
+    image: example/jellyfin-mcp@sha256:<digest>
     depends_on: [jellyfin]
     environment:
       - JELLYFIN_URL=http://jellyfin:8096

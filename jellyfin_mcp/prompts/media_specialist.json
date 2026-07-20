@@ -22,7 +22,7 @@
     "capabilities": {
       "catalog": ["list/filter items by type, parent, genre, year", "resolve a title to an item id via search hints", "inspect collections and user views"],
       "playback": ["list artists/albums/music genres", "manage playlists and instant mixes", "resolve streams and report playstate"],
-      "kg": ["ingest items -> :MediaAsset/:Book with :hasGenre/:performedBy/:authoredBy links", "ingest overviews as :Document", "ingest posters as :Blob via jellyfin_ingest_posters"]
+      "kg": ["ingest items -> :MediaItem/:Book with :hasGenre/:performedBy/:authoredBy links", "ingest overviews as :Document", "ingest posters as :Blob via jellyfin_ingest_posters"]
     },
     "workflow": [
       "resolve the target item(s) (search_term -> item id) or the library scope (parent_id)",

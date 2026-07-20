@@ -7,7 +7,7 @@
         "jellyfin-mcp"
       ],
       "env": {
-        "MCP_TOOL_MODE": "condensed",
+        "MCP_TOOL_MODE": "intent",
         "CONDENSED_JELLYFINTOOL": "True",
         "DELEGATED_SCOPES": "api",
         "ENABLE_DELEGATION": "False",
@@ -16,6 +16,7 @@
         "JELLYFIN_PASSWORD": "your_jellyfin_password_here",
         "JELLYFIN_URL": "http://localhost:8096",
         "JELLYFIN_USERNAME": "admin",
+        "OIDC_CLIENT_SECRET": "your-oidc-client-secret",
         "OIDC_TOKEN_ENDPOINT": "https://identity.example.com/oauth2/token"
       }
     }

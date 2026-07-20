@@ -38,19 +38,26 @@ def generate_api_code(spec: dict) -> str:
     lines.append("")
     lines.append("import json")
     lines.append("import requests")
+    lines.append(
+        "from agent_utilities.core.transport_security import ResolvedTLSProfile, resolve_configured_tls_profile"
+    )
     lines.append("from typing import Dict, List, Optional, Any, Union")
     lines.append("from urllib.parse import urljoin")
     lines.append("")
     lines.append("class Api:")
     lines.append(
-        "    def __init__(self, base_url: str, token: Optional[str] | None = None, username: Optional[str] | None = None, password: Optional[str] | None = None, verify: bool = False):"
+        "    def __init__(self, base_url: str, token: Optional[str] | None = None, username: Optional[str] | None = None, password: Optional[str] | None = None, tls_profile: ResolvedTLSProfile | None = None):"
     )
     lines.append("        self.base_url = base_url")
     lines.append("        self.token = token")
     lines.append("        self.username = username")
     lines.append("        self.password = password")
-    lines.append("        self._session = requests.Session()")
-    lines.append("        self._session.verify = verify")
+    lines.append(
+        "        self.tls_profile = tls_profile or resolve_configured_tls_profile('jellyfin')"
+    )
+    lines.append(
+        "        self._session = self.tls_profile.configure_requests_session(requests.Session())"
+    )
     lines.append("        if token:")
     lines.append("            self._session.headers.update({'X-Emby-Token': token})")
     lines.append("        # Note: Implement basic auth or login flow if needed")
@@ -153,7 +160,9 @@ def generate_mcp_code(spec: dict) -> str:
     lines.append("from fastmcp import FastMCP, Context")
     lines.append("from pydantic import Field")
     lines.append("from jellyfin_mcp.jellyfin_api import Api")
-    lines.append("from jellyfin_mcp.utils import to_boolean, to_integer")
+    lines.append(
+        "from agent_utilities.core.transport_security import resolve_configured_tls_profile"
+    )
     lines.append("")
     lines.append('mcp = FastMCP("jellyfin-mcp")')
     lines.append("")
@@ -162,13 +171,12 @@ def generate_mcp_code(spec: dict) -> str:
     lines.append('    token = os.environ.get("JELLYFIN_TOKEN")')
     lines.append('    username = os.environ.get("JELLYFIN_USERNAME")')
     lines.append('    password = os.environ.get("JELLYFIN_PASSWORD")')
-    lines.append('    verify = to_boolean(os.environ.get("JELLYFIN_VERIFY", "False"))')
     lines.append("    if not base_url:")
     lines.append(
         '        raise ValueError("JELLYFIN_BASE_URL environment variable is required")'
     )
     lines.append(
-        "    return Api(base_url, token=token, username=username, password=password, verify=verify)"
+        "    return Api(base_url, token=token, username=username, password=password, tls_profile=resolve_configured_tls_profile('jellyfin'))"
     )
     lines.append("")
 

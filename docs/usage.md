@@ -34,7 +34,6 @@ from jellyfin_mcp.api_client import Api
 api = Api(
     base_url="http://your-jellyfin:8096",
     token="your_api_key",
-    verify=True,
 )
 
 # Reads
@@ -43,6 +42,10 @@ movies = api.get_movies()              # movie library items
 results = api.search_items(searchTerm="matrix")
 views = api.get_user_views()           # the caller's library views
 ```
+
+TLS verification is always enabled. Configure private trust chains, mTLS, and
+proxy policy with `JELLYFIN_TLS_PROFILE` or `JELLYFIN_TLS_PROFILE_REF`; direct
+clients resolve the active AgentConfig profile automatically.
 
 Build a client straight from the environment:
 

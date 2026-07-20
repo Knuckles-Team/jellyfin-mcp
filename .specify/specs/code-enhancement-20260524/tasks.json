@@ -457,7 +457,7 @@
   {
     "id": "T036",
     "title": "[Environment Variables] 7 Python env vars not in .env.example: JELLYFIN_AUDIENCE, JELLYFIN_INSTANCE, JEL",
-    "description": "7 Python env vars not in .env.example: JELLYFIN_AUDIENCE, JELLYFIN_INSTANCE, JELLYFIN_VERIFY, KNOWLEDGE_GRAPH_SYNC_BACKGROUND, OIDC_CLIENT_ID",
+    "description": "7 Python env vars not in .env.example: JELLYFIN_AUDIENCE, JELLYFIN_INSTANCE, TLS_PROFILE, KNOWLEDGE_GRAPH_SYNC_BACKGROUND, OIDC_CLIENT_ID",
     "domain": "Environment Variables",
     "priority": "P2-Medium",
     "effort": "Medium",

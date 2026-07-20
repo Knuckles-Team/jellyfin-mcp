@@ -1,7 +1,7 @@
 """Action-discovery standardization tests for the jellyfin-mcp condensed tools.
 
-Verifies the shared agent-utilities ``dispatch`` helper provides ``list_actions``
-discovery and rich did-you-mean errors across the action-routed tools.
+Verifies the shared agent-utilities async dispatch provides discovery, bounded
+errors, and fail-closed destructive routing across the action-routed tools.
 
 CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
 """
@@ -15,7 +15,9 @@ from jellyfin_mcp.mcp_server import register_condensed_jellyfin_tools
 
 
 def _make_client() -> MagicMock:
-    client = MagicMock(spec=["get_system_info", "get_items", "get_movie"])
+    client = MagicMock(
+        spec=["delete_record", "get_system_info", "get_items", "get_movie"]
+    )
     client.get_system_info.return_value = {"ok": "system"}
     client.get_items.return_value = {"ok": "items"}
     client.get_movie.return_value = {"ok": "movie"}
@@ -47,12 +49,11 @@ async def test_list_actions_returns_names(tool_name: str):
     "tool_name", ["jellyfin_media", "jellyfin_library", "jellyfin_system"]
 )
 async def test_unknown_action_mentions_list_actions(tool_name: str):
-    """A bogus action returns a rich error mentioning ``list_actions``."""
+    """An unknown action returns a bounded error without echoing caller input."""
     fn = await _get_fn(tool_name)
     res = await fn(action="totally_bogus", params_json="{}", client=_make_client())
-    assert "error" in res
-    assert "Unknown action 'totally_bogus'" in res["error"]
-    assert "list_actions" in res["error"]
+    assert res == {"error": "Operation failed"}
+    assert "totally_bogus" not in str(res)
 
 
 @pytest.mark.asyncio
@@ -63,3 +64,14 @@ async def test_plural_alias_resolves_to_singular():
     res = await fn(action="get_movies", params_json="{}", client=client)
     assert res == {"ok": "movie"}
     client.get_movie.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_headless_destructive_action_fails_closed():
+    fn = await _get_fn("jellyfin_system")
+    client = _make_client()
+
+    res = await fn(action="delete_record", params_json="{}", client=client)
+
+    assert res == {"cancelled": True, "operation": "delete_record"}
+    client.delete_record.assert_not_called()

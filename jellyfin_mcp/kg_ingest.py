@@ -2,16 +2,14 @@
 
 CONCEPT:AU-KG.ingest.enterprise-source-extractor. The jellyfin-mcp connector natively
 pushes its library into the ONE epistemic-graph knowledge graph as **typed OWL nodes**
-(``:MediaAsset``, ``:Book``, ``:Artist``, ``:Genre``) + links (``:hasGenre`` /
+(``:MediaItem``, ``:Book``, ``:Artist``, ``:Genre``) + links (``:hasGenre`` /
 ``:performedBy`` / ``:authoredBy``), and item overviews as searchable ``:Document`` nodes.
 
-This is a thin mapper: the txn write path lives once in the shared primitive
-``agent_utilities.knowledge_graph.memory.native_ingest``. When that primitive is present it
-is used directly; otherwise a self-contained, engine-guarded txn fallback runs (the shared
-module is not yet in every installed agent_utilities). Everything is best-effort — with no
-KG stack or no reachable engine every entry point **no-ops** (returns ``None``), so the
-connector runs with zero KG infrastructure. Node ids follow ``media:<class>:<externalId>``
-and each ``type`` matches a class the package's ``jellyfin_mcp.ontology`` ``.ttl`` federates.
+This is a thin mapper: the transaction path lives once in the required
+``agent_utilities.knowledge_graph.memory.native_ingest`` primitive. Engine failures are
+explicit and partial writes are never acknowledged. Node ids follow
+``media:<class>:<externalId>`` and each ``node_type`` matches a class the package's
+``jellyfin_mcp.ontology`` ``.ttl`` federates.
 """
 
 from __future__ import annotations
@@ -19,51 +17,19 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from agent_utilities.knowledge_graph.memory.native_ingest import (
+    ingest_documents as _native_ingest_documents,
+)
+from agent_utilities.knowledge_graph.memory.native_ingest import (
+    ingest_entities as _native_ingest_entities,
+)
+
 logger = logging.getLogger("jellyfin_mcp.kg")
 
 _SOURCE = "jellyfin-mcp"
 _DOMAIN = "media"
-_DEFAULT_GRAPH = "__commons__"
-
-# Jellyfin item Type values that are book/audiobook items -> :Book (else :MediaAsset).
+# Jellyfin item Type values that are book/audiobook items -> :Book (else :MediaItem).
 _BOOK_KINDS = {"Book", "AudioBook"}
-
-
-# --------------------------------------------------------------------------- #
-# Shared-primitive-first, guarded fallback write path
-# --------------------------------------------------------------------------- #
-def _shared():
-    """Return the shared native_ingest module, or ``None`` when absent."""
-    try:
-        from agent_utilities.knowledge_graph.memory import native_ingest
-
-        return native_ingest
-    except Exception as e:  # noqa: BLE001 — shared primitive not installed yet
-        logger.debug("shared native_ingest unavailable: %s", e)
-        return None
-
-
-def _client() -> tuple[Any | None, str]:
-    """Return ``(engine_client, graph_name)`` or ``(None, "")`` when unavailable."""
-    shared = _shared()
-    if shared is not None:
-        return shared.native_client()
-    try:
-        from agent_utilities.knowledge_graph.core.graph_compute import (
-            GraphComputeEngine,
-        )
-    except Exception as e:  # noqa: BLE001 — KG stack absent
-        logger.debug("KG ingest unavailable (import): %s", e)
-        return None, ""
-    try:
-        engine = GraphComputeEngine()
-        client = getattr(engine, "_client", None)
-        if client is None:
-            return None, ""
-        return client, (getattr(engine, "graph_name", None) or _DEFAULT_GRAPH)
-    except Exception as e:  # noqa: BLE001 — engine unreachable
-        logger.debug("KG ingest: engine unreachable: %s", e)
-        return None, ""
 
 
 def ingest_entities(
@@ -74,61 +40,19 @@ def ingest_entities(
     domain: str = _DOMAIN,
     client: Any | None = None,
     graph: str | None = None,
-) -> dict[str, int] | None:
+) -> dict[str, int]:
     """Write typed OWL nodes (+ edges) into epistemic-graph.
 
-    ``entities``: ``[{"id":..., "type":<owl:Class>, ...props}]``.
-    ``relationships``: ``[{"source":id, "target":id, "type":<link>}]``.
-    Returns ``{"nodes":n, "edges":m}`` or ``None`` (no engine / failure; never raises).
+    Nodes use ``node_type`` and relationships use ``relationship``.
     """
-    entities = [e for e in (entities or []) if e.get("id")]
-    if not entities:
-        return None
-
-    shared = _shared()
-    if shared is not None:
-        return shared.ingest_entities(
-            entities,
-            relationships,
-            source=source,
-            domain=domain,
-            client=client,
-            graph=graph,
-        )
-
-    # Self-contained fallback txn path (mirrors the shared primitive).
-    if client is None:
-        client, graph = _client()
-    if client is None:
-        return None
-    graph = graph or _DEFAULT_GRAPH
-    try:
-        txn = client.txn.begin(graph=graph)
-        for ent in entities:
-            props = {k: v for k, v in ent.items() if k != "id" and v is not None}
-            props.setdefault("source", source)
-            props.setdefault("domain", domain)
-            client.txn.add_node(txn, ent["id"], props)
-        committed = client.txn.commit(txn)
-    except Exception as e:  # noqa: BLE001 — engine/txn failure is non-fatal
-        logger.warning("KG ingest: txn failed: %s", e)
-        return None
-    if not committed:
-        logger.warning("KG ingest: txn not committed (conflict)")
-        return None
-
-    edges = 0
-    for rel in relationships or []:
-        try:
-            client.edges.add(
-                rel["source"], rel["target"], {"type": rel.get("type", "RELATED")}
-            )
-            edges += 1
-        except Exception as e:  # noqa: BLE001 — pure edge link, best-effort
-            logger.debug("KG ingest: edge skipped: %s", e)
-
-    logger.info("KG ingest: wrote %d nodes, %d edges", len(entities), edges)
-    return {"nodes": len(entities), "edges": edges}
+    return _native_ingest_entities(
+        entities,
+        relationships,
+        source=source,
+        domain=domain,
+        client=client,
+        graph=graph,
+    )
 
 
 def ingest_documents(
@@ -138,22 +62,14 @@ def ingest_documents(
     domain: str = _DOMAIN,
     client: Any | None = None,
     graph: str | None = None,
-) -> dict[str, int] | None:
+) -> dict[str, int]:
     """Write text records as ``:Document`` nodes (semantic-search fodder)."""
-    documents = [d for d in (documents or []) if d.get("id") and d.get("text")]
-    if not documents:
-        return None
-
-    shared = _shared()
-    if shared is not None:
-        return shared.ingest_documents(
-            documents, source=source, domain=domain, client=client, graph=graph
-        )
-
-    # Fallback: :Document nodes are just typed nodes carrying ``text``.
-    nodes = [{**d, "type": "Document"} for d in documents]
-    return ingest_entities(
-        nodes, None, source=source, domain=domain, client=client, graph=graph
+    return _native_ingest_documents(
+        documents,
+        source=source,
+        domain=domain,
+        client=client,
+        graph=graph,
     )
 
 
@@ -176,13 +92,13 @@ def _map_item(
     iid = item.get("Id") or item.get("id")
     if not iid:
         return
-    kind = item.get("Type") or item.get("type") or "MediaAsset"
-    cls = "Book" if kind in _BOOK_KINDS else "MediaAsset"
+    kind = item.get("Type") or item.get("type") or "MediaItem"
+    cls = "Book" if kind in _BOOK_KINDS else "MediaItem"
     node_id = f"media:{cls}:{iid}"
     entities.append(
         {
             "id": node_id,
-            "type": cls,
+            "node_type": cls,
             "name": item.get("Name") or item.get("name"),
             "itemKind": kind,
             "overview": item.get("Overview"),
@@ -214,9 +130,9 @@ def _map_item(
             continue
         gid = f"media:Genre:{_norm(str(genre))}"
         if gid not in seen:
-            entities.append({"id": gid, "type": "Genre", "name": str(genre)})
+            entities.append({"id": gid, "node_type": "Genre", "name": str(genre)})
             seen.add(gid)
-        relationships.append({"source": node_id, "target": gid, "type": "hasGenre"})
+        relationships.append({"source": node_id, "target": gid, "relationship": "hasGenre"})
 
     # Artists (audio) / authors (books) -> :Artist|:Author + link
     for artist in item.get("Artists") or []:
@@ -229,9 +145,9 @@ def _map_item(
             aid = f"media:Artist:{_norm(str(artist))}"
             atype, link = "Artist", "performedBy"
         if aid not in seen:
-            entities.append({"id": aid, "type": atype, "name": str(artist)})
+            entities.append({"id": aid, "node_type": atype, "name": str(artist)})
             seen.add(aid)
-        relationships.append({"source": node_id, "target": aid, "type": link})
+        relationships.append({"source": node_id, "target": aid, "relationship": link})
 
 
 def ingest_items(
@@ -241,7 +157,7 @@ def ingest_items(
     graph: str | None = None,
     with_documents: bool = True,
 ) -> dict[str, int] | None:
-    """Map Jellyfin library items -> ``:MediaAsset``/``:Book`` (+ genre/artist) nodes.
+    """Map Jellyfin library items -> ``:MediaItem``/``:Book`` (+ genre/artist) nodes.
 
     Accepts either a raw list of item dicts or the Jellyfin ``{"Items": [...]}`` envelope.
     Returns ``{"nodes":n, "edges":m, "documents":d}`` or ``None``.
@@ -285,7 +201,7 @@ def ingest_artists(
         entities.append(
             {
                 "id": f"media:Artist:{aid}",
-                "type": "Artist",
+                "node_type": "Artist",
                 "name": artist.get("Name") or artist.get("name"),
                 "overview": artist.get("Overview"),
                 "externalToolId": str(aid),

@@ -1,12 +1,15 @@
 """Native epistemic-graph typed-node ingestion — Wire-First coverage.
 
 Exercises the real ``ingest_entities`` / ``ingest_items`` / ``ingest_artists`` seam with
-a fake engine client (no engine required), asserting the txn add_node/commit + edge calls
-and the Jellyfin item -> :MediaAsset/:Book/:Genre/:Artist mapping.
+a fake engine client (no engine required), asserting the single-transaction node/edge staging and commit
+and the Jellyfin item -> :MediaItem/:Book/:Genre/:Artist mapping.
 CONCEPT:AU-KG.ingest.enterprise-source-extractor.
 """
 
 from __future__ import annotations
+
+import pytest
+from agent_utilities.knowledge_graph.memory.native_ingest import NativeIngestError
 
 from jellyfin_mcp.kg_ingest import (
     ingest_artists,
@@ -19,6 +22,7 @@ from jellyfin_mcp.kg_ingest import (
 class _FakeTxn:
     def __init__(self):
         self.nodes = {}
+        self.edges = []
         self.committed = False
 
     def begin(self, graph=None):
@@ -28,33 +32,27 @@ class _FakeTxn:
     def add_node(self, txn, node_id, props):
         self.nodes[node_id] = props
 
+    def add_edge(self, txn, source, target, props):
+        self.edges.append((source, target, props))
+
     def commit(self, txn):
         self.committed = True
         return True
 
 
-class _FakeEdges:
-    def __init__(self):
-        self.edges = []
-
-    def add(self, src, dst, props):
-        self.edges.append((src, dst, props))
-
-
 class _FakeClient:
     def __init__(self):
         self.txn = _FakeTxn()
-        self.edges = _FakeEdges()
 
 
 def test_ingest_entities_writes_nodes_and_edges():
     c = _FakeClient()
     res = ingest_entities(
         [
-            {"id": "a", "type": "MediaAsset", "name": "m"},
-            {"id": "g", "type": "Genre", "name": "Drama"},
+            {"id": "a", "node_type": "MediaItem", "name": "m"},
+            {"id": "g", "node_type": "Genre", "name": "Drama"},
         ],
-        [{"source": "a", "target": "g", "type": "hasGenre"}],
+        [{"source": "a", "target": "g", "relationship": "hasGenre"}],
         client=c,
         graph="__commons__",
     )
@@ -64,7 +62,7 @@ def test_ingest_entities_writes_nodes_and_edges():
     # provenance is stamped
     assert c.txn.nodes["a"]["source"] == "jellyfin-mcp"
     assert c.txn.nodes["a"]["domain"] == "media"
-    assert c.edges.edges == [("a", "g", {"type": "hasGenre"})]
+    assert c.txn.edges == [("a", "g", {"relationship": "hasGenre"})]
 
 
 def test_ingest_items_maps_movie_genre_and_documents():
@@ -85,21 +83,21 @@ def test_ingest_items_maps_movie_genre_and_documents():
         client=c,
     )
     assert res is not None
-    node = c.txn.nodes["media:MediaAsset:abc"]
-    assert node["type"] == "MediaAsset"
+    node = c.txn.nodes["media:MediaItem:abc"]
+    assert node["node_type"] == "MediaItem"
     assert node["itemKind"] == "Movie"
     assert node["externalToolId"] == "abc"
     assert node["productionYear"] == 1982
     # genre nodes + hasGenre edges
     assert "media:Genre:science-fiction" in c.txn.nodes
     assert (
-        "media:MediaAsset:abc",
+        "media:MediaItem:abc",
         "media:Genre:drama",
-        {"type": "hasGenre"},
-    ) in c.edges.edges
+        {"relationship": "hasGenre"},
+    ) in c.txn.edges
     # overview became a :Document
     assert res["documents"] == 1
-    assert c.txn.nodes["media:Document:abc"]["type"] == "Document"
+    assert c.txn.nodes["media:Document:abc"]["node_type"] == "Document"
 
 
 def test_ingest_items_maps_audio_artist_and_book_author():
@@ -112,26 +110,26 @@ def test_ingest_items_maps_audio_artist_and_book_author():
         client=c,
         with_documents=False,
     )
-    assert c.txn.nodes["media:Book:b1"]["type"] == "Book"
+    assert c.txn.nodes["media:Book:b1"]["node_type"] == "Book"
     assert "media:Artist:miles-davis" in c.txn.nodes
     assert "media:Author:frank-herbert" in c.txn.nodes
     assert (
-        "media:MediaAsset:s1",
+        "media:MediaItem:s1",
         "media:Artist:miles-davis",
-        {"type": "performedBy"},
-    ) in c.edges.edges
+        {"relationship": "performedBy"},
+    ) in c.txn.edges
     assert (
         "media:Book:b1",
         "media:Author:frank-herbert",
-        {"type": "authoredBy"},
-    ) in c.edges.edges
+        {"relationship": "authoredBy"},
+    ) in c.txn.edges
 
 
 def test_ingest_artists_maps_artist_nodes():
     c = _FakeClient()
     res = ingest_artists({"Items": [{"Id": "art1", "Name": "Radiohead"}]}, client=c)
     assert res == {"nodes": 1, "edges": 0}
-    assert c.txn.nodes["media:Artist:art1"]["type"] == "Artist"
+    assert c.txn.nodes["media:Artist:art1"]["node_type"] == "Artist"
     assert c.txn.nodes["media:Artist:art1"]["name"] == "Radiohead"
 
 
@@ -141,15 +139,14 @@ def test_ingest_documents_writes_document_nodes():
         [{"id": "media:Document:x", "text": "hello", "title": "X"}], client=c
     )
     assert res == {"nodes": 1, "edges": 0}
-    assert c.txn.nodes["media:Document:x"]["type"] == "Document"
+    assert c.txn.nodes["media:Document:x"]["node_type"] == "Document"
 
 
-def test_ingest_noops_without_engine():
-    # No injected client + no reachable engine -> clean no-op.
-    assert ingest_entities([{"id": "a", "type": "MediaAsset"}]) is None
+def test_retired_structural_alias_is_rejected():
+    with pytest.raises(NativeIngestError, match="canonical node_type"):
+        ingest_entities([{"id": "a", "type": "MediaItem"}], client=_FakeClient())
 
 
-def test_ingest_empty_is_noop():
-    assert ingest_entities([], client=_FakeClient()) is None
-    assert ingest_items([], client=_FakeClient()) is None
-    assert ingest_artists([], client=_FakeClient()) is None
+def test_empty_native_ingest_is_rejected():
+    with pytest.raises(NativeIngestError, match="at least one entity"):
+        ingest_entities([], client=_FakeClient())

@@ -53,7 +53,7 @@
 - **FR-033**: 1 tests exceed 100 lines — likely doing too much per test
 - **FR-034**: Partial env var documentation: 37% coverage
 - **FR-035**: Undocumented env vars: AUTH_TYPE, DEFAULT_AGENT_NAME, DELEGATED_SCOPES, ENABLE_DELEGATION, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, JELLYFIN_ACCESS_TOKEN, JELLYFIN_AUDIENCE, JELLYFIN_BASE_URL, JELLYFIN_INSTANCE
-- **FR-036**: 7 Python env vars not in .env.example: JELLYFIN_AUDIENCE, JELLYFIN_INSTANCE, JELLYFIN_VERIFY, KNOWLEDGE_GRAPH_SYNC_BACKGROUND, OIDC_CLIENT_ID
+- **FR-036**: 7 Python env vars not in .env.example: JELLYFIN_AUDIENCE, JELLYFIN_INSTANCE, TLS_PROFILE, KNOWLEDGE_GRAPH_SYNC_BACKGROUND, OIDC_CLIENT_ID
 - **FR-037**: Analysis error: No module named 'agent_utilities.knowledge_graph'
 
 ## Success Criteria

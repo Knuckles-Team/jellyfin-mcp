@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jellyfin MCP Operations"
+  short_description: "Help with Jellyfin MCP Operations tasks"
+  default_prompt: "Use $jellyfin-mcp-operations to complete a governed provider workflow."

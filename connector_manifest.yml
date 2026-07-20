@@ -28,7 +28,7 @@ resources:
   relations:
   - name: producedAsset
     label: produced asset
-    target: MediaAsset
+    target: AssetOccurrence
     lpg_rel_type: ''
   - name: requestedBy
     label: requested by
@@ -42,25 +42,17 @@ resources:
   label: Library
   id_prefix: library
   relations: []
-- name: MediaAsset
-  label: Media Asset
-  id_prefix: mediaasset
+- name: MediaCollection
+  label: Media Collection
+  id_prefix: mediacollection
+  relations: []
+- name: MediaItem
+  label: Media Item
+  id_prefix: mediaitem
   relations:
-  - name: attachedToMessage
-    label: attached to message
-    target: Memory
-    lpg_rel_type: ''
   - name: belongsToCollection
     label: belongs to collection
     target: MediaCollection
-    lpg_rel_type: ''
-  - name: downloadedVia
-    label: downloaded via
-    target: System
-    lpg_rel_type: ''
-  - name: hasBlob
-    label: has blob
-    target: Blob
     lpg_rel_type: ''
   - name: hasGenre
     label: has genre
@@ -74,10 +66,6 @@ resources:
     label: performed by
     target: Artist
     lpg_rel_type: ''
-- name: MediaCollection
-  label: Media Collection
-  id_prefix: mediacollection
-  relations: []
 - name: MediaLibrary
   label: Media Library
   id_prefix: medialibrary
@@ -147,7 +135,7 @@ schema_mappings:
       mediaType: xsd:string
       productionYear: xsd:integer
   Book:
-    ontology_class: MediaAsset
+    ontology_class: MediaItem
     fields:
       addedDate: xsd:dateTime
       communityRating: xsd:float
@@ -202,7 +190,7 @@ schema_mappings:
       itemKind: xsd:string
       mediaType: xsd:string
       productionYear: xsd:integer
-  MediaAsset:
+  MediaCollection:
     ontology_class: Dataset
     fields:
       addedDate: xsd:dateTime
@@ -216,7 +204,7 @@ schema_mappings:
       itemKind: xsd:string
       mediaType: xsd:string
       productionYear: xsd:integer
-  MediaCollection:
+  MediaItem:
     ontology_class: Dataset
     fields:
       addedDate: xsd:dateTime
@@ -256,6 +244,7 @@ sync:
   updated_field: DateCreated
   pagination: null
   doc_type: media
+  tool_schema_sha256: b566892c3942b578cac9d7396b9561748bf8f8c92bfd090fc4481cff8e5f4c73
   raw:
     server: jellyfin-mcp
     tool: jellyfin_library
@@ -268,17 +257,20 @@ sync:
     doc_type: media
 provenance:
   generated_by: scripts/generate_connector_manifests.py
-  generated_at: '2026-07-09T00:00:00Z'
+  generated_at: '2026-07-18T00:00:00Z'
   source_artifacts:
   - a2a.json
   - jellyfin_mcp/connectors/mcp_source_presets.json
+  - jellyfin_mcp/connectors/tool_schema_fingerprints.json
   - jellyfin_mcp/ontology/media.ttl
   integrity:
     algorithm: urdna2015-sha256
-    hash: 73f0f22a416927d8d737963cbe9096ab2faef983182449275d38ca48f1f9a83e
-    triple_count: 117
+    hash: 8d0d9a4c6aac1d900718a74970c7739016fcf879a41c3f51330f8666a8efd0bc
+    triple_count: 105
   signer: ontology-manifest-generator
-  signature: aa49b4d2df34e3614fd2a8f707f4b30f5b840ab56e62e9dbf74bcd5f95494e08
+  signature_algorithm: ed25519
+  signing_public_key: q0Cp7bmQMqJhbofGKKw8xXC6KbFzukBDDke0UYVi8y4
+  signature: 2DGCo6Fzn9Czt2DFOHclruowY0Ra8vzfYMHFYl0vWNoK5iIhgJXfp0HCGmOEMmG6FMWi_kUoSWx2J7wnyYs6Ag
 policy:
   pii_fields: {}
   tenant_boundary: null
@@ -286,13 +278,19 @@ policy:
 review_todos:
 - "policy.rls / policy.tenant_boundary are unset \u2014 no row-level-security predicate has been reviewed\
   \ for this connector."
+- "relation 'attachedToMessage' has no declared rdfs:domain resolving to a known resource in this connector's\
+  \ ontology \u2014 not attached to any resource; verify its true domain manually."
+- "relation 'downloadedVia' has no declared rdfs:domain resolving to a known resource in this connector's\
+  \ ontology \u2014 not attached to any resource; verify its true domain manually."
+- "relation 'hasBlob' has no declared rdfs:domain resolving to a known resource in this connector's ontology\
+  \ \u2014 not attached to any resource; verify its true domain manually."
 - "schema_mappings.Artist.ontology_class = 'Agent' [source ttl rdfs:subClassOf] \u2014 verify manually\
   \ before relying on this crosswalk for reasoning/joins."
 - "schema_mappings.Author.ontology_class = 'Person' [source ttl rdfs:subClassOf] \u2014 verify manually\
   \ before relying on this crosswalk for reasoning/joins."
 - "schema_mappings.Blob.ontology_class = 'Dataset' [source ttl rdfs:subClassOf] \u2014 verify manually\
   \ before relying on this crosswalk for reasoning/joins."
-- "schema_mappings.Book.ontology_class = 'MediaAsset' [source ttl rdfs:subClassOf] \u2014 verify manually\
+- "schema_mappings.Book.ontology_class = 'MediaItem' [source ttl rdfs:subClassOf] \u2014 verify manually\
   \ before relying on this crosswalk for reasoning/joins."
 - "schema_mappings.DownloadJob.ontology_class = 'Action' [source ttl rdfs:subClassOf] \u2014 verify manually\
   \ before relying on this crosswalk for reasoning/joins."
@@ -300,9 +298,9 @@ review_todos:
   \ before relying on this crosswalk for reasoning/joins."
 - "schema_mappings.Library.ontology_class = 'System' [source ttl rdfs:subClassOf] \u2014 verify manually\
   \ before relying on this crosswalk for reasoning/joins."
-- "schema_mappings.MediaAsset.ontology_class = 'Dataset' [source ttl rdfs:subClassOf] \u2014 verify manually\
-  \ before relying on this crosswalk for reasoning/joins."
 - "schema_mappings.MediaCollection.ontology_class = 'Dataset' [source ttl rdfs:subClassOf] \u2014 verify\
   \ manually before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.MediaItem.ontology_class = 'Dataset' [source ttl rdfs:subClassOf] \u2014 verify manually\
+  \ before relying on this crosswalk for reasoning/joins."
 - "schema_mappings.MediaLibrary.ontology_class = 'System' [source ttl rdfs:subClassOf] \u2014 verify manually\
   \ before relying on this crosswalk for reasoning/joins."
