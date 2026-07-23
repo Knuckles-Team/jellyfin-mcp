@@ -10,11 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://knuckles-team.github.io/jellyfin-mcp/">
+        <link rel="canonical" href="https://knuckles-team.github.io/jellyfin-mcp/configuration/">
       
       
+        <link rel="prev" href="../installation/">
       
-        <link rel="next" href="overview/">
+      
+        <link rel="next" href="../deployment/">
       
       
         
@@ -25,14 +27,14 @@
     
     
       
-        <title>jellyfin-mcp</title>
+        <title>Configuration, trust, and privacy - jellyfin-mcp</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -76,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#jellyfin-mcp" class="md-skip">
+        <a href="#configuration-trust-and-privacy" class="md-skip">
           Skip to content
         </a>
       
@@ -92,7 +94,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="jellyfin-mcp" class="md-header__button md-logo" aria-label="jellyfin-mcp" data-md-component="logo">
+    <a href=".." title="jellyfin-mcp" class="md-header__button md-logo" aria-label="jellyfin-mcp" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20.84 2.18-3.93.78 2.74 3.54 1.97-.4zm-6.87 1.36L12 3.93l2.75 3.53 1.96-.39zm-4.9.96-1.97.41 2.75 3.53 1.96-.39zm-4.91 1-.98.19a2 2 0 0 0-1.57 2.35L2 10l4.9-.97zM2 10v10a2 2 0 0 0 2 2h16c1.11 0 2-.89 2-2V10z"/></svg>
@@ -112,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Configuration, trust, and privacy
             
           </span>
         </div>
@@ -232,11 +234,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="." class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
         
   
   
@@ -255,7 +255,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="overview/" class="md-tabs__link">
+      <a href="../overview/" class="md-tabs__link">
         
   
   
@@ -274,7 +274,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="installation/" class="md-tabs__link">
+      <a href="../installation/" class="md-tabs__link">
         
   
   
@@ -291,9 +291,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="configuration/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -312,7 +314,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="deployment/" class="md-tabs__link">
+      <a href="../deployment/" class="md-tabs__link">
         
   
   
@@ -331,7 +333,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="usage/" class="md-tabs__link">
+      <a href="../usage/" class="md-tabs__link">
         
   
   
@@ -350,7 +352,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="platform/" class="md-tabs__link">
+      <a href="../platform/" class="md-tabs__link">
         
   
   
@@ -369,7 +371,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="concepts/" class="md-tabs__link">
+      <a href="../concepts/" class="md-tabs__link">
         
   
   
@@ -410,7 +412,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="jellyfin-mcp" class="md-nav__button md-logo" aria-label="jellyfin-mcp" data-md-component="logo">
+    <a href=".." title="jellyfin-mcp" class="md-nav__button md-logo" aria-label="jellyfin-mcp" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20.84 2.18-3.93.78 2.74 3.54 1.97-.4zm-6.87 1.36L12 3.93l2.75 3.53 1.96-.39zm-4.9.96-1.97.41 2.75 3.53 1.96-.39zm-4.91 1-.98.19a2 2 0 0 0-1.57 2.35L2 10l4.9-.97zM2 10v10a2 2 0 0 0 2 2h16c1.11 0 2-.89 2-2V10z"/></svg>
@@ -437,37 +439,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -483,59 +458,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#explore-the-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Explore the documentation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick start
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -547,7 +469,7 @@
   
   
     <li class="md-nav__item">
-      <a href="overview/" class="md-nav__link">
+      <a href="../overview/" class="md-nav__link">
         
   
   
@@ -574,7 +496,7 @@
   
   
     <li class="md-nav__item">
-      <a href="installation/" class="md-nav__link">
+      <a href="../installation/" class="md-nav__link">
         
   
   
@@ -598,10 +520,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="configuration/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration, trust, and privacy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -617,6 +566,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#capability-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capability configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runtime-values-and-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime values and secrets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS trust
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#privacy-and-data-governance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privacy and data governance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -628,7 +652,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deployment/" class="md-nav__link">
+      <a href="../deployment/" class="md-nav__link">
         
   
   
@@ -655,7 +679,7 @@
   
   
     <li class="md-nav__item">
-      <a href="usage/" class="md-nav__link">
+      <a href="../usage/" class="md-nav__link">
         
   
   
@@ -682,7 +706,7 @@
   
   
     <li class="md-nav__item">
-      <a href="platform/" class="md-nav__link">
+      <a href="../platform/" class="md-nav__link">
         
   
   
@@ -709,7 +733,7 @@
   
   
     <li class="md-nav__item">
-      <a href="concepts/" class="md-nav__link">
+      <a href="../concepts/" class="md-nav__link">
         
   
   
@@ -756,10 +780,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#capability-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Capability configuration
       
     </span>
   </a>
@@ -767,10 +791,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#explore-the-documentation" class="md-nav__link">
+  <a href="#runtime-values-and-secrets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Explore the documentation
+        Runtime values and secrets
       
     </span>
   </a>
@@ -778,10 +802,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#tls-trust" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick start
+        TLS trust
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#privacy-and-data-governance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privacy and data governance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment verification
       
     </span>
   </a>
@@ -808,57 +854,70 @@
   
 
 
-<h1 id="jellyfin-mcp">jellyfin-mcp<a class="headerlink" href="#jellyfin-mcp" title="Permanent link">&para;</a></h1>
-<p>Jellyfin media-server <strong>API + MCP Server + A2A Agent</strong> for the agent-utilities
-ecosystem — a typed, deterministic tool surface over the Jellyfin REST API for
-agentic media management.</p>
-<div class="admonition info">
-<p class="admonition-title">Official documentation</p>
-<p>This site is the canonical reference for <code>jellyfin-mcp</code>, maintained alongside every
-release.</p>
-</div>
-<p><a href="https://pypi.org/project/jellyfin-mcp/"><img alt="PyPI" src="https://img.shields.io/pypi/v/jellyfin-mcp" /></a>
-<img alt="MCP Server" src="https://badge.mcpx.dev?type=server" title="MCP Server" />
-<a href="https://github.com/Knuckles-Team/jellyfin-mcp/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/pypi/l/jellyfin-mcp" /></a>
-<a href="https://github.com/Knuckles-Team/jellyfin-mcp"><img alt="GitHub" src="https://img.shields.io/badge/source-GitHub-181717?logo=github" /></a></p>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p><code>jellyfin-mcp</code> wraps the Jellyfin media server's REST surface with consolidated,
-action-routed MCP tools, and ships an integrated Pydantic-AI graph agent. It provides:</p>
+<h1 id="configuration-trust-and-privacy">Configuration, trust, and privacy<a class="headerlink" href="#configuration-trust-and-privacy" title="Permanent link">&para;</a></h1>
+<p>This page is the operator contract for <code>jellyfin-mcp</code>. Package-specific endpoint,
+authentication, tool-toggle, and model settings remain documented in the
+repository README and the installed command's <code>--help</code> output. Runtime values
+must be injected by the launcher; they do not belong in source, packaged skill
+content, traces, or generated reports.</p>
+<h2 id="capability-configuration">Capability configuration<a class="headerlink" href="#capability-configuration" title="Permanent link">&para;</a></h2>
+<p>The current capability surface is defined by three versioned artifacts:</p>
 <ul>
-<li><strong><code>Api</code></strong> — a unified Python client composed of modular media, library, system, and
-  user sub-clients over the Jellyfin REST API.</li>
-<li><strong>Condensed, action-routed MCP tools</strong> — <code>jellyfin_media</code>, <code>jellyfin_library</code>, and
-  <code>jellyfin_system</code> dispatch dynamically to the client methods, minimizing tool bloat
-  in the LLM context window.</li>
-<li><strong>An A2A graph agent</strong> (<code>jellyfin-agent</code> console script) — a Pydantic-AI agent with a
-  confidence-gated router, optional Web UI (AG-UI), and OpenTelemetry tracing.</li>
+<li>the action-routed MCP tools described in the README and <code>docs/usage.md</code>;</li>
+<li>the compact canonical skill plus any specialist <code>WORKFLOW.md</code> procedures;</li>
+<li><code>connector_manifest.yml</code> and its ontology, mappings, shapes, fixtures,
+  migrations, tool-schema fingerprints, and certification metadata.</li>
 </ul>
-<p>Credentials are read from the environment; the server <strong>remains inactive when
-credentials are absent</strong> rather than failing at import time.</p>
-<h2 id="explore-the-documentation">Explore the documentation<a class="headerlink" href="#explore-the-documentation" title="Permanent link">&para;</a></h2>
-<div class="grid cards">
+<p>Treat those artifacts as a unit during release and deployment. Do not enable a
+skill whose certification or tool-schema fingerprint does not match the
+installed package. Use the compact/intent-oriented tool surface for delegated
+agents; expose verbose per-operation tools only for compatibility or debugging.</p>
+<h2 id="runtime-values-and-secrets">Runtime values and secrets<a class="headerlink" href="#runtime-values-and-secrets" title="Permanent link">&para;</a></h2>
 <ul>
-<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m13.13 22.19-1.63-3.83c1.57-.58 3.04-1.36 4.4-2.27zM5.64 12.5l-3.83-1.63 6.1-2.77C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39S16.66.269 11 5.93c-2.19 2.19-3.5 4.6-4.35 6.71-.28.75-.09 1.57.46 2.13l2.13 2.12c.55.56 1.37.74 2.12.46A19.1 19.1 0 0 0 18.07 13c5.66-5.66 3.54-10.61 3.54-10.61m-7.07 7.07c-.78-.78-.78-2.05 0-2.83s2.05-.78 2.83 0c.77.78.78 2.05 0 2.83s-2.05.78-2.83 0m-5.66 7.07-1.41-1.41zM6.24 22l3.64-3.64c-.34-.09-.67-.24-.97-.45L4.83 22zM2 22h1.41l4.77-4.76-1.42-1.41L2 20.59zm0-2.83 4.09-4.08c-.21-.3-.36-.62-.45-.97L2 17.76z"/></svg></span> <strong><a href="installation/">Installation</a></strong> — pip, source, extras, and the prebuilt Docker image.</li>
-<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 19h1a1 1 0 0 1 1 1h7v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-7zM4 3h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1m5 4h1V5H9zm0 8h1v-2H9zM5 5v2h2V5zm0 8v2h2v-2z"/></svg></span> <strong><a href="deployment/">Deployment</a></strong> — run the MCP and agent servers, Docker Compose, Caddy + Technitium.</li>
-<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 19V7H4v12zm0-16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-7 14v-2h5v2zm-3.42-4L5.57 9H8.4l3.3 3.3c.39.39.39 1.03 0 1.42L8.42 17H5.59z"/></svg></span> <strong><a href="usage/">Usage</a></strong> — the MCP tools, the <code>Api</code> client, and the agent CLI.</li>
-<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20.84 2.18-3.93.78 2.74 3.54 1.97-.4zm-6.87 1.36L12 3.93l2.75 3.53 1.96-.39zm-4.9.96-1.97.41 2.75 3.53 1.96-.39zm-4.91 1-.98.19a2 2 0 0 0-1.57 2.35L2 10l4.9-.97zM2 10v10a2 2 0 0 0 2 2h16c1.11 0 2-.89 2-2V10z"/></svg></span> <strong><a href="platform/">Backing Platform</a></strong> — deploy a Jellyfin media server with Docker.</li>
-<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 2v6h2v3H5c-1.11 0-2 .89-2 2v3H1v6h6v-6H5v-3h6v3H9v6h6v-6h-2v-3h6v3h-2v6h6v-6h-2v-3c0-1.11-.89-2-2-2h-6V8h2V2z"/></svg></span> <strong><a href="overview/">Architecture</a></strong> — the agent-package pattern and MCP configuration.</li>
-<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.5 9A1.5 1.5 0 0 0 7 7.5 1.5 1.5 0 0 0 5.5 6 1.5 1.5 0 0 0 4 7.5 1.5 1.5 0 0 0 5.5 9m11.91 2.58c.36.36.59.86.59 1.42 0 .55-.22 1.05-.59 1.41l-5 5a1.996 1.996 0 0 1-2.83 0l-6.99-6.99C2.22 12.05 2 11.55 2 11V6c0-1.11.89-2 2-2h5c.55 0 1.05.22 1.41.58zm-3.87-5.87 1-1 6.87 6.87c.37.36.59.87.59 1.42s-.22 1.05-.58 1.41l-5.38 5.38-1-1L20.75 13z"/></svg></span> <strong><a href="concepts/">Concepts</a></strong> — the <code>CONCEPT:JELLYFIN-*</code> registry.</li>
+<li>Supply service endpoints, tenant identifiers, credentials, and model keys
+  through environment variables or a mounted secret provider.</li>
+<li>Use non-personal agent aliases and opaque tenant/correlation identifiers.</li>
+<li>Keep developer directories, workstation names, and deployment hostnames out
+  of checked-in configuration.</li>
+<li>Bind network transports to an explicitly chosen interface and require the
+  deployment's MCP authentication policy before accepting remote traffic.</li>
+<li>Enable optional agent, embedding, evolution, or observability features only
+  when their dependencies and backends are configured and healthy.</li>
 </ul>
-</div>
-<h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>jellyfin-mcp
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>jellyfin-mcp<span class="w">                       </span><span class="c1"># stdio MCP server (default transport)</span>
-</span></code></pre></div>
-<p>Connect it to a Jellyfin server:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">JELLYFIN_URL</span><span class="o">=</span>http://your-jellyfin:8096
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">JELLYFIN_API_KEY</span><span class="o">=</span>your_api_key
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>jellyfin-mcp<span class="w"> </span>--transport<span class="w"> </span>streamable-http<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
-</span></code></pre></div>
-<p>See <strong><a href="installation/">Installation</a></strong> and <strong><a href="deployment/">Deployment</a></strong> for the
-full matrix (PyPI extras, Docker image, all transports, the agent server, reverse
-proxy, DNS).
-</content></p>
+<p>The checked-in examples use <code>localhost</code> for loopback-only development and
+<code>example.invalid</code> for replaceable network endpoints. Neither value is a
+production default.</p>
+<h2 id="tls-trust">TLS trust<a class="headerlink" href="#tls-trust" title="Permanent link">&para;</a></h2>
+<p>Certificate verification is required. For a private certificate authority,
+mount a PEM bundle containing the required intermediate and root certificates,
+then configure the client environment with <code>SSL_CERT_FILE</code> and, for
+Requests-compatible clients, <code>REQUESTS_CA_BUNDLE</code>. When <code>uvx</code> must use the
+native platform trust store while resolving packages, set <code>UV_NATIVE_TLS=true</code>.</p>
+<p>Do not disable verification to work around an incomplete server chain. Keep CA
+bundle locations environment-configured and stable for the runtime; never embed
+a workstation path or certificate material in MCP configuration.</p>
+<h2 id="privacy-and-data-governance">Privacy and data governance<a class="headerlink" href="#privacy-and-data-governance" title="Permanent link">&para;</a></h2>
+<p>The default observability posture is metadata-only. Do not persist prompts,
+message bodies, tool inputs/results, document content, raw traces, credentials,
+local paths, hostnames, or personal identity unless an approved data contract
+explicitly requires it. Keep Langfuse or OTLP content capture disabled unless a
+reviewed retention and access policy authorizes it.</p>
+<p>When connector ingestion is enabled, each change must carry tenant, ACL,
+classification, retention, provenance, and checkpoint/delta metadata. Reject or
+quarantine records that cannot satisfy that contract; never silently widen a
+tenant scope. Logs and reports should contain counts, status, and opaque
+references only.</p>
+<h2 id="deployment-verification">Deployment verification<a class="headerlink" href="#deployment-verification" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Validate the capability bundle and skill metadata against the installed tool
+   schemas.</li>
+<li>Confirm required secrets are present without printing their values.</li>
+<li>Verify the complete TLS chain with certificate verification enabled.</li>
+<li>Exercise health/readiness and one least-privilege read operation.</li>
+<li>Confirm traces arrive under the expected opaque tenant/run identifiers and
+   contain no captured content.</li>
+<li>Record only sanitized pass/fail evidence and version identifiers.</li>
+</ol>
 
 
 
@@ -895,15 +954,31 @@ proxy, DNS).
       
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
+          
+          <a href="../installation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Installation">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Installation
+              </div>
+            </div>
+          </a>
+        
         
           
-          <a href="overview/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+          <a href="../deployment/" class="md-footer__link md-footer__link--next" aria-label="Next: Deployment">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Overview
+                Deployment
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -973,10 +1048,10 @@ proxy, DNS).
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.tracking", "navigation.instant", "navigation.instant.progress", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.tracking", "navigation.instant", "navigation.instant.progress", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
