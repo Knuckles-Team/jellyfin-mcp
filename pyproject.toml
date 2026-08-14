@@ -43,6 +43,9 @@ jellyfin-mcp = "jellyfin_mcp.connectors"
 [project.entry-points."agent_utilities.ontology_providers"]
 jellyfin-mcp = "jellyfin_mcp.ontology"
 
+[tool.uv.workspace]
+members = ["."]
+
 [tool.setuptools]
 include-package-data = true
 
