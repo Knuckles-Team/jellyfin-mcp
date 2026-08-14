@@ -20,7 +20,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/jellyfin-mcp)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/jellyfin-mcp)
 
-*Version: 2.0.0*
+*Version: 2.1.0*
 
 > **Documentation** — Installation, deployment, usage across the MCP, API, and A2A
 > agent interfaces, and guidance for provisioning the Jellyfin media server are
@@ -111,10 +111,12 @@ _Auto-generated from the live MCP server — do not edit by hand._
 
 <!-- MCP-TOOLS-TABLE:START -->
 
-#### Condensed action-routed tools (default — `MCP_TOOL_MODE=condensed`)
+#### Condensed action-routed tools (`MCP_TOOL_MODE=condensed`)
 
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
+| `jellyfin_ingest_library` | `KG_INGESTTOOL` | Natively ingest the Jellyfin library into epistemic-graph as typed nodes. |
+| `jellyfin_ingest_posters` | `KG_INGESTTOOL` | Ingest item posters as content-addressed :Blob + :AssetOccurrence (best-effort). |
 | `jellyfin_library` | `CONDENSED_JELLYFINTOOL` | Execute library searches, items, collection updates, and catalog queries dynamically. |
 | `jellyfin_media` | `CONDENSED_JELLYFINTOOL` | Execute media playback, stream, artist, playlist, and audio/video queries dynamically. |
 | `jellyfin_system` | `CONDENSED_JELLYFINTOOL` | Execute administrative actions, system status, configurations, backups, and user management. |
@@ -497,7 +499,7 @@ _Auto-generated from the live MCP server — do not edit by hand._
 
 </details>
 
-_3 action-routed tool(s) (default) · 368 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (`condensed` default · `verbose` 1:1 · `both`). Auto-generated — do not edit._
+_5 action-routed tool(s) · 368 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
 Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/index.md#mcp](docs/index.md#mcp).
