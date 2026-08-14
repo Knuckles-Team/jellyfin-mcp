@@ -132,7 +132,9 @@ def _map_item(
         if gid not in seen:
             entities.append({"id": gid, "node_type": "Genre", "name": str(genre)})
             seen.add(gid)
-        relationships.append({"source": node_id, "target": gid, "relationship": "hasGenre"})
+        relationships.append(
+            {"source": node_id, "target": gid, "relationship": "hasGenre"}
+        )
 
     # Artists (audio) / authors (books) -> :Artist|:Author + link
     for artist in item.get("Artists") or []:
@@ -151,7 +153,7 @@ def _map_item(
 
 
 def ingest_items(
-    items: list[dict[str, Any]],
+    items: list[dict[str, Any]] | dict[str, Any],
     *,
     client: Any | None = None,
     graph: str | None = None,
@@ -183,7 +185,7 @@ def ingest_items(
 
 
 def ingest_artists(
-    artists: list[dict[str, Any]],
+    artists: list[dict[str, Any]] | dict[str, Any],
     *,
     client: Any | None = None,
     graph: str | None = None,
