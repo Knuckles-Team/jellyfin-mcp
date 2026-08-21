@@ -1,8 +1,7 @@
 {
   "api_version": "graphos.io/v1",
   "artifacts": {
-    "a2a.json": "d9245e0bff094bdb6bad6c1278b438882be4ad0affe049188ba8873358f94678",
-    "connector_manifest.yml": "f6b2ce01db2449baf15b5bfc5acd8b3f6f372cd792a8ba14a06a1f8271662e84",
+    "connector_manifest.yml": "3a0c754a60579725381a8a7be51a6b7fbeb88320423b33e0bc280a570e67696d",
     "jellyfin_mcp/connectors/mcp_source_presets.json": "944efc44e7ca174bdca88ee38f4f2fc3948552f4f447f2bc00d121b40a3c682c",
     "jellyfin_mcp/connectors/tool_schema_fingerprints.json": "d688144cd865c5db8ca5f763b9ed3e4e87c39318576c6a0f14087ab14d159007",
     "jellyfin_mcp/ontology/fixtures/records.json": "665fcc73887a9d979694af27a2a9401b9941deb59a0290d05a9119fb6762498f",
@@ -19,19 +18,19 @@
     "synthetic_fixture_contract": "passed"
   },
   "compatibility": {
-    "agent_utilities": ">=2.1.0,<3",
+    "agent_utilities": ">=2.4.0,<3",
     "bundle_schema": "2",
-    "epistemic_graph": ">=2.23.0,<3"
+    "epistemic_graph": ">=2.26.0,<3"
   },
   "connector": "jellyfin-mcp",
   "kind": "ConnectorSourceAttestation",
   "live_certified": false,
   "mode": "offline-source",
   "schema_version": "2",
-  "signature": "WvBexIHR6s2JrIchPLXrK_NbRmtUs9mhI97g8NuZW58_bU9n34rquWoxqVF7wLv0D61TnKTKijzlE4Db7XoPCw",
-  "signature_algorithm": "ed25519",
-  "signer": "ontology-manifest-generator",
-  "signing_public_key": "QkigdPNpcUU7x7NcSkwCsUXIQpaFncMQbYSoiSgI2SY",
+  "signature": null,
+  "signature_algorithm": "none",
+  "signer": "UNSIGNED-PREVIEW",
+  "signing_public_key": "",
   "status": "source-validated",
-  "validated_at": "2026-07-31T04:00:00Z"
+  "validated_at": "2026-08-21T04:30:39Z"
 }
