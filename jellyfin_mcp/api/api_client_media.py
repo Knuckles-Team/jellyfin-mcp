@@ -748,7 +748,9 @@ class MediaClient(ApiBase):
         endpoint = endpoint.replace("{container}", str(container))
         params: dict[str, Any] = {}
         _put_if_not_none(params, "runtimeTicks", runtime_ticks)
-        _put_if_not_none(params, "actualSegmentLengthTicks", actual_segment_length_ticks)
+        _put_if_not_none(
+            params, "actualSegmentLengthTicks", actual_segment_length_ticks
+        )
         _put_if_not_none(params, "static", static)
         _put_if_not_none(params, "params", stream_params)
         _put_if_not_none(params, "tag", tag)
@@ -786,7 +788,9 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "requireAvc", require_avc)
         _put_if_not_none(params, "deInterlace", de_interlace)
         _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
-        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(
+            params, "transcodingMaxAudioChannels", transcoding_max_audio_channels
+        )
         _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
         _put_if_not_none(params, "liveStreamId", live_stream_id)
         _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
@@ -1052,7 +1056,9 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "requireAvc", require_avc)
         _put_if_not_none(params, "deInterlace", de_interlace)
         _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
-        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(
+            params, "transcodingMaxAudioChannels", transcoding_max_audio_channels
+        )
         _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
         _put_if_not_none(params, "liveStreamId", live_stream_id)
         _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
@@ -1063,7 +1069,9 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "videoStreamIndex", video_stream_index)
         _put_if_not_none(params, "context", context)
         _put_if_not_none(params, "streamOptions", stream_options)
-        _put_if_not_none(params, "enableAdaptiveBitrateStreaming", enable_adaptive_bitrate_streaming)
+        _put_if_not_none(
+            params, "enableAdaptiveBitrateStreaming", enable_adaptive_bitrate_streaming
+        )
         _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
         return self.request("GET", endpoint, params=params)
 
@@ -1135,7 +1143,9 @@ class MediaClient(ApiBase):
         endpoint = endpoint.replace("{container}", str(container))
         params: dict[str, Any] = {}
         _put_if_not_none(params, "runtimeTicks", runtime_ticks)
-        _put_if_not_none(params, "actualSegmentLengthTicks", actual_segment_length_ticks)
+        _put_if_not_none(
+            params, "actualSegmentLengthTicks", actual_segment_length_ticks
+        )
         _put_if_not_none(params, "static", static)
         _put_if_not_none(params, "params", stream_params)
         _put_if_not_none(params, "tag", tag)
@@ -1174,7 +1184,9 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "requireAvc", require_avc)
         _put_if_not_none(params, "deInterlace", de_interlace)
         _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
-        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(
+            params, "transcodingMaxAudioChannels", transcoding_max_audio_channels
+        )
         _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
         _put_if_not_none(params, "liveStreamId", live_stream_id)
         _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
@@ -1186,7 +1198,11 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "context", context)
         _put_if_not_none(params, "streamOptions", stream_options)
         _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
-        _put_if_not_none(params, "alwaysBurnInSubtitleWhenTranscoding", always_burn_in_subtitle_when_transcoding)
+        _put_if_not_none(
+            params,
+            "alwaysBurnInSubtitleWhenTranscoding",
+            always_burn_in_subtitle_when_transcoding,
+        )
         return self.request("GET", endpoint, params=params)
 
     def get_live_hls_stream(
@@ -1287,7 +1303,9 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "requireAvc", require_avc)
         _put_if_not_none(params, "deInterlace", de_interlace)
         _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
-        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(
+            params, "transcodingMaxAudioChannels", transcoding_max_audio_channels
+        )
         _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
         _put_if_not_none(params, "liveStreamId", live_stream_id)
         _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
@@ -1300,9 +1318,15 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "streamOptions", stream_options)
         _put_if_not_none(params, "maxWidth", max_width)
         _put_if_not_none(params, "maxHeight", max_height)
-        _put_if_not_none(params, "enableSubtitlesInManifest", enable_subtitles_in_manifest)
+        _put_if_not_none(
+            params, "enableSubtitlesInManifest", enable_subtitles_in_manifest
+        )
         _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
-        _put_if_not_none(params, "alwaysBurnInSubtitleWhenTranscoding", always_burn_in_subtitle_when_transcoding)
+        _put_if_not_none(
+            params,
+            "alwaysBurnInSubtitleWhenTranscoding",
+            always_burn_in_subtitle_when_transcoding,
+        )
         return self.request("GET", endpoint, params=params)
 
     def get_variant_hls_video_playlist(
@@ -1402,7 +1426,9 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "requireAvc", require_avc)
         _put_if_not_none(params, "deInterlace", de_interlace)
         _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
-        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(
+            params, "transcodingMaxAudioChannels", transcoding_max_audio_channels
+        )
         _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
         _put_if_not_none(params, "liveStreamId", live_stream_id)
         _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
@@ -1414,7 +1440,11 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "context", context)
         _put_if_not_none(params, "streamOptions", stream_options)
         _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
-        _put_if_not_none(params, "alwaysBurnInSubtitleWhenTranscoding", always_burn_in_subtitle_when_transcoding)
+        _put_if_not_none(
+            params,
+            "alwaysBurnInSubtitleWhenTranscoding",
+            always_burn_in_subtitle_when_transcoding,
+        )
         return self.request("GET", endpoint, params=params)
 
     def get_master_hls_video_playlist(
@@ -1516,7 +1546,9 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "requireAvc", require_avc)
         _put_if_not_none(params, "deInterlace", de_interlace)
         _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
-        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(
+            params, "transcodingMaxAudioChannels", transcoding_max_audio_channels
+        )
         _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
         _put_if_not_none(params, "liveStreamId", live_stream_id)
         _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
@@ -1527,10 +1559,16 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "videoStreamIndex", video_stream_index)
         _put_if_not_none(params, "context", context)
         _put_if_not_none(params, "streamOptions", stream_options)
-        _put_if_not_none(params, "enableAdaptiveBitrateStreaming", enable_adaptive_bitrate_streaming)
+        _put_if_not_none(
+            params, "enableAdaptiveBitrateStreaming", enable_adaptive_bitrate_streaming
+        )
         _put_if_not_none(params, "enableTrickplay", enable_trickplay)
         _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
-        _put_if_not_none(params, "alwaysBurnInSubtitleWhenTranscoding", always_burn_in_subtitle_when_transcoding)
+        _put_if_not_none(
+            params,
+            "alwaysBurnInSubtitleWhenTranscoding",
+            always_burn_in_subtitle_when_transcoding,
+        )
         return self.request("GET", endpoint, params=params)
 
     def get_hls_audio_segment_legacy_aac(self, item_id: str, segment_id: str) -> Any:
@@ -3749,7 +3787,9 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "minCriticRating", min_critic_rating)
         _put_if_not_none(params, "minPremiereDate", min_premiere_date)
         _put_if_not_none(params, "minDateLastSaved", min_date_last_saved)
-        _put_if_not_none(params, "minDateLastSavedForUser", min_date_last_saved_for_user)
+        _put_if_not_none(
+            params, "minDateLastSavedForUser", min_date_last_saved_for_user
+        )
         _put_if_not_none(params, "maxPremiereDate", max_premiere_date)
         _put_if_not_none(params, "hasOverview", has_overview)
         _put_if_not_none(params, "hasImdbId", has_imdb_id)
@@ -4040,7 +4080,9 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "requireAvc", require_avc)
         _put_if_not_none(params, "deInterlace", de_interlace)
         _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
-        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(
+            params, "transcodingMaxAudioChannels", transcoding_max_audio_channels
+        )
         _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
         _put_if_not_none(params, "liveStreamId", live_stream_id)
         _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
@@ -4152,7 +4194,9 @@ class MediaClient(ApiBase):
         _put_if_not_none(params, "requireAvc", require_avc)
         _put_if_not_none(params, "deInterlace", de_interlace)
         _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
-        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(
+            params, "transcodingMaxAudioChannels", transcoding_max_audio_channels
+        )
         _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
         _put_if_not_none(params, "liveStreamId", live_stream_id)
         _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)

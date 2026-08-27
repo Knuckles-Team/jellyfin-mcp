@@ -1012,7 +1012,9 @@ class LibraryClient(ApiBase):
         _put_if_not_none(params, "minCriticRating", min_critic_rating)
         _put_if_not_none(params, "minPremiereDate", min_premiere_date)
         _put_if_not_none(params, "minDateLastSaved", min_date_last_saved)
-        _put_if_not_none(params, "minDateLastSavedForUser", min_date_last_saved_for_user)
+        _put_if_not_none(
+            params, "minDateLastSavedForUser", min_date_last_saved_for_user
+        )
         _put_if_not_none(params, "maxPremiereDate", max_premiere_date)
         _put_if_not_none(params, "hasOverview", has_overview)
         _put_if_not_none(params, "hasImdbId", has_imdb_id)
