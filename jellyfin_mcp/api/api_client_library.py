@@ -4,6 +4,17 @@ from typing import Any
 from jellyfin_mcp.api.api_client_base import ApiBase
 
 
+def _put_if_not_none(params: dict[str, Any], key: str, value: Any) -> None:
+    """Set params[key] = value iff value was provided (mirrors the generated
+    client's `if <arg> is not None: params[<key>] = <arg>` call-site idiom).
+
+    Preserves falsy-but-provided values (False, 0, "", []) exactly as the
+    inline `is not None` checks did; this is not a truthiness check.
+    """
+    if value is not None:
+        params[key] = value
+
+
 class LibraryClient(ApiBase):
     def create_collection(
         self,
@@ -980,178 +991,92 @@ class LibraryClient(ApiBase):
         """Gets items based on a query."""
         endpoint = "/Items"
         params: dict[str, Any] = {}
-        if user_id is not None:
-            params["userId"] = user_id
-        if max_official_rating is not None:
-            params["maxOfficialRating"] = max_official_rating
-        if has_theme_song is not None:
-            params["hasThemeSong"] = has_theme_song
-        if has_theme_video is not None:
-            params["hasThemeVideo"] = has_theme_video
-        if has_subtitles is not None:
-            params["hasSubtitles"] = has_subtitles
-        if has_special_feature is not None:
-            params["hasSpecialFeature"] = has_special_feature
-        if has_trailer is not None:
-            params["hasTrailer"] = has_trailer
-        if adjacent_to is not None:
-            params["adjacentTo"] = adjacent_to
-        if index_number is not None:
-            params["indexNumber"] = index_number
-        if parent_index_number is not None:
-            params["parentIndexNumber"] = parent_index_number
-        if has_parental_rating is not None:
-            params["hasParentalRating"] = has_parental_rating
-        if is_hd is not None:
-            params["isHd"] = is_hd
-        if is4_k is not None:
-            params["is4K"] = is4_k
-        if location_types is not None:
-            params["locationTypes"] = location_types
-        if exclude_location_types is not None:
-            params["excludeLocationTypes"] = exclude_location_types
-        if is_missing is not None:
-            params["isMissing"] = is_missing
-        if is_unaired is not None:
-            params["isUnaired"] = is_unaired
-        if min_community_rating is not None:
-            params["minCommunityRating"] = min_community_rating
-        if min_critic_rating is not None:
-            params["minCriticRating"] = min_critic_rating
-        if min_premiere_date is not None:
-            params["minPremiereDate"] = min_premiere_date
-        if min_date_last_saved is not None:
-            params["minDateLastSaved"] = min_date_last_saved
-        if min_date_last_saved_for_user is not None:
-            params["minDateLastSavedForUser"] = min_date_last_saved_for_user
-        if max_premiere_date is not None:
-            params["maxPremiereDate"] = max_premiere_date
-        if has_overview is not None:
-            params["hasOverview"] = has_overview
-        if has_imdb_id is not None:
-            params["hasImdbId"] = has_imdb_id
-        if has_tmdb_id is not None:
-            params["hasTmdbId"] = has_tmdb_id
-        if has_tvdb_id is not None:
-            params["hasTvdbId"] = has_tvdb_id
-        if is_movie is not None:
-            params["isMovie"] = is_movie
-        if is_series is not None:
-            params["isSeries"] = is_series
-        if is_news is not None:
-            params["isNews"] = is_news
-        if is_kids is not None:
-            params["isKids"] = is_kids
-        if is_sports is not None:
-            params["isSports"] = is_sports
-        if exclude_item_ids is not None:
-            params["excludeItemIds"] = exclude_item_ids
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if recursive is not None:
-            params["recursive"] = recursive
-        if search_term is not None:
-            params["searchTerm"] = search_term
-        if sort_order is not None:
-            params["sortOrder"] = sort_order
-        if parent_id is not None:
-            params["parentId"] = parent_id
-        if fields is not None:
-            params["fields"] = fields
-        if exclude_item_types is not None:
-            params["excludeItemTypes"] = exclude_item_types
-        if include_item_types is not None:
-            params["includeItemTypes"] = include_item_types
-        if filters is not None:
-            params["filters"] = filters
-        if is_favorite is not None:
-            params["isFavorite"] = is_favorite
-        if media_types is not None:
-            params["mediaTypes"] = media_types
-        if image_types is not None:
-            params["imageTypes"] = image_types
-        if sort_by is not None:
-            params["sortBy"] = sort_by
-        if is_played is not None:
-            params["isPlayed"] = is_played
-        if genres is not None:
-            params["genres"] = genres
-        if official_ratings is not None:
-            params["officialRatings"] = official_ratings
-        if tags is not None:
-            params["tags"] = tags
-        if years is not None:
-            params["years"] = years
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if person is not None:
-            params["person"] = person
-        if person_ids is not None:
-            params["personIds"] = person_ids
-        if person_types is not None:
-            params["personTypes"] = person_types
-        if studios is not None:
-            params["studios"] = studios
-        if artists is not None:
-            params["artists"] = artists
-        if exclude_artist_ids is not None:
-            params["excludeArtistIds"] = exclude_artist_ids
-        if artist_ids is not None:
-            params["artistIds"] = artist_ids
-        if album_artist_ids is not None:
-            params["albumArtistIds"] = album_artist_ids
-        if contributing_artist_ids is not None:
-            params["contributingArtistIds"] = contributing_artist_ids
-        if albums is not None:
-            params["albums"] = albums
-        if album_ids is not None:
-            params["albumIds"] = album_ids
-        if ids is not None:
-            params["ids"] = ids
-        if video_types is not None:
-            params["videoTypes"] = video_types
-        if min_official_rating is not None:
-            params["minOfficialRating"] = min_official_rating
-        if is_locked is not None:
-            params["isLocked"] = is_locked
-        if is_place_holder is not None:
-            params["isPlaceHolder"] = is_place_holder
-        if has_official_rating is not None:
-            params["hasOfficialRating"] = has_official_rating
-        if collapse_box_set_items is not None:
-            params["collapseBoxSetItems"] = collapse_box_set_items
-        if min_width is not None:
-            params["minWidth"] = min_width
-        if min_height is not None:
-            params["minHeight"] = min_height
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if is3_d is not None:
-            params["is3D"] = is3_d
-        if series_status is not None:
-            params["seriesStatus"] = series_status
-        if name_starts_with_or_greater is not None:
-            params["nameStartsWithOrGreater"] = name_starts_with_or_greater
-        if name_starts_with is not None:
-            params["nameStartsWith"] = name_starts_with
-        if name_less_than is not None:
-            params["nameLessThan"] = name_less_than
-        if studio_ids is not None:
-            params["studioIds"] = studio_ids
-        if genre_ids is not None:
-            params["genreIds"] = genre_ids
-        if enable_total_record_count is not None:
-            params["enableTotalRecordCount"] = enable_total_record_count
-        if enable_images is not None:
-            params["enableImages"] = enable_images
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "maxOfficialRating", max_official_rating)
+        _put_if_not_none(params, "hasThemeSong", has_theme_song)
+        _put_if_not_none(params, "hasThemeVideo", has_theme_video)
+        _put_if_not_none(params, "hasSubtitles", has_subtitles)
+        _put_if_not_none(params, "hasSpecialFeature", has_special_feature)
+        _put_if_not_none(params, "hasTrailer", has_trailer)
+        _put_if_not_none(params, "adjacentTo", adjacent_to)
+        _put_if_not_none(params, "indexNumber", index_number)
+        _put_if_not_none(params, "parentIndexNumber", parent_index_number)
+        _put_if_not_none(params, "hasParentalRating", has_parental_rating)
+        _put_if_not_none(params, "isHd", is_hd)
+        _put_if_not_none(params, "is4K", is4_k)
+        _put_if_not_none(params, "locationTypes", location_types)
+        _put_if_not_none(params, "excludeLocationTypes", exclude_location_types)
+        _put_if_not_none(params, "isMissing", is_missing)
+        _put_if_not_none(params, "isUnaired", is_unaired)
+        _put_if_not_none(params, "minCommunityRating", min_community_rating)
+        _put_if_not_none(params, "minCriticRating", min_critic_rating)
+        _put_if_not_none(params, "minPremiereDate", min_premiere_date)
+        _put_if_not_none(params, "minDateLastSaved", min_date_last_saved)
+        _put_if_not_none(params, "minDateLastSavedForUser", min_date_last_saved_for_user)
+        _put_if_not_none(params, "maxPremiereDate", max_premiere_date)
+        _put_if_not_none(params, "hasOverview", has_overview)
+        _put_if_not_none(params, "hasImdbId", has_imdb_id)
+        _put_if_not_none(params, "hasTmdbId", has_tmdb_id)
+        _put_if_not_none(params, "hasTvdbId", has_tvdb_id)
+        _put_if_not_none(params, "isMovie", is_movie)
+        _put_if_not_none(params, "isSeries", is_series)
+        _put_if_not_none(params, "isNews", is_news)
+        _put_if_not_none(params, "isKids", is_kids)
+        _put_if_not_none(params, "isSports", is_sports)
+        _put_if_not_none(params, "excludeItemIds", exclude_item_ids)
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "recursive", recursive)
+        _put_if_not_none(params, "searchTerm", search_term)
+        _put_if_not_none(params, "sortOrder", sort_order)
+        _put_if_not_none(params, "parentId", parent_id)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "excludeItemTypes", exclude_item_types)
+        _put_if_not_none(params, "includeItemTypes", include_item_types)
+        _put_if_not_none(params, "filters", filters)
+        _put_if_not_none(params, "isFavorite", is_favorite)
+        _put_if_not_none(params, "mediaTypes", media_types)
+        _put_if_not_none(params, "imageTypes", image_types)
+        _put_if_not_none(params, "sortBy", sort_by)
+        _put_if_not_none(params, "isPlayed", is_played)
+        _put_if_not_none(params, "genres", genres)
+        _put_if_not_none(params, "officialRatings", official_ratings)
+        _put_if_not_none(params, "tags", tags)
+        _put_if_not_none(params, "years", years)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "person", person)
+        _put_if_not_none(params, "personIds", person_ids)
+        _put_if_not_none(params, "personTypes", person_types)
+        _put_if_not_none(params, "studios", studios)
+        _put_if_not_none(params, "artists", artists)
+        _put_if_not_none(params, "excludeArtistIds", exclude_artist_ids)
+        _put_if_not_none(params, "artistIds", artist_ids)
+        _put_if_not_none(params, "albumArtistIds", album_artist_ids)
+        _put_if_not_none(params, "contributingArtistIds", contributing_artist_ids)
+        _put_if_not_none(params, "albums", albums)
+        _put_if_not_none(params, "albumIds", album_ids)
+        _put_if_not_none(params, "ids", ids)
+        _put_if_not_none(params, "videoTypes", video_types)
+        _put_if_not_none(params, "minOfficialRating", min_official_rating)
+        _put_if_not_none(params, "isLocked", is_locked)
+        _put_if_not_none(params, "isPlaceHolder", is_place_holder)
+        _put_if_not_none(params, "hasOfficialRating", has_official_rating)
+        _put_if_not_none(params, "collapseBoxSetItems", collapse_box_set_items)
+        _put_if_not_none(params, "minWidth", min_width)
+        _put_if_not_none(params, "minHeight", min_height)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "is3D", is3_d)
+        _put_if_not_none(params, "seriesStatus", series_status)
+        _put_if_not_none(params, "nameStartsWithOrGreater", name_starts_with_or_greater)
+        _put_if_not_none(params, "nameStartsWith", name_starts_with)
+        _put_if_not_none(params, "nameLessThan", name_less_than)
+        _put_if_not_none(params, "studioIds", studio_ids)
+        _put_if_not_none(params, "genreIds", genre_ids)
+        _put_if_not_none(params, "enableTotalRecordCount", enable_total_record_count)
+        _put_if_not_none(params, "enableImages", enable_images)
         return self.request("GET", endpoint, params=params)
 
     def delete_items(self, ids: list[Any] | None = None) -> Any:
