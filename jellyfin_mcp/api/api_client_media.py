@@ -4,6 +4,17 @@ from typing import Any
 from jellyfin_mcp.api.api_client_base import ApiBase
 
 
+def _put_if_not_none(params: dict[str, Any], key: str, value: Any) -> None:
+    """Set params[key] = value iff value was provided (mirrors the generated
+    client's `if <arg> is not None: params[<key>] = <arg>` call-site idiom).
+
+    Preserves falsy-but-provided values (False, 0, "", [], {}) exactly as
+    the inline `is not None` checks did; this is not a truthiness check.
+    """
+    if value is not None:
+        params[key] = value
+
+
 class MediaClient(ApiBase):
     def get_artists(
         self,
@@ -736,108 +747,57 @@ class MediaClient(ApiBase):
         endpoint = endpoint.replace("{segmentId}", str(segment_id))
         endpoint = endpoint.replace("{container}", str(container))
         params: dict[str, Any] = {}
-        if runtime_ticks is not None:
-            params["runtimeTicks"] = runtime_ticks
-        if actual_segment_length_ticks is not None:
-            params["actualSegmentLengthTicks"] = actual_segment_length_ticks
-        if static is not None:
-            params["static"] = static
-        if stream_params is not None:
-            params["params"] = stream_params
-        if tag is not None:
-            params["tag"] = tag
-        if device_profile_id is not None:
-            params["deviceProfileId"] = device_profile_id
-        if play_session_id is not None:
-            params["playSessionId"] = play_session_id
-        if segment_container is not None:
-            params["segmentContainer"] = segment_container
-        if segment_length is not None:
-            params["segmentLength"] = segment_length
-        if min_segments is not None:
-            params["minSegments"] = min_segments
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if device_id is not None:
-            params["deviceId"] = device_id
-        if audio_codec is not None:
-            params["audioCodec"] = audio_codec
-        if enable_auto_stream_copy is not None:
-            params["enableAutoStreamCopy"] = enable_auto_stream_copy
-        if allow_video_stream_copy is not None:
-            params["allowVideoStreamCopy"] = allow_video_stream_copy
-        if allow_audio_stream_copy is not None:
-            params["allowAudioStreamCopy"] = allow_audio_stream_copy
-        if break_on_non_key_frames is not None:
-            params["breakOnNonKeyFrames"] = break_on_non_key_frames
-        if audio_sample_rate is not None:
-            params["audioSampleRate"] = audio_sample_rate
-        if max_audio_bit_depth is not None:
-            params["maxAudioBitDepth"] = max_audio_bit_depth
-        if max_streaming_bitrate is not None:
-            params["maxStreamingBitrate"] = max_streaming_bitrate
-        if audio_bit_rate is not None:
-            params["audioBitRate"] = audio_bit_rate
-        if audio_channels is not None:
-            params["audioChannels"] = audio_channels
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if profile is not None:
-            params["profile"] = profile
-        if level is not None:
-            params["level"] = level
-        if framerate is not None:
-            params["framerate"] = framerate
-        if max_framerate is not None:
-            params["maxFramerate"] = max_framerate
-        if copy_timestamps is not None:
-            params["copyTimestamps"] = copy_timestamps
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if video_bit_rate is not None:
-            params["videoBitRate"] = video_bit_rate
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if subtitle_method is not None:
-            params["subtitleMethod"] = subtitle_method
-        if max_ref_frames is not None:
-            params["maxRefFrames"] = max_ref_frames
-        if max_video_bit_depth is not None:
-            params["maxVideoBitDepth"] = max_video_bit_depth
-        if require_avc is not None:
-            params["requireAvc"] = require_avc
-        if de_interlace is not None:
-            params["deInterlace"] = de_interlace
-        if require_non_anamorphic is not None:
-            params["requireNonAnamorphic"] = require_non_anamorphic
-        if transcoding_max_audio_channels is not None:
-            params["transcodingMaxAudioChannels"] = transcoding_max_audio_channels
-        if cpu_core_limit is not None:
-            params["cpuCoreLimit"] = cpu_core_limit
-        if live_stream_id is not None:
-            params["liveStreamId"] = live_stream_id
-        if enable_mpegts_m2_ts_mode is not None:
-            params["enableMpegtsM2TsMode"] = enable_mpegts_m2_ts_mode
-        if video_codec is not None:
-            params["videoCodec"] = video_codec
-        if subtitle_codec is not None:
-            params["subtitleCodec"] = subtitle_codec
-        if transcode_reasons is not None:
-            params["transcodeReasons"] = transcode_reasons
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if video_stream_index is not None:
-            params["videoStreamIndex"] = video_stream_index
-        if context is not None:
-            params["context"] = context
-        if stream_options is not None:
-            params["streamOptions"] = stream_options
-        if enable_audio_vbr_encoding is not None:
-            params["enableAudioVbrEncoding"] = enable_audio_vbr_encoding
+        _put_if_not_none(params, "runtimeTicks", runtime_ticks)
+        _put_if_not_none(params, "actualSegmentLengthTicks", actual_segment_length_ticks)
+        _put_if_not_none(params, "static", static)
+        _put_if_not_none(params, "params", stream_params)
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "deviceProfileId", device_profile_id)
+        _put_if_not_none(params, "playSessionId", play_session_id)
+        _put_if_not_none(params, "segmentContainer", segment_container)
+        _put_if_not_none(params, "segmentLength", segment_length)
+        _put_if_not_none(params, "minSegments", min_segments)
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "deviceId", device_id)
+        _put_if_not_none(params, "audioCodec", audio_codec)
+        _put_if_not_none(params, "enableAutoStreamCopy", enable_auto_stream_copy)
+        _put_if_not_none(params, "allowVideoStreamCopy", allow_video_stream_copy)
+        _put_if_not_none(params, "allowAudioStreamCopy", allow_audio_stream_copy)
+        _put_if_not_none(params, "breakOnNonKeyFrames", break_on_non_key_frames)
+        _put_if_not_none(params, "audioSampleRate", audio_sample_rate)
+        _put_if_not_none(params, "maxAudioBitDepth", max_audio_bit_depth)
+        _put_if_not_none(params, "maxStreamingBitrate", max_streaming_bitrate)
+        _put_if_not_none(params, "audioBitRate", audio_bit_rate)
+        _put_if_not_none(params, "audioChannels", audio_channels)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "profile", profile)
+        _put_if_not_none(params, "level", level)
+        _put_if_not_none(params, "framerate", framerate)
+        _put_if_not_none(params, "maxFramerate", max_framerate)
+        _put_if_not_none(params, "copyTimestamps", copy_timestamps)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "videoBitRate", video_bit_rate)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "subtitleMethod", subtitle_method)
+        _put_if_not_none(params, "maxRefFrames", max_ref_frames)
+        _put_if_not_none(params, "maxVideoBitDepth", max_video_bit_depth)
+        _put_if_not_none(params, "requireAvc", require_avc)
+        _put_if_not_none(params, "deInterlace", de_interlace)
+        _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
+        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
+        _put_if_not_none(params, "liveStreamId", live_stream_id)
+        _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
+        _put_if_not_none(params, "videoCodec", video_codec)
+        _put_if_not_none(params, "subtitleCodec", subtitle_codec)
+        _put_if_not_none(params, "transcodeReasons", transcode_reasons)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "videoStreamIndex", video_stream_index)
+        _put_if_not_none(params, "context", context)
+        _put_if_not_none(params, "streamOptions", stream_options)
+        _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
         return self.request("GET", endpoint, params=params)
 
     def get_variant_hls_audio_playlist(
@@ -1055,106 +1015,56 @@ class MediaClient(ApiBase):
         endpoint = "/Audio/{itemId}/master.m3u8"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         params: dict[str, Any] = {}
-        if static is not None:
-            params["static"] = static
-        if stream_params is not None:
-            params["params"] = stream_params
-        if tag is not None:
-            params["tag"] = tag
-        if device_profile_id is not None:
-            params["deviceProfileId"] = device_profile_id
-        if play_session_id is not None:
-            params["playSessionId"] = play_session_id
-        if segment_container is not None:
-            params["segmentContainer"] = segment_container
-        if segment_length is not None:
-            params["segmentLength"] = segment_length
-        if min_segments is not None:
-            params["minSegments"] = min_segments
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if device_id is not None:
-            params["deviceId"] = device_id
-        if audio_codec is not None:
-            params["audioCodec"] = audio_codec
-        if enable_auto_stream_copy is not None:
-            params["enableAutoStreamCopy"] = enable_auto_stream_copy
-        if allow_video_stream_copy is not None:
-            params["allowVideoStreamCopy"] = allow_video_stream_copy
-        if allow_audio_stream_copy is not None:
-            params["allowAudioStreamCopy"] = allow_audio_stream_copy
-        if break_on_non_key_frames is not None:
-            params["breakOnNonKeyFrames"] = break_on_non_key_frames
-        if audio_sample_rate is not None:
-            params["audioSampleRate"] = audio_sample_rate
-        if max_audio_bit_depth is not None:
-            params["maxAudioBitDepth"] = max_audio_bit_depth
-        if max_streaming_bitrate is not None:
-            params["maxStreamingBitrate"] = max_streaming_bitrate
-        if audio_bit_rate is not None:
-            params["audioBitRate"] = audio_bit_rate
-        if audio_channels is not None:
-            params["audioChannels"] = audio_channels
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if profile is not None:
-            params["profile"] = profile
-        if level is not None:
-            params["level"] = level
-        if framerate is not None:
-            params["framerate"] = framerate
-        if max_framerate is not None:
-            params["maxFramerate"] = max_framerate
-        if copy_timestamps is not None:
-            params["copyTimestamps"] = copy_timestamps
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if video_bit_rate is not None:
-            params["videoBitRate"] = video_bit_rate
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if subtitle_method is not None:
-            params["subtitleMethod"] = subtitle_method
-        if max_ref_frames is not None:
-            params["maxRefFrames"] = max_ref_frames
-        if max_video_bit_depth is not None:
-            params["maxVideoBitDepth"] = max_video_bit_depth
-        if require_avc is not None:
-            params["requireAvc"] = require_avc
-        if de_interlace is not None:
-            params["deInterlace"] = de_interlace
-        if require_non_anamorphic is not None:
-            params["requireNonAnamorphic"] = require_non_anamorphic
-        if transcoding_max_audio_channels is not None:
-            params["transcodingMaxAudioChannels"] = transcoding_max_audio_channels
-        if cpu_core_limit is not None:
-            params["cpuCoreLimit"] = cpu_core_limit
-        if live_stream_id is not None:
-            params["liveStreamId"] = live_stream_id
-        if enable_mpegts_m2_ts_mode is not None:
-            params["enableMpegtsM2TsMode"] = enable_mpegts_m2_ts_mode
-        if video_codec is not None:
-            params["videoCodec"] = video_codec
-        if subtitle_codec is not None:
-            params["subtitleCodec"] = subtitle_codec
-        if transcode_reasons is not None:
-            params["transcodeReasons"] = transcode_reasons
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if video_stream_index is not None:
-            params["videoStreamIndex"] = video_stream_index
-        if context is not None:
-            params["context"] = context
-        if stream_options is not None:
-            params["streamOptions"] = stream_options
-        if enable_adaptive_bitrate_streaming is not None:
-            params["enableAdaptiveBitrateStreaming"] = enable_adaptive_bitrate_streaming
-        if enable_audio_vbr_encoding is not None:
-            params["enableAudioVbrEncoding"] = enable_audio_vbr_encoding
+        _put_if_not_none(params, "static", static)
+        _put_if_not_none(params, "params", stream_params)
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "deviceProfileId", device_profile_id)
+        _put_if_not_none(params, "playSessionId", play_session_id)
+        _put_if_not_none(params, "segmentContainer", segment_container)
+        _put_if_not_none(params, "segmentLength", segment_length)
+        _put_if_not_none(params, "minSegments", min_segments)
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "deviceId", device_id)
+        _put_if_not_none(params, "audioCodec", audio_codec)
+        _put_if_not_none(params, "enableAutoStreamCopy", enable_auto_stream_copy)
+        _put_if_not_none(params, "allowVideoStreamCopy", allow_video_stream_copy)
+        _put_if_not_none(params, "allowAudioStreamCopy", allow_audio_stream_copy)
+        _put_if_not_none(params, "breakOnNonKeyFrames", break_on_non_key_frames)
+        _put_if_not_none(params, "audioSampleRate", audio_sample_rate)
+        _put_if_not_none(params, "maxAudioBitDepth", max_audio_bit_depth)
+        _put_if_not_none(params, "maxStreamingBitrate", max_streaming_bitrate)
+        _put_if_not_none(params, "audioBitRate", audio_bit_rate)
+        _put_if_not_none(params, "audioChannels", audio_channels)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "profile", profile)
+        _put_if_not_none(params, "level", level)
+        _put_if_not_none(params, "framerate", framerate)
+        _put_if_not_none(params, "maxFramerate", max_framerate)
+        _put_if_not_none(params, "copyTimestamps", copy_timestamps)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "videoBitRate", video_bit_rate)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "subtitleMethod", subtitle_method)
+        _put_if_not_none(params, "maxRefFrames", max_ref_frames)
+        _put_if_not_none(params, "maxVideoBitDepth", max_video_bit_depth)
+        _put_if_not_none(params, "requireAvc", require_avc)
+        _put_if_not_none(params, "deInterlace", de_interlace)
+        _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
+        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
+        _put_if_not_none(params, "liveStreamId", live_stream_id)
+        _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
+        _put_if_not_none(params, "videoCodec", video_codec)
+        _put_if_not_none(params, "subtitleCodec", subtitle_codec)
+        _put_if_not_none(params, "transcodeReasons", transcode_reasons)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "videoStreamIndex", video_stream_index)
+        _put_if_not_none(params, "context", context)
+        _put_if_not_none(params, "streamOptions", stream_options)
+        _put_if_not_none(params, "enableAdaptiveBitrateStreaming", enable_adaptive_bitrate_streaming)
+        _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
         return self.request("GET", endpoint, params=params)
 
     def get_hls_video_segment(
@@ -1224,114 +1134,59 @@ class MediaClient(ApiBase):
         endpoint = endpoint.replace("{segmentId}", str(segment_id))
         endpoint = endpoint.replace("{container}", str(container))
         params: dict[str, Any] = {}
-        if runtime_ticks is not None:
-            params["runtimeTicks"] = runtime_ticks
-        if actual_segment_length_ticks is not None:
-            params["actualSegmentLengthTicks"] = actual_segment_length_ticks
-        if static is not None:
-            params["static"] = static
-        if stream_params is not None:
-            params["params"] = stream_params
-        if tag is not None:
-            params["tag"] = tag
-        if device_profile_id is not None:
-            params["deviceProfileId"] = device_profile_id
-        if play_session_id is not None:
-            params["playSessionId"] = play_session_id
-        if segment_container is not None:
-            params["segmentContainer"] = segment_container
-        if segment_length is not None:
-            params["segmentLength"] = segment_length
-        if min_segments is not None:
-            params["minSegments"] = min_segments
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if device_id is not None:
-            params["deviceId"] = device_id
-        if audio_codec is not None:
-            params["audioCodec"] = audio_codec
-        if enable_auto_stream_copy is not None:
-            params["enableAutoStreamCopy"] = enable_auto_stream_copy
-        if allow_video_stream_copy is not None:
-            params["allowVideoStreamCopy"] = allow_video_stream_copy
-        if allow_audio_stream_copy is not None:
-            params["allowAudioStreamCopy"] = allow_audio_stream_copy
-        if break_on_non_key_frames is not None:
-            params["breakOnNonKeyFrames"] = break_on_non_key_frames
-        if audio_sample_rate is not None:
-            params["audioSampleRate"] = audio_sample_rate
-        if max_audio_bit_depth is not None:
-            params["maxAudioBitDepth"] = max_audio_bit_depth
-        if audio_bit_rate is not None:
-            params["audioBitRate"] = audio_bit_rate
-        if audio_channels is not None:
-            params["audioChannels"] = audio_channels
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if profile is not None:
-            params["profile"] = profile
-        if level is not None:
-            params["level"] = level
-        if framerate is not None:
-            params["framerate"] = framerate
-        if max_framerate is not None:
-            params["maxFramerate"] = max_framerate
-        if copy_timestamps is not None:
-            params["copyTimestamps"] = copy_timestamps
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if video_bit_rate is not None:
-            params["videoBitRate"] = video_bit_rate
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if subtitle_method is not None:
-            params["subtitleMethod"] = subtitle_method
-        if max_ref_frames is not None:
-            params["maxRefFrames"] = max_ref_frames
-        if max_video_bit_depth is not None:
-            params["maxVideoBitDepth"] = max_video_bit_depth
-        if require_avc is not None:
-            params["requireAvc"] = require_avc
-        if de_interlace is not None:
-            params["deInterlace"] = de_interlace
-        if require_non_anamorphic is not None:
-            params["requireNonAnamorphic"] = require_non_anamorphic
-        if transcoding_max_audio_channels is not None:
-            params["transcodingMaxAudioChannels"] = transcoding_max_audio_channels
-        if cpu_core_limit is not None:
-            params["cpuCoreLimit"] = cpu_core_limit
-        if live_stream_id is not None:
-            params["liveStreamId"] = live_stream_id
-        if enable_mpegts_m2_ts_mode is not None:
-            params["enableMpegtsM2TsMode"] = enable_mpegts_m2_ts_mode
-        if video_codec is not None:
-            params["videoCodec"] = video_codec
-        if subtitle_codec is not None:
-            params["subtitleCodec"] = subtitle_codec
-        if transcode_reasons is not None:
-            params["transcodeReasons"] = transcode_reasons
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if video_stream_index is not None:
-            params["videoStreamIndex"] = video_stream_index
-        if context is not None:
-            params["context"] = context
-        if stream_options is not None:
-            params["streamOptions"] = stream_options
-        if enable_audio_vbr_encoding is not None:
-            params["enableAudioVbrEncoding"] = enable_audio_vbr_encoding
-        if always_burn_in_subtitle_when_transcoding is not None:
-            params["alwaysBurnInSubtitleWhenTranscoding"] = (
-                always_burn_in_subtitle_when_transcoding
-            )
+        _put_if_not_none(params, "runtimeTicks", runtime_ticks)
+        _put_if_not_none(params, "actualSegmentLengthTicks", actual_segment_length_ticks)
+        _put_if_not_none(params, "static", static)
+        _put_if_not_none(params, "params", stream_params)
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "deviceProfileId", device_profile_id)
+        _put_if_not_none(params, "playSessionId", play_session_id)
+        _put_if_not_none(params, "segmentContainer", segment_container)
+        _put_if_not_none(params, "segmentLength", segment_length)
+        _put_if_not_none(params, "minSegments", min_segments)
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "deviceId", device_id)
+        _put_if_not_none(params, "audioCodec", audio_codec)
+        _put_if_not_none(params, "enableAutoStreamCopy", enable_auto_stream_copy)
+        _put_if_not_none(params, "allowVideoStreamCopy", allow_video_stream_copy)
+        _put_if_not_none(params, "allowAudioStreamCopy", allow_audio_stream_copy)
+        _put_if_not_none(params, "breakOnNonKeyFrames", break_on_non_key_frames)
+        _put_if_not_none(params, "audioSampleRate", audio_sample_rate)
+        _put_if_not_none(params, "maxAudioBitDepth", max_audio_bit_depth)
+        _put_if_not_none(params, "audioBitRate", audio_bit_rate)
+        _put_if_not_none(params, "audioChannels", audio_channels)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "profile", profile)
+        _put_if_not_none(params, "level", level)
+        _put_if_not_none(params, "framerate", framerate)
+        _put_if_not_none(params, "maxFramerate", max_framerate)
+        _put_if_not_none(params, "copyTimestamps", copy_timestamps)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "videoBitRate", video_bit_rate)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "subtitleMethod", subtitle_method)
+        _put_if_not_none(params, "maxRefFrames", max_ref_frames)
+        _put_if_not_none(params, "maxVideoBitDepth", max_video_bit_depth)
+        _put_if_not_none(params, "requireAvc", require_avc)
+        _put_if_not_none(params, "deInterlace", de_interlace)
+        _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
+        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
+        _put_if_not_none(params, "liveStreamId", live_stream_id)
+        _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
+        _put_if_not_none(params, "videoCodec", video_codec)
+        _put_if_not_none(params, "subtitleCodec", subtitle_codec)
+        _put_if_not_none(params, "transcodeReasons", transcode_reasons)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "videoStreamIndex", video_stream_index)
+        _put_if_not_none(params, "context", context)
+        _put_if_not_none(params, "streamOptions", stream_options)
+        _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
+        _put_if_not_none(params, "alwaysBurnInSubtitleWhenTranscoding", always_burn_in_subtitle_when_transcoding)
         return self.request("GET", endpoint, params=params)
 
     def get_live_hls_stream(
@@ -1395,114 +1250,59 @@ class MediaClient(ApiBase):
         endpoint = "/Videos/{itemId}/live.m3u8"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         params: dict[str, Any] = {}
-        if container is not None:
-            params["container"] = container
-        if static is not None:
-            params["static"] = static
-        if stream_params is not None:
-            params["params"] = stream_params
-        if tag is not None:
-            params["tag"] = tag
-        if device_profile_id is not None:
-            params["deviceProfileId"] = device_profile_id
-        if play_session_id is not None:
-            params["playSessionId"] = play_session_id
-        if segment_container is not None:
-            params["segmentContainer"] = segment_container
-        if segment_length is not None:
-            params["segmentLength"] = segment_length
-        if min_segments is not None:
-            params["minSegments"] = min_segments
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if device_id is not None:
-            params["deviceId"] = device_id
-        if audio_codec is not None:
-            params["audioCodec"] = audio_codec
-        if enable_auto_stream_copy is not None:
-            params["enableAutoStreamCopy"] = enable_auto_stream_copy
-        if allow_video_stream_copy is not None:
-            params["allowVideoStreamCopy"] = allow_video_stream_copy
-        if allow_audio_stream_copy is not None:
-            params["allowAudioStreamCopy"] = allow_audio_stream_copy
-        if break_on_non_key_frames is not None:
-            params["breakOnNonKeyFrames"] = break_on_non_key_frames
-        if audio_sample_rate is not None:
-            params["audioSampleRate"] = audio_sample_rate
-        if max_audio_bit_depth is not None:
-            params["maxAudioBitDepth"] = max_audio_bit_depth
-        if audio_bit_rate is not None:
-            params["audioBitRate"] = audio_bit_rate
-        if audio_channels is not None:
-            params["audioChannels"] = audio_channels
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if profile is not None:
-            params["profile"] = profile
-        if level is not None:
-            params["level"] = level
-        if framerate is not None:
-            params["framerate"] = framerate
-        if max_framerate is not None:
-            params["maxFramerate"] = max_framerate
-        if copy_timestamps is not None:
-            params["copyTimestamps"] = copy_timestamps
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if video_bit_rate is not None:
-            params["videoBitRate"] = video_bit_rate
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if subtitle_method is not None:
-            params["subtitleMethod"] = subtitle_method
-        if max_ref_frames is not None:
-            params["maxRefFrames"] = max_ref_frames
-        if max_video_bit_depth is not None:
-            params["maxVideoBitDepth"] = max_video_bit_depth
-        if require_avc is not None:
-            params["requireAvc"] = require_avc
-        if de_interlace is not None:
-            params["deInterlace"] = de_interlace
-        if require_non_anamorphic is not None:
-            params["requireNonAnamorphic"] = require_non_anamorphic
-        if transcoding_max_audio_channels is not None:
-            params["transcodingMaxAudioChannels"] = transcoding_max_audio_channels
-        if cpu_core_limit is not None:
-            params["cpuCoreLimit"] = cpu_core_limit
-        if live_stream_id is not None:
-            params["liveStreamId"] = live_stream_id
-        if enable_mpegts_m2_ts_mode is not None:
-            params["enableMpegtsM2TsMode"] = enable_mpegts_m2_ts_mode
-        if video_codec is not None:
-            params["videoCodec"] = video_codec
-        if subtitle_codec is not None:
-            params["subtitleCodec"] = subtitle_codec
-        if transcode_reasons is not None:
-            params["transcodeReasons"] = transcode_reasons
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if video_stream_index is not None:
-            params["videoStreamIndex"] = video_stream_index
-        if context is not None:
-            params["context"] = context
-        if stream_options is not None:
-            params["streamOptions"] = stream_options
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if enable_subtitles_in_manifest is not None:
-            params["enableSubtitlesInManifest"] = enable_subtitles_in_manifest
-        if enable_audio_vbr_encoding is not None:
-            params["enableAudioVbrEncoding"] = enable_audio_vbr_encoding
-        if always_burn_in_subtitle_when_transcoding is not None:
-            params["alwaysBurnInSubtitleWhenTranscoding"] = (
-                always_burn_in_subtitle_when_transcoding
-            )
+        _put_if_not_none(params, "container", container)
+        _put_if_not_none(params, "static", static)
+        _put_if_not_none(params, "params", stream_params)
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "deviceProfileId", device_profile_id)
+        _put_if_not_none(params, "playSessionId", play_session_id)
+        _put_if_not_none(params, "segmentContainer", segment_container)
+        _put_if_not_none(params, "segmentLength", segment_length)
+        _put_if_not_none(params, "minSegments", min_segments)
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "deviceId", device_id)
+        _put_if_not_none(params, "audioCodec", audio_codec)
+        _put_if_not_none(params, "enableAutoStreamCopy", enable_auto_stream_copy)
+        _put_if_not_none(params, "allowVideoStreamCopy", allow_video_stream_copy)
+        _put_if_not_none(params, "allowAudioStreamCopy", allow_audio_stream_copy)
+        _put_if_not_none(params, "breakOnNonKeyFrames", break_on_non_key_frames)
+        _put_if_not_none(params, "audioSampleRate", audio_sample_rate)
+        _put_if_not_none(params, "maxAudioBitDepth", max_audio_bit_depth)
+        _put_if_not_none(params, "audioBitRate", audio_bit_rate)
+        _put_if_not_none(params, "audioChannels", audio_channels)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "profile", profile)
+        _put_if_not_none(params, "level", level)
+        _put_if_not_none(params, "framerate", framerate)
+        _put_if_not_none(params, "maxFramerate", max_framerate)
+        _put_if_not_none(params, "copyTimestamps", copy_timestamps)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "videoBitRate", video_bit_rate)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "subtitleMethod", subtitle_method)
+        _put_if_not_none(params, "maxRefFrames", max_ref_frames)
+        _put_if_not_none(params, "maxVideoBitDepth", max_video_bit_depth)
+        _put_if_not_none(params, "requireAvc", require_avc)
+        _put_if_not_none(params, "deInterlace", de_interlace)
+        _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
+        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
+        _put_if_not_none(params, "liveStreamId", live_stream_id)
+        _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
+        _put_if_not_none(params, "videoCodec", video_codec)
+        _put_if_not_none(params, "subtitleCodec", subtitle_codec)
+        _put_if_not_none(params, "transcodeReasons", transcode_reasons)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "videoStreamIndex", video_stream_index)
+        _put_if_not_none(params, "context", context)
+        _put_if_not_none(params, "streamOptions", stream_options)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "enableSubtitlesInManifest", enable_subtitles_in_manifest)
+        _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
+        _put_if_not_none(params, "alwaysBurnInSubtitleWhenTranscoding", always_burn_in_subtitle_when_transcoding)
         return self.request("GET", endpoint, params=params)
 
     def get_variant_hls_video_playlist(
@@ -1564,110 +1364,57 @@ class MediaClient(ApiBase):
         endpoint = "/Videos/{itemId}/main.m3u8"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         params: dict[str, Any] = {}
-        if static is not None:
-            params["static"] = static
-        if stream_params is not None:
-            params["params"] = stream_params
-        if tag is not None:
-            params["tag"] = tag
-        if device_profile_id is not None:
-            params["deviceProfileId"] = device_profile_id
-        if play_session_id is not None:
-            params["playSessionId"] = play_session_id
-        if segment_container is not None:
-            params["segmentContainer"] = segment_container
-        if segment_length is not None:
-            params["segmentLength"] = segment_length
-        if min_segments is not None:
-            params["minSegments"] = min_segments
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if device_id is not None:
-            params["deviceId"] = device_id
-        if audio_codec is not None:
-            params["audioCodec"] = audio_codec
-        if enable_auto_stream_copy is not None:
-            params["enableAutoStreamCopy"] = enable_auto_stream_copy
-        if allow_video_stream_copy is not None:
-            params["allowVideoStreamCopy"] = allow_video_stream_copy
-        if allow_audio_stream_copy is not None:
-            params["allowAudioStreamCopy"] = allow_audio_stream_copy
-        if break_on_non_key_frames is not None:
-            params["breakOnNonKeyFrames"] = break_on_non_key_frames
-        if audio_sample_rate is not None:
-            params["audioSampleRate"] = audio_sample_rate
-        if max_audio_bit_depth is not None:
-            params["maxAudioBitDepth"] = max_audio_bit_depth
-        if audio_bit_rate is not None:
-            params["audioBitRate"] = audio_bit_rate
-        if audio_channels is not None:
-            params["audioChannels"] = audio_channels
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if profile is not None:
-            params["profile"] = profile
-        if level is not None:
-            params["level"] = level
-        if framerate is not None:
-            params["framerate"] = framerate
-        if max_framerate is not None:
-            params["maxFramerate"] = max_framerate
-        if copy_timestamps is not None:
-            params["copyTimestamps"] = copy_timestamps
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if video_bit_rate is not None:
-            params["videoBitRate"] = video_bit_rate
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if subtitle_method is not None:
-            params["subtitleMethod"] = subtitle_method
-        if max_ref_frames is not None:
-            params["maxRefFrames"] = max_ref_frames
-        if max_video_bit_depth is not None:
-            params["maxVideoBitDepth"] = max_video_bit_depth
-        if require_avc is not None:
-            params["requireAvc"] = require_avc
-        if de_interlace is not None:
-            params["deInterlace"] = de_interlace
-        if require_non_anamorphic is not None:
-            params["requireNonAnamorphic"] = require_non_anamorphic
-        if transcoding_max_audio_channels is not None:
-            params["transcodingMaxAudioChannels"] = transcoding_max_audio_channels
-        if cpu_core_limit is not None:
-            params["cpuCoreLimit"] = cpu_core_limit
-        if live_stream_id is not None:
-            params["liveStreamId"] = live_stream_id
-        if enable_mpegts_m2_ts_mode is not None:
-            params["enableMpegtsM2TsMode"] = enable_mpegts_m2_ts_mode
-        if video_codec is not None:
-            params["videoCodec"] = video_codec
-        if subtitle_codec is not None:
-            params["subtitleCodec"] = subtitle_codec
-        if transcode_reasons is not None:
-            params["transcodeReasons"] = transcode_reasons
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if video_stream_index is not None:
-            params["videoStreamIndex"] = video_stream_index
-        if context is not None:
-            params["context"] = context
-        if stream_options is not None:
-            params["streamOptions"] = stream_options
-        if enable_audio_vbr_encoding is not None:
-            params["enableAudioVbrEncoding"] = enable_audio_vbr_encoding
-        if always_burn_in_subtitle_when_transcoding is not None:
-            params["alwaysBurnInSubtitleWhenTranscoding"] = (
-                always_burn_in_subtitle_when_transcoding
-            )
+        _put_if_not_none(params, "static", static)
+        _put_if_not_none(params, "params", stream_params)
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "deviceProfileId", device_profile_id)
+        _put_if_not_none(params, "playSessionId", play_session_id)
+        _put_if_not_none(params, "segmentContainer", segment_container)
+        _put_if_not_none(params, "segmentLength", segment_length)
+        _put_if_not_none(params, "minSegments", min_segments)
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "deviceId", device_id)
+        _put_if_not_none(params, "audioCodec", audio_codec)
+        _put_if_not_none(params, "enableAutoStreamCopy", enable_auto_stream_copy)
+        _put_if_not_none(params, "allowVideoStreamCopy", allow_video_stream_copy)
+        _put_if_not_none(params, "allowAudioStreamCopy", allow_audio_stream_copy)
+        _put_if_not_none(params, "breakOnNonKeyFrames", break_on_non_key_frames)
+        _put_if_not_none(params, "audioSampleRate", audio_sample_rate)
+        _put_if_not_none(params, "maxAudioBitDepth", max_audio_bit_depth)
+        _put_if_not_none(params, "audioBitRate", audio_bit_rate)
+        _put_if_not_none(params, "audioChannels", audio_channels)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "profile", profile)
+        _put_if_not_none(params, "level", level)
+        _put_if_not_none(params, "framerate", framerate)
+        _put_if_not_none(params, "maxFramerate", max_framerate)
+        _put_if_not_none(params, "copyTimestamps", copy_timestamps)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "videoBitRate", video_bit_rate)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "subtitleMethod", subtitle_method)
+        _put_if_not_none(params, "maxRefFrames", max_ref_frames)
+        _put_if_not_none(params, "maxVideoBitDepth", max_video_bit_depth)
+        _put_if_not_none(params, "requireAvc", require_avc)
+        _put_if_not_none(params, "deInterlace", de_interlace)
+        _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
+        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
+        _put_if_not_none(params, "liveStreamId", live_stream_id)
+        _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
+        _put_if_not_none(params, "videoCodec", video_codec)
+        _put_if_not_none(params, "subtitleCodec", subtitle_codec)
+        _put_if_not_none(params, "transcodeReasons", transcode_reasons)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "videoStreamIndex", video_stream_index)
+        _put_if_not_none(params, "context", context)
+        _put_if_not_none(params, "streamOptions", stream_options)
+        _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
+        _put_if_not_none(params, "alwaysBurnInSubtitleWhenTranscoding", always_burn_in_subtitle_when_transcoding)
         return self.request("GET", endpoint, params=params)
 
     def get_master_hls_video_playlist(
@@ -1731,114 +1478,59 @@ class MediaClient(ApiBase):
         endpoint = "/Videos/{itemId}/master.m3u8"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         params: dict[str, Any] = {}
-        if static is not None:
-            params["static"] = static
-        if stream_params is not None:
-            params["params"] = stream_params
-        if tag is not None:
-            params["tag"] = tag
-        if device_profile_id is not None:
-            params["deviceProfileId"] = device_profile_id
-        if play_session_id is not None:
-            params["playSessionId"] = play_session_id
-        if segment_container is not None:
-            params["segmentContainer"] = segment_container
-        if segment_length is not None:
-            params["segmentLength"] = segment_length
-        if min_segments is not None:
-            params["minSegments"] = min_segments
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if device_id is not None:
-            params["deviceId"] = device_id
-        if audio_codec is not None:
-            params["audioCodec"] = audio_codec
-        if enable_auto_stream_copy is not None:
-            params["enableAutoStreamCopy"] = enable_auto_stream_copy
-        if allow_video_stream_copy is not None:
-            params["allowVideoStreamCopy"] = allow_video_stream_copy
-        if allow_audio_stream_copy is not None:
-            params["allowAudioStreamCopy"] = allow_audio_stream_copy
-        if break_on_non_key_frames is not None:
-            params["breakOnNonKeyFrames"] = break_on_non_key_frames
-        if audio_sample_rate is not None:
-            params["audioSampleRate"] = audio_sample_rate
-        if max_audio_bit_depth is not None:
-            params["maxAudioBitDepth"] = max_audio_bit_depth
-        if audio_bit_rate is not None:
-            params["audioBitRate"] = audio_bit_rate
-        if audio_channels is not None:
-            params["audioChannels"] = audio_channels
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if profile is not None:
-            params["profile"] = profile
-        if level is not None:
-            params["level"] = level
-        if framerate is not None:
-            params["framerate"] = framerate
-        if max_framerate is not None:
-            params["maxFramerate"] = max_framerate
-        if copy_timestamps is not None:
-            params["copyTimestamps"] = copy_timestamps
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if video_bit_rate is not None:
-            params["videoBitRate"] = video_bit_rate
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if subtitle_method is not None:
-            params["subtitleMethod"] = subtitle_method
-        if max_ref_frames is not None:
-            params["maxRefFrames"] = max_ref_frames
-        if max_video_bit_depth is not None:
-            params["maxVideoBitDepth"] = max_video_bit_depth
-        if require_avc is not None:
-            params["requireAvc"] = require_avc
-        if de_interlace is not None:
-            params["deInterlace"] = de_interlace
-        if require_non_anamorphic is not None:
-            params["requireNonAnamorphic"] = require_non_anamorphic
-        if transcoding_max_audio_channels is not None:
-            params["transcodingMaxAudioChannels"] = transcoding_max_audio_channels
-        if cpu_core_limit is not None:
-            params["cpuCoreLimit"] = cpu_core_limit
-        if live_stream_id is not None:
-            params["liveStreamId"] = live_stream_id
-        if enable_mpegts_m2_ts_mode is not None:
-            params["enableMpegtsM2TsMode"] = enable_mpegts_m2_ts_mode
-        if video_codec is not None:
-            params["videoCodec"] = video_codec
-        if subtitle_codec is not None:
-            params["subtitleCodec"] = subtitle_codec
-        if transcode_reasons is not None:
-            params["transcodeReasons"] = transcode_reasons
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if video_stream_index is not None:
-            params["videoStreamIndex"] = video_stream_index
-        if context is not None:
-            params["context"] = context
-        if stream_options is not None:
-            params["streamOptions"] = stream_options
-        if enable_adaptive_bitrate_streaming is not None:
-            params["enableAdaptiveBitrateStreaming"] = enable_adaptive_bitrate_streaming
-        if enable_trickplay is not None:
-            params["enableTrickplay"] = enable_trickplay
-        if enable_audio_vbr_encoding is not None:
-            params["enableAudioVbrEncoding"] = enable_audio_vbr_encoding
-        if always_burn_in_subtitle_when_transcoding is not None:
-            params["alwaysBurnInSubtitleWhenTranscoding"] = (
-                always_burn_in_subtitle_when_transcoding
-            )
+        _put_if_not_none(params, "static", static)
+        _put_if_not_none(params, "params", stream_params)
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "deviceProfileId", device_profile_id)
+        _put_if_not_none(params, "playSessionId", play_session_id)
+        _put_if_not_none(params, "segmentContainer", segment_container)
+        _put_if_not_none(params, "segmentLength", segment_length)
+        _put_if_not_none(params, "minSegments", min_segments)
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "deviceId", device_id)
+        _put_if_not_none(params, "audioCodec", audio_codec)
+        _put_if_not_none(params, "enableAutoStreamCopy", enable_auto_stream_copy)
+        _put_if_not_none(params, "allowVideoStreamCopy", allow_video_stream_copy)
+        _put_if_not_none(params, "allowAudioStreamCopy", allow_audio_stream_copy)
+        _put_if_not_none(params, "breakOnNonKeyFrames", break_on_non_key_frames)
+        _put_if_not_none(params, "audioSampleRate", audio_sample_rate)
+        _put_if_not_none(params, "maxAudioBitDepth", max_audio_bit_depth)
+        _put_if_not_none(params, "audioBitRate", audio_bit_rate)
+        _put_if_not_none(params, "audioChannels", audio_channels)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "profile", profile)
+        _put_if_not_none(params, "level", level)
+        _put_if_not_none(params, "framerate", framerate)
+        _put_if_not_none(params, "maxFramerate", max_framerate)
+        _put_if_not_none(params, "copyTimestamps", copy_timestamps)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "videoBitRate", video_bit_rate)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "subtitleMethod", subtitle_method)
+        _put_if_not_none(params, "maxRefFrames", max_ref_frames)
+        _put_if_not_none(params, "maxVideoBitDepth", max_video_bit_depth)
+        _put_if_not_none(params, "requireAvc", require_avc)
+        _put_if_not_none(params, "deInterlace", de_interlace)
+        _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
+        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
+        _put_if_not_none(params, "liveStreamId", live_stream_id)
+        _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
+        _put_if_not_none(params, "videoCodec", video_codec)
+        _put_if_not_none(params, "subtitleCodec", subtitle_codec)
+        _put_if_not_none(params, "transcodeReasons", transcode_reasons)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "videoStreamIndex", video_stream_index)
+        _put_if_not_none(params, "context", context)
+        _put_if_not_none(params, "streamOptions", stream_options)
+        _put_if_not_none(params, "enableAdaptiveBitrateStreaming", enable_adaptive_bitrate_streaming)
+        _put_if_not_none(params, "enableTrickplay", enable_trickplay)
+        _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
+        _put_if_not_none(params, "alwaysBurnInSubtitleWhenTranscoding", always_burn_in_subtitle_when_transcoding)
         return self.request("GET", endpoint, params=params)
 
     def get_hls_audio_segment_legacy_aac(self, item_id: str, segment_id: str) -> Any:
@@ -4037,174 +3729,90 @@ class MediaClient(ApiBase):
         """Finds movies and trailers similar to a given trailer."""
         endpoint = "/Trailers"
         params: dict[str, Any] = {}
-        if user_id is not None:
-            params["userId"] = user_id
-        if max_official_rating is not None:
-            params["maxOfficialRating"] = max_official_rating
-        if has_theme_song is not None:
-            params["hasThemeSong"] = has_theme_song
-        if has_theme_video is not None:
-            params["hasThemeVideo"] = has_theme_video
-        if has_subtitles is not None:
-            params["hasSubtitles"] = has_subtitles
-        if has_special_feature is not None:
-            params["hasSpecialFeature"] = has_special_feature
-        if has_trailer is not None:
-            params["hasTrailer"] = has_trailer
-        if adjacent_to is not None:
-            params["adjacentTo"] = adjacent_to
-        if parent_index_number is not None:
-            params["parentIndexNumber"] = parent_index_number
-        if has_parental_rating is not None:
-            params["hasParentalRating"] = has_parental_rating
-        if is_hd is not None:
-            params["isHd"] = is_hd
-        if is4_k is not None:
-            params["is4K"] = is4_k
-        if location_types is not None:
-            params["locationTypes"] = location_types
-        if exclude_location_types is not None:
-            params["excludeLocationTypes"] = exclude_location_types
-        if is_missing is not None:
-            params["isMissing"] = is_missing
-        if is_unaired is not None:
-            params["isUnaired"] = is_unaired
-        if min_community_rating is not None:
-            params["minCommunityRating"] = min_community_rating
-        if min_critic_rating is not None:
-            params["minCriticRating"] = min_critic_rating
-        if min_premiere_date is not None:
-            params["minPremiereDate"] = min_premiere_date
-        if min_date_last_saved is not None:
-            params["minDateLastSaved"] = min_date_last_saved
-        if min_date_last_saved_for_user is not None:
-            params["minDateLastSavedForUser"] = min_date_last_saved_for_user
-        if max_premiere_date is not None:
-            params["maxPremiereDate"] = max_premiere_date
-        if has_overview is not None:
-            params["hasOverview"] = has_overview
-        if has_imdb_id is not None:
-            params["hasImdbId"] = has_imdb_id
-        if has_tmdb_id is not None:
-            params["hasTmdbId"] = has_tmdb_id
-        if has_tvdb_id is not None:
-            params["hasTvdbId"] = has_tvdb_id
-        if is_movie is not None:
-            params["isMovie"] = is_movie
-        if is_series is not None:
-            params["isSeries"] = is_series
-        if is_news is not None:
-            params["isNews"] = is_news
-        if is_kids is not None:
-            params["isKids"] = is_kids
-        if is_sports is not None:
-            params["isSports"] = is_sports
-        if exclude_item_ids is not None:
-            params["excludeItemIds"] = exclude_item_ids
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if recursive is not None:
-            params["recursive"] = recursive
-        if search_term is not None:
-            params["searchTerm"] = search_term
-        if sort_order is not None:
-            params["sortOrder"] = sort_order
-        if parent_id is not None:
-            params["parentId"] = parent_id
-        if fields is not None:
-            params["fields"] = fields
-        if exclude_item_types is not None:
-            params["excludeItemTypes"] = exclude_item_types
-        if filters is not None:
-            params["filters"] = filters
-        if is_favorite is not None:
-            params["isFavorite"] = is_favorite
-        if media_types is not None:
-            params["mediaTypes"] = media_types
-        if image_types is not None:
-            params["imageTypes"] = image_types
-        if sort_by is not None:
-            params["sortBy"] = sort_by
-        if is_played is not None:
-            params["isPlayed"] = is_played
-        if genres is not None:
-            params["genres"] = genres
-        if official_ratings is not None:
-            params["officialRatings"] = official_ratings
-        if tags is not None:
-            params["tags"] = tags
-        if years is not None:
-            params["years"] = years
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if person is not None:
-            params["person"] = person
-        if person_ids is not None:
-            params["personIds"] = person_ids
-        if person_types is not None:
-            params["personTypes"] = person_types
-        if studios is not None:
-            params["studios"] = studios
-        if artists is not None:
-            params["artists"] = artists
-        if exclude_artist_ids is not None:
-            params["excludeArtistIds"] = exclude_artist_ids
-        if artist_ids is not None:
-            params["artistIds"] = artist_ids
-        if album_artist_ids is not None:
-            params["albumArtistIds"] = album_artist_ids
-        if contributing_artist_ids is not None:
-            params["contributingArtistIds"] = contributing_artist_ids
-        if albums is not None:
-            params["albums"] = albums
-        if album_ids is not None:
-            params["albumIds"] = album_ids
-        if ids is not None:
-            params["ids"] = ids
-        if video_types is not None:
-            params["videoTypes"] = video_types
-        if min_official_rating is not None:
-            params["minOfficialRating"] = min_official_rating
-        if is_locked is not None:
-            params["isLocked"] = is_locked
-        if is_place_holder is not None:
-            params["isPlaceHolder"] = is_place_holder
-        if has_official_rating is not None:
-            params["hasOfficialRating"] = has_official_rating
-        if collapse_box_set_items is not None:
-            params["collapseBoxSetItems"] = collapse_box_set_items
-        if min_width is not None:
-            params["minWidth"] = min_width
-        if min_height is not None:
-            params["minHeight"] = min_height
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if is3_d is not None:
-            params["is3D"] = is3_d
-        if series_status is not None:
-            params["seriesStatus"] = series_status
-        if name_starts_with_or_greater is not None:
-            params["nameStartsWithOrGreater"] = name_starts_with_or_greater
-        if name_starts_with is not None:
-            params["nameStartsWith"] = name_starts_with
-        if name_less_than is not None:
-            params["nameLessThan"] = name_less_than
-        if studio_ids is not None:
-            params["studioIds"] = studio_ids
-        if genre_ids is not None:
-            params["genreIds"] = genre_ids
-        if enable_total_record_count is not None:
-            params["enableTotalRecordCount"] = enable_total_record_count
-        if enable_images is not None:
-            params["enableImages"] = enable_images
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "maxOfficialRating", max_official_rating)
+        _put_if_not_none(params, "hasThemeSong", has_theme_song)
+        _put_if_not_none(params, "hasThemeVideo", has_theme_video)
+        _put_if_not_none(params, "hasSubtitles", has_subtitles)
+        _put_if_not_none(params, "hasSpecialFeature", has_special_feature)
+        _put_if_not_none(params, "hasTrailer", has_trailer)
+        _put_if_not_none(params, "adjacentTo", adjacent_to)
+        _put_if_not_none(params, "parentIndexNumber", parent_index_number)
+        _put_if_not_none(params, "hasParentalRating", has_parental_rating)
+        _put_if_not_none(params, "isHd", is_hd)
+        _put_if_not_none(params, "is4K", is4_k)
+        _put_if_not_none(params, "locationTypes", location_types)
+        _put_if_not_none(params, "excludeLocationTypes", exclude_location_types)
+        _put_if_not_none(params, "isMissing", is_missing)
+        _put_if_not_none(params, "isUnaired", is_unaired)
+        _put_if_not_none(params, "minCommunityRating", min_community_rating)
+        _put_if_not_none(params, "minCriticRating", min_critic_rating)
+        _put_if_not_none(params, "minPremiereDate", min_premiere_date)
+        _put_if_not_none(params, "minDateLastSaved", min_date_last_saved)
+        _put_if_not_none(params, "minDateLastSavedForUser", min_date_last_saved_for_user)
+        _put_if_not_none(params, "maxPremiereDate", max_premiere_date)
+        _put_if_not_none(params, "hasOverview", has_overview)
+        _put_if_not_none(params, "hasImdbId", has_imdb_id)
+        _put_if_not_none(params, "hasTmdbId", has_tmdb_id)
+        _put_if_not_none(params, "hasTvdbId", has_tvdb_id)
+        _put_if_not_none(params, "isMovie", is_movie)
+        _put_if_not_none(params, "isSeries", is_series)
+        _put_if_not_none(params, "isNews", is_news)
+        _put_if_not_none(params, "isKids", is_kids)
+        _put_if_not_none(params, "isSports", is_sports)
+        _put_if_not_none(params, "excludeItemIds", exclude_item_ids)
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "recursive", recursive)
+        _put_if_not_none(params, "searchTerm", search_term)
+        _put_if_not_none(params, "sortOrder", sort_order)
+        _put_if_not_none(params, "parentId", parent_id)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "excludeItemTypes", exclude_item_types)
+        _put_if_not_none(params, "filters", filters)
+        _put_if_not_none(params, "isFavorite", is_favorite)
+        _put_if_not_none(params, "mediaTypes", media_types)
+        _put_if_not_none(params, "imageTypes", image_types)
+        _put_if_not_none(params, "sortBy", sort_by)
+        _put_if_not_none(params, "isPlayed", is_played)
+        _put_if_not_none(params, "genres", genres)
+        _put_if_not_none(params, "officialRatings", official_ratings)
+        _put_if_not_none(params, "tags", tags)
+        _put_if_not_none(params, "years", years)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "person", person)
+        _put_if_not_none(params, "personIds", person_ids)
+        _put_if_not_none(params, "personTypes", person_types)
+        _put_if_not_none(params, "studios", studios)
+        _put_if_not_none(params, "artists", artists)
+        _put_if_not_none(params, "excludeArtistIds", exclude_artist_ids)
+        _put_if_not_none(params, "artistIds", artist_ids)
+        _put_if_not_none(params, "albumArtistIds", album_artist_ids)
+        _put_if_not_none(params, "contributingArtistIds", contributing_artist_ids)
+        _put_if_not_none(params, "albums", albums)
+        _put_if_not_none(params, "albumIds", album_ids)
+        _put_if_not_none(params, "ids", ids)
+        _put_if_not_none(params, "videoTypes", video_types)
+        _put_if_not_none(params, "minOfficialRating", min_official_rating)
+        _put_if_not_none(params, "isLocked", is_locked)
+        _put_if_not_none(params, "isPlaceHolder", is_place_holder)
+        _put_if_not_none(params, "hasOfficialRating", has_official_rating)
+        _put_if_not_none(params, "collapseBoxSetItems", collapse_box_set_items)
+        _put_if_not_none(params, "minWidth", min_width)
+        _put_if_not_none(params, "minHeight", min_height)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "is3D", is3_d)
+        _put_if_not_none(params, "seriesStatus", series_status)
+        _put_if_not_none(params, "nameStartsWithOrGreater", name_starts_with_or_greater)
+        _put_if_not_none(params, "nameStartsWith", name_starts_with)
+        _put_if_not_none(params, "nameLessThan", name_less_than)
+        _put_if_not_none(params, "studioIds", studio_ids)
+        _put_if_not_none(params, "genreIds", genre_ids)
+        _put_if_not_none(params, "enableTotalRecordCount", enable_total_record_count)
+        _put_if_not_none(params, "enableImages", enable_images)
         return self.request("GET", endpoint, params=params)
 
     def get_trickplay_tile_image(
@@ -4393,108 +4001,57 @@ class MediaClient(ApiBase):
         endpoint = "/Videos/{itemId}/stream"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         params: dict[str, Any] = {}
-        if container is not None:
-            params["container"] = container
-        if static is not None:
-            params["static"] = static
-        if stream_params is not None:
-            params["params"] = stream_params
-        if tag is not None:
-            params["tag"] = tag
-        if device_profile_id is not None:
-            params["deviceProfileId"] = device_profile_id
-        if play_session_id is not None:
-            params["playSessionId"] = play_session_id
-        if segment_container is not None:
-            params["segmentContainer"] = segment_container
-        if segment_length is not None:
-            params["segmentLength"] = segment_length
-        if min_segments is not None:
-            params["minSegments"] = min_segments
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if device_id is not None:
-            params["deviceId"] = device_id
-        if audio_codec is not None:
-            params["audioCodec"] = audio_codec
-        if enable_auto_stream_copy is not None:
-            params["enableAutoStreamCopy"] = enable_auto_stream_copy
-        if allow_video_stream_copy is not None:
-            params["allowVideoStreamCopy"] = allow_video_stream_copy
-        if allow_audio_stream_copy is not None:
-            params["allowAudioStreamCopy"] = allow_audio_stream_copy
-        if break_on_non_key_frames is not None:
-            params["breakOnNonKeyFrames"] = break_on_non_key_frames
-        if audio_sample_rate is not None:
-            params["audioSampleRate"] = audio_sample_rate
-        if max_audio_bit_depth is not None:
-            params["maxAudioBitDepth"] = max_audio_bit_depth
-        if audio_bit_rate is not None:
-            params["audioBitRate"] = audio_bit_rate
-        if audio_channels is not None:
-            params["audioChannels"] = audio_channels
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if profile is not None:
-            params["profile"] = profile
-        if level is not None:
-            params["level"] = level
-        if framerate is not None:
-            params["framerate"] = framerate
-        if max_framerate is not None:
-            params["maxFramerate"] = max_framerate
-        if copy_timestamps is not None:
-            params["copyTimestamps"] = copy_timestamps
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if video_bit_rate is not None:
-            params["videoBitRate"] = video_bit_rate
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if subtitle_method is not None:
-            params["subtitleMethod"] = subtitle_method
-        if max_ref_frames is not None:
-            params["maxRefFrames"] = max_ref_frames
-        if max_video_bit_depth is not None:
-            params["maxVideoBitDepth"] = max_video_bit_depth
-        if require_avc is not None:
-            params["requireAvc"] = require_avc
-        if de_interlace is not None:
-            params["deInterlace"] = de_interlace
-        if require_non_anamorphic is not None:
-            params["requireNonAnamorphic"] = require_non_anamorphic
-        if transcoding_max_audio_channels is not None:
-            params["transcodingMaxAudioChannels"] = transcoding_max_audio_channels
-        if cpu_core_limit is not None:
-            params["cpuCoreLimit"] = cpu_core_limit
-        if live_stream_id is not None:
-            params["liveStreamId"] = live_stream_id
-        if enable_mpegts_m2_ts_mode is not None:
-            params["enableMpegtsM2TsMode"] = enable_mpegts_m2_ts_mode
-        if video_codec is not None:
-            params["videoCodec"] = video_codec
-        if subtitle_codec is not None:
-            params["subtitleCodec"] = subtitle_codec
-        if transcode_reasons is not None:
-            params["transcodeReasons"] = transcode_reasons
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if video_stream_index is not None:
-            params["videoStreamIndex"] = video_stream_index
-        if context is not None:
-            params["context"] = context
-        if stream_options is not None:
-            params["streamOptions"] = stream_options
-        if enable_audio_vbr_encoding is not None:
-            params["enableAudioVbrEncoding"] = enable_audio_vbr_encoding
+        _put_if_not_none(params, "container", container)
+        _put_if_not_none(params, "static", static)
+        _put_if_not_none(params, "params", stream_params)
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "deviceProfileId", device_profile_id)
+        _put_if_not_none(params, "playSessionId", play_session_id)
+        _put_if_not_none(params, "segmentContainer", segment_container)
+        _put_if_not_none(params, "segmentLength", segment_length)
+        _put_if_not_none(params, "minSegments", min_segments)
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "deviceId", device_id)
+        _put_if_not_none(params, "audioCodec", audio_codec)
+        _put_if_not_none(params, "enableAutoStreamCopy", enable_auto_stream_copy)
+        _put_if_not_none(params, "allowVideoStreamCopy", allow_video_stream_copy)
+        _put_if_not_none(params, "allowAudioStreamCopy", allow_audio_stream_copy)
+        _put_if_not_none(params, "breakOnNonKeyFrames", break_on_non_key_frames)
+        _put_if_not_none(params, "audioSampleRate", audio_sample_rate)
+        _put_if_not_none(params, "maxAudioBitDepth", max_audio_bit_depth)
+        _put_if_not_none(params, "audioBitRate", audio_bit_rate)
+        _put_if_not_none(params, "audioChannels", audio_channels)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "profile", profile)
+        _put_if_not_none(params, "level", level)
+        _put_if_not_none(params, "framerate", framerate)
+        _put_if_not_none(params, "maxFramerate", max_framerate)
+        _put_if_not_none(params, "copyTimestamps", copy_timestamps)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "videoBitRate", video_bit_rate)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "subtitleMethod", subtitle_method)
+        _put_if_not_none(params, "maxRefFrames", max_ref_frames)
+        _put_if_not_none(params, "maxVideoBitDepth", max_video_bit_depth)
+        _put_if_not_none(params, "requireAvc", require_avc)
+        _put_if_not_none(params, "deInterlace", de_interlace)
+        _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
+        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
+        _put_if_not_none(params, "liveStreamId", live_stream_id)
+        _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
+        _put_if_not_none(params, "videoCodec", video_codec)
+        _put_if_not_none(params, "subtitleCodec", subtitle_codec)
+        _put_if_not_none(params, "transcodeReasons", transcode_reasons)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "videoStreamIndex", video_stream_index)
+        _put_if_not_none(params, "context", context)
+        _put_if_not_none(params, "streamOptions", stream_options)
+        _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
         return self.request("GET", endpoint, params=params)
 
     def get_video_stream_by_container(
@@ -4557,106 +4114,56 @@ class MediaClient(ApiBase):
         endpoint = endpoint.replace("{itemId}", str(item_id))
         endpoint = endpoint.replace("{container}", str(container))
         params: dict[str, Any] = {}
-        if static is not None:
-            params["static"] = static
-        if stream_params is not None:
-            params["params"] = stream_params
-        if tag is not None:
-            params["tag"] = tag
-        if device_profile_id is not None:
-            params["deviceProfileId"] = device_profile_id
-        if play_session_id is not None:
-            params["playSessionId"] = play_session_id
-        if segment_container is not None:
-            params["segmentContainer"] = segment_container
-        if segment_length is not None:
-            params["segmentLength"] = segment_length
-        if min_segments is not None:
-            params["minSegments"] = min_segments
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if device_id is not None:
-            params["deviceId"] = device_id
-        if audio_codec is not None:
-            params["audioCodec"] = audio_codec
-        if enable_auto_stream_copy is not None:
-            params["enableAutoStreamCopy"] = enable_auto_stream_copy
-        if allow_video_stream_copy is not None:
-            params["allowVideoStreamCopy"] = allow_video_stream_copy
-        if allow_audio_stream_copy is not None:
-            params["allowAudioStreamCopy"] = allow_audio_stream_copy
-        if break_on_non_key_frames is not None:
-            params["breakOnNonKeyFrames"] = break_on_non_key_frames
-        if audio_sample_rate is not None:
-            params["audioSampleRate"] = audio_sample_rate
-        if max_audio_bit_depth is not None:
-            params["maxAudioBitDepth"] = max_audio_bit_depth
-        if audio_bit_rate is not None:
-            params["audioBitRate"] = audio_bit_rate
-        if audio_channels is not None:
-            params["audioChannels"] = audio_channels
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if profile is not None:
-            params["profile"] = profile
-        if level is not None:
-            params["level"] = level
-        if framerate is not None:
-            params["framerate"] = framerate
-        if max_framerate is not None:
-            params["maxFramerate"] = max_framerate
-        if copy_timestamps is not None:
-            params["copyTimestamps"] = copy_timestamps
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if video_bit_rate is not None:
-            params["videoBitRate"] = video_bit_rate
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if subtitle_method is not None:
-            params["subtitleMethod"] = subtitle_method
-        if max_ref_frames is not None:
-            params["maxRefFrames"] = max_ref_frames
-        if max_video_bit_depth is not None:
-            params["maxVideoBitDepth"] = max_video_bit_depth
-        if require_avc is not None:
-            params["requireAvc"] = require_avc
-        if de_interlace is not None:
-            params["deInterlace"] = de_interlace
-        if require_non_anamorphic is not None:
-            params["requireNonAnamorphic"] = require_non_anamorphic
-        if transcoding_max_audio_channels is not None:
-            params["transcodingMaxAudioChannels"] = transcoding_max_audio_channels
-        if cpu_core_limit is not None:
-            params["cpuCoreLimit"] = cpu_core_limit
-        if live_stream_id is not None:
-            params["liveStreamId"] = live_stream_id
-        if enable_mpegts_m2_ts_mode is not None:
-            params["enableMpegtsM2TsMode"] = enable_mpegts_m2_ts_mode
-        if video_codec is not None:
-            params["videoCodec"] = video_codec
-        if subtitle_codec is not None:
-            params["subtitleCodec"] = subtitle_codec
-        if transcode_reasons is not None:
-            params["transcodeReasons"] = transcode_reasons
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if video_stream_index is not None:
-            params["videoStreamIndex"] = video_stream_index
-        if context is not None:
-            params["context"] = context
-        if stream_options is not None:
-            params["streamOptions"] = stream_options
-        if enable_audio_vbr_encoding is not None:
-            params["enableAudioVbrEncoding"] = enable_audio_vbr_encoding
+        _put_if_not_none(params, "static", static)
+        _put_if_not_none(params, "params", stream_params)
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "deviceProfileId", device_profile_id)
+        _put_if_not_none(params, "playSessionId", play_session_id)
+        _put_if_not_none(params, "segmentContainer", segment_container)
+        _put_if_not_none(params, "segmentLength", segment_length)
+        _put_if_not_none(params, "minSegments", min_segments)
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "deviceId", device_id)
+        _put_if_not_none(params, "audioCodec", audio_codec)
+        _put_if_not_none(params, "enableAutoStreamCopy", enable_auto_stream_copy)
+        _put_if_not_none(params, "allowVideoStreamCopy", allow_video_stream_copy)
+        _put_if_not_none(params, "allowAudioStreamCopy", allow_audio_stream_copy)
+        _put_if_not_none(params, "breakOnNonKeyFrames", break_on_non_key_frames)
+        _put_if_not_none(params, "audioSampleRate", audio_sample_rate)
+        _put_if_not_none(params, "maxAudioBitDepth", max_audio_bit_depth)
+        _put_if_not_none(params, "audioBitRate", audio_bit_rate)
+        _put_if_not_none(params, "audioChannels", audio_channels)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "profile", profile)
+        _put_if_not_none(params, "level", level)
+        _put_if_not_none(params, "framerate", framerate)
+        _put_if_not_none(params, "maxFramerate", max_framerate)
+        _put_if_not_none(params, "copyTimestamps", copy_timestamps)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "videoBitRate", video_bit_rate)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "subtitleMethod", subtitle_method)
+        _put_if_not_none(params, "maxRefFrames", max_ref_frames)
+        _put_if_not_none(params, "maxVideoBitDepth", max_video_bit_depth)
+        _put_if_not_none(params, "requireAvc", require_avc)
+        _put_if_not_none(params, "deInterlace", de_interlace)
+        _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
+        _put_if_not_none(params, "transcodingMaxAudioChannels", transcoding_max_audio_channels)
+        _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
+        _put_if_not_none(params, "liveStreamId", live_stream_id)
+        _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
+        _put_if_not_none(params, "videoCodec", video_codec)
+        _put_if_not_none(params, "subtitleCodec", subtitle_codec)
+        _put_if_not_none(params, "transcodeReasons", transcode_reasons)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "videoStreamIndex", video_stream_index)
+        _put_if_not_none(params, "context", context)
+        _put_if_not_none(params, "streamOptions", stream_options)
+        _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
         return self.request("GET", endpoint, params=params)
 
     def merge_versions(self, ids: list[Any] | None = None) -> Any:
