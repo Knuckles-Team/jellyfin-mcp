@@ -1,7 +1,7 @@
 {
   "api_version": "graphos.io/v1",
   "artifacts": {
-    "connector_manifest.yml": "3a0c754a60579725381a8a7be51a6b7fbeb88320423b33e0bc280a570e67696d",
+    "connector_manifest.yml": "be0a61edd720cebe8651fda7236afda7a1111144a9d8f67c6055b4a04f6f6333",
     "jellyfin_mcp/connectors/mcp_source_presets.json": "944efc44e7ca174bdca88ee38f4f2fc3948552f4f447f2bc00d121b40a3c682c",
     "jellyfin_mcp/connectors/tool_schema_fingerprints.json": "d688144cd865c5db8ca5f763b9ed3e4e87c39318576c6a0f14087ab14d159007",
     "jellyfin_mcp/ontology/fixtures/records.json": "665fcc73887a9d979694af27a2a9401b9941deb59a0290d05a9119fb6762498f",
@@ -18,9 +18,9 @@
     "synthetic_fixture_contract": "passed"
   },
   "compatibility": {
-    "agent_utilities": ">=2.4.0,<3",
+    "agent_utilities": ">=2.5.0,<3",
     "bundle_schema": "2",
-    "epistemic_graph": ">=2.26.0,<3"
+    "epistemic_graph": ">=2.27.0,<3"
   },
   "connector": "jellyfin-mcp",
   "kind": "ConnectorSourceAttestation",
@@ -32,5 +32,5 @@
   "signer": "UNSIGNED-PREVIEW",
   "signing_public_key": "",
   "status": "source-validated",
-  "validated_at": "2026-08-21T04:30:39Z"
+  "validated_at": "2026-08-26T13:42:55Z"
 }
