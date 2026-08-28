@@ -54,70 +54,38 @@ class MediaClient(ApiBase):
         """Gets all artists from a given item, folder, or the entire library."""
         endpoint = "/Artists"
         params: dict[str, Any] = {}
-        if min_community_rating is not None:
-            params["minCommunityRating"] = min_community_rating
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if search_term is not None:
-            params["searchTerm"] = search_term
-        if parent_id is not None:
-            params["parentId"] = parent_id
-        if fields is not None:
-            params["fields"] = fields
-        if exclude_item_types is not None:
-            params["excludeItemTypes"] = exclude_item_types
-        if include_item_types is not None:
-            params["includeItemTypes"] = include_item_types
-        if filters is not None:
-            params["filters"] = filters
-        if is_favorite is not None:
-            params["isFavorite"] = is_favorite
-        if media_types is not None:
-            params["mediaTypes"] = media_types
-        if genres is not None:
-            params["genres"] = genres
-        if genre_ids is not None:
-            params["genreIds"] = genre_ids
-        if official_ratings is not None:
-            params["officialRatings"] = official_ratings
-        if tags is not None:
-            params["tags"] = tags
-        if years is not None:
-            params["years"] = years
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if person is not None:
-            params["person"] = person
-        if person_ids is not None:
-            params["personIds"] = person_ids
-        if person_types is not None:
-            params["personTypes"] = person_types
-        if studios is not None:
-            params["studios"] = studios
-        if studio_ids is not None:
-            params["studioIds"] = studio_ids
-        if user_id is not None:
-            params["userId"] = user_id
-        if name_starts_with_or_greater is not None:
-            params["nameStartsWithOrGreater"] = name_starts_with_or_greater
-        if name_starts_with is not None:
-            params["nameStartsWith"] = name_starts_with
-        if name_less_than is not None:
-            params["nameLessThan"] = name_less_than
-        if sort_by is not None:
-            params["sortBy"] = sort_by
-        if sort_order is not None:
-            params["sortOrder"] = sort_order
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if enable_total_record_count is not None:
-            params["enableTotalRecordCount"] = enable_total_record_count
+        _put_if_not_none(params, "minCommunityRating", min_community_rating)
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "searchTerm", search_term)
+        _put_if_not_none(params, "parentId", parent_id)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "excludeItemTypes", exclude_item_types)
+        _put_if_not_none(params, "includeItemTypes", include_item_types)
+        _put_if_not_none(params, "filters", filters)
+        _put_if_not_none(params, "isFavorite", is_favorite)
+        _put_if_not_none(params, "mediaTypes", media_types)
+        _put_if_not_none(params, "genres", genres)
+        _put_if_not_none(params, "genreIds", genre_ids)
+        _put_if_not_none(params, "officialRatings", official_ratings)
+        _put_if_not_none(params, "tags", tags)
+        _put_if_not_none(params, "years", years)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "person", person)
+        _put_if_not_none(params, "personIds", person_ids)
+        _put_if_not_none(params, "personTypes", person_types)
+        _put_if_not_none(params, "studios", studios)
+        _put_if_not_none(params, "studioIds", studio_ids)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "nameStartsWithOrGreater", name_starts_with_or_greater)
+        _put_if_not_none(params, "nameStartsWith", name_starts_with)
+        _put_if_not_none(params, "nameLessThan", name_less_than)
+        _put_if_not_none(params, "sortBy", sort_by)
+        _put_if_not_none(params, "sortOrder", sort_order)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "enableTotalRecordCount", enable_total_record_count)
         return self.request("GET", endpoint, params=params)
 
     def get_artist_by_name(self, name: str, user_id: str | None = None) -> Any:
@@ -167,70 +135,38 @@ class MediaClient(ApiBase):
         """Gets all album artists from a given item, folder, or the entire library."""
         endpoint = "/Artists/AlbumArtists"
         params: dict[str, Any] = {}
-        if min_community_rating is not None:
-            params["minCommunityRating"] = min_community_rating
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if search_term is not None:
-            params["searchTerm"] = search_term
-        if parent_id is not None:
-            params["parentId"] = parent_id
-        if fields is not None:
-            params["fields"] = fields
-        if exclude_item_types is not None:
-            params["excludeItemTypes"] = exclude_item_types
-        if include_item_types is not None:
-            params["includeItemTypes"] = include_item_types
-        if filters is not None:
-            params["filters"] = filters
-        if is_favorite is not None:
-            params["isFavorite"] = is_favorite
-        if media_types is not None:
-            params["mediaTypes"] = media_types
-        if genres is not None:
-            params["genres"] = genres
-        if genre_ids is not None:
-            params["genreIds"] = genre_ids
-        if official_ratings is not None:
-            params["officialRatings"] = official_ratings
-        if tags is not None:
-            params["tags"] = tags
-        if years is not None:
-            params["years"] = years
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if person is not None:
-            params["person"] = person
-        if person_ids is not None:
-            params["personIds"] = person_ids
-        if person_types is not None:
-            params["personTypes"] = person_types
-        if studios is not None:
-            params["studios"] = studios
-        if studio_ids is not None:
-            params["studioIds"] = studio_ids
-        if user_id is not None:
-            params["userId"] = user_id
-        if name_starts_with_or_greater is not None:
-            params["nameStartsWithOrGreater"] = name_starts_with_or_greater
-        if name_starts_with is not None:
-            params["nameStartsWith"] = name_starts_with
-        if name_less_than is not None:
-            params["nameLessThan"] = name_less_than
-        if sort_by is not None:
-            params["sortBy"] = sort_by
-        if sort_order is not None:
-            params["sortOrder"] = sort_order
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if enable_total_record_count is not None:
-            params["enableTotalRecordCount"] = enable_total_record_count
+        _put_if_not_none(params, "minCommunityRating", min_community_rating)
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "searchTerm", search_term)
+        _put_if_not_none(params, "parentId", parent_id)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "excludeItemTypes", exclude_item_types)
+        _put_if_not_none(params, "includeItemTypes", include_item_types)
+        _put_if_not_none(params, "filters", filters)
+        _put_if_not_none(params, "isFavorite", is_favorite)
+        _put_if_not_none(params, "mediaTypes", media_types)
+        _put_if_not_none(params, "genres", genres)
+        _put_if_not_none(params, "genreIds", genre_ids)
+        _put_if_not_none(params, "officialRatings", official_ratings)
+        _put_if_not_none(params, "tags", tags)
+        _put_if_not_none(params, "years", years)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "person", person)
+        _put_if_not_none(params, "personIds", person_ids)
+        _put_if_not_none(params, "personTypes", person_types)
+        _put_if_not_none(params, "studios", studios)
+        _put_if_not_none(params, "studioIds", studio_ids)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "nameStartsWithOrGreater", name_starts_with_or_greater)
+        _put_if_not_none(params, "nameStartsWith", name_starts_with)
+        _put_if_not_none(params, "nameLessThan", name_less_than)
+        _put_if_not_none(params, "sortBy", sort_by)
+        _put_if_not_none(params, "sortOrder", sort_order)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "enableTotalRecordCount", enable_total_record_count)
         return self.request("GET", endpoint, params=params)
 
     def get_audio_stream(
@@ -290,104 +226,57 @@ class MediaClient(ApiBase):
         endpoint = "/Audio/{itemId}/stream"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         params: dict[str, Any] = {}  # type: ignore
-        if container is not None:
-            params["container"] = container  # type: ignore
-        if static is not None:
-            params["static"] = static  # type: ignore
-        if stream_params is not None:
-            params["params"] = stream_params  # type: ignore
-        if tag is not None:
-            params["tag"] = tag  # type: ignore
-        if device_profile_id is not None:
-            params["deviceProfileId"] = device_profile_id
-        if play_session_id is not None:
-            params["playSessionId"] = play_session_id
-        if segment_container is not None:
-            params["segmentContainer"] = segment_container
-        if segment_length is not None:
-            params["segmentLength"] = segment_length
-        if min_segments is not None:
-            params["minSegments"] = min_segments
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if device_id is not None:
-            params["deviceId"] = device_id
-        if audio_codec is not None:
-            params["audioCodec"] = audio_codec
-        if enable_auto_stream_copy is not None:
-            params["enableAutoStreamCopy"] = enable_auto_stream_copy
-        if allow_video_stream_copy is not None:
-            params["allowVideoStreamCopy"] = allow_video_stream_copy
-        if allow_audio_stream_copy is not None:
-            params["allowAudioStreamCopy"] = allow_audio_stream_copy
-        if break_on_non_key_frames is not None:
-            params["breakOnNonKeyFrames"] = break_on_non_key_frames
-        if audio_sample_rate is not None:
-            params["audioSampleRate"] = audio_sample_rate
-        if max_audio_bit_depth is not None:
-            params["maxAudioBitDepth"] = max_audio_bit_depth
-        if audio_bit_rate is not None:
-            params["audioBitRate"] = audio_bit_rate
-        if audio_channels is not None:
-            params["audioChannels"] = audio_channels
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if profile is not None:
-            params["profile"] = profile
-        if level is not None:
-            params["level"] = level
-        if framerate is not None:
-            params["framerate"] = framerate
-        if max_framerate is not None:
-            params["maxFramerate"] = max_framerate
-        if copy_timestamps is not None:
-            params["copyTimestamps"] = copy_timestamps
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if video_bit_rate is not None:
-            params["videoBitRate"] = video_bit_rate
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if subtitle_method is not None:
-            params["subtitleMethod"] = subtitle_method
-        if max_ref_frames is not None:
-            params["maxRefFrames"] = max_ref_frames
-        if max_video_bit_depth is not None:
-            params["maxVideoBitDepth"] = max_video_bit_depth
-        if require_avc is not None:
-            params["requireAvc"] = require_avc
-        if de_interlace is not None:
-            params["deInterlace"] = de_interlace
-        if require_non_anamorphic is not None:
-            params["requireNonAnamorphic"] = require_non_anamorphic
-        if transcoding_max_audio_channels is not None:
-            params["transcodingMaxAudioChannels"] = transcoding_max_audio_channels
-        if cpu_core_limit is not None:
-            params["cpuCoreLimit"] = cpu_core_limit
-        if live_stream_id is not None:
-            params["liveStreamId"] = live_stream_id
-        if enable_mpegts_m2_ts_mode is not None:
-            params["enableMpegtsM2TsMode"] = enable_mpegts_m2_ts_mode
-        if video_codec is not None:
-            params["videoCodec"] = video_codec
-        if subtitle_codec is not None:
-            params["subtitleCodec"] = subtitle_codec
-        if transcode_reasons is not None:
-            params["transcodeReasons"] = transcode_reasons
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if video_stream_index is not None:
-            params["videoStreamIndex"] = video_stream_index
-        if context is not None:
-            params["context"] = context
-        if stream_options is not None:
-            params["streamOptions"] = stream_options
-        if enable_audio_vbr_encoding is not None:
-            params["enableAudioVbrEncoding"] = enable_audio_vbr_encoding
+        _put_if_not_none(params, "container", container)
+        _put_if_not_none(params, "static", static)
+        _put_if_not_none(params, "params", stream_params)
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "deviceProfileId", device_profile_id)
+        _put_if_not_none(params, "playSessionId", play_session_id)
+        _put_if_not_none(params, "segmentContainer", segment_container)
+        _put_if_not_none(params, "segmentLength", segment_length)
+        _put_if_not_none(params, "minSegments", min_segments)
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "deviceId", device_id)
+        _put_if_not_none(params, "audioCodec", audio_codec)
+        _put_if_not_none(params, "enableAutoStreamCopy", enable_auto_stream_copy)
+        _put_if_not_none(params, "allowVideoStreamCopy", allow_video_stream_copy)
+        _put_if_not_none(params, "allowAudioStreamCopy", allow_audio_stream_copy)
+        _put_if_not_none(params, "breakOnNonKeyFrames", break_on_non_key_frames)
+        _put_if_not_none(params, "audioSampleRate", audio_sample_rate)
+        _put_if_not_none(params, "maxAudioBitDepth", max_audio_bit_depth)
+        _put_if_not_none(params, "audioBitRate", audio_bit_rate)
+        _put_if_not_none(params, "audioChannels", audio_channels)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "profile", profile)
+        _put_if_not_none(params, "level", level)
+        _put_if_not_none(params, "framerate", framerate)
+        _put_if_not_none(params, "maxFramerate", max_framerate)
+        _put_if_not_none(params, "copyTimestamps", copy_timestamps)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "videoBitRate", video_bit_rate)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "subtitleMethod", subtitle_method)
+        _put_if_not_none(params, "maxRefFrames", max_ref_frames)
+        _put_if_not_none(params, "maxVideoBitDepth", max_video_bit_depth)
+        _put_if_not_none(params, "requireAvc", require_avc)
+        _put_if_not_none(params, "deInterlace", de_interlace)
+        _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
+        _put_if_not_none(
+            params, "transcodingMaxAudioChannels", transcoding_max_audio_channels
+        )
+        _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
+        _put_if_not_none(params, "liveStreamId", live_stream_id)
+        _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
+        _put_if_not_none(params, "videoCodec", video_codec)
+        _put_if_not_none(params, "subtitleCodec", subtitle_codec)
+        _put_if_not_none(params, "transcodeReasons", transcode_reasons)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "videoStreamIndex", video_stream_index)
+        _put_if_not_none(params, "context", context)
+        _put_if_not_none(params, "streamOptions", stream_options)
+        _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
         return self.request("GET", endpoint, params=params)
 
     def get_audio_stream_by_container(
@@ -448,102 +337,56 @@ class MediaClient(ApiBase):
         endpoint = endpoint.replace("{itemId}", str(item_id))
         endpoint = endpoint.replace("{container}", str(container))
         params: dict[str, Any] = {}
-        if static is not None:
-            params["static"] = static
-        if stream_params is not None:
-            params["params"] = stream_params
-        if tag is not None:
-            params["tag"] = tag
-        if device_profile_id is not None:
-            params["deviceProfileId"] = device_profile_id
-        if play_session_id is not None:
-            params["playSessionId"] = play_session_id
-        if segment_container is not None:
-            params["segmentContainer"] = segment_container
-        if segment_length is not None:
-            params["segmentLength"] = segment_length
-        if min_segments is not None:
-            params["minSegments"] = min_segments
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if device_id is not None:
-            params["deviceId"] = device_id
-        if audio_codec is not None:
-            params["audioCodec"] = audio_codec
-        if enable_auto_stream_copy is not None:
-            params["enableAutoStreamCopy"] = enable_auto_stream_copy
-        if allow_video_stream_copy is not None:
-            params["allowVideoStreamCopy"] = allow_video_stream_copy
-        if allow_audio_stream_copy is not None:
-            params["allowAudioStreamCopy"] = allow_audio_stream_copy
-        if break_on_non_key_frames is not None:
-            params["breakOnNonKeyFrames"] = break_on_non_key_frames
-        if audio_sample_rate is not None:
-            params["audioSampleRate"] = audio_sample_rate
-        if max_audio_bit_depth is not None:
-            params["maxAudioBitDepth"] = max_audio_bit_depth
-        if audio_bit_rate is not None:
-            params["audioBitRate"] = audio_bit_rate
-        if audio_channels is not None:
-            params["audioChannels"] = audio_channels
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if profile is not None:
-            params["profile"] = profile
-        if level is not None:
-            params["level"] = level
-        if framerate is not None:
-            params["framerate"] = framerate
-        if max_framerate is not None:
-            params["maxFramerate"] = max_framerate
-        if copy_timestamps is not None:
-            params["copyTimestamps"] = copy_timestamps
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if video_bit_rate is not None:
-            params["videoBitRate"] = video_bit_rate
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if subtitle_method is not None:
-            params["subtitleMethod"] = subtitle_method
-        if max_ref_frames is not None:
-            params["maxRefFrames"] = max_ref_frames
-        if max_video_bit_depth is not None:
-            params["maxVideoBitDepth"] = max_video_bit_depth
-        if require_avc is not None:
-            params["requireAvc"] = require_avc
-        if de_interlace is not None:
-            params["deInterlace"] = de_interlace
-        if require_non_anamorphic is not None:
-            params["requireNonAnamorphic"] = require_non_anamorphic
-        if transcoding_max_audio_channels is not None:
-            params["transcodingMaxAudioChannels"] = transcoding_max_audio_channels
-        if cpu_core_limit is not None:
-            params["cpuCoreLimit"] = cpu_core_limit
-        if live_stream_id is not None:
-            params["liveStreamId"] = live_stream_id
-        if enable_mpegts_m2_ts_mode is not None:
-            params["enableMpegtsM2TsMode"] = enable_mpegts_m2_ts_mode
-        if video_codec is not None:
-            params["videoCodec"] = video_codec
-        if subtitle_codec is not None:
-            params["subtitleCodec"] = subtitle_codec
-        if transcode_reasons is not None:
-            params["transcodeReasons"] = transcode_reasons
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if video_stream_index is not None:
-            params["videoStreamIndex"] = video_stream_index
-        if context is not None:
-            params["context"] = context
-        if stream_options is not None:
-            params["streamOptions"] = stream_options
-        if enable_audio_vbr_encoding is not None:
-            params["enableAudioVbrEncoding"] = enable_audio_vbr_encoding
+        _put_if_not_none(params, "static", static)
+        _put_if_not_none(params, "params", stream_params)
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "deviceProfileId", device_profile_id)
+        _put_if_not_none(params, "playSessionId", play_session_id)
+        _put_if_not_none(params, "segmentContainer", segment_container)
+        _put_if_not_none(params, "segmentLength", segment_length)
+        _put_if_not_none(params, "minSegments", min_segments)
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "deviceId", device_id)
+        _put_if_not_none(params, "audioCodec", audio_codec)
+        _put_if_not_none(params, "enableAutoStreamCopy", enable_auto_stream_copy)
+        _put_if_not_none(params, "allowVideoStreamCopy", allow_video_stream_copy)
+        _put_if_not_none(params, "allowAudioStreamCopy", allow_audio_stream_copy)
+        _put_if_not_none(params, "breakOnNonKeyFrames", break_on_non_key_frames)
+        _put_if_not_none(params, "audioSampleRate", audio_sample_rate)
+        _put_if_not_none(params, "maxAudioBitDepth", max_audio_bit_depth)
+        _put_if_not_none(params, "audioBitRate", audio_bit_rate)
+        _put_if_not_none(params, "audioChannels", audio_channels)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "profile", profile)
+        _put_if_not_none(params, "level", level)
+        _put_if_not_none(params, "framerate", framerate)
+        _put_if_not_none(params, "maxFramerate", max_framerate)
+        _put_if_not_none(params, "copyTimestamps", copy_timestamps)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "videoBitRate", video_bit_rate)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "subtitleMethod", subtitle_method)
+        _put_if_not_none(params, "maxRefFrames", max_ref_frames)
+        _put_if_not_none(params, "maxVideoBitDepth", max_video_bit_depth)
+        _put_if_not_none(params, "requireAvc", require_avc)
+        _put_if_not_none(params, "deInterlace", de_interlace)
+        _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
+        _put_if_not_none(
+            params, "transcodingMaxAudioChannels", transcoding_max_audio_channels
+        )
+        _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
+        _put_if_not_none(params, "liveStreamId", live_stream_id)
+        _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
+        _put_if_not_none(params, "videoCodec", video_codec)
+        _put_if_not_none(params, "subtitleCodec", subtitle_codec)
+        _put_if_not_none(params, "transcodeReasons", transcode_reasons)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "videoStreamIndex", video_stream_index)
+        _put_if_not_none(params, "context", context)
+        _put_if_not_none(params, "streamOptions", stream_options)
+        _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
         return self.request("GET", endpoint, params=params)
 
     def get_channels(
@@ -861,104 +704,57 @@ class MediaClient(ApiBase):
         endpoint = "/Audio/{itemId}/main.m3u8"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         params: dict[str, Any] = {}
-        if static is not None:
-            params["static"] = static
-        if stream_params is not None:
-            params["params"] = stream_params
-        if tag is not None:
-            params["tag"] = tag
-        if device_profile_id is not None:
-            params["deviceProfileId"] = device_profile_id
-        if play_session_id is not None:
-            params["playSessionId"] = play_session_id
-        if segment_container is not None:
-            params["segmentContainer"] = segment_container
-        if segment_length is not None:
-            params["segmentLength"] = segment_length
-        if min_segments is not None:
-            params["minSegments"] = min_segments
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if device_id is not None:
-            params["deviceId"] = device_id
-        if audio_codec is not None:
-            params["audioCodec"] = audio_codec
-        if enable_auto_stream_copy is not None:
-            params["enableAutoStreamCopy"] = enable_auto_stream_copy
-        if allow_video_stream_copy is not None:
-            params["allowVideoStreamCopy"] = allow_video_stream_copy
-        if allow_audio_stream_copy is not None:
-            params["allowAudioStreamCopy"] = allow_audio_stream_copy
-        if break_on_non_key_frames is not None:
-            params["breakOnNonKeyFrames"] = break_on_non_key_frames
-        if audio_sample_rate is not None:
-            params["audioSampleRate"] = audio_sample_rate
-        if max_audio_bit_depth is not None:
-            params["maxAudioBitDepth"] = max_audio_bit_depth
-        if max_streaming_bitrate is not None:
-            params["maxStreamingBitrate"] = max_streaming_bitrate
-        if audio_bit_rate is not None:
-            params["audioBitRate"] = audio_bit_rate
-        if audio_channels is not None:
-            params["audioChannels"] = audio_channels
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if profile is not None:
-            params["profile"] = profile
-        if level is not None:
-            params["level"] = level
-        if framerate is not None:
-            params["framerate"] = framerate
-        if max_framerate is not None:
-            params["maxFramerate"] = max_framerate
-        if copy_timestamps is not None:
-            params["copyTimestamps"] = copy_timestamps
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if video_bit_rate is not None:
-            params["videoBitRate"] = video_bit_rate
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if subtitle_method is not None:
-            params["subtitleMethod"] = subtitle_method
-        if max_ref_frames is not None:
-            params["maxRefFrames"] = max_ref_frames
-        if max_video_bit_depth is not None:
-            params["maxVideoBitDepth"] = max_video_bit_depth
-        if require_avc is not None:
-            params["requireAvc"] = require_avc
-        if de_interlace is not None:
-            params["deInterlace"] = de_interlace
-        if require_non_anamorphic is not None:
-            params["requireNonAnamorphic"] = require_non_anamorphic
-        if transcoding_max_audio_channels is not None:
-            params["transcodingMaxAudioChannels"] = transcoding_max_audio_channels
-        if cpu_core_limit is not None:
-            params["cpuCoreLimit"] = cpu_core_limit
-        if live_stream_id is not None:
-            params["liveStreamId"] = live_stream_id
-        if enable_mpegts_m2_ts_mode is not None:
-            params["enableMpegtsM2TsMode"] = enable_mpegts_m2_ts_mode
-        if video_codec is not None:
-            params["videoCodec"] = video_codec
-        if subtitle_codec is not None:
-            params["subtitleCodec"] = subtitle_codec
-        if transcode_reasons is not None:
-            params["transcodeReasons"] = transcode_reasons
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if video_stream_index is not None:
-            params["videoStreamIndex"] = video_stream_index
-        if context is not None:
-            params["context"] = context
-        if stream_options is not None:
-            params["streamOptions"] = stream_options
-        if enable_audio_vbr_encoding is not None:
-            params["enableAudioVbrEncoding"] = enable_audio_vbr_encoding
+        _put_if_not_none(params, "static", static)
+        _put_if_not_none(params, "params", stream_params)
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "deviceProfileId", device_profile_id)
+        _put_if_not_none(params, "playSessionId", play_session_id)
+        _put_if_not_none(params, "segmentContainer", segment_container)
+        _put_if_not_none(params, "segmentLength", segment_length)
+        _put_if_not_none(params, "minSegments", min_segments)
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "deviceId", device_id)
+        _put_if_not_none(params, "audioCodec", audio_codec)
+        _put_if_not_none(params, "enableAutoStreamCopy", enable_auto_stream_copy)
+        _put_if_not_none(params, "allowVideoStreamCopy", allow_video_stream_copy)
+        _put_if_not_none(params, "allowAudioStreamCopy", allow_audio_stream_copy)
+        _put_if_not_none(params, "breakOnNonKeyFrames", break_on_non_key_frames)
+        _put_if_not_none(params, "audioSampleRate", audio_sample_rate)
+        _put_if_not_none(params, "maxAudioBitDepth", max_audio_bit_depth)
+        _put_if_not_none(params, "maxStreamingBitrate", max_streaming_bitrate)
+        _put_if_not_none(params, "audioBitRate", audio_bit_rate)
+        _put_if_not_none(params, "audioChannels", audio_channels)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "profile", profile)
+        _put_if_not_none(params, "level", level)
+        _put_if_not_none(params, "framerate", framerate)
+        _put_if_not_none(params, "maxFramerate", max_framerate)
+        _put_if_not_none(params, "copyTimestamps", copy_timestamps)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "videoBitRate", video_bit_rate)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "subtitleMethod", subtitle_method)
+        _put_if_not_none(params, "maxRefFrames", max_ref_frames)
+        _put_if_not_none(params, "maxVideoBitDepth", max_video_bit_depth)
+        _put_if_not_none(params, "requireAvc", require_avc)
+        _put_if_not_none(params, "deInterlace", de_interlace)
+        _put_if_not_none(params, "requireNonAnamorphic", require_non_anamorphic)
+        _put_if_not_none(
+            params, "transcodingMaxAudioChannels", transcoding_max_audio_channels
+        )
+        _put_if_not_none(params, "cpuCoreLimit", cpu_core_limit)
+        _put_if_not_none(params, "liveStreamId", live_stream_id)
+        _put_if_not_none(params, "enableMpegtsM2TsMode", enable_mpegts_m2_ts_mode)
+        _put_if_not_none(params, "videoCodec", video_codec)
+        _put_if_not_none(params, "subtitleCodec", subtitle_codec)
+        _put_if_not_none(params, "transcodeReasons", transcode_reasons)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "videoStreamIndex", video_stream_index)
+        _put_if_not_none(params, "context", context)
+        _put_if_not_none(params, "streamOptions", stream_options)
+        _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
         return self.request("GET", endpoint, params=params)
 
     def get_master_hls_audio_playlist(
@@ -1645,34 +1441,20 @@ class MediaClient(ApiBase):
         endpoint = endpoint.replace("{imageType}", str(image_type))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
         params: dict[str, Any] = {}
-        if tag is not None:
-            params["tag"] = tag
-        if format is not None:
-            params["format"] = format
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if percent_played is not None:
-            params["percentPlayed"] = percent_played
-        if unplayed_count is not None:
-            params["unplayedCount"] = unplayed_count
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if quality is not None:
-            params["quality"] = quality
-        if fill_width is not None:
-            params["fillWidth"] = fill_width
-        if fill_height is not None:
-            params["fillHeight"] = fill_height
-        if blur is not None:
-            params["blur"] = blur
-        if background_color is not None:
-            params["backgroundColor"] = background_color
-        if foreground_layer is not None:
-            params["foregroundLayer"] = foreground_layer
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "format", format)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "percentPlayed", percent_played)
+        _put_if_not_none(params, "unplayedCount", unplayed_count)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "quality", quality)
+        _put_if_not_none(params, "fillWidth", fill_width)
+        _put_if_not_none(params, "fillHeight", fill_height)
+        _put_if_not_none(params, "blur", blur)
+        _put_if_not_none(params, "backgroundColor", background_color)
+        _put_if_not_none(params, "foregroundLayer", foreground_layer)
         return self.request("GET", endpoint, params=params)
 
     def get_music_genre_image(
@@ -1700,36 +1482,21 @@ class MediaClient(ApiBase):
         endpoint = endpoint.replace("{name}", str(name))
         endpoint = endpoint.replace("{imageType}", str(image_type))
         params: dict[str, Any] = {}
-        if tag is not None:
-            params["tag"] = tag
-        if format is not None:
-            params["format"] = format
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if percent_played is not None:
-            params["percentPlayed"] = percent_played
-        if unplayed_count is not None:
-            params["unplayedCount"] = unplayed_count
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if quality is not None:
-            params["quality"] = quality
-        if fill_width is not None:
-            params["fillWidth"] = fill_width
-        if fill_height is not None:
-            params["fillHeight"] = fill_height
-        if blur is not None:
-            params["blur"] = blur
-        if background_color is not None:
-            params["backgroundColor"] = background_color
-        if foreground_layer is not None:
-            params["foregroundLayer"] = foreground_layer
-        if image_index is not None:
-            params["imageIndex"] = image_index
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "format", format)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "percentPlayed", percent_played)
+        _put_if_not_none(params, "unplayedCount", unplayed_count)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "quality", quality)
+        _put_if_not_none(params, "fillWidth", fill_width)
+        _put_if_not_none(params, "fillHeight", fill_height)
+        _put_if_not_none(params, "blur", blur)
+        _put_if_not_none(params, "backgroundColor", background_color)
+        _put_if_not_none(params, "foregroundLayer", foreground_layer)
+        _put_if_not_none(params, "imageIndex", image_index)
         return self.request("GET", endpoint, params=params)
 
     def get_music_genre_image_by_index(
@@ -1758,34 +1525,20 @@ class MediaClient(ApiBase):
         endpoint = endpoint.replace("{imageType}", str(image_type))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
         params: dict[str, Any] = {}
-        if tag is not None:
-            params["tag"] = tag
-        if format is not None:
-            params["format"] = format
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if percent_played is not None:
-            params["percentPlayed"] = percent_played
-        if unplayed_count is not None:
-            params["unplayedCount"] = unplayed_count
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if quality is not None:
-            params["quality"] = quality
-        if fill_width is not None:
-            params["fillWidth"] = fill_width
-        if fill_height is not None:
-            params["fillHeight"] = fill_height
-        if blur is not None:
-            params["blur"] = blur
-        if background_color is not None:
-            params["backgroundColor"] = background_color
-        if foreground_layer is not None:
-            params["foregroundLayer"] = foreground_layer
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "format", format)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "percentPlayed", percent_played)
+        _put_if_not_none(params, "unplayedCount", unplayed_count)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "quality", quality)
+        _put_if_not_none(params, "fillWidth", fill_width)
+        _put_if_not_none(params, "fillHeight", fill_height)
+        _put_if_not_none(params, "blur", blur)
+        _put_if_not_none(params, "backgroundColor", background_color)
+        _put_if_not_none(params, "foregroundLayer", foreground_layer)
         return self.request("GET", endpoint, params=params)
 
     def get_instant_mix_from_artists(
@@ -2191,48 +1944,27 @@ class MediaClient(ApiBase):
         """Gets available live tv channels."""
         endpoint = "/LiveTv/Channels"
         params: dict[str, Any] = {}
-        if type is not None:
-            params["type"] = type
-        if user_id is not None:
-            params["userId"] = user_id
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if is_movie is not None:
-            params["isMovie"] = is_movie
-        if is_series is not None:
-            params["isSeries"] = is_series
-        if is_news is not None:
-            params["isNews"] = is_news
-        if is_kids is not None:
-            params["isKids"] = is_kids
-        if is_sports is not None:
-            params["isSports"] = is_sports
-        if limit is not None:
-            params["limit"] = limit
-        if is_favorite is not None:
-            params["isFavorite"] = is_favorite
-        if is_liked is not None:
-            params["isLiked"] = is_liked
-        if is_disliked is not None:
-            params["isDisliked"] = is_disliked
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if fields is not None:
-            params["fields"] = fields
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if sort_by is not None:
-            params["sortBy"] = sort_by
-        if sort_order is not None:
-            params["sortOrder"] = sort_order
-        if enable_favorite_sorting is not None:
-            params["enableFavoriteSorting"] = enable_favorite_sorting
-        if add_current_program is not None:
-            params["addCurrentProgram"] = add_current_program
+        _put_if_not_none(params, "type", type)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "isMovie", is_movie)
+        _put_if_not_none(params, "isSeries", is_series)
+        _put_if_not_none(params, "isNews", is_news)
+        _put_if_not_none(params, "isKids", is_kids)
+        _put_if_not_none(params, "isSports", is_sports)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "isFavorite", is_favorite)
+        _put_if_not_none(params, "isLiked", is_liked)
+        _put_if_not_none(params, "isDisliked", is_disliked)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "sortBy", sort_by)
+        _put_if_not_none(params, "sortOrder", sort_order)
+        _put_if_not_none(params, "enableFavoriteSorting", enable_favorite_sorting)
+        _put_if_not_none(params, "addCurrentProgram", add_current_program)
         return self.request("GET", endpoint, params=params)
 
     def get_channel(self, channel_id: str, user_id: str | None = None) -> Any:
@@ -2362,60 +2094,33 @@ class MediaClient(ApiBase):
         """Gets available live tv epgs."""
         endpoint = "/LiveTv/Programs"
         params: dict[str, Any] = {}
-        if channel_ids is not None:
-            params["channelIds"] = channel_ids
-        if user_id is not None:
-            params["userId"] = user_id
-        if min_start_date is not None:
-            params["minStartDate"] = min_start_date
-        if has_aired is not None:
-            params["hasAired"] = has_aired
-        if is_airing is not None:
-            params["isAiring"] = is_airing
-        if max_start_date is not None:
-            params["maxStartDate"] = max_start_date
-        if min_end_date is not None:
-            params["minEndDate"] = min_end_date
-        if max_end_date is not None:
-            params["maxEndDate"] = max_end_date
-        if is_movie is not None:
-            params["isMovie"] = is_movie
-        if is_series is not None:
-            params["isSeries"] = is_series
-        if is_news is not None:
-            params["isNews"] = is_news
-        if is_kids is not None:
-            params["isKids"] = is_kids
-        if is_sports is not None:
-            params["isSports"] = is_sports
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if sort_by is not None:
-            params["sortBy"] = sort_by
-        if sort_order is not None:
-            params["sortOrder"] = sort_order
-        if genres is not None:
-            params["genres"] = genres
-        if genre_ids is not None:
-            params["genreIds"] = genre_ids
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if series_timer_id is not None:
-            params["seriesTimerId"] = series_timer_id
-        if library_series_id is not None:
-            params["librarySeriesId"] = library_series_id
-        if fields is not None:
-            params["fields"] = fields
-        if enable_total_record_count is not None:
-            params["enableTotalRecordCount"] = enable_total_record_count
+        _put_if_not_none(params, "channelIds", channel_ids)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "minStartDate", min_start_date)
+        _put_if_not_none(params, "hasAired", has_aired)
+        _put_if_not_none(params, "isAiring", is_airing)
+        _put_if_not_none(params, "maxStartDate", max_start_date)
+        _put_if_not_none(params, "minEndDate", min_end_date)
+        _put_if_not_none(params, "maxEndDate", max_end_date)
+        _put_if_not_none(params, "isMovie", is_movie)
+        _put_if_not_none(params, "isSeries", is_series)
+        _put_if_not_none(params, "isNews", is_news)
+        _put_if_not_none(params, "isKids", is_kids)
+        _put_if_not_none(params, "isSports", is_sports)
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "sortBy", sort_by)
+        _put_if_not_none(params, "sortOrder", sort_order)
+        _put_if_not_none(params, "genres", genres)
+        _put_if_not_none(params, "genreIds", genre_ids)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "seriesTimerId", series_timer_id)
+        _put_if_not_none(params, "librarySeriesId", library_series_id)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "enableTotalRecordCount", enable_total_record_count)
         return self.request("GET", endpoint, params=params)
 
     def get_programs(self, body: dict[str, Any] | None = None) -> Any:
@@ -2456,40 +2161,23 @@ class MediaClient(ApiBase):
         """Gets recommended live tv epgs."""
         endpoint = "/LiveTv/Programs/Recommended"
         params: dict[str, Any] = {}
-        if user_id is not None:
-            params["userId"] = user_id
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if is_airing is not None:
-            params["isAiring"] = is_airing
-        if has_aired is not None:
-            params["hasAired"] = has_aired
-        if is_series is not None:
-            params["isSeries"] = is_series
-        if is_movie is not None:
-            params["isMovie"] = is_movie
-        if is_news is not None:
-            params["isNews"] = is_news
-        if is_kids is not None:
-            params["isKids"] = is_kids
-        if is_sports is not None:
-            params["isSports"] = is_sports
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if genre_ids is not None:
-            params["genreIds"] = genre_ids
-        if fields is not None:
-            params["fields"] = fields
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if enable_total_record_count is not None:
-            params["enableTotalRecordCount"] = enable_total_record_count
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "isAiring", is_airing)
+        _put_if_not_none(params, "hasAired", has_aired)
+        _put_if_not_none(params, "isSeries", is_series)
+        _put_if_not_none(params, "isMovie", is_movie)
+        _put_if_not_none(params, "isNews", is_news)
+        _put_if_not_none(params, "isKids", is_kids)
+        _put_if_not_none(params, "isSports", is_sports)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "genreIds", genre_ids)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "enableTotalRecordCount", enable_total_record_count)
         return self.request("GET", endpoint, params=params)
 
     def get_recordings(
@@ -2517,44 +2205,25 @@ class MediaClient(ApiBase):
         """Gets live tv recordings."""
         endpoint = "/LiveTv/Recordings"
         params: dict[str, Any] = {}
-        if channel_id is not None:
-            params["channelId"] = channel_id
-        if user_id is not None:
-            params["userId"] = user_id
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if status is not None:
-            params["status"] = status
-        if is_in_progress is not None:
-            params["isInProgress"] = is_in_progress
-        if series_timer_id is not None:
-            params["seriesTimerId"] = series_timer_id
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if fields is not None:
-            params["fields"] = fields
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if is_movie is not None:
-            params["isMovie"] = is_movie
-        if is_series is not None:
-            params["isSeries"] = is_series
-        if is_kids is not None:
-            params["isKids"] = is_kids
-        if is_sports is not None:
-            params["isSports"] = is_sports
-        if is_news is not None:
-            params["isNews"] = is_news
-        if is_library_item is not None:
-            params["isLibraryItem"] = is_library_item
-        if enable_total_record_count is not None:
-            params["enableTotalRecordCount"] = enable_total_record_count
+        _put_if_not_none(params, "channelId", channel_id)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "status", status)
+        _put_if_not_none(params, "isInProgress", is_in_progress)
+        _put_if_not_none(params, "seriesTimerId", series_timer_id)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "isMovie", is_movie)
+        _put_if_not_none(params, "isSeries", is_series)
+        _put_if_not_none(params, "isKids", is_kids)
+        _put_if_not_none(params, "isSports", is_sports)
+        _put_if_not_none(params, "isNews", is_news)
+        _put_if_not_none(params, "isLibraryItem", is_library_item)
+        _put_if_not_none(params, "enableTotalRecordCount", enable_total_record_count)
         return self.request("GET", endpoint, params=params)
 
     def get_recording(self, recording_id: str, user_id: str | None = None) -> Any:
@@ -2616,34 +2285,20 @@ class MediaClient(ApiBase):
         """Gets live tv recording series."""
         endpoint = "/LiveTv/Recordings/Series"
         params: dict[str, Any] = {}
-        if channel_id is not None:
-            params["channelId"] = channel_id
-        if user_id is not None:
-            params["userId"] = user_id
-        if group_id is not None:
-            params["groupId"] = group_id
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if status is not None:
-            params["status"] = status
-        if is_in_progress is not None:
-            params["isInProgress"] = is_in_progress
-        if series_timer_id is not None:
-            params["seriesTimerId"] = series_timer_id
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if fields is not None:
-            params["fields"] = fields
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if enable_total_record_count is not None:
-            params["enableTotalRecordCount"] = enable_total_record_count
+        _put_if_not_none(params, "channelId", channel_id)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "groupId", group_id)
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "status", status)
+        _put_if_not_none(params, "isInProgress", is_in_progress)
+        _put_if_not_none(params, "seriesTimerId", series_timer_id)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "enableTotalRecordCount", enable_total_record_count)
         return self.request("GET", endpoint, params=params)
 
     def get_series_timers(
@@ -2867,34 +2522,20 @@ class MediaClient(ApiBase):
         endpoint = "/Items/{itemId}/PlaybackInfo"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         params: dict[str, Any] = {}
-        if user_id is not None:
-            params["userId"] = user_id
-        if max_streaming_bitrate is not None:
-            params["maxStreamingBitrate"] = max_streaming_bitrate
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if live_stream_id is not None:
-            params["liveStreamId"] = live_stream_id
-        if auto_open_live_stream is not None:
-            params["autoOpenLiveStream"] = auto_open_live_stream
-        if enable_direct_play is not None:
-            params["enableDirectPlay"] = enable_direct_play
-        if enable_direct_stream is not None:
-            params["enableDirectStream"] = enable_direct_stream
-        if enable_transcoding is not None:
-            params["enableTranscoding"] = enable_transcoding
-        if allow_video_stream_copy is not None:
-            params["allowVideoStreamCopy"] = allow_video_stream_copy
-        if allow_audio_stream_copy is not None:
-            params["allowAudioStreamCopy"] = allow_audio_stream_copy
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "maxStreamingBitrate", max_streaming_bitrate)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "liveStreamId", live_stream_id)
+        _put_if_not_none(params, "autoOpenLiveStream", auto_open_live_stream)
+        _put_if_not_none(params, "enableDirectPlay", enable_direct_play)
+        _put_if_not_none(params, "enableDirectStream", enable_direct_stream)
+        _put_if_not_none(params, "enableTranscoding", enable_transcoding)
+        _put_if_not_none(params, "allowVideoStreamCopy", allow_video_stream_copy)
+        _put_if_not_none(params, "allowAudioStreamCopy", allow_audio_stream_copy)
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def close_live_stream(self, live_stream_id: str | None = None) -> Any:
@@ -2924,32 +2565,22 @@ class MediaClient(ApiBase):
         """Opens a media source."""
         endpoint = "/LiveStreams/Open"
         params: dict[str, Any] = {}
-        if open_token is not None:
-            params["openToken"] = open_token
-        if user_id is not None:
-            params["userId"] = user_id
-        if play_session_id is not None:
-            params["playSessionId"] = play_session_id
-        if max_streaming_bitrate is not None:
-            params["maxStreamingBitrate"] = max_streaming_bitrate
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if item_id is not None:
-            params["itemId"] = item_id
-        if enable_direct_play is not None:
-            params["enableDirectPlay"] = enable_direct_play
-        if enable_direct_stream is not None:
-            params["enableDirectStream"] = enable_direct_stream
-        if always_burn_in_subtitle_when_transcoding is not None:
-            params["alwaysBurnInSubtitleWhenTranscoding"] = (
-                always_burn_in_subtitle_when_transcoding
-            )
+        _put_if_not_none(params, "openToken", open_token)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "playSessionId", play_session_id)
+        _put_if_not_none(params, "maxStreamingBitrate", max_streaming_bitrate)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "itemId", item_id)
+        _put_if_not_none(params, "enableDirectPlay", enable_direct_play)
+        _put_if_not_none(params, "enableDirectStream", enable_direct_stream)
+        _put_if_not_none(
+            params,
+            "alwaysBurnInSubtitleWhenTranscoding",
+            always_burn_in_subtitle_when_transcoding,
+        )
         return self.request("POST", endpoint, params=params, json_data=body)
 
     def get_item_segments(
@@ -3010,42 +2641,24 @@ class MediaClient(ApiBase):
         """Gets all music genres from a given item, folder, or the entire library."""
         endpoint = "/MusicGenres"
         params: dict[str, Any] = {}
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if search_term is not None:
-            params["searchTerm"] = search_term
-        if parent_id is not None:
-            params["parentId"] = parent_id
-        if fields is not None:
-            params["fields"] = fields
-        if exclude_item_types is not None:
-            params["excludeItemTypes"] = exclude_item_types
-        if include_item_types is not None:
-            params["includeItemTypes"] = include_item_types
-        if is_favorite is not None:
-            params["isFavorite"] = is_favorite
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if user_id is not None:
-            params["userId"] = user_id
-        if name_starts_with_or_greater is not None:
-            params["nameStartsWithOrGreater"] = name_starts_with_or_greater
-        if name_starts_with is not None:
-            params["nameStartsWith"] = name_starts_with
-        if name_less_than is not None:
-            params["nameLessThan"] = name_less_than
-        if sort_by is not None:
-            params["sortBy"] = sort_by
-        if sort_order is not None:
-            params["sortOrder"] = sort_order
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if enable_total_record_count is not None:
-            params["enableTotalRecordCount"] = enable_total_record_count
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "searchTerm", search_term)
+        _put_if_not_none(params, "parentId", parent_id)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "excludeItemTypes", exclude_item_types)
+        _put_if_not_none(params, "includeItemTypes", include_item_types)
+        _put_if_not_none(params, "isFavorite", is_favorite)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "nameStartsWithOrGreater", name_starts_with_or_greater)
+        _put_if_not_none(params, "nameStartsWith", name_starts_with)
+        _put_if_not_none(params, "nameLessThan", name_less_than)
+        _put_if_not_none(params, "sortBy", sort_by)
+        _put_if_not_none(params, "sortOrder", sort_order)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "enableTotalRecordCount", enable_total_record_count)
         return self.request("GET", endpoint, params=params)
 
     def get_music_genre(self, genre_name: str, user_id: str | None = None) -> Any:
@@ -3272,28 +2885,17 @@ class MediaClient(ApiBase):
         endpoint = "/PlayingItems/{itemId}/Progress"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         params: dict[str, Any] = {}
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if position_ticks is not None:
-            params["positionTicks"] = position_ticks
-        if audio_stream_index is not None:
-            params["audioStreamIndex"] = audio_stream_index
-        if subtitle_stream_index is not None:
-            params["subtitleStreamIndex"] = subtitle_stream_index
-        if volume_level is not None:
-            params["volumeLevel"] = volume_level
-        if play_method is not None:
-            params["playMethod"] = play_method
-        if live_stream_id is not None:
-            params["liveStreamId"] = live_stream_id
-        if play_session_id is not None:
-            params["playSessionId"] = play_session_id
-        if repeat_mode is not None:
-            params["repeatMode"] = repeat_mode
-        if is_paused is not None:
-            params["isPaused"] = is_paused
-        if is_muted is not None:
-            params["isMuted"] = is_muted
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "positionTicks", position_ticks)
+        _put_if_not_none(params, "audioStreamIndex", audio_stream_index)
+        _put_if_not_none(params, "subtitleStreamIndex", subtitle_stream_index)
+        _put_if_not_none(params, "volumeLevel", volume_level)
+        _put_if_not_none(params, "playMethod", play_method)
+        _put_if_not_none(params, "liveStreamId", live_stream_id)
+        _put_if_not_none(params, "playSessionId", play_session_id)
+        _put_if_not_none(params, "repeatMode", repeat_mode)
+        _put_if_not_none(params, "isPaused", is_paused)
+        _put_if_not_none(params, "isMuted", is_muted)
         return self.request("POST", endpoint, params=params)
 
     def report_playback_start(self, body: dict[str, Any] | None = None) -> Any:
@@ -3910,42 +3512,24 @@ class MediaClient(ApiBase):
         endpoint = "/Audio/{itemId}/universal"
         endpoint = endpoint.replace("{itemId}", str(item_id))
         params: dict[str, Any] = {}
-        if container is not None:
-            params["container"] = container
-        if media_source_id is not None:
-            params["mediaSourceId"] = media_source_id
-        if device_id is not None:
-            params["deviceId"] = device_id
-        if user_id is not None:
-            params["userId"] = user_id
-        if audio_codec is not None:
-            params["audioCodec"] = audio_codec
-        if max_audio_channels is not None:
-            params["maxAudioChannels"] = max_audio_channels
-        if transcoding_audio_channels is not None:
-            params["transcodingAudioChannels"] = transcoding_audio_channels
-        if max_streaming_bitrate is not None:
-            params["maxStreamingBitrate"] = max_streaming_bitrate
-        if audio_bit_rate is not None:
-            params["audioBitRate"] = audio_bit_rate
-        if start_time_ticks is not None:
-            params["startTimeTicks"] = start_time_ticks
-        if transcoding_container is not None:
-            params["transcodingContainer"] = transcoding_container
-        if transcoding_protocol is not None:
-            params["transcodingProtocol"] = transcoding_protocol
-        if max_audio_sample_rate is not None:
-            params["maxAudioSampleRate"] = max_audio_sample_rate
-        if max_audio_bit_depth is not None:
-            params["maxAudioBitDepth"] = max_audio_bit_depth
-        if enable_remote_media is not None:
-            params["enableRemoteMedia"] = enable_remote_media
-        if enable_audio_vbr_encoding is not None:
-            params["enableAudioVbrEncoding"] = enable_audio_vbr_encoding
-        if break_on_non_key_frames is not None:
-            params["breakOnNonKeyFrames"] = break_on_non_key_frames
-        if enable_redirection is not None:
-            params["enableRedirection"] = enable_redirection
+        _put_if_not_none(params, "container", container)
+        _put_if_not_none(params, "mediaSourceId", media_source_id)
+        _put_if_not_none(params, "deviceId", device_id)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "audioCodec", audio_codec)
+        _put_if_not_none(params, "maxAudioChannels", max_audio_channels)
+        _put_if_not_none(params, "transcodingAudioChannels", transcoding_audio_channels)
+        _put_if_not_none(params, "maxStreamingBitrate", max_streaming_bitrate)
+        _put_if_not_none(params, "audioBitRate", audio_bit_rate)
+        _put_if_not_none(params, "startTimeTicks", start_time_ticks)
+        _put_if_not_none(params, "transcodingContainer", transcoding_container)
+        _put_if_not_none(params, "transcodingProtocol", transcoding_protocol)
+        _put_if_not_none(params, "maxAudioSampleRate", max_audio_sample_rate)
+        _put_if_not_none(params, "maxAudioBitDepth", max_audio_bit_depth)
+        _put_if_not_none(params, "enableRemoteMedia", enable_remote_media)
+        _put_if_not_none(params, "enableAudioVbrEncoding", enable_audio_vbr_encoding)
+        _put_if_not_none(params, "breakOnNonKeyFrames", break_on_non_key_frames)
+        _put_if_not_none(params, "enableRedirection", enable_redirection)
         return self.request("GET", endpoint, params=params)
 
     def get_local_trailers(self, item_id: str, user_id: str | None = None) -> Any:
