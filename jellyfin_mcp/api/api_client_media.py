@@ -3366,7 +3366,15 @@ class MediaClient(ApiBase):
         enable_total_record_count: bool | None = None,
         enable_images: bool | None = None,
     ) -> Any:
-        """Finds movies and trailers similar to a given trailer."""
+        """Lists trailers, filtered by the given query parameters.
+
+        Plain ``GET /Trailers`` list query -- there is no anchor-item
+        parameter here. For a trailer-similarity lookup keyed off one item,
+        use ``get_similar_trailers`` instead (``GET /Trailers/{itemId}/Similar``,
+        which takes an ``item_id``). This method only filters an item
+        listing by the optional criteria below (ratings, flags, ids, sort,
+        paging, ...).
+        """
         endpoint = "/Trailers"
         params: dict[str, Any] = {}
         _put_if_not_none(params, "userId", user_id)

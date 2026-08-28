@@ -21,6 +21,29 @@ def _make_media_client() -> MediaClient:
     return MediaClient(base_url="http://127.0.0.1:1/")
 
 
+def test_get_trailers_docstring_does_not_claim_similarity_search():
+    """BUG-CX-047: ``get_trailers`` hits plain ``GET /Trailers`` (a filtered
+    list query -- see the params tests below) and accepts no item/anchor id
+    to compare against. Its docstring previously read "Finds movies and
+    trailers similar to a given trailer", which is what an LLM tool
+    selector reads to choose between this method and the real similarity
+    endpoint, ``get_similar_trailers`` (``GET /Trailers/{itemId}/Similar``,
+    which DOES take an ``item_id``). Pin that the two are no longer
+    conflated: ``get_trailers``'s docstring must not claim similarity, and
+    ``get_similar_trailers`` must still exist as the actual similarity
+    lookup.
+    """
+    doc = (MediaClient.get_trailers.__doc__ or "").lower()
+    assert "similar to a given trailer" not in doc, (
+        "get_trailers docstring must not claim it finds items similar to a "
+        f"given trailer; got: {MediaClient.get_trailers.__doc__!r}"
+    )
+    import inspect
+
+    assert "item_id" not in inspect.signature(MediaClient.get_trailers).parameters
+    assert "item_id" in inspect.signature(MediaClient.get_similar_trailers).parameters
+
+
 def test_get_trailers_required_only_yields_empty_params():
     client = _make_media_client()
     client.request = MagicMock(return_value={"ok": True})
