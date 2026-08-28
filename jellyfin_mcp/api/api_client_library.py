@@ -94,26 +94,16 @@ class LibraryClient(ApiBase):
         """Gets query filters."""
         endpoint = "/Items/Filters2"
         params: dict[str, Any] = {}
-        if user_id is not None:
-            params["userId"] = user_id
-        if parent_id is not None:
-            params["parentId"] = parent_id
-        if include_item_types is not None:
-            params["includeItemTypes"] = include_item_types
-        if is_airing is not None:
-            params["isAiring"] = is_airing
-        if is_movie is not None:
-            params["isMovie"] = is_movie
-        if is_sports is not None:
-            params["isSports"] = is_sports
-        if is_kids is not None:
-            params["isKids"] = is_kids
-        if is_news is not None:
-            params["isNews"] = is_news
-        if is_series is not None:
-            params["isSeries"] = is_series
-        if recursive is not None:
-            params["recursive"] = recursive
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "parentId", parent_id)
+        _put_if_not_none(params, "includeItemTypes", include_item_types)
+        _put_if_not_none(params, "isAiring", is_airing)
+        _put_if_not_none(params, "isMovie", is_movie)
+        _put_if_not_none(params, "isSports", is_sports)
+        _put_if_not_none(params, "isKids", is_kids)
+        _put_if_not_none(params, "isNews", is_news)
+        _put_if_not_none(params, "isSeries", is_series)
+        _put_if_not_none(params, "recursive", recursive)
         return self.request("GET", endpoint, params=params)
 
     def get_genres(
@@ -140,42 +130,24 @@ class LibraryClient(ApiBase):
         """Gets all genres from a given item, folder, or the entire library."""
         endpoint = "/Genres"
         params: dict[str, Any] = {}
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if search_term is not None:
-            params["searchTerm"] = search_term
-        if parent_id is not None:
-            params["parentId"] = parent_id
-        if fields is not None:
-            params["fields"] = fields
-        if exclude_item_types is not None:
-            params["excludeItemTypes"] = exclude_item_types
-        if include_item_types is not None:
-            params["includeItemTypes"] = include_item_types
-        if is_favorite is not None:
-            params["isFavorite"] = is_favorite
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if user_id is not None:
-            params["userId"] = user_id
-        if name_starts_with_or_greater is not None:
-            params["nameStartsWithOrGreater"] = name_starts_with_or_greater
-        if name_starts_with is not None:
-            params["nameStartsWith"] = name_starts_with
-        if name_less_than is not None:
-            params["nameLessThan"] = name_less_than
-        if sort_by is not None:
-            params["sortBy"] = sort_by
-        if sort_order is not None:
-            params["sortOrder"] = sort_order
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if enable_total_record_count is not None:
-            params["enableTotalRecordCount"] = enable_total_record_count
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "searchTerm", search_term)
+        _put_if_not_none(params, "parentId", parent_id)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "excludeItemTypes", exclude_item_types)
+        _put_if_not_none(params, "includeItemTypes", include_item_types)
+        _put_if_not_none(params, "isFavorite", is_favorite)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "nameStartsWithOrGreater", name_starts_with_or_greater)
+        _put_if_not_none(params, "nameStartsWith", name_starts_with)
+        _put_if_not_none(params, "nameLessThan", name_less_than)
+        _put_if_not_none(params, "sortBy", sort_by)
+        _put_if_not_none(params, "sortOrder", sort_order)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "enableTotalRecordCount", enable_total_record_count)
         return self.request("GET", endpoint, params=params)
 
     def get_genre(self, genre_name: str, user_id: str | None = None) -> Any:
@@ -212,36 +184,21 @@ class LibraryClient(ApiBase):
         endpoint = endpoint.replace("{name}", str(name))
         endpoint = endpoint.replace("{imageType}", str(image_type))
         params: dict[str, Any] = {}
-        if tag is not None:
-            params["tag"] = tag
-        if format is not None:
-            params["format"] = format
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if percent_played is not None:
-            params["percentPlayed"] = percent_played
-        if unplayed_count is not None:
-            params["unplayedCount"] = unplayed_count
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if quality is not None:
-            params["quality"] = quality
-        if fill_width is not None:
-            params["fillWidth"] = fill_width
-        if fill_height is not None:
-            params["fillHeight"] = fill_height
-        if blur is not None:
-            params["blur"] = blur
-        if background_color is not None:
-            params["backgroundColor"] = background_color
-        if foreground_layer is not None:
-            params["foregroundLayer"] = foreground_layer
-        if image_index is not None:
-            params["imageIndex"] = image_index
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "format", format)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "percentPlayed", percent_played)
+        _put_if_not_none(params, "unplayedCount", unplayed_count)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "quality", quality)
+        _put_if_not_none(params, "fillWidth", fill_width)
+        _put_if_not_none(params, "fillHeight", fill_height)
+        _put_if_not_none(params, "blur", blur)
+        _put_if_not_none(params, "backgroundColor", background_color)
+        _put_if_not_none(params, "foregroundLayer", foreground_layer)
+        _put_if_not_none(params, "imageIndex", image_index)
         return self.request("GET", endpoint, params=params)
 
     def get_genre_image_by_index(
@@ -270,34 +227,20 @@ class LibraryClient(ApiBase):
         endpoint = endpoint.replace("{imageType}", str(image_type))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
         params: dict[str, Any] = {}
-        if tag is not None:
-            params["tag"] = tag
-        if format is not None:
-            params["format"] = format
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if percent_played is not None:
-            params["percentPlayed"] = percent_played
-        if unplayed_count is not None:
-            params["unplayedCount"] = unplayed_count
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if quality is not None:
-            params["quality"] = quality
-        if fill_width is not None:
-            params["fillWidth"] = fill_width
-        if fill_height is not None:
-            params["fillHeight"] = fill_height
-        if blur is not None:
-            params["blur"] = blur
-        if background_color is not None:
-            params["backgroundColor"] = background_color
-        if foreground_layer is not None:
-            params["foregroundLayer"] = foreground_layer
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "format", format)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "percentPlayed", percent_played)
+        _put_if_not_none(params, "unplayedCount", unplayed_count)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "quality", quality)
+        _put_if_not_none(params, "fillWidth", fill_width)
+        _put_if_not_none(params, "fillHeight", fill_height)
+        _put_if_not_none(params, "blur", blur)
+        _put_if_not_none(params, "backgroundColor", background_color)
+        _put_if_not_none(params, "foregroundLayer", foreground_layer)
         return self.request("GET", endpoint, params=params)
 
     def get_item_image_infos(self, item_id: str) -> Any:
@@ -354,36 +297,21 @@ class LibraryClient(ApiBase):
         endpoint = endpoint.replace("{itemId}", str(item_id))
         endpoint = endpoint.replace("{imageType}", str(image_type))
         params: dict[str, Any] = {}
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if quality is not None:
-            params["quality"] = quality
-        if fill_width is not None:
-            params["fillWidth"] = fill_width
-        if fill_height is not None:
-            params["fillHeight"] = fill_height
-        if tag is not None:
-            params["tag"] = tag
-        if format is not None:
-            params["format"] = format
-        if percent_played is not None:
-            params["percentPlayed"] = percent_played
-        if unplayed_count is not None:
-            params["unplayedCount"] = unplayed_count
-        if blur is not None:
-            params["blur"] = blur
-        if background_color is not None:
-            params["backgroundColor"] = background_color
-        if foreground_layer is not None:
-            params["foregroundLayer"] = foreground_layer
-        if image_index is not None:
-            params["imageIndex"] = image_index
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "quality", quality)
+        _put_if_not_none(params, "fillWidth", fill_width)
+        _put_if_not_none(params, "fillHeight", fill_height)
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "format", format)
+        _put_if_not_none(params, "percentPlayed", percent_played)
+        _put_if_not_none(params, "unplayedCount", unplayed_count)
+        _put_if_not_none(params, "blur", blur)
+        _put_if_not_none(params, "backgroundColor", background_color)
+        _put_if_not_none(params, "foregroundLayer", foreground_layer)
+        _put_if_not_none(params, "imageIndex", image_index)
         return self.request("GET", endpoint, params=params)
 
     def delete_item_image_by_index(
@@ -438,34 +366,20 @@ class LibraryClient(ApiBase):
         endpoint = endpoint.replace("{imageType}", str(image_type))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
         params: dict[str, Any] = {}
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if quality is not None:
-            params["quality"] = quality
-        if fill_width is not None:
-            params["fillWidth"] = fill_width
-        if fill_height is not None:
-            params["fillHeight"] = fill_height
-        if tag is not None:
-            params["tag"] = tag
-        if format is not None:
-            params["format"] = format
-        if percent_played is not None:
-            params["percentPlayed"] = percent_played
-        if unplayed_count is not None:
-            params["unplayedCount"] = unplayed_count
-        if blur is not None:
-            params["blur"] = blur
-        if background_color is not None:
-            params["backgroundColor"] = background_color
-        if foreground_layer is not None:
-            params["foregroundLayer"] = foreground_layer
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "quality", quality)
+        _put_if_not_none(params, "fillWidth", fill_width)
+        _put_if_not_none(params, "fillHeight", fill_height)
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "format", format)
+        _put_if_not_none(params, "percentPlayed", percent_played)
+        _put_if_not_none(params, "unplayedCount", unplayed_count)
+        _put_if_not_none(params, "blur", blur)
+        _put_if_not_none(params, "backgroundColor", background_color)
+        _put_if_not_none(params, "foregroundLayer", foreground_layer)
         return self.request("GET", endpoint, params=params)
 
     def get_item_image2(
@@ -560,36 +474,21 @@ class LibraryClient(ApiBase):
         endpoint = endpoint.replace("{name}", str(name))
         endpoint = endpoint.replace("{imageType}", str(image_type))
         params: dict[str, Any] = {}
-        if tag is not None:
-            params["tag"] = tag
-        if format is not None:
-            params["format"] = format
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if percent_played is not None:
-            params["percentPlayed"] = percent_played
-        if unplayed_count is not None:
-            params["unplayedCount"] = unplayed_count
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if quality is not None:
-            params["quality"] = quality
-        if fill_width is not None:
-            params["fillWidth"] = fill_width
-        if fill_height is not None:
-            params["fillHeight"] = fill_height
-        if blur is not None:
-            params["blur"] = blur
-        if background_color is not None:
-            params["backgroundColor"] = background_color
-        if foreground_layer is not None:
-            params["foregroundLayer"] = foreground_layer
-        if image_index is not None:
-            params["imageIndex"] = image_index
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "format", format)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "percentPlayed", percent_played)
+        _put_if_not_none(params, "unplayedCount", unplayed_count)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "quality", quality)
+        _put_if_not_none(params, "fillWidth", fill_width)
+        _put_if_not_none(params, "fillHeight", fill_height)
+        _put_if_not_none(params, "blur", blur)
+        _put_if_not_none(params, "backgroundColor", background_color)
+        _put_if_not_none(params, "foregroundLayer", foreground_layer)
+        _put_if_not_none(params, "imageIndex", image_index)
         return self.request("GET", endpoint, params=params)
 
     def get_person_image_by_index(
@@ -618,34 +517,20 @@ class LibraryClient(ApiBase):
         endpoint = endpoint.replace("{imageType}", str(image_type))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
         params: dict[str, Any] = {}
-        if tag is not None:
-            params["tag"] = tag
-        if format is not None:
-            params["format"] = format
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if percent_played is not None:
-            params["percentPlayed"] = percent_played
-        if unplayed_count is not None:
-            params["unplayedCount"] = unplayed_count
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if quality is not None:
-            params["quality"] = quality
-        if fill_width is not None:
-            params["fillWidth"] = fill_width
-        if fill_height is not None:
-            params["fillHeight"] = fill_height
-        if blur is not None:
-            params["blur"] = blur
-        if background_color is not None:
-            params["backgroundColor"] = background_color
-        if foreground_layer is not None:
-            params["foregroundLayer"] = foreground_layer
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "format", format)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "percentPlayed", percent_played)
+        _put_if_not_none(params, "unplayedCount", unplayed_count)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "quality", quality)
+        _put_if_not_none(params, "fillWidth", fill_width)
+        _put_if_not_none(params, "fillHeight", fill_height)
+        _put_if_not_none(params, "blur", blur)
+        _put_if_not_none(params, "backgroundColor", background_color)
+        _put_if_not_none(params, "foregroundLayer", foreground_layer)
         return self.request("GET", endpoint, params=params)
 
     def get_studio_image(
@@ -673,36 +558,21 @@ class LibraryClient(ApiBase):
         endpoint = endpoint.replace("{name}", str(name))
         endpoint = endpoint.replace("{imageType}", str(image_type))
         params: dict[str, Any] = {}
-        if tag is not None:
-            params["tag"] = tag
-        if format is not None:
-            params["format"] = format
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if percent_played is not None:
-            params["percentPlayed"] = percent_played
-        if unplayed_count is not None:
-            params["unplayedCount"] = unplayed_count
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if quality is not None:
-            params["quality"] = quality
-        if fill_width is not None:
-            params["fillWidth"] = fill_width
-        if fill_height is not None:
-            params["fillHeight"] = fill_height
-        if blur is not None:
-            params["blur"] = blur
-        if background_color is not None:
-            params["backgroundColor"] = background_color
-        if foreground_layer is not None:
-            params["foregroundLayer"] = foreground_layer
-        if image_index is not None:
-            params["imageIndex"] = image_index
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "format", format)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "percentPlayed", percent_played)
+        _put_if_not_none(params, "unplayedCount", unplayed_count)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "quality", quality)
+        _put_if_not_none(params, "fillWidth", fill_width)
+        _put_if_not_none(params, "fillHeight", fill_height)
+        _put_if_not_none(params, "blur", blur)
+        _put_if_not_none(params, "backgroundColor", background_color)
+        _put_if_not_none(params, "foregroundLayer", foreground_layer)
+        _put_if_not_none(params, "imageIndex", image_index)
         return self.request("GET", endpoint, params=params)
 
     def get_studio_image_by_index(
@@ -731,34 +601,20 @@ class LibraryClient(ApiBase):
         endpoint = endpoint.replace("{imageType}", str(image_type))
         endpoint = endpoint.replace("{imageIndex}", str(image_index))
         params: dict[str, Any] = {}
-        if tag is not None:
-            params["tag"] = tag
-        if format is not None:
-            params["format"] = format
-        if max_width is not None:
-            params["maxWidth"] = max_width
-        if max_height is not None:
-            params["maxHeight"] = max_height
-        if percent_played is not None:
-            params["percentPlayed"] = percent_played
-        if unplayed_count is not None:
-            params["unplayedCount"] = unplayed_count
-        if width is not None:
-            params["width"] = width
-        if height is not None:
-            params["height"] = height
-        if quality is not None:
-            params["quality"] = quality
-        if fill_width is not None:
-            params["fillWidth"] = fill_width
-        if fill_height is not None:
-            params["fillHeight"] = fill_height
-        if blur is not None:
-            params["blur"] = blur
-        if background_color is not None:
-            params["backgroundColor"] = background_color
-        if foreground_layer is not None:
-            params["foregroundLayer"] = foreground_layer
+        _put_if_not_none(params, "tag", tag)
+        _put_if_not_none(params, "format", format)
+        _put_if_not_none(params, "maxWidth", max_width)
+        _put_if_not_none(params, "maxHeight", max_height)
+        _put_if_not_none(params, "percentPlayed", percent_played)
+        _put_if_not_none(params, "unplayedCount", unplayed_count)
+        _put_if_not_none(params, "width", width)
+        _put_if_not_none(params, "height", height)
+        _put_if_not_none(params, "quality", quality)
+        _put_if_not_none(params, "fillWidth", fill_width)
+        _put_if_not_none(params, "fillHeight", fill_height)
+        _put_if_not_none(params, "blur", blur)
+        _put_if_not_none(params, "backgroundColor", background_color)
+        _put_if_not_none(params, "foregroundLayer", foreground_layer)
         return self.request("GET", endpoint, params=params)
 
     def get_instant_mix_from_album(
@@ -1110,36 +966,21 @@ class LibraryClient(ApiBase):
         """Gets items based on a query."""
         endpoint = "/UserItems/Resume"
         params: dict[str, Any] = {}
-        if user_id is not None:
-            params["userId"] = user_id
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if search_term is not None:
-            params["searchTerm"] = search_term
-        if parent_id is not None:
-            params["parentId"] = parent_id
-        if fields is not None:
-            params["fields"] = fields
-        if media_types is not None:
-            params["mediaTypes"] = media_types
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if exclude_item_types is not None:
-            params["excludeItemTypes"] = exclude_item_types
-        if include_item_types is not None:
-            params["includeItemTypes"] = include_item_types
-        if enable_total_record_count is not None:
-            params["enableTotalRecordCount"] = enable_total_record_count
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if exclude_active_sessions is not None:
-            params["excludeActiveSessions"] = exclude_active_sessions
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "searchTerm", search_term)
+        _put_if_not_none(params, "parentId", parent_id)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "mediaTypes", media_types)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "excludeItemTypes", exclude_item_types)
+        _put_if_not_none(params, "includeItemTypes", include_item_types)
+        _put_if_not_none(params, "enableTotalRecordCount", enable_total_record_count)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "excludeActiveSessions", exclude_active_sessions)
         return self.request("GET", endpoint, params=params)
 
     def update_item(self, item_id: str, body: dict[str, Any] | None = None) -> Any:
@@ -1556,32 +1397,19 @@ class LibraryClient(ApiBase):
         """Gets all persons."""
         endpoint = "/Persons"
         params: dict[str, Any] = {}
-        if limit is not None:
-            params["limit"] = limit
-        if search_term is not None:
-            params["searchTerm"] = search_term
-        if fields is not None:
-            params["fields"] = fields
-        if filters is not None:
-            params["filters"] = filters
-        if is_favorite is not None:
-            params["isFavorite"] = is_favorite
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if exclude_person_types is not None:
-            params["excludePersonTypes"] = exclude_person_types
-        if person_types is not None:
-            params["personTypes"] = person_types
-        if appears_in_item_id is not None:
-            params["appearsInItemId"] = appears_in_item_id
-        if user_id is not None:
-            params["userId"] = user_id
-        if enable_images is not None:
-            params["enableImages"] = enable_images
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "searchTerm", search_term)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "filters", filters)
+        _put_if_not_none(params, "isFavorite", is_favorite)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "excludePersonTypes", exclude_person_types)
+        _put_if_not_none(params, "personTypes", person_types)
+        _put_if_not_none(params, "appearsInItemId", appears_in_item_id)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "enableImages", enable_images)
         return self.request("GET", endpoint, params=params)
 
     def get_person(self, name: str, user_id: str | None = None) -> Any:
@@ -1662,42 +1490,24 @@ class LibraryClient(ApiBase):
         """Gets the search hint result."""
         endpoint = "/Search/Hints"
         params: dict[str, Any] = {}
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if user_id is not None:
-            params["userId"] = user_id
-        if search_term is not None:
-            params["searchTerm"] = search_term
-        if include_item_types is not None:
-            params["includeItemTypes"] = include_item_types
-        if exclude_item_types is not None:
-            params["excludeItemTypes"] = exclude_item_types
-        if media_types is not None:
-            params["mediaTypes"] = media_types
-        if parent_id is not None:
-            params["parentId"] = parent_id
-        if is_movie is not None:
-            params["isMovie"] = is_movie
-        if is_series is not None:
-            params["isSeries"] = is_series
-        if is_news is not None:
-            params["isNews"] = is_news
-        if is_kids is not None:
-            params["isKids"] = is_kids
-        if is_sports is not None:
-            params["isSports"] = is_sports
-        if include_people is not None:
-            params["includePeople"] = include_people
-        if include_media is not None:
-            params["includeMedia"] = include_media
-        if include_genres is not None:
-            params["includeGenres"] = include_genres
-        if include_studios is not None:
-            params["includeStudios"] = include_studios
-        if include_artists is not None:
-            params["includeArtists"] = include_artists
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "searchTerm", search_term)
+        _put_if_not_none(params, "includeItemTypes", include_item_types)
+        _put_if_not_none(params, "excludeItemTypes", exclude_item_types)
+        _put_if_not_none(params, "mediaTypes", media_types)
+        _put_if_not_none(params, "parentId", parent_id)
+        _put_if_not_none(params, "isMovie", is_movie)
+        _put_if_not_none(params, "isSeries", is_series)
+        _put_if_not_none(params, "isNews", is_news)
+        _put_if_not_none(params, "isKids", is_kids)
+        _put_if_not_none(params, "isSports", is_sports)
+        _put_if_not_none(params, "includePeople", include_people)
+        _put_if_not_none(params, "includeMedia", include_media)
+        _put_if_not_none(params, "includeGenres", include_genres)
+        _put_if_not_none(params, "includeStudios", include_studios)
+        _put_if_not_none(params, "includeArtists", include_artists)
         return self.request("GET", endpoint, params=params)
 
     def complete_wizard(self) -> Any:
@@ -1735,40 +1545,23 @@ class LibraryClient(ApiBase):
         """Gets all studios from a given item, folder, or the entire library."""
         endpoint = "/Studios"
         params: dict[str, Any] = {}
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if search_term is not None:
-            params["searchTerm"] = search_term
-        if parent_id is not None:
-            params["parentId"] = parent_id
-        if fields is not None:
-            params["fields"] = fields
-        if exclude_item_types is not None:
-            params["excludeItemTypes"] = exclude_item_types
-        if include_item_types is not None:
-            params["includeItemTypes"] = include_item_types
-        if is_favorite is not None:
-            params["isFavorite"] = is_favorite
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if user_id is not None:
-            params["userId"] = user_id
-        if name_starts_with_or_greater is not None:
-            params["nameStartsWithOrGreater"] = name_starts_with_or_greater
-        if name_starts_with is not None:
-            params["nameStartsWith"] = name_starts_with
-        if name_less_than is not None:
-            params["nameLessThan"] = name_less_than
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if enable_total_record_count is not None:
-            params["enableTotalRecordCount"] = enable_total_record_count
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "searchTerm", search_term)
+        _put_if_not_none(params, "parentId", parent_id)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "excludeItemTypes", exclude_item_types)
+        _put_if_not_none(params, "includeItemTypes", include_item_types)
+        _put_if_not_none(params, "isFavorite", is_favorite)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "nameStartsWithOrGreater", name_starts_with_or_greater)
+        _put_if_not_none(params, "nameStartsWith", name_starts_with)
+        _put_if_not_none(params, "nameLessThan", name_less_than)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "enableTotalRecordCount", enable_total_record_count)
         return self.request("GET", endpoint, params=params)
 
     def get_studio(self, name: str, user_id: str | None = None) -> Any:
@@ -1847,34 +1640,20 @@ class LibraryClient(ApiBase):
         endpoint = "/Shows/{seriesId}/Episodes"
         endpoint = endpoint.replace("{seriesId}", str(series_id))
         params: dict[str, Any] = {}
-        if user_id is not None:
-            params["userId"] = user_id
-        if fields is not None:
-            params["fields"] = fields
-        if season is not None:
-            params["season"] = season
-        if season_id is not None:
-            params["seasonId"] = season_id
-        if is_missing is not None:
-            params["isMissing"] = is_missing
-        if adjacent_to is not None:
-            params["adjacentTo"] = adjacent_to
-        if start_item_id is not None:
-            params["startItemId"] = start_item_id
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if sort_by is not None:
-            params["sortBy"] = sort_by
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "season", season)
+        _put_if_not_none(params, "seasonId", season_id)
+        _put_if_not_none(params, "isMissing", is_missing)
+        _put_if_not_none(params, "adjacentTo", adjacent_to)
+        _put_if_not_none(params, "startItemId", start_item_id)
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "sortBy", sort_by)
         return self.request("GET", endpoint, params=params)
 
     def get_seasons(
@@ -1935,36 +1714,21 @@ class LibraryClient(ApiBase):
         """Gets a list of next up episodes."""
         endpoint = "/Shows/NextUp"
         params: dict[str, Any] = {}
-        if user_id is not None:
-            params["userId"] = user_id
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if fields is not None:
-            params["fields"] = fields
-        if series_id is not None:
-            params["seriesId"] = series_id
-        if parent_id is not None:
-            params["parentId"] = parent_id
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if next_up_date_cutoff is not None:
-            params["nextUpDateCutoff"] = next_up_date_cutoff
-        if enable_total_record_count is not None:
-            params["enableTotalRecordCount"] = enable_total_record_count
-        if disable_first_episode is not None:
-            params["disableFirstEpisode"] = disable_first_episode
-        if enable_resumable is not None:
-            params["enableResumable"] = enable_resumable
-        if enable_rewatching is not None:
-            params["enableRewatching"] = enable_rewatching
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "seriesId", series_id)
+        _put_if_not_none(params, "parentId", parent_id)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "nextUpDateCutoff", next_up_date_cutoff)
+        _put_if_not_none(params, "enableTotalRecordCount", enable_total_record_count)
+        _put_if_not_none(params, "disableFirstEpisode", disable_first_episode)
+        _put_if_not_none(params, "enableResumable", enable_resumable)
+        _put_if_not_none(params, "enableRewatching", enable_rewatching)
         return self.request("GET", endpoint, params=params)
 
     def get_upcoming_episodes(
@@ -2037,28 +1801,17 @@ class LibraryClient(ApiBase):
         """Gets latest media."""
         endpoint = "/Items/Latest"
         params: dict[str, Any] = {}
-        if user_id is not None:
-            params["userId"] = user_id
-        if parent_id is not None:
-            params["parentId"] = parent_id
-        if fields is not None:
-            params["fields"] = fields
-        if include_item_types is not None:
-            params["includeItemTypes"] = include_item_types
-        if is_played is not None:
-            params["isPlayed"] = is_played
-        if enable_images is not None:
-            params["enableImages"] = enable_images
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if limit is not None:
-            params["limit"] = limit
-        if group_items is not None:
-            params["groupItems"] = group_items
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "parentId", parent_id)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "includeItemTypes", include_item_types)
+        _put_if_not_none(params, "isPlayed", is_played)
+        _put_if_not_none(params, "enableImages", enable_images)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "groupItems", group_items)
         return self.request("GET", endpoint, params=params)
 
     def get_root_folder(self, user_id: str | None = None) -> Any:
@@ -2108,36 +1861,21 @@ class LibraryClient(ApiBase):
         """Get years."""
         endpoint = "/Years"
         params: dict[str, Any] = {}
-        if start_index is not None:
-            params["startIndex"] = start_index
-        if limit is not None:
-            params["limit"] = limit
-        if sort_order is not None:
-            params["sortOrder"] = sort_order
-        if parent_id is not None:
-            params["parentId"] = parent_id
-        if fields is not None:
-            params["fields"] = fields
-        if exclude_item_types is not None:
-            params["excludeItemTypes"] = exclude_item_types
-        if include_item_types is not None:
-            params["includeItemTypes"] = include_item_types
-        if media_types is not None:
-            params["mediaTypes"] = media_types
-        if sort_by is not None:
-            params["sortBy"] = sort_by
-        if enable_user_data is not None:
-            params["enableUserData"] = enable_user_data
-        if image_type_limit is not None:
-            params["imageTypeLimit"] = image_type_limit
-        if enable_image_types is not None:
-            params["enableImageTypes"] = enable_image_types
-        if user_id is not None:
-            params["userId"] = user_id
-        if recursive is not None:
-            params["recursive"] = recursive
-        if enable_images is not None:
-            params["enableImages"] = enable_images
+        _put_if_not_none(params, "startIndex", start_index)
+        _put_if_not_none(params, "limit", limit)
+        _put_if_not_none(params, "sortOrder", sort_order)
+        _put_if_not_none(params, "parentId", parent_id)
+        _put_if_not_none(params, "fields", fields)
+        _put_if_not_none(params, "excludeItemTypes", exclude_item_types)
+        _put_if_not_none(params, "includeItemTypes", include_item_types)
+        _put_if_not_none(params, "mediaTypes", media_types)
+        _put_if_not_none(params, "sortBy", sort_by)
+        _put_if_not_none(params, "enableUserData", enable_user_data)
+        _put_if_not_none(params, "imageTypeLimit", image_type_limit)
+        _put_if_not_none(params, "enableImageTypes", enable_image_types)
+        _put_if_not_none(params, "userId", user_id)
+        _put_if_not_none(params, "recursive", recursive)
+        _put_if_not_none(params, "enableImages", enable_images)
         return self.request("GET", endpoint, params=params)
 
     def get_year(self, year: int, user_id: str | None = None) -> Any:
