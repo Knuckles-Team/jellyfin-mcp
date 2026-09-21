@@ -1,3 +1,5 @@
+# mypy: disable-error-code=method-assign
+
 """Characterization tests for CXA-FL-JELLYFINMCP-02's 9 CCN>50 MediaClient
 query-parameter-builder methods, before they are decomposed.
 

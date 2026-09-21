@@ -16,6 +16,7 @@
         "JELLYFIN_PASSWORD": "your_jellyfin_password_here",
         "JELLYFIN_URL": "http://localhost:8096",
         "JELLYFIN_USERNAME": "admin",
+        "KG_INGESTTOOL": "True",
         "OIDC_CLIENT_SECRET": "your-oidc-client-secret",
         "OIDC_TOKEN_ENDPOINT": "https://identity.example.com/oauth2/token"
       }
