@@ -249,7 +249,7 @@ sync:
   updated_field: DateCreated
   pagination: null
   doc_type: media
-  tool_schema_sha256: b566892c3942b578cac9d7396b9561748bf8f8c92bfd090fc4481cff8e5f4c73
+  tool_schema_sha256: d9235e2041cce6e1269065e57ef69dbe315832d7f864ad4ef7904bac1e0dd573
   raw:
     server: jellyfin-mcp
     tool: jellyfin_library
