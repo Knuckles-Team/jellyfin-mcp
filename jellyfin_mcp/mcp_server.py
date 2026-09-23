@@ -445,7 +445,18 @@ def register_condensed_jellyfin_tools(mcp: FastMCP):
         except Exception as e:
             return {"error": f"Media action failed: {type(e).__name__}"}
 
-    @mcp.tool(tags={"Library"})
+    @mcp.tool(
+        tags={"Library"},
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": False,
+            "idempotentHint": False,
+            "openWorldHint": True,
+        },
+        meta={
+            "eg.annotations": {"modalities_in": ["text"], "modalities_out": ["text"]}
+        },
+    )
     async def jellyfin_library(
         action: _JELLYFIN_ACTIONS = Field(
             description="The library or search-related client method to execute. Examples: get_items, get_item_by_id, search_items, get_collections, create_collection, add_to_collection, remove_from_collection, get_library_info, get_user_views, get_user_library, get_library_structure, get_channels, get_channel_items, get_latest_channel_items."
