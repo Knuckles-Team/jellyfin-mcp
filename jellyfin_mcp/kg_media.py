@@ -2,13 +2,20 @@
 
 CONCEPT:AU-KG.ingest.list-durable-media. A Jellyfin item's **poster / primary image**
 (or any downloaded bytes) is stored as a content-addressed :Blob with a linked
-:AssetOccurrence graph node in ONE cross-modal ACID commit, via the agent-utilities
-``MediaStore``. This makes the raw artwork bytes — not just an image URL — durable,
-deduped, and queryable inside the knowledge graph beside the typed library nodes that
+:AssetOccurrence graph node in ONE cross-modal ACID commit, via a ``MediaStore``.
+This makes the raw artwork bytes — not just an image URL — durable, deduped, and
+queryable inside the knowledge graph beside the typed library nodes that
 ``jellyfin_mcp.kg_ingest`` writes.
 
 Best-effort and dependency-/engine-guarded: with no KG stack or no reachable engine every
 entry point **no-ops** (returns ``None``), so the connector runs with zero KG infrastructure.
+
+SDK GAP (EH-481/SDK-GAPS.md): this used to build a ``MediaStore`` over
+``agent_utilities.knowledge_graph.memory.native_ingest.media_store`` (or, as a fallback,
+``agent_utilities.knowledge_graph.core.graph_compute.GraphComputeEngine`` +
+``agent_utilities.knowledge_graph.memory.media_store.MediaStore`` directly). The SDK has no
+equivalent blob/media store primitive yet. Until the gap is filled, ``media_store()`` always
+returns ``None``; every call site above keeps working as a documented no-op.
 """
 
 from __future__ import annotations
@@ -31,33 +38,8 @@ _MIME_BY_EXT = {
 
 
 def media_store() -> Any | None:
-    """Build a ``MediaStore`` over a live engine, or ``None`` when unavailable.
-
-    Prefers the shared ``native_ingest.media_store`` primitive; falls back to
-    constructing one directly. Never raises.
-    """
-    try:
-        from agent_utilities.knowledge_graph.memory import native_ingest
-
-        return native_ingest.media_store()
-    except Exception as e:  # noqa: BLE001 — shared primitive absent
-        logger.debug("Operation failed: error_type=%s", type(e).__name__)
-    try:
-        from agent_utilities.knowledge_graph.core.graph_compute import (
-            GraphComputeEngine,
-        )
-        from agent_utilities.knowledge_graph.memory.media_store import MediaStore
-    except Exception as e:  # noqa: BLE001 — KG stack absent
-        logger.debug("Operation failed: error_type=%s", type(e).__name__)
-        return None
-    try:
-        engine = GraphComputeEngine()
-        if getattr(engine, "_client", None) is None:
-            return None
-        return MediaStore(engine)
-    except Exception as e:  # noqa: BLE001 — no reachable engine
-        logger.debug("Operation failed: error_type=%s", type(e).__name__)
-        return None
+    """No native ``MediaStore`` authority is wired yet; see the SDK-GAPS note above."""
+    return None
 
 
 def ingest_image_bytes(

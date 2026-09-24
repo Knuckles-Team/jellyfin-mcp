@@ -39,7 +39,8 @@ def generate_api_code(spec: dict) -> str:
     lines.append("import json")
     lines.append("import requests")
     lines.append(
-        "from agent_utilities.core.transport_security import ResolvedTLSProfile, resolve_configured_tls_profile"
+        "from agent_connector_sdk.tls.profile import ResolvedTLSProfile\n"
+        "from agent_connector_sdk.tls.resolve import resolve_tls_profile"
     )
     lines.append("from typing import Dict, List, Optional, Any, Union")
     lines.append("from urllib.parse import urljoin")
@@ -53,7 +54,7 @@ def generate_api_code(spec: dict) -> str:
     lines.append("        self.username = username")
     lines.append("        self.password = password")
     lines.append(
-        "        self.tls_profile = tls_profile or resolve_configured_tls_profile('jellyfin')"
+        "        self.tls_profile = tls_profile or resolve_tls_profile('jellyfin')"
     )
     lines.append(
         "        self._session = self.tls_profile.configure_requests_session(requests.Session())"
@@ -160,9 +161,7 @@ def generate_mcp_code(spec: dict) -> str:
     lines.append("from fastmcp import FastMCP, Context")
     lines.append("from pydantic import Field")
     lines.append("from jellyfin_mcp.jellyfin_api import Api")
-    lines.append(
-        "from agent_utilities.core.transport_security import resolve_configured_tls_profile"
-    )
+    lines.append("from agent_connector_sdk.tls.resolve import resolve_tls_profile")
     lines.append("")
     lines.append('mcp = FastMCP("jellyfin-mcp")')
     lines.append("")
@@ -176,7 +175,7 @@ def generate_mcp_code(spec: dict) -> str:
         '        raise ValueError("JELLYFIN_BASE_URL environment variable is required")'
     )
     lines.append(
-        "    return Api(base_url, token=token, username=username, password=password, tls_profile=resolve_configured_tls_profile('jellyfin'))"
+        "    return Api(base_url, token=token, username=username, password=password, tls_profile=resolve_tls_profile('jellyfin'))"
     )
     lines.append("")
 
