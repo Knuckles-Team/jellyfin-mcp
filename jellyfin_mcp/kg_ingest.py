@@ -5,18 +5,11 @@ pushes its library into the ONE epistemic-graph knowledge graph as **typed OWL n
 (``:MediaItem``, ``:Book``, ``:Artist``, ``:Genre``) + links (``:hasGenre`` /
 ``:performedBy`` / ``:authoredBy``), and item overviews as searchable ``:Document`` nodes.
 
-Node ids follow ``media:<class>:<externalId>`` and each ``node_type`` matches a class the
-package's ``jellyfin_mcp.ontology`` ``.ttl`` federates.
-
-SDK GAP (EH-481/SDK-GAPS.md): this used to commit through the required
-``agent_utilities.knowledge_graph.memory.native_ingest`` authority (dependency-injected via
-a ``client`` exposing ``.changes``/``.nodes``/``.rdf``/``.supports()``). The SDK's only
-epistemic-graph write path, ``agent_connector_sdk.sinks.epistemic_graph.EpistemicGraphSink``,
-requires a verified client plus a ``PackImportAuthorityResolver`` wired at the composition
-root — not a same-shaped drop-in. Until the gap is filled, the structural validation that
-``native_ingest`` used to do (reject records missing ``node_type``/using the retired ``type``
-alias, reject empty input) is vendored locally so callers keep the same contract; the actual
-commit is a stub that reports zero nodes/edges written.
+This is a thin mapper: the transaction path lives once in the required
+``agent_utilities.knowledge_graph.memory.native_ingest`` primitive. Engine failures are
+explicit and partial writes are never acknowledged. Node ids follow
+``media:<class>:<externalId>`` and each ``node_type`` matches a class the package's
+``jellyfin_mcp.ontology`` ``.ttl`` federates.
 """
 
 from __future__ import annotations
@@ -24,70 +17,19 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from agent_utilities.knowledge_graph.memory.native_ingest import (
+    ingest_documents as _native_ingest_documents,
+)
+from agent_utilities.knowledge_graph.memory.native_ingest import (
+    ingest_entities as _native_ingest_entities,
+)
+
 logger = logging.getLogger("jellyfin_mcp.kg")
 
 _SOURCE = "jellyfin-mcp"
 _DOMAIN = "media"
 # Jellyfin item Type values that are book/audiobook items -> :Book (else :MediaItem).
 _BOOK_KINDS = {"Book", "AudioBook"}
-
-
-class NativeIngestError(Exception):
-    """A record failed the native-ingest structural contract, or was empty."""
-
-
-def _validate_nodes(nodes: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    identified = [n for n in nodes if n.get("id")]
-    if not identified:
-        raise NativeIngestError("native ingest requires at least one identified node")
-    for node in identified:
-        if "type" in node or not node.get("node_type"):
-            raise NativeIngestError("native ingest nodes require canonical node_type")
-    return identified
-
-
-def _validate_edges(relationships: list[dict[str, Any]] | None) -> None:
-    for rel in relationships or []:
-        if (
-            "type" in rel
-            or not rel.get("relationship")
-            or not rel.get("source")
-            or not rel.get("target")
-        ):
-            raise NativeIngestError(
-                "native ingest edges require source, target, and canonical relationship"
-            )
-
-
-def _native_ingest_entities(
-    entities: list[dict[str, Any]],
-    relationships: list[dict[str, Any]] | None = None,
-    *,
-    source: str,
-    domain: str,
-    client: Any | None = None,
-    graph: str | None = None,
-) -> dict[str, int]:
-    """Validate, then no-op the commit; see the SDK-GAPS note above."""
-    if not entities:
-        raise NativeIngestError("native ingest requires at least one entity")
-    _validate_nodes(entities)
-    _validate_edges(relationships)
-    return {"nodes": 0, "edges": 0}
-
-
-def _native_ingest_documents(
-    documents: list[dict[str, Any]],
-    *,
-    source: str,
-    domain: str,
-    client: Any | None = None,
-    graph: str | None = None,
-) -> dict[str, int]:
-    """Validate, then no-op the commit; see the SDK-GAPS note above."""
-    if not documents:
-        raise NativeIngestError("native ingest requires at least one document")
-    return {"nodes": 0, "edges": 0}
 
 
 def ingest_entities(

@@ -13,7 +13,6 @@ __all__: list[str] = []
 CORE_MODULES: list[str] = ["jellyfin_mcp.api_client"]
 
 OPTIONAL_MODULES = {
-    "jellyfin_mcp.agent_server": "agent",
     "jellyfin_mcp.mcp_server": "mcp",
 }
 
@@ -35,7 +34,7 @@ for module_name in CORE_MODULES:
         module = importlib.import_module(module_name)
         _expose_members(module)
 
-# Dynamic/lazy loading of optional modules (agent_server, mcp_server)
+# Dynamic/lazy loading of optional modules (mcp_server)
 _loaded_optional_modules: dict[str, Any] = {}
 
 
@@ -58,12 +57,6 @@ def __getattr__(name: str) -> Any:
         if mcp_key:
             return _import_module_safely(mcp_key) is not None
         return False
-    if name == "_AGENT_AVAILABLE":
-        agent_key = next((k for k in OPTIONAL_MODULES if "agent_server" in k), None)
-        if agent_key:
-            return _import_module_safely(agent_key) is not None
-        return False
-
     # Check optional modules
     for module_name in OPTIONAL_MODULES:
         if module_name not in _loaded_optional_modules:

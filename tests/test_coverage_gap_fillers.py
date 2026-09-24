@@ -20,11 +20,9 @@ def test_init_module_lazy_attributes():
 
     # Check lazy attributes
     assert hasattr(jellyfin_mcp, "_MCP_AVAILABLE")
-    assert hasattr(jellyfin_mcp, "_AGENT_AVAILABLE")
 
     # Test getting dynamic lazy attributes
     assert jellyfin_mcp._MCP_AVAILABLE is True
-    assert jellyfin_mcp._AGENT_AVAILABLE is True
 
     # Test requesting nonexistent attribute raises AttributeError
     with pytest.raises(AttributeError):
@@ -45,7 +43,6 @@ def test_init_module_missing_availability():
     # Mock OPTIONAL_MODULES to trigger false return branches
     with patch.dict(jellyfin_mcp.OPTIONAL_MODULES, {}, clear=True):
         assert jellyfin_mcp._MCP_AVAILABLE is False
-        assert jellyfin_mcp._AGENT_AVAILABLE is False
 
 
 def test_init_lazy_import_failure():
@@ -485,96 +482,6 @@ def test_mcp_server_main_execution():
         mock_mcp.run.assert_called_with(transport="stdio")
 
 
-# --- Tests for jellyfin_mcp/agent_server.py ---
-
-
-def test_agent_server_debug_mode():
-    """Verify agent server debug mode activation.
-
-    CONCEPT:JF-OS.config.a2a-agent-interface — A2A Agent Interface
-    """
-    with (
-        patch("agent_utilities.initialize_workspace"),
-        patch("agent_utilities.load_identity", return_value={"name": "test"}),
-        patch(
-            "agent_utilities.build_system_prompt_from_workspace", return_value="prompt"
-        ),
-        patch("agent_utilities.create_agent_server") as mock_server,
-        patch("agent_utilities.create_agent_parser") as mock_parser,
-        patch("sys.argv", ["agent_server.py"]),
-    ):
-        mock_args = MagicMock()
-        mock_args.debug = True
-        mock_args.mcp_url = None
-        mock_args.mcp_config = None
-        mock_args.host = "localhost"
-        mock_args.port = 8000
-        mock_args.provider = "openai"
-        mock_args.model_id = "gpt-4"
-        mock_args.base_url = None
-        mock_args.api_key = "test"
-        mock_args.custom_skills_directory = None
-        mock_args.web = False
-        mock_args.otel = False
-        mock_args.otel_endpoint = None
-        mock_args.otel_headers = None
-        mock_args.otel_public_key = None
-        mock_args.otel_secret_key = None
-        mock_args.otel_protocol = "http/protobuf"
-        mock_parser.return_value.parse_args.return_value = mock_args
-
-        # Force reimport with mocked dependencies
-        import importlib
-        import sys
-
-        mod = sys.modules.get("jellyfin_mcp.agent_server")
-        if not mod:
-            mod = importlib.import_module("jellyfin_mcp.agent_server")
-
-        importlib.reload(mod)
-        mod.agent_server()
-        assert mock_server.called
-
-
-def test_agent_server_main_execution():
-    """Verify agent server main execution setup.
-
-    CONCEPT:JF-OS.config.a2a-agent-interface — A2A Agent Interface
-    """
-    with (
-        patch("agent_utilities.initialize_workspace"),
-        patch("agent_utilities.load_identity", return_value={"name": "test"}),
-        patch(
-            "agent_utilities.build_system_prompt_from_workspace", return_value="prompt"
-        ),
-        patch("agent_utilities.create_agent_server") as mock_server,
-        patch("agent_utilities.create_agent_parser") as mock_parser,
-        patch("sys.argv", ["agent_server.py"]),
-    ):
-        mock_args = MagicMock()
-        mock_args.debug = False
-        mock_args.mcp_url = None
-        mock_args.mcp_config = None
-        mock_args.host = "localhost"
-        mock_args.port = 8000
-        mock_args.provider = "openai"
-        mock_args.model_id = "gpt-4"
-        mock_args.base_url = None
-        mock_args.api_key = "test"
-        mock_args.custom_skills_directory = None
-        mock_args.web = False
-        mock_args.otel = False
-        mock_args.otel_endpoint = None
-        mock_args.otel_headers = None
-        mock_args.otel_public_key = None
-        mock_args.otel_secret_key = None
-        mock_args.otel_protocol = "http/protobuf"
-        mock_parser.return_value.parse_args.return_value = mock_args
-
-        runpy.run_module("jellyfin_mcp.agent_server", run_name="__main__")
-        assert mock_server.called
-
-
 # --- Tests for jellyfin_mcp/__main__.py ---
 
 
@@ -583,9 +490,9 @@ def test_main_module():
 
     CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
     """
-    with patch("jellyfin_mcp.agent_server.agent_server") as mock_agent_server:
+    with patch("jellyfin_mcp.mcp_server.mcp_server") as mock_mcp_server:
         runpy.run_module("jellyfin_mcp.__main__", run_name="__main__")
-        mock_agent_server.assert_called_once()
+        mock_mcp_server.assert_called_once()
 
 
 def test_api_client_error_coverage():
