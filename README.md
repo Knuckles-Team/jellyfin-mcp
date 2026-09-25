@@ -366,7 +366,7 @@ _Auto-generated from the live MCP server — do not edit by hand._
 | `jellyfin_get_timer` | `MEDIA_CLIENTTOOL` | Gets a timer. |
 | `jellyfin_get_timers` | `MEDIA_CLIENTTOOL` | Gets the live tv timers. |
 | `jellyfin_get_trailer_remote_search_results` | `MEDIA_CLIENTTOOL` | Get trailer remote search. |
-| `jellyfin_get_trailers` | `MEDIA_CLIENTTOOL` | Finds movies and trailers similar to a given trailer. |
+| `jellyfin_get_trailers` | `MEDIA_CLIENTTOOL` | Lists trailers, filtered by the given query parameters. |
 | `jellyfin_get_trickplay_hls_playlist` | `MEDIA_CLIENTTOOL` | Gets an image tiles playlist for trickplay. |
 | `jellyfin_get_trickplay_tile_image` | `MEDIA_CLIENTTOOL` | Gets a trickplay tile image. |
 | `jellyfin_get_tuner_host_types` | `MEDIA_CLIENTTOOL` | Get tuner host types. |
@@ -556,6 +556,7 @@ When query strings or parameters are supplied, an LLM-free **Knowledge Graph res
         "JELLYFIN_PASSWORD": "your_jellyfin_password_here",
         "JELLYFIN_URL": "http://localhost:8096",
         "JELLYFIN_USERNAME": "admin",
+        "KG_INGESTTOOL": "True",
         "OIDC_CLIENT_SECRET": "your-oidc-client-secret",
         "OIDC_TOKEN_ENDPOINT": "https://identity.example.com/oauth2/token"
       }
@@ -597,6 +598,7 @@ own runtime secret boundary.
         "JELLYFIN_PASSWORD": "your_jellyfin_password_here",
         "JELLYFIN_URL": "http://localhost:8096",
         "JELLYFIN_USERNAME": "admin",
+        "KG_INGESTTOOL": "True",
         "OIDC_CLIENT_SECRET": "your-oidc-client-secret",
         "OIDC_TOKEN_ENDPOINT": "https://identity.example.com/oauth2/token"
       }
@@ -637,6 +639,7 @@ docker run -i --rm \
   -e JELLYFIN_PASSWORD=your_jellyfin_password_here \
   -e JELLYFIN_URL=http://localhost:8096 \
   -e JELLYFIN_USERNAME=admin \
+  -e KG_INGESTTOOL=True \
   -e OIDC_CLIENT_SECRET=your-oidc-client-secret \
   -e OIDC_TOKEN_ENDPOINT=https://identity.example.com/oauth2/token \
   registry.example.invalid/jellyfin-mcp@sha256:<digest> jellyfin-mcp
@@ -855,8 +858,6 @@ diagrams are documented in the
 | `DEFAULT_AGENT_NAME` | `"Jellyfin MCP Agent"` | Displayed name of the integrated Graph Agent |
 | `ENABLE_OTEL` | `True` |  |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://localhost:8080/api/public/otel` |  |
-| `OTEL_EXPORTER_OTLP_PUBLIC_KEY` | secret-injected |  |
-| `OTEL_EXPORTER_OTLP_SECRET_KEY` | secret-injected |  |
 | `OTEL_EXPORTER_OTLP_PROTOCOL` | `http/protobuf` |  |
 | `EUNOMIA_TYPE` | `none` | options: none, embedded, remote |
 | `EUNOMIA_POLICY_FILE` | `mcp_policies.json` |  |
@@ -869,6 +870,10 @@ diagrams are documented in the
 | `TLS_PROFILE` | `private-ca` | AgentConfig named transport profile |
 | `TLS_PROFILE_REF` | `secret://transport/provider` | Direct runtime profile reference |
 | `TLS_PROFILES_REF` | `secret://transport/catalog` | Named runtime profile catalog |
+| `JELLYFIN_TLS_PROFILE` | `system` |  |
+| `JELLYFIN_TLS_PROFILE_REF` | `secret://transport/provider` |  |
+| `JELLYFIN_MCP_MCP_IMAGE` | `registry.example.invalid/jellyfin-mcp@sha256:<digest>` |  |
+| `JELLYFIN_MCP_AGENT_IMAGE` | `registry.example.invalid/jellyfin-agent@sha256:<digest>` |  |
 | `ENABLE_DELEGATION` | `False` |  |
 | `DELEGATED_SCOPES` | `api` |  |
 | `JELLYFIN_AUDIENCE` | `https://jellyfin.example.com` |  |
@@ -876,6 +881,7 @@ diagrams are documented in the
 | `OIDC_CLIENT_ID` | `your-oidc-client-id` |  |
 | `OIDC_CLIENT_SECRET` | secret-injected |  |
 | `CONDENSED_JELLYFINTOOL` | `True` |  |
+| `KG_INGESTTOOL` | `True` |  |
 
 #### Inherited agent-utilities variables (apply to every connector)
 
@@ -893,11 +899,11 @@ diagrams are documented in the
 | `DEBUG` | `False` | Verbose logging |
 | `PYTHONUNBUFFERED` | `1` | Unbuffered stdout (recommended in containers) |
 | `MCP_URL` | `http://localhost:8000/mcp` | URL of the MCP server the agent connects to |
-| `PROVIDER` | `openai` | LLM provider for the agent |
-| `MODEL_ID` | `gpt-4o` | Model id for the agent |
+| `PROVIDER` | — | Operator-configured LLM provider for the agent |
+| `MODEL_ID` | — | Operator-configured model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_27 package + 15 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+_30 package + 15 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 

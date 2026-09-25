@@ -1,3 +1,5 @@
+# mypy: disable-error-code=method-assign
+
 """Characterization tests for LibraryClient.get_items (CXA-FL-JELLYFINMCP-01).
 
 Pins the exact query-parameter construction behaviour of the pre-refactor
