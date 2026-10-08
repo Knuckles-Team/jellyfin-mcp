@@ -124,7 +124,7 @@ Optional OIDC token delegation (`ENABLE_DELEGATION`, `OIDC_TOKEN_ENDPOINT`,
 `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `JELLYFIN_AUDIENCE`, `DELEGATED_SCOPES`) and
 telemetry (`ENABLE_OTEL`, `OTEL_EXPORTER_OTLP_*`) settings are documented in
 [`.env.example`](https://github.com/Knuckles-Team/jellyfin-mcp/blob/main/.env.example).
-Copy it to `.env` and populate only what you use. Plus `HOST` / `PORT` / `TRANSPORT`
+Copy it to `.env` and populate only what the operator use. Plus `HOST` / `PORT` / `TRANSPORT`
 for HTTP transports.
 
 ## Docker Compose
@@ -223,7 +223,7 @@ docker compose -f docker/agent.compose.yml up -d
 
 ## Behind a Caddy reverse proxy
 
-Expose the HTTP server on a hostname with automatic TLS. Add to your `Caddyfile`:
+Expose the HTTP server on a hostname with automatic TLS. Add to the operator's `Caddyfile`:
 
 ```caddy
 # Internal (self-signed) — homelab .example.invalid zone
@@ -267,7 +267,7 @@ this as a tool.
 
 ## Register with an MCP client
 
-Add to your client's `mcp_config.json`:
+Add to the operator's client's `mcp_config.json`:
 
 ```json
 {

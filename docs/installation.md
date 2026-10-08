@@ -1,7 +1,7 @@
 # Installation
 
 `jellyfin-mcp` is a standard Python package and a prebuilt container image. Pick the
-path that matches how you want to run it.
+path that matches how the operator want to run it.
 
 ## Requirements
 
@@ -20,7 +20,7 @@ The base install already includes the FastMCP MCP-server runtime
 
 ### Optional extras
 
-Install an extra only when you need the integrated agent or the test tooling:
+Install an extra only when the operator need the integrated agent or the test tooling:
 
 | Extra | Install | Pulls in |
 |---|---|---|
