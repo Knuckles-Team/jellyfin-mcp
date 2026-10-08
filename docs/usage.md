@@ -1,7 +1,7 @@
 # Usage — MCP / API / Agent
 
 `jellyfin-mcp` exposes the same capability three ways: as **MCP tools** an agent calls,
-as a **Python API** (`Api`) you import, and as an **A2A agent CLI**. The agent-package
+as a **Python API** (`Api`) the operator import, and as an **A2A agent CLI**. The agent-package
 pattern and MCP configuration are covered in [Overview](overview.md).
 
 ## As an MCP server

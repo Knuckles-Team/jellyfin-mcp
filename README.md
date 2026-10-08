@@ -62,20 +62,20 @@ uv pip install jellyfin-mcp[all]
 ```
 
 ### 2. Configure Environment
-Set up your connection keys and Jellyfin host details (see `.env.example` for comprehensive list):
+Set up the operator's connection keys and Jellyfin host details (see `.env.example` for complete list):
 ```bash
 export JELLYFIN_URL="http://localhost:8096"
 export JELLYFIN_API_KEY="your_api_key_here"
 ```
 
 ### 3. Run the MCP Server
-Launch the server over standard standard I/O (stdio) transport:
+Start the server over standard standard `I/O` (stdio) transport:
 ```bash
 jellyfin-mcp
 ```
 
 ### 4. Run the Agent CLI
-To launch the interactive Graph Agent terminal interface:
+To start the interactive Graph Agent terminal interface:
 ```bash
 jellyfin-agent --provider openai --model-id gpt-4o
 ```
@@ -87,7 +87,7 @@ jellyfin-agent --provider openai --model-id gpt-4o
 ## Key Features
 
 - **Consolidated Action-Routed MCP Tools:** Minimizes token overhead and eliminates tool bloat in LLM contexts by grouping methods into optimized, togglable tool modules.
-- **Enterprise-Grade Security:** Comprehensive support for Eunomia policies, OIDC token delegation, and granular execution context tracking.
+- **Enterprise-Grade Security:** Complete support for Eunomia policies, OIDC token delegation, and granular execution context tracking.
 - **Integrated Graph Agent:** Built-in Pydantic AI agent supporting the Agent Control Protocol (ACP) and standard Web interfaces (AG-UI).
 - **Native Telemetry & Tracing:** Out-of-the-box OpenTelemetry exports and native Langfuse tracing.
 
@@ -95,7 +95,7 @@ jellyfin-agent --provider openai --model-id gpt-4o
 
 ## CLI or API
 
-This agent wraps the Jellyfin MCP Server for Agentic AI! API. You can interact with it programmatically or via its integrated execution entrypoints.
+This agent wraps the Jellyfin MCP Server for Agentic AI! API. The operator can interact with it programmatically or via its integrated execution entrypoints.
 
 Detailed instructions on how to use the underlying API wrappers, extended schema bindings, and developer SDK references are maintained in [docs/index.md](docs/index.md).
 
@@ -103,7 +103,7 @@ Detailed instructions on how to use the underlying API wrappers, extended schema
 
 ## MCP
 
-This server utilizes dynamic Action-Routed tools to optimize token overhead and maximize IDE compatibility.
+This server use dynamic Action-Routed tools to optimize token overhead and maximize IDE compatibility.
 
 ### Available MCP Tools
 
@@ -506,9 +506,9 @@ Detailed tool schemas, parameter shapes, and validation constraints are preserve
 
 ### Dynamic Tool Selection & Visibility
 
-This MCP server supports dynamic toolset selection and visibility filtering at runtime. This allows you to restrict the set of exposed tools in order to prevent blowing up the LLM's context window.
+This MCP server supports dynamic toolset selection and visibility filtering at runtime. This allows the operator to restrict the set of exposed tools to prevent blowing up the LLM's context window.
 
-You can configure tool filtering via multiple input channels:
+The operator can configure tool filtering via multiple input channels:
 
 - **CLI Arguments:** Pass `--tools` or `--toolsets` (or their disabled counterparts `--disabled-tools` and `--disabled-toolsets`) during startup.
 - **Environment Variables:** Define standard environment variables:
@@ -517,11 +517,11 @@ You can configure tool filtering via multiple input channels:
 - **HTTP SSE Request Headers:** Pass custom headers during transport initialization:
   - `x-mcp-enabled-tools` / `x-mcp-disabled-tools`
   - `x-mcp-enabled-tags` / `x-mcp-disabled-tags`
-- **HTTP SSE Request Query Parameters:** Append query parameters directly to your transport connection URL:
+- **HTTP SSE Request Query Parameters:** Append query parameters directly to the operator's transport connection URL:
   - `?tools=tool1,tool2`
   - `?tags=tag1`
 
-When query strings or parameters are supplied, an LLM-free **Knowledge Graph resolution layer** (using `DynamicToolOrchestrator`) matches query intents against known tool tags, names, or descriptions, with safe fallback and automated 24-hour background cache refreshing.
+When query strings or parameters are provided, an LLM-free **Knowledge Graph resolution layer** (using `DynamicToolOrchestrator`) matches query intents against known tool tags, names, or descriptions, with safe fallback and automated 24-hour background cache refreshing.
 
 ---
 
@@ -667,7 +667,7 @@ the detailed transport contract.
 
 ## Agent
 
-This repository features a fully integrated Pydantic AI Graph Agent. It communicates over the **Agent Control Protocol (ACP)** and interacts seamlessly with the **Agent Web UI (AG-UI)** and Terminal interface.
+This repository features a fully integrated Pydantic AI Graph Agent. It communicates over the **Agent Control Protocol (ACP)** and interacts smoothly with the **Agent Web UI (AG-UI)** and Terminal interface.
 
 ### Running the Agent CLI
 To start the interactive command-line agent:
@@ -765,7 +765,7 @@ Built directly upon the enterprise-ready [`agent-utilities`](https://github.com/
 - **Scoped Credentials:** Execution context runs restricted to the specific caller identity.
 
 ### Runtime Security Grid
-| Feature | Functionality | Enablement |
+| Feature | Feature | Enablement |
 |---------|---------------|------------|
 | **Tool Guard** | Sensitivity inspection with human-in-the-loop validation | Enabled by default |
 | **Prompt Injection Defense** | Input scanning, repetition monitoring, and recursive loop blocks | Enabled by default |
@@ -792,12 +792,12 @@ recommended reference for installation, deployment, and day-to-day operation.
 
 ## Installation
 
-Pick the extra that matches what you want to run:
+Pick the extra that matches what the operator want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| `jellyfin-mcp[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | You only run the **MCP server** (smallest install / image) |
-| `jellyfin-mcp[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | You run the **integrated agent** |
+| `jellyfin-mcp[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
+| `jellyfin-mcp[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | The operator run the **integrated agent** |
 | `jellyfin-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
@@ -832,7 +832,7 @@ agent (`immutable agent digest`) with a co-located `:mcp` sidecar.
 
 Both `[mcp]` and `[agent]` carry the **epistemic-graph** engine through the required
 Agent Utilities core dependency (`epistemic-graph[full]`). The `[mcp]` extra keeps
-the server connector-focused; `[agent]` additionally enables model orchestration. Local
+the server connector-focused; `[agent]` also enables model orchestration. Local
 deployments can use the bundled engine. For production or shared state, run
 **epistemic-graph as a dedicated database service** and configure the runtime to use it.
 Deployment recipes (single-node + Raft HA), connection configuration, and architecture
@@ -935,7 +935,7 @@ Every variable the server reads, grouped by purpose.
 ### Agent runtime (full `[agent]` runtime only)
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `DEFAULT_AGENT_NAME` | Display name of the integrated Graph Agent | `Jellyfin MCP Agent` |
+| `DEFAULT_AGENT_NAME` | Show name of the integrated Graph Agent | `Jellyfin MCP Agent` |
 | `MCP_URL` | URL of the MCP server the agent connects to | `http://localhost:8000/mcp` |
 | `PROVIDER` | LLM provider (e.g. `openai`) | `openai` |
 | `MODEL_ID` | Model id (e.g. `gpt-4o`) | `gpt-4o` |
@@ -971,11 +971,11 @@ See [`.env.example`](.env.example) for a copy-paste starting point.
 
 ## Contribute
 
-Contributions are welcome! Please ensure code quality by executing local checks before submitting pull requests:
+Contributions are welcome! Please ensure code quality by running local checks before submitting pull requests:
 - Format code using `ruff format .`
 - Lint code using `ruff check .`
 - Validate type-safety with `mypy .`
-- Execute test suites using `pytest`
+- Run test suites using `pytest`
 
 
 <!-- BEGIN agent-utilities-deployment (generated; do not edit between markers) -->
