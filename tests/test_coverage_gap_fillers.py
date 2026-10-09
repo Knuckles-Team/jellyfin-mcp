@@ -4,7 +4,7 @@ import sys
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from agent_utilities.core.exceptions import AuthError, UnauthorizedError
+from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
 from starlette.datastructures import Headers
 from starlette.requests import Request
 
@@ -476,7 +476,7 @@ def test_mcp_server_main_execution():
 
     with (
         patch(
-            "agent_utilities.mcp.server_factory.create_mcp_server",
+            "agent_connector_sdk.mcp.server.create_mcp_server",
             return_value=(mock_args, mock_mcp, []),
         ),
         patch("sys.exit"),
@@ -593,7 +593,7 @@ def test_api_client_error_coverage():
 
     CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
     """
-    from agent_utilities.core.exceptions import AuthError, UnauthorizedError
+    from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
 
     from jellyfin_mcp.api_client import Api
 

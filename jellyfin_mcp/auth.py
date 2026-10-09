@@ -6,12 +6,10 @@ CONCEPT:JF-OS.identity.access-delegation — Access Delegation
 import threading
 
 import requests
-from agent_utilities.core.config import setting
-from agent_utilities.core.exceptions import AuthError, UnauthorizedError
-from agent_utilities.core.transport_security import (
-    ResolvedTLSProfile,
-    resolve_configured_tls_profile,
-)
+from agent_connector_sdk.config import setting
+from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
+from agent_connector_sdk.tls.profile import ResolvedTLSProfile
+from agent_connector_sdk.tls.resolve import resolve_tls_profile
 from fastmcp.utilities.logging import get_logger
 
 local = threading.local()
@@ -36,7 +34,7 @@ def get_client(
     token = token if token is not None else setting("JELLYFIN_API_KEY", None)
     username = username if username is not None else setting("JELLYFIN_USERNAME", None)
     password = password if password is not None else setting("JELLYFIN_PASSWORD", None)
-    profile = tls_profile or resolve_configured_tls_profile("jellyfin")
+    profile = tls_profile or resolve_tls_profile("jellyfin")
     config = {
         "enable_delegation": setting("ENABLE_DELEGATION", False),
         "audience": setting("JELLYFIN_AUDIENCE", None),
