@@ -199,9 +199,8 @@ def register_kg_ingest_tools(mcp: FastMCP):
 
         CONCEPT:AU-KG.ingest.list-durable-media.
         """
-        from jellyfin_mcp.kg_media import ingest_image_bytes, media_store
+        from jellyfin_mcp.kg_media import ingest_image_bytes
 
-        store = media_store()
         stored: list[dict[str, Any]] = []
         for iid in item_ids or []:
             try:
@@ -214,9 +213,7 @@ def register_kg_ingest_tools(mcp: FastMCP):
             data = raw if isinstance(raw, bytes) else None
             if data is None and isinstance(raw, str):
                 data = raw.encode("latin-1", "ignore")
-            res = ingest_image_bytes(
-                data, item_id=iid, image_type=image_type, store=store
-            )
+            res = await ingest_image_bytes(data, item_id=iid, image_type=image_type)
             if res:
                 stored.append(res)
         return {"requested": len(item_ids or []), "stored": stored}
