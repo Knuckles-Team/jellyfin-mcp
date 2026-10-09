@@ -8,11 +8,11 @@ import logging
 import sys
 from typing import Any
 
-from agent_utilities.core.config import load_config
-from agent_utilities.mcp.action_dispatch import dispatch_async, parse_json_object
-from agent_utilities.mcp.concurrency import run_blocking
-from agent_utilities.mcp.server_factory import create_mcp_server
-from agent_utilities.mcp.verbose_tools import register_tool_surface
+from agent_connector_sdk.config import load_config
+from agent_connector_sdk.mcp.action_dispatch import dispatch_async, parse_json_object
+from agent_connector_sdk.mcp.concurrency import run_blocking
+from agent_connector_sdk.mcp.server import create_mcp_server
+from agent_connector_sdk.mcp.tool_surface import register_tool_surface
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from fastmcp.utilities.logging import get_logger
@@ -182,7 +182,7 @@ def register_kg_ingest_tools(mcp: FastMCP):
         data = getattr(resp, "data", resp)
         items = data.get("Items", []) if isinstance(data, dict) else data
         items = items if isinstance(items, list) else [items]
-        result = ingest_items(items)
+        result = await ingest_items(items)
         return {"listed": len(items), "ingested": result}
 
     @mcp.tool(tags={"misc", "kg"})
