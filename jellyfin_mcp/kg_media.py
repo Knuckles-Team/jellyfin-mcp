@@ -1,24 +1,37 @@
 """Native epistemic-graph blob ingestion for Jellyfin artwork / media bytes.
 
 CONCEPT:AU-KG.ingest.list-durable-media. A Jellyfin item's **poster / primary image**
-(or any downloaded bytes) is stored as a content-addressed :Blob with a linked
-:AssetOccurrence graph node in ONE cross-modal ACID commit, via the agent-utilities
-``MediaStore``. This makes the raw artwork bytes — not just an image URL — durable,
-deduped, and queryable inside the knowledge graph beside the typed library nodes that
-``jellyfin_mcp.kg_ingest`` writes.
+(or any downloaded bytes) is stored as a content-addressed blob with a linked
+``:MediaAsset`` graph node in ONE cross-modal ACID commit, via the
+``agent_connector_sdk.ingest`` facade. This makes the raw artwork bytes — not just an
+image URL — durable, deduped, and queryable inside the knowledge graph beside the typed
+library nodes that ``jellyfin_mcp.kg_ingest`` writes.
 
-Best-effort and dependency-/engine-guarded: with no KG stack or no reachable engine every
-entry point **no-ops** (returns ``None``), so the connector runs with zero KG infrastructure.
+The knowledge-ingest service is obtained through ``agent_connector_sdk.ingest
+.current_ingest()`` (process-installed, or connected from settings on first use).
+Best-effort and engine-guarded: with no reachable engine every entry point **no-ops**
+(returns ``None``, never raises), so the connector runs with zero KG infrastructure.
 """
 
 from __future__ import annotations
 
+import hashlib
 import logging
 from typing import Any
 
+from agent_connector_sdk.ingest import (
+    ChangeSet,
+    IngestBinding,
+    IngestError,
+    IngestUnavailableError,
+    KnowledgeIngest,
+    MediaAsset,
+    current_ingest,
+)
+
 logger = logging.getLogger("jellyfin_mcp.kg.media")
 
-_SOURCE = "jellyfin-mcp"
+_BINDING = IngestBinding(connector="jellyfin-mcp", stream="media")
 
 # Jellyfin image-format -> mime.
 _MIME_BY_EXT = {
@@ -30,55 +43,26 @@ _MIME_BY_EXT = {
 }
 
 
-def media_store() -> Any | None:
-    """Build a ``MediaStore`` over a live engine, or ``None`` when unavailable.
-
-    Prefers the shared ``native_ingest.media_store`` primitive; falls back to
-    constructing one directly. Never raises.
-    """
-    try:
-        from agent_utilities.knowledge_graph.memory import native_ingest
-
-        return native_ingest.media_store()
-    except Exception as e:  # noqa: BLE001 — shared primitive absent
-        logger.debug("Operation failed: error_type=%s", type(e).__name__)
-    try:
-        from agent_utilities.knowledge_graph.core.graph_compute import (
-            GraphComputeEngine,
-        )
-        from agent_utilities.knowledge_graph.memory.media_store import MediaStore
-    except Exception as e:  # noqa: BLE001 — KG stack absent
-        logger.debug("Operation failed: error_type=%s", type(e).__name__)
-        return None
-    try:
-        engine = GraphComputeEngine()
-        if getattr(engine, "_client", None) is None:
-            return None
-        return MediaStore(engine)
-    except Exception as e:  # noqa: BLE001 — no reachable engine
-        logger.debug("Operation failed: error_type=%s", type(e).__name__)
-        return None
-
-
-def ingest_image_bytes(
+async def ingest_image_bytes(
     data: bytes | None,
     *,
     item_id: str,
     name: str = "",
     image_format: str = "jpg",
     image_type: str = "Primary",
-    store: Any | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, Any] | None:
-    """Store Jellyfin item artwork as a :Blob + :AssetOccurrence in the knowledge graph.
+    """Store Jellyfin item artwork as a blob + ``:MediaAsset`` node. Never raises.
 
     Returns ``{asset_id, digest, size_bytes, media_type}`` on success, or ``None``
-    when there is no engine, no bytes, or the store failed (never raises).
-    ``store`` may be injected (tests); otherwise one is built on demand.
+    when there is no engine, no bytes, or the store failed. ``ingest`` may be
+    injected (tests); otherwise the process-owned service is resolved on demand.
+
+    ``digest`` is computed client-side (SHA-256 of ``data``) for the caller's
+    immediate use; it matches the asset id the engine derives when no explicit id
+    is set.
     """
     if not data:
-        return None
-    store = store if store is not None else media_store()
-    if store is None:
         return None
 
     mime = _MIME_BY_EXT.get(str(image_format).lower().lstrip("."), "image/jpeg")
@@ -87,30 +71,31 @@ def ingest_image_bytes(
         "image_type": image_type,
         "source_uri": f"jellyfin://item/{item_id}/images/{image_type}",
     }
+    digest = hashlib.sha256(data).hexdigest()
+
+    asset = MediaAsset(
+        data=data,
+        mime_type=mime,
+        name=name or f"{item_id}-{image_type}",
+        properties=extra,
+    )
+    change_set = ChangeSet(media=(asset,))
     try:
-        stored = store.store_media(
-            data,
-            media_type="image",
-            mime_type=mime,
-            source=_SOURCE,
-            name=name or f"{item_id}-{image_type}",
-            extra=extra,
-        )
-    except Exception as e:  # noqa: BLE001 — engine/store failure is non-fatal
-        logger.warning("Operation failed: error_type=%s", type(e).__name__)
-        return None
-    if stored is None:
+        service = ingest if ingest is not None else current_ingest()
+        await service.submit(_BINDING, change_set)
+    except (IngestError, IngestUnavailableError) as exc:
+        logger.debug("KG media ingest unavailable/failed: %s", exc)
         return None
 
     logger.info(
-        "KG media ingest: stored %s poster (%d bytes) as asset %s",
+        "KG media ingest: stored %s poster (%d bytes) digest=%s",
         item_id,
         len(data),
-        getattr(stored, "asset_id", "?"),
+        digest,
     )
     return {
-        "asset_id": getattr(stored, "asset_id", None),
-        "digest": getattr(stored, "digest", None),
+        "asset_id": f"blob:{digest}",
+        "digest": digest,
         "size_bytes": len(data),
         "media_type": "image",
     }
