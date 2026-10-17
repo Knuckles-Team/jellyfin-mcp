@@ -38,7 +38,7 @@ engine-guarded (no engine reachable ⇒ clean no-op).
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`jellyfin-mcp`** MCP server.
 Ingestion additionally requires a reachable epistemic-graph engine (an
-`agent_utilities` KG stack); with none present the tools return
+`agent_connector_sdk` KG stack); with none present the tools return
 `{"ingested": null}` and do nothing else.
 
 | Variable | Required | Notes |

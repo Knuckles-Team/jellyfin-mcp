@@ -173,7 +173,6 @@ export JELLYFIN_API_KEY=your_api_key
 jellyfin-agent --provider openai --model-id gpt-4o --host 0.0.0.0 --port 9056
 ```
 
-The repo ships [`docker/agent.compose.yml`](https://github.com/Knuckles-Team/jellyfin-mcp/blob/main/docker/agent.compose.yml),
 which runs the MCP server and the agent together. The agent listens on `:9056` and is
 wired to the MCP server by container name:
 
@@ -194,7 +193,6 @@ services:
     ports:
       - "8000:8000"
 
-  jellyfin-mcp-agent:
     image: example/jellyfin-mcp@sha256:<digest>
     container_name: jellyfin-mcp-agent
     hostname: jellyfin-mcp-agent
@@ -218,7 +216,6 @@ services:
 ```
 
 ```bash
-docker compose -f docker/agent.compose.yml up -d
 ```
 
 ## Behind a Caddy reverse proxy
