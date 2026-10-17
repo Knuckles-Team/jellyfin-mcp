@@ -1,5 +1,5 @@
 {
-  "api_version": "graphos.io/v1",
+  "api_version": "arbora.io/v1",
   "artifacts": {
     "connector_manifest.yml": "be0a61edd720cebe8651fda7236afda7a1111144a9d8f67c6055b4a04f6f6333",
     "jellyfin_mcp/connectors/mcp_source_presets.json": "944efc44e7ca174bdca88ee38f4f2fc3948552f4f447f2bc00d121b40a3c682c",
