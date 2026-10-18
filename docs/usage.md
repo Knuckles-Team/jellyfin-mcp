@@ -37,10 +37,10 @@ api = Api(
 )
 
 # Reads
-info = api.get_system_info()           # server name, version, OS
-movies = api.get_movies()              # movie library items
+info = api.get_system_info()  # server name, version, OS
+movies = api.get_movies()  # movie library items
 results = api.search_items(searchTerm="matrix")
-views = api.get_user_views()           # the caller's library views
+views = api.get_user_views()  # the caller's library views
 ```
 
 TLS verification is always enabled. Configure private trust chains, mTLS, and
@@ -52,7 +52,7 @@ Build a client straight from the environment:
 ```python
 from jellyfin_mcp.auth import get_client
 
-api = get_client()        # reads JELLYFIN_* from the environment / .env
+api = get_client()  # reads JELLYFIN_* from the environment / .env
 users = api.get_users()
 ```
 
