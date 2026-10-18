@@ -1,6 +1,6 @@
 # jellyfin-mcp
 
-Jellyfin media-server **API + MCP Server + A2A Agent** for the agent-utilities
+Jellyfin media-server **API + MCP Server + A2A Agent** for the agent-connector-sdk
 ecosystem — a typed, deterministic tool surface over the Jellyfin REST API for
 agentic media management.
 

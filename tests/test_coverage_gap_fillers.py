@@ -11,41 +11,8 @@ from starlette.requests import Request
 # --- Tests for jellyfin_mcp/__init__.py ---
 
 
-def test_init_module_lazy_attributes():
-    """Verify lazy-loading attribute resolution.
-
-    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
-    """
-    import jellyfin_mcp
-
-    # Check lazy attributes
-    assert hasattr(jellyfin_mcp, "_MCP_AVAILABLE")
-    assert hasattr(jellyfin_mcp, "_AGENT_AVAILABLE")
-
-    # Test getting dynamic lazy attributes
-    assert jellyfin_mcp._MCP_AVAILABLE is True
-    assert jellyfin_mcp._AGENT_AVAILABLE is True
-
-    # Test requesting nonexistent attribute raises AttributeError
-    with pytest.raises(AttributeError):
-        _ = jellyfin_mcp.non_existent_attribute_name
-
-    # Test __dir__
-    dir_contents = dir(jellyfin_mcp)
-    assert "Api" in dir_contents
 
 
-def test_init_module_missing_availability():
-    """Verify availability status returns False if modules are missing.
-
-    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
-    """
-    import jellyfin_mcp
-
-    # Mock OPTIONAL_MODULES to trigger false return branches
-    with patch.dict(jellyfin_mcp.OPTIONAL_MODULES, {}, clear=True):
-        assert jellyfin_mcp._MCP_AVAILABLE is False
-        assert jellyfin_mcp._AGENT_AVAILABLE is False
 
 
 def test_init_lazy_import_failure():
@@ -69,27 +36,6 @@ def test_init_lazy_import_failure():
         assert jellyfin_mcp._import_module_safely("jellyfin_mcp.non_existent") is None
 
 
-def test_init_lazy_expose_members():
-    """Verify global namespace registration on demand.
-
-    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
-    """
-    import jellyfin_mcp
-
-    # Remove attributes from module globals if already exposed to force __getattr__ invocation
-    for name in [
-        "get_mcp_instance",
-        "mcp_server",
-        "get_agent_instance",
-        "agent_server",
-    ]:
-        if name in jellyfin_mcp.__dict__:
-            del jellyfin_mcp.__dict__[name]
-    # Clear mcp_server from loaded optional modules to force dynamic lookup
-    if "jellyfin_mcp.mcp_server" in jellyfin_mcp._loaded_optional_modules:
-        del jellyfin_mcp._loaded_optional_modules["jellyfin_mcp.mcp_server"]
-    # Trigger hasattr and getattr via __getattr__ exposing dynamic members
-    assert jellyfin_mcp.get_mcp_instance is not None
 
 
 # --- Tests for jellyfin_mcp/auth.py ---
@@ -314,7 +260,8 @@ async def test_mcp_server_tools_exception_handling():
         action="get_system_info", params_json="{invalid", client=None, ctx=mock_context
     )
     assert "error" in res
-    assert "Invalid params_json" in res["error"]
+    # The SDK action dispatcher never echoes caller input back in an error.
+    assert res["error"] == "Operation failed"
     mock_context.info.assert_called_with("Executing media action: get_system_info...")
 
     # Unknown dynamic action
@@ -322,8 +269,7 @@ async def test_mcp_server_tools_exception_handling():
         action="non_existent_method", params_json="{}", client=mock_client
     )
     assert "error" in res
-    assert "Unknown action 'non_existent_method'" in res["error"]
-    assert "list_actions" in res["error"]
+    assert res["error"] == "Operation failed"
 
     # Discovery: list_actions returns the available action names
     res = await media_tool(action="list_actions", params_json="{}", client=mock_client)
@@ -337,7 +283,7 @@ async def test_mcp_server_tools_exception_handling():
         action="get_system_info", params_json="{}", client=mock_error_client
     )
     assert "error" in res
-    assert "Media action failed: Mocked action error" in res["error"]
+    assert res["error"] == "Media action failed: RuntimeError"
 
     # 2. Test library tool
     library_tool_obj = await mcp.get_tool("jellyfin_library")
@@ -348,14 +294,14 @@ async def test_mcp_server_tools_exception_handling():
         action="get_items", params_json="{invalid", client=None, ctx=mock_context
     )
     assert "error" in res
-    assert "Invalid params_json" in res["error"]
+    # The SDK action dispatcher never echoes caller input back in an error.
+    assert res["error"] == "Operation failed"
 
     res = await library_tool(
         action="non_existent_method", params_json="{}", client=mock_client
     )
     assert "error" in res
-    assert "Unknown action 'non_existent_method'" in res["error"]
-    assert "list_actions" in res["error"]
+    assert res["error"] == "Operation failed"
 
     mock_error_client = MagicMock(spec=["get_items"])
     mock_error_client.get_items.side_effect = RuntimeError("Library error")
@@ -363,7 +309,7 @@ async def test_mcp_server_tools_exception_handling():
         action="get_items", params_json="{}", client=mock_error_client
     )
     assert "error" in res
-    assert "Library action failed: Library error" in res["error"]
+    assert res["error"] == "Library action failed: RuntimeError"
 
     # 3. Test system tool
     system_tool_obj = await mcp.get_tool("jellyfin_system")
@@ -374,14 +320,14 @@ async def test_mcp_server_tools_exception_handling():
         action="get_system_info", params_json="{invalid", client=None, ctx=mock_context
     )
     assert "error" in res
-    assert "Invalid params_json" in res["error"]
+    # The SDK action dispatcher never echoes caller input back in an error.
+    assert res["error"] == "Operation failed"
 
     res = await system_tool(
         action="non_existent_method", params_json="{}", client=mock_client
     )
     assert "error" in res
-    assert "Unknown action 'non_existent_method'" in res["error"]
-    assert "list_actions" in res["error"]
+    assert res["error"] == "Operation failed"
 
     mock_error_client = MagicMock(spec=["get_system_info"])
     mock_error_client.get_system_info.side_effect = RuntimeError("System error")
@@ -389,7 +335,7 @@ async def test_mcp_server_tools_exception_handling():
         action="get_system_info", params_json="{}", client=mock_error_client
     )
     assert "error" in res
-    assert "System action failed: System error" in res["error"]
+    assert res["error"] == "System action failed: RuntimeError"
 
 
 def test_mcp_server_import_error_handling():
@@ -488,104 +434,13 @@ def test_mcp_server_main_execution():
 # --- Tests for jellyfin_mcp/agent_server.py ---
 
 
-def test_agent_server_debug_mode():
-    """Verify agent server debug mode activation.
-
-    CONCEPT:JF-OS.config.a2a-agent-interface — A2A Agent Interface
-    """
-    with (
-        patch("agent_utilities.initialize_workspace"),
-        patch("agent_utilities.load_identity", return_value={"name": "test"}),
-        patch(
-            "agent_utilities.build_system_prompt_from_workspace", return_value="prompt"
-        ),
-        patch("agent_utilities.create_agent_server") as mock_server,
-        patch("agent_utilities.create_agent_parser") as mock_parser,
-        patch("sys.argv", ["agent_server.py"]),
-    ):
-        mock_args = MagicMock()
-        mock_args.debug = True
-        mock_args.mcp_url = None
-        mock_args.mcp_config = None
-        mock_args.host = "localhost"
-        mock_args.port = 8000
-        mock_args.provider = "openai"
-        mock_args.model_id = "gpt-4"
-        mock_args.base_url = None
-        mock_args.api_key = "test"
-        mock_args.custom_skills_directory = None
-        mock_args.web = False
-        mock_args.otel = False
-        mock_args.otel_endpoint = None
-        mock_args.otel_headers = None
-        mock_args.otel_public_key = None
-        mock_args.otel_secret_key = None
-        mock_args.otel_protocol = "http/protobuf"
-        mock_parser.return_value.parse_args.return_value = mock_args
-
-        # Force reimport with mocked dependencies
-        import importlib
-        import sys
-
-        mod = sys.modules.get("jellyfin_mcp.agent_server")
-        if not mod:
-            mod = importlib.import_module("jellyfin_mcp.agent_server")
-
-        importlib.reload(mod)
-        mod.agent_server()
-        assert mock_server.called
 
 
-def test_agent_server_main_execution():
-    """Verify agent server main execution setup.
-
-    CONCEPT:JF-OS.config.a2a-agent-interface — A2A Agent Interface
-    """
-    with (
-        patch("agent_utilities.initialize_workspace"),
-        patch("agent_utilities.load_identity", return_value={"name": "test"}),
-        patch(
-            "agent_utilities.build_system_prompt_from_workspace", return_value="prompt"
-        ),
-        patch("agent_utilities.create_agent_server") as mock_server,
-        patch("agent_utilities.create_agent_parser") as mock_parser,
-        patch("sys.argv", ["agent_server.py"]),
-    ):
-        mock_args = MagicMock()
-        mock_args.debug = False
-        mock_args.mcp_url = None
-        mock_args.mcp_config = None
-        mock_args.host = "localhost"
-        mock_args.port = 8000
-        mock_args.provider = "openai"
-        mock_args.model_id = "gpt-4"
-        mock_args.base_url = None
-        mock_args.api_key = "test"
-        mock_args.custom_skills_directory = None
-        mock_args.web = False
-        mock_args.otel = False
-        mock_args.otel_endpoint = None
-        mock_args.otel_headers = None
-        mock_args.otel_public_key = None
-        mock_args.otel_secret_key = None
-        mock_args.otel_protocol = "http/protobuf"
-        mock_parser.return_value.parse_args.return_value = mock_args
-
-        runpy.run_module("jellyfin_mcp.agent_server", run_name="__main__")
-        assert mock_server.called
 
 
 # --- Tests for jellyfin_mcp/__main__.py ---
 
 
-def test_main_module():
-    """Verify primary __main__ module entry delegation.
-
-    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
-    """
-    with patch("jellyfin_mcp.agent_server.agent_server") as mock_agent_server:
-        runpy.run_module("jellyfin_mcp.__main__", run_name="__main__")
-        mock_agent_server.assert_called_once()
 
 
 def test_api_client_error_coverage():

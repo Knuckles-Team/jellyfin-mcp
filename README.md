@@ -1,5 +1,5 @@
 # Jellyfin Mcp
-## CLI or API | MCP | Agent
+## CLI or API | MCP
 
 ![PyPI - Version](https://img.shields.io/pypi/v/jellyfin-mcp)
 ![MCP Server](https://badge.mcpx.dev?type=server 'MCP Server')
@@ -20,7 +20,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/jellyfin-mcp)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/jellyfin-mcp)
 
-*Version: 2.1.0*
+*Version: 2.2.0*
 
 > **Documentation** — Installation, deployment, usage across the MCP, API, and A2A
 > agent interfaces, and guidance for provisioning the Jellyfin media server are
@@ -530,7 +530,7 @@ When query strings or parameters are provided, an LLM-free **Knowledge Graph res
 <!-- MCP-CONFIG-EXAMPLES:START -->
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `jellyfin-mcp[mcp]` to add
-> FastMCP / FastAPI through `agent-utilities[mcp]`; the required Agent Utilities core
+> FastMCP / FastAPI through `agent-connector-sdk`; the required Agent Connector SDK core
 > still carries `epistemic-graph[full]`. The `[agent-runtime]` extra additionally
 > enables model orchestration.
 
@@ -564,7 +564,7 @@ When query strings or parameters are provided, an LLM-free **Knowledge Graph res
 }
 ```
 
-Runtime references require an alias-aware launcher such as GraphOS. Other
+Runtime references require an alias-aware launcher such as Arbora. Other
 launchers must omit those entries and inject the resolved values through their
 own runtime secret boundary.
 
@@ -684,7 +684,6 @@ jellyfin-agent --provider openai --model-id gpt-4o
 ```
 
 ### Docker Compose Orchestration
-The following `docker/agent.compose.yml` configures the Agent, Web UI, and Terminal Interface together:
 
 ```yaml
 version: '3.8'
@@ -716,7 +715,6 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  jellyfin-mcp-agent:
     image: example/jellyfin-mcp@sha256:<digest>
     container_name: jellyfin-mcp-agent
     hostname: jellyfin-mcp-agent
@@ -757,7 +755,7 @@ Detailed graph node architecture explanations, custom skill configurations, and 
 
 ## Security & Governance
 
-Built directly upon the enterprise-ready [`agent-utilities`](https://github.com/Knuckles-Team/agent-utilities) core, standard security parameters are fully supported:
+Built directly upon the enterprise-ready [`agent-connector-sdk`](https://github.com/Knuckles-Team/agent-connector-sdk) core, standard security parameters are fully supported:
 
 ### Access Control & Policy Enforcement
 - **Eunomia Policies:** Fine-grained, policy-driven tool authorization. Supports `none`, local `embedded` (`mcp_policies.json`), or centralized `remote` modes.
@@ -796,8 +794,7 @@ Pick the extra that matches what the operator want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| `jellyfin-mcp[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
-| `jellyfin-mcp[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | The operator run the **integrated agent** |
+| `jellyfin-mcp[mcp]` | Connector-focused MCP server (`agent-connector-sdk` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
 | `jellyfin-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
@@ -805,34 +802,28 @@ Pick the extra that matches what the operator want to run:
 uv pip install "jellyfin-mcp[mcp]"
 
 # Agent runtime (adds model orchestration to the shared graph engine)
-uv pip install "jellyfin-mcp[agent]"
 
 # Everything (development)
 uv pip install "jellyfin-mcp[all]"      # or: python -m pip install "jellyfin-mcp[all]"
 ```
 
-### Container images (`:mcp` vs `:agent`)
+### Container images (`:mcp`)
 
-One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `--target`:
+One multi-stage `docker/Dockerfile` builds the MCP-only image (`--target mcp`):
 
 | Image tag | Build target | Contents | Entrypoint |
 |-----------|--------------|----------|------------|
 | `example/jellyfin-mcp:mcp` | `--target mcp` | `jellyfin-mcp[mcp]` — **connector-focused**, includes `epistemic-graph[full]`; no model-orchestration stack | `jellyfin-mcp` |
-| `example/jellyfin-mcp@sha256:<digest>` | `--target agent` (default) | `jellyfin-mcp[agent]` — **agent runtime**, model orchestration + `epistemic-graph[full]` | `jellyfin-agent` |
 
 ```bash
 docker build --target mcp   -t example/jellyfin-mcp:mcp    docker/   # connector-focused MCP server
-docker build --target agent -t example/jellyfin-mcp:agent-local docker/   # agent runtime
 ```
 
-`docker/mcp.compose.yml` runs the connector-focused `:mcp` server; `docker/agent.compose.yml` runs the
 agent (`immutable agent digest`) with a co-located `:mcp` sidecar.
 
 ### Knowledge-graph database (`epistemic-graph`)
 
-Both `[mcp]` and `[agent]` carry the **epistemic-graph** engine through the required
-Agent Utilities core dependency (`epistemic-graph[full]`). The `[mcp]` extra keeps
-the server connector-focused; `[agent]` also enables model orchestration. Local
+Agent Connector SDK core dependency (`epistemic-graph[full]`). The `[mcp]` extra keeps
 deployments can use the bundled engine. For production or shared state, run
 **epistemic-graph as a dedicated database service** and configure the runtime to use it.
 Deployment recipes (single-node + Raft HA), connection configuration, and architecture
@@ -877,7 +868,7 @@ diagrams are documented in the
 | `OIDC_CLIENT_SECRET` | secret-injected |  |
 | `CONDENSED_JELLYFINTOOL` | `True` |  |
 
-#### Inherited agent-utilities variables (apply to every connector)
+#### Inherited agent-connector-sdk variables (apply to every connector)
 
 | Variable | Example | Description |
 |----------|---------|-------------|
@@ -897,7 +888,7 @@ diagrams are documented in the
 | `MODEL_ID` | `gpt-4o` | Model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_27 package + 15 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+_27 package + 15 inherited variable(s). Auto-generated from `.env.example` + the shared agent-connector-sdk set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 
@@ -978,27 +969,6 @@ Contributions are welcome! Please ensure code quality by running local checks be
 - Run test suites using `pytest`
 
 
-<!-- BEGIN agent-utilities-deployment (generated; do not edit between markers) -->
-
-## Deploy with `agent-utilities-deployment`
-
-Provision this package with the consolidated **`agent-utilities-deployment`**
-workflow. It selects an installed-package, editable-source, or immutable-container
-path; records only runtime secret and TLS-profile references in `AgentConfig`; and
-runs doctor, registration, policy, observability, and rollback gates. Ask your agent
-to **"deploy `jellyfin-mcp` with agent-utilities-deployment"**.
-
-| Install mode | Command |
-|------|---------|
-| Installed package | `uv tool install "jellyfin-mcp[mcp]"`, then run `jellyfin-mcp` |
-| Editable source | `uv pip install -e ".[agent]"`, then run `jellyfin-mcp` |
-| Immutable container | deploy `registry.example.invalid/jellyfin-mcp@sha256:<digest>` through the operator-selected orchestrator |
-
-The repository embeds no deployment profile, credential value, certificate path, or
-environment-specific endpoint. Supply those at runtime through `AgentConfig` and the
-configured secret provider.
-
-<!-- END agent-utilities-deployment -->
 
 <!-- GOVERNED-CAPABILITY:START -->
 ## Governed capability contract
@@ -1013,5 +983,5 @@ historical per-task skill wrappers.
 Runtime endpoints, credentials, certificate trust, tenant identity, retention,
 and observability policy are deployment inputs and are never packaged values.
 See [Configuration, trust, and privacy](docs/configuration.md) before enabling a
-network transport, connector ingestion, GraphOS delegation, or trace export.
+network transport, connector ingestion, Arbora delegation, or trace export.
 <!-- GOVERNED-CAPABILITY:END -->
