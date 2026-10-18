@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Jellyfin media-server API + MCP Server + A2A Agent for the agent-utilities ecosystem — a typed, deterministic tool surface over the Jellyfin REST API for agentic media management.">
+        <meta name="description" content="Jellyfin media-server API + MCP Server + A2A Agent for the agent-connector-sdk ecosystem — a typed, deterministic tool surface over the Jellyfin REST API for agentic media management.">
       
       
       
@@ -862,10 +862,10 @@ sub-clients. Build one directly, or from the environment with <code>get_client()
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Reads</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">info</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_system_info</span><span class="p">()</span>           <span class="c1"># server name, version, OS</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">movies</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_movies</span><span class="p">()</span>              <span class="c1"># movie library items</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">info</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_system_info</span><span class="p">()</span>  <span class="c1"># server name, version, OS</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">movies</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_movies</span><span class="p">()</span>  <span class="c1"># movie library items</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">results</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">search_items</span><span class="p">(</span><span class="n">searchTerm</span><span class="o">=</span><span class="s2">"matrix"</span><span class="p">)</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">views</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_user_views</span><span class="p">()</span>           <span class="c1"># the caller's library views</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">views</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_user_views</span><span class="p">()</span>  <span class="c1"># the caller's library views</span>
 </span></code></pre></div>
 <p>TLS verification is always enabled. Configure private trust chains, mTLS, and
 proxy policy with <code>JELLYFIN_TLS_PROFILE</code> or <code>JELLYFIN_TLS_PROFILE_REF</code>; direct
@@ -873,7 +873,7 @@ clients resolve the active AgentConfig profile automatically.</p>
 <p>Build a client straight from the environment:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">jellyfin_mcp.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_client</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">api</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span>        <span class="c1"># reads JELLYFIN_* from the environment / .env</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">api</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span>  <span class="c1"># reads JELLYFIN_* from the environment / .env</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">users</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_users</span><span class="p">()</span>
 </span></code></pre></div>
 <p><code>get_client()</code> selects the authentication flow automatically: a <code>JELLYFIN_API_KEY</code>
