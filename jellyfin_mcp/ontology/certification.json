@@ -1,9 +1,9 @@
 {
   "api_version": "arbora.io/v1",
   "artifacts": {
-    "connector_manifest.yml": "be0a61edd720cebe8651fda7236afda7a1111144a9d8f67c6055b4a04f6f6333",
-    "jellyfin_mcp/connectors/mcp_source_presets.json": "944efc44e7ca174bdca88ee38f4f2fc3948552f4f447f2bc00d121b40a3c682c",
-    "jellyfin_mcp/connectors/tool_schema_fingerprints.json": "d688144cd865c5db8ca5f763b9ed3e4e87c39318576c6a0f14087ab14d159007",
+    "connector_manifest.yml": "3f796c5cbbbc830225fba499cc37e50083858db343fcbc0b77b931b487d946d1",
+    "jellyfin_mcp/connectors/mcp_source_presets.json": "b351563772a395e07313f696ba314fed36ae89aa3d32fca86919a5e0909af91b",
+    "jellyfin_mcp/connectors/tool_schema_fingerprints.json": "9c4c4950022d4c0cdcd6dbb8bf409d5e9e4047a0aaa8a5019fc2a7ff23c9d46c",
     "jellyfin_mcp/ontology/fixtures/records.json": "665fcc73887a9d979694af27a2a9401b9941deb59a0290d05a9119fb6762498f",
     "jellyfin_mcp/ontology/mappings/source.yaml": "120f60f138c04417acc6464b3295818d8d1f0fed6e67659c471be339f9a731ae",
     "jellyfin_mcp/ontology/media.ttl": "4ed06a2ca13760dfe8cb502917ceb44c7773ada9cf8fe09b2d82cbf4939a79eb",
