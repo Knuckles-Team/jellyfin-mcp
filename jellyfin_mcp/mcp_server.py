@@ -23,7 +23,7 @@ from starlette.responses import JSONResponse
 from jellyfin_mcp.api_client import Api
 from jellyfin_mcp.auth import get_client
 
-__version__ = "2.2.0"
+__version__ = "2.3.0"
 
 logger = get_logger(name="jellyfin-mcp")
 logger.setLevel(logging.INFO)
@@ -230,7 +230,7 @@ def get_mcp_instance() -> tuple[Any, ...]:
     args, mcp, middlewares = create_mcp_server(
         name="jellyfin-mcp MCP",
         version=__version__,
-        instructions="jellyfin-mcp MCP Server — Condensed Action-Routed Tools.",
+        instructions="jellyfin-mcp MCP Server — one tool per API operation.",
     )
 
     @mcp.custom_route("/health", methods=["GET"])

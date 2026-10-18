@@ -144,5 +144,3 @@ def test_mcp_server_coverage():
                         pass
 
             asyncio.run(run_tools())
-
-
