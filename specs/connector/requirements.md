@@ -1,7 +1,2 @@
-# CONN-JELLYFIN-MCP — Requirements
 
-Governing spec: [spec.md](spec.md).
-
-| ID | Requirement | Acceptance |
-|---|---|---|
-| `CONN-JELLYFIN-MCP-R001` | **MediaBrowser token header.** The client in `jellyfin_mcp/api/api_client_base.py` must send the API key as `Authorization: MediaBrowser Token="<key>"`. The client must not send `X-Emby-Token`. The generator in `scripts/generate_code.py` must emit the same header. | `tests/test_auth_header.py` must show the `Authorization` header value and no `X-Emby-Token` header. |
+| `CONN-JELLYFIN-MCP-R002` | **Env declarations match the code.** `.env.example`, `mcp_config.json` and the README must declare exactly the variables the code reads: no dead variable, no undocumented variable. | `tests/test_env_declarations.py::test_env_declarations_match_the_code_read_surface` must pass. |

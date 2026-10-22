@@ -843,11 +843,8 @@ diagrams are documented in the
 | `HOST` | `0.0.0.0` |  |
 | `PORT` | `8000` |  |
 | `TRANSPORT` | `stdio` | options: stdio, streamable-http, sse |
-| `DEFAULT_AGENT_NAME` | `"Jellyfin MCP Agent"` | Displayed name of the integrated Graph Agent |
 | `ENABLE_OTEL` | `True` |  |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://localhost:8080/api/public/otel` |  |
-| `OTEL_EXPORTER_OTLP_PUBLIC_KEY` | secret-injected |  |
-| `OTEL_EXPORTER_OTLP_SECRET_KEY` | secret-injected |  |
 | `OTEL_EXPORTER_OTLP_PROTOCOL` | `http/protobuf` |  |
 | `EUNOMIA_TYPE` | `none` | options: none, embedded, remote |
 | `EUNOMIA_POLICY_FILE` | `mcp_policies.json` |  |
@@ -857,9 +854,6 @@ diagrams are documented in the
 | `JELLYFIN_API_KEY` | secret-injected | Authentication values (choose API key or Username/Password) API key standard input: |
 | `JELLYFIN_USERNAME` | `admin` | Credential-based login (used if API key is not provided): |
 | `JELLYFIN_PASSWORD` | secret-injected |  |
-| `TLS_PROFILE` | `private-ca` | AgentConfig named transport profile |
-| `TLS_PROFILE_REF` | `secret://transport/provider` | Direct runtime profile reference |
-| `TLS_PROFILES_REF` | `secret://transport/catalog` | Named runtime profile catalog |
 | `ENABLE_DELEGATION` | `False` |  |
 | `DELEGATED_SCOPES` | `api` |  |
 | `JELLYFIN_AUDIENCE` | `https://jellyfin.example.com` |  |
@@ -926,7 +920,6 @@ Every variable the server reads, grouped by purpose.
 ### Agent runtime (full `[agent]` runtime only)
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `DEFAULT_AGENT_NAME` | Show name of the integrated Graph Agent | `Jellyfin MCP Agent` |
 | `MCP_URL` | URL of the MCP server the agent connects to | `http://localhost:8000/mcp` |
 | `PROVIDER` | LLM provider (e.g. `openai`) | `openai` |
 | `MODEL_ID` | Model id (e.g. `gpt-4o`) | `gpt-4o` |

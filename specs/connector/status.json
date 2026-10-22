@@ -4,7 +4,8 @@
   "owner_repo": "jellyfin-mcp",
   "delivery_state": "VERIFIED",
   "requirement_ids": [
-    "CONN-JELLYFIN-MCP-R001"
+    "CONN-JELLYFIN-MCP-R001",
+    "CONN-JELLYFIN-MCP-R002"
   ],
   "requirements": [
     {
@@ -16,6 +17,15 @@
       ],
       "verified_by": [
         "tests/test_auth_header.py:10"
+      ]
+    },
+    {
+      "id": "CONN-JELLYFIN-MCP-R002",
+      "title": "Env declarations match the code",
+      "delivery_state": "SPECIFIED",
+      "landed_in": [],
+      "verified_by": [
+        "tests/test_env_declarations.py:12"
       ]
     }
   ]
