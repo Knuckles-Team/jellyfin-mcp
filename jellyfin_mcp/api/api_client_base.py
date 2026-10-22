@@ -23,7 +23,9 @@ class ApiBase:
         self.tls_profile = tls_profile or resolve_tls_profile("jellyfin")
         self._session = self.tls_profile.configure_requests_session(requests.Session())
         if token:
-            self._session.headers.update({"X-Emby-Token": token})
+            self._session.headers.update(
+                {"Authorization": f'MediaBrowser Token="{token}"'}
+            )
 
         from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
 

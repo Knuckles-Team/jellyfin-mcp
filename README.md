@@ -20,7 +20,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/jellyfin-mcp)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/jellyfin-mcp)
 
-*Version: 2.3.0*
+*Version: 2.3.1*
 
 > **Documentation** — Installation, deployment, usage across the MCP, API, and A2A
 > agent interfaces, and guidance for provisioning the Jellyfin media server are
