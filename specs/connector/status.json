@@ -2,7 +2,7 @@
   "schema_version": 2,
   "spec_id": "CONN-JELLYFIN-MCP",
   "owner_repo": "jellyfin-mcp",
-  "delivery_state": "SPECIFIED",
+  "delivery_state": "VERIFIED",
   "requirement_ids": [
     "CONN-JELLYFIN-MCP-R001"
   ],
@@ -10,8 +10,10 @@
     {
       "id": "CONN-JELLYFIN-MCP-R001",
       "title": "MediaBrowser token header",
-      "delivery_state": "SPECIFIED",
-      "landed_in": [],
+      "delivery_state": "VERIFIED",
+      "landed_in": [
+        "8b46ace02a79"
+      ],
       "verified_by": [
         "tests/test_auth_header.py:10"
       ]
