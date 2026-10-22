@@ -3,3 +3,4 @@
 Governing spec: [spec.md](spec.md). Design: [plan.md](plan.md). Rows: [requirements.md](requirements.md).
 
 - [x] CONN-JELLYFIN-MCP-R001: MediaBrowser token header.
+- [x] CONN-JELLYFIN-MCP-R002: Env declarations match the code.

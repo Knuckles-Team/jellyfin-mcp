@@ -7,7 +7,6 @@
         "jellyfin-mcp"
       ],
       "env": {
-        "MCP_TOOL_MODE": "intent",
         "CONDENSED_JELLYFINTOOL": "True",
         "DELEGATED_SCOPES": "api",
         "ENABLE_DELEGATION": "False",
