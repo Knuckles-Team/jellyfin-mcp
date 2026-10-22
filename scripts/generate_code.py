@@ -59,7 +59,7 @@ def generate_api_code(spec: dict) -> str:
         "        self._session = self.tls_profile.configure_requests_session(requests.Session())"
     )
     lines.append("        if token:")
-    lines.append("            self._session.headers.update({'X-Emby-Token': token})")
+    lines.append("            self._session.headers.update({'Authorization': f'MediaBrowser Token=\"{token}\"'})")
     lines.append("        # Note: Implement basic auth or login flow if needed")
     lines.append("")
     lines.append(
