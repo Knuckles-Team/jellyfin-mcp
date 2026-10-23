@@ -12,11 +12,8 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 :Author a owl:Class ;
-    rdfs:label "Author" ;
-    rdfs:comment """The author of one or more :Book items. Aligned to schema:Person /
-foaf:Person (CONCEPT:KG-2.163).""" ;
-    rdfs:seeAlso foaf:Person ;
-    rdfs:subClassOf foaf:Person .
+    rdfs:seeAlso foaf:Person .
+
 
 :Book a owl:Class ;
     rdfs:label "Book" ;
@@ -130,8 +127,8 @@ downloader into the unified KG.
 
 Tracks download jobs, media assets, and their consumption patterns.
 
-Standards alignment: schema:MediaObject, schema:DownloadAction.""" ;
-    owl:imports <http://knuckles.team/kg> .
+Standards alignment: schema:MediaObject, schema:DownloadAction.""" .
+
 
 :MediaCollection a owl:Class ;
     rdfs:label "Media Collection" ;
@@ -144,15 +141,8 @@ Standards alignment: schema:MediaObject, schema:DownloadAction.""" ;
 MediaItems into collections. BFO:IndependentContinuant via System.""" ;
     rdfs:subClassOf :System .
 
-:Blob a owl:Class ;
-    rdfs:label "Blob" ;
-    rdfs:comment """A content-addressed, deduplicated binary stored in the engine BLOB
-substrate (CONCEPT:KG-2.206), keyed by its content digest. The same bytes (an image,
-a voice note, a chart) resolve to ONE :Blob no matter how many :AssetOccurrences reference
-it. The bytes live in the engine, beside the graph; this node is the graph-side handle
-(its digest) so the blob is discoverable + GC-refcounted from the ontology
-(CONCEPT:KG-2.251).""" ;
-    rdfs:subClassOf :Dataset .
+:Blob a owl:Class .
+
 
 :DownloadJob a owl:Class ;
     rdfs:label "Download Job" ;
@@ -219,3 +209,6 @@ Audio, MusicAlbum, Book, etc.""" ;
     rdfs:comment "Links a :Book to its :Author." ;
     rdfs:domain :Book ;
     rdfs:range :Author .
+
+# ontology-codemod R4
+<http://knuckles.team/kg#Genre> rdfs:subClassOf <http://knuckles.team/kg#Category> .

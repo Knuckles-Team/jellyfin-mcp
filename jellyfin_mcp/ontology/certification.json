@@ -1,9 +1,6 @@
 {
   "api_version": "arbora.io/v1",
   "artifacts": {
-    "connector_manifest.yml": "3f796c5cbbbc830225fba499cc37e50083858db343fcbc0b77b931b487d946d1",
-    "jellyfin_mcp/connectors/mcp_source_presets.json": "b351563772a395e07313f696ba314fed36ae89aa3d32fca86919a5e0909af91b",
-    "jellyfin_mcp/connectors/tool_schema_fingerprints.json": "9c4c4950022d4c0cdcd6dbb8bf409d5e9e4047a0aaa8a5019fc2a7ff23c9d46c",
     "jellyfin_mcp/ontology/fixtures/records.json": "665fcc73887a9d979694af27a2a9401b9941deb59a0290d05a9119fb6762498f",
     "jellyfin_mcp/ontology/mappings/source.yaml": "120f60f138c04417acc6464b3295818d8d1f0fed6e67659c471be339f9a731ae",
     "jellyfin_mcp/ontology/media.ttl": "4ed06a2ca13760dfe8cb502917ceb44c7773ada9cf8fe09b2d82cbf4939a79eb",

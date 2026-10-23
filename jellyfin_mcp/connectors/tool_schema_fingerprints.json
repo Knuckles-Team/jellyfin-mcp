@@ -1,8 +1,0 @@
-{
-  "algorithm": "agent-connector-sdk:mcp-tool-contract-compat:v2",
-  "connector": "jellyfin-mcp",
-  "schema_version": "1",
-  "tools": {
-    "jellyfin_get_items": "c91ec77e4c684c604891827b537883d99e23d990eb0aef7aaaaae71eac9e42cb"
-  }
-}
