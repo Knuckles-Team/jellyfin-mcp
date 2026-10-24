@@ -1,39 +1,13 @@
 import os
-import runpy
 import sys
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
-from starlette.datastructures import Headers
-from starlette.requests import Request
 
 # --- Tests for jellyfin_mcp/__init__.py ---
 
 
-
-
-
-
-def test_init_lazy_import_failure():
-    """Verify import safety wrapper handles missing modules.
-
-    CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
-    """
-    # Mock importlib.import_module to raise ImportError for optional modules
-    import importlib
-
-    import jellyfin_mcp
-
-    original_import = importlib.import_module
-
-    def mock_import(name, *args, **kwargs):
-        if "non_existent" in name:
-            raise ImportError("Mocked import error")
-        return original_import(name, *args, **kwargs)
-
-    with patch("importlib.import_module", side_effect=mock_import):
-        assert jellyfin_mcp._import_module_safely("jellyfin_mcp.non_existent") is None
 
 
 
@@ -187,45 +161,6 @@ def test_auth_credentials_invalid():
 
 
 @pytest.mark.asyncio
-async def test_mcp_server_custom_route():
-    """Verify custom routes (e.g. /health) inside MCP instance.
-
-    CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
-    """
-    from jellyfin_mcp.mcp_server import get_mcp_instance
-
-    mcp_data = get_mcp_instance()
-    mcp = mcp_data[0] if isinstance(mcp_data, tuple) else mcp_data
-
-    # Retrieve custom routes from mcp.http_app()
-    app = mcp.http_app()
-    route_handler = None
-    for route in app.routes:
-        if route.path == "/health":
-            route_handler = route.endpoint
-            break
-
-    assert route_handler is not None
-
-    # Construct a mock Starlette Request object
-    mock_scope = {
-        "type": "http",
-        "method": "GET",
-        "path": "/health",
-        "headers": Headers().raw,
-    }
-    mock_req = Request(scope=mock_scope)
-    response = await route_handler(mock_req)
-
-    # Verify response
-    assert response.status_code == 200
-    import json
-
-    payload = json.loads(response.body.decode())
-    assert payload.get("status", "").lower() == "ok"
-
-
-@pytest.mark.asyncio
 async def test_mcp_server_tools_exception_handling():
     """Verify tool execution safety & exception handling.
 
@@ -359,76 +294,6 @@ def test_mcp_server_import_error_handling():
     with patch("builtins.__import__", side_effect=mock_import):
         if mod:
             importlib.reload(mod)
-
-
-def test_mcp_server_startup_transports():
-    """Verify startup transport command-line flag handling.
-
-    CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
-    """
-    from jellyfin_mcp.mcp_server import mcp_server
-
-    mock_args = MagicMock()
-    mock_args.transport = "stdio"
-    mock_args.host = "localhost"
-    mock_args.port = 8000
-    mock_args.auth_type = "none"
-
-    mock_mcp = MagicMock()
-
-    with (
-        patch(
-            "jellyfin_mcp.mcp_server.get_mcp_instance",
-            return_value=(mock_mcp, mock_args, []),
-        ),
-        patch("sys.exit") as mock_exit,
-    ):
-        # 1. stdio transport
-        mock_args.transport = "stdio"
-        mcp_server()
-        mock_mcp.run.assert_called_with(transport="stdio")
-
-        # 2. streamable-http transport
-        mock_args.transport = "streamable-http"
-        mcp_server()
-        mock_mcp.run.assert_called_with(
-            transport="streamable-http", host="localhost", port=8000
-        )
-
-        # 3. sse transport
-        mock_args.transport = "sse"
-        mcp_server()
-        mock_mcp.run.assert_called_with(transport="sse", host="localhost", port=8000)
-
-        # 4. Invalid transport
-        mock_args.transport = "invalid-transport"
-        mcp_server()
-        mock_exit.assert_called_with(1)
-
-
-def test_mcp_server_main_execution():
-    """Verify main block execution of the MCP server module.
-
-    CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
-    """
-    mock_args = MagicMock()
-    mock_args.transport = "stdio"
-    mock_args.host = "localhost"
-    mock_args.port = 8000
-    mock_args.auth_type = "none"
-
-    mock_mcp = MagicMock()
-    mock_mcp.custom_route.return_value = lambda x: x
-
-    with (
-        patch(
-            "agent_connector_sdk.mcp.server.create_mcp_server",
-            return_value=(mock_args, mock_mcp, []),
-        ),
-        patch("sys.exit"),
-    ):
-        runpy.run_module("jellyfin_mcp.mcp_server", run_name="__main__")
-        mock_mcp.run.assert_called_with(transport="stdio")
 
 
 # --- Tests for jellyfin_mcp/agent_server.py ---

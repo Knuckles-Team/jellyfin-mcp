@@ -4,43 +4,33 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jellyfin-mcp"
-version = "2.3.3"
+version = "2.3.4"
 description = "Jellyfin MCP Server for Agentic AI!"
 readme = "README.md"
 classifiers = [ "Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Environment :: Console", "Operating System :: POSIX :: Linux", "Programming Language :: Python :: 3",]
 requires-python = ">=3.12"
-dependencies = [ "agent-connector-sdk[mcp]>=0.4.1,<1.0.0", "requests>=2.34.2",]
+dependencies = [ "agent-connector-sdk[mcp]>=0.5.4,<0.6.0", "requests>=2.34.2",]
 [[project.authors]]
-name = "Project Maintainers"
-email = "maintainers@users.noreply.github.com"
+name = "Repository Maintainers"
+email = "maintainers@knuckles.team"
 
 [project.license]
 text = "MIT"
 
 [project.optional-dependencies]
-mcp = [ "agent-connector-sdk[mcp]>=0.4.1,<1.0.0",]
-all = [ "agent-connector-sdk[mcp]>=0.4.1,<1.0.0",]
 test = [
     "pytest-xdist>=3.8.0", "pytest>=9.1.1", "pytest-asyncio>=1.4.0", "pytest-cov>=7.1.0",]
 
 [project.scripts]
-jellyfin-mcp = "jellyfin_mcp.mcp_server:mcp_server"
-
-[project.entry-points."agent_connector_sdk.skill_providers"]
-jellyfin-mcp = "jellyfin_mcp.skills"
-
-[project.entry-points."agent_connector_sdk.source_connector_providers"]
-jellyfin-mcp = "jellyfin_mcp.connectors"
+jellyfin-mcp = "agent_connector_sdk.cli:serve"
 
 # CONCEPT:AU-KG.ontology.package-federation-migration — federate this package's OWL/RDF ontology module into the
 # agent-connector-sdk hub (http://knuckles.team/kg/media). Resolved via
 # iter_provider_dirs like the skill/prompt providers.
-[project.entry-points."agent_connector_sdk.ontology_providers"]
-jellyfin-mcp = "jellyfin_mcp.ontology"
 
 # The one declared connector identity: the fleet name (SDK-CONNECTOR-CONTROL-R071).
 [project.entry-points."agent_connector_sdk.connector"]
-jellyfin-mcp = "jellyfin_mcp"
+jellyfin-mcp = "jellyfin_mcp:connector"
 
 [tool.uv.workspace]
 members = ["."]
@@ -54,6 +44,7 @@ override-dependencies = [
 ]
 
 [tool.ruff]
+extend-exclude = ["tests", "scripts"]
 line-length = 88
 target-version = "py310"
 
@@ -82,3 +73,6 @@ ignore_names = ["request", "config"]
 
 [tool.pipelines_hooks.ste]
 exempt = ["specs/*", "specs/**/*"]
+
+[tool.pipelines.container]
+debug_apt = ["default-jre", "ripgrep", "tree", "fd-find", "curl", "nano", "build-essential", "cmake", "libssl-dev", "libcurl4-openssl-dev", "pkg-config", "cargo", "rustc"]

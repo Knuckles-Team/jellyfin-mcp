@@ -7,9 +7,6 @@ Served live as ``connector://resources``. Regenerate by editing the declarations
 from __future__ import annotations
 
 from agent_connector_sdk.ingest.live_declaration import source_meta
-from agent_connector_sdk.ingest.sources import IngestSourceDeclaration, IngestSourceSpec
-
-CONNECTOR = "jellyfin-mcp"
 
 SOURCES = (
     source_meta(
@@ -28,165 +25,63 @@ SOURCES = (
     ),
 )
 
+SCHEMA_VERSION = 2
+
+FIELD_SETS = {
+    "fields_1": {
+        "addedDate": "xsd:dateTime",
+        "communityRating": "xsd:float",
+        "completedDate": "xsd:dateTime",
+        "contentDigest": "xsd:string",
+        "downloadProgress": "xsd:float",
+        "downloadStatus": "xsd:string",
+        "downloadUrl": "xsd:anyURI",
+        "fileSizeBytes": "xsd:long",
+        "itemKind": "xsd:string",
+        "mediaType": "xsd:string",
+        "productionYear": "xsd:integer",
+    },
+}
+
 SCHEMA_MAPPINGS = {
     "Artist": {
-        "fields": {
-            "addedDate": "xsd:dateTime",
-            "communityRating": "xsd:float",
-            "completedDate": "xsd:dateTime",
-            "contentDigest": "xsd:string",
-            "downloadProgress": "xsd:float",
-            "downloadStatus": "xsd:string",
-            "downloadUrl": "xsd:anyURI",
-            "fileSizeBytes": "xsd:long",
-            "itemKind": "xsd:string",
-            "mediaType": "xsd:string",
-            "productionYear": "xsd:integer",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": "Agent",
     },
     "Author": {
-        "fields": {
-            "addedDate": "xsd:dateTime",
-            "communityRating": "xsd:float",
-            "completedDate": "xsd:dateTime",
-            "contentDigest": "xsd:string",
-            "downloadProgress": "xsd:float",
-            "downloadStatus": "xsd:string",
-            "downloadUrl": "xsd:anyURI",
-            "fileSizeBytes": "xsd:long",
-            "itemKind": "xsd:string",
-            "mediaType": "xsd:string",
-            "productionYear": "xsd:integer",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": "Person",
     },
     "Blob": {
-        "fields": {
-            "addedDate": "xsd:dateTime",
-            "communityRating": "xsd:float",
-            "completedDate": "xsd:dateTime",
-            "contentDigest": "xsd:string",
-            "downloadProgress": "xsd:float",
-            "downloadStatus": "xsd:string",
-            "downloadUrl": "xsd:anyURI",
-            "fileSizeBytes": "xsd:long",
-            "itemKind": "xsd:string",
-            "mediaType": "xsd:string",
-            "productionYear": "xsd:integer",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": "Dataset",
     },
     "Book": {
-        "fields": {
-            "addedDate": "xsd:dateTime",
-            "communityRating": "xsd:float",
-            "completedDate": "xsd:dateTime",
-            "contentDigest": "xsd:string",
-            "downloadProgress": "xsd:float",
-            "downloadStatus": "xsd:string",
-            "downloadUrl": "xsd:anyURI",
-            "fileSizeBytes": "xsd:long",
-            "itemKind": "xsd:string",
-            "mediaType": "xsd:string",
-            "productionYear": "xsd:integer",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": "MediaItem",
     },
     "DownloadJob": {
-        "fields": {
-            "addedDate": "xsd:dateTime",
-            "communityRating": "xsd:float",
-            "completedDate": "xsd:dateTime",
-            "contentDigest": "xsd:string",
-            "downloadProgress": "xsd:float",
-            "downloadStatus": "xsd:string",
-            "downloadUrl": "xsd:anyURI",
-            "fileSizeBytes": "xsd:long",
-            "itemKind": "xsd:string",
-            "mediaType": "xsd:string",
-            "productionYear": "xsd:integer",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": "Action",
     },
     "Genre": {
-        "fields": {
-            "addedDate": "xsd:dateTime",
-            "communityRating": "xsd:float",
-            "completedDate": "xsd:dateTime",
-            "contentDigest": "xsd:string",
-            "downloadProgress": "xsd:float",
-            "downloadStatus": "xsd:string",
-            "downloadUrl": "xsd:anyURI",
-            "fileSizeBytes": "xsd:long",
-            "itemKind": "xsd:string",
-            "mediaType": "xsd:string",
-            "productionYear": "xsd:integer",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": "Concept",
     },
     "Library": {
-        "fields": {
-            "addedDate": "xsd:dateTime",
-            "communityRating": "xsd:float",
-            "completedDate": "xsd:dateTime",
-            "contentDigest": "xsd:string",
-            "downloadProgress": "xsd:float",
-            "downloadStatus": "xsd:string",
-            "downloadUrl": "xsd:anyURI",
-            "fileSizeBytes": "xsd:long",
-            "itemKind": "xsd:string",
-            "mediaType": "xsd:string",
-            "productionYear": "xsd:integer",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": "System",
     },
     "MediaCollection": {
-        "fields": {
-            "addedDate": "xsd:dateTime",
-            "communityRating": "xsd:float",
-            "completedDate": "xsd:dateTime",
-            "contentDigest": "xsd:string",
-            "downloadProgress": "xsd:float",
-            "downloadStatus": "xsd:string",
-            "downloadUrl": "xsd:anyURI",
-            "fileSizeBytes": "xsd:long",
-            "itemKind": "xsd:string",
-            "mediaType": "xsd:string",
-            "productionYear": "xsd:integer",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": "Dataset",
     },
     "MediaItem": {
-        "fields": {
-            "addedDate": "xsd:dateTime",
-            "communityRating": "xsd:float",
-            "completedDate": "xsd:dateTime",
-            "contentDigest": "xsd:string",
-            "downloadProgress": "xsd:float",
-            "downloadStatus": "xsd:string",
-            "downloadUrl": "xsd:anyURI",
-            "fileSizeBytes": "xsd:long",
-            "itemKind": "xsd:string",
-            "mediaType": "xsd:string",
-            "productionYear": "xsd:integer",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": "Dataset",
     },
     "MediaLibrary": {
-        "fields": {
-            "addedDate": "xsd:dateTime",
-            "communityRating": "xsd:float",
-            "completedDate": "xsd:dateTime",
-            "contentDigest": "xsd:string",
-            "downloadProgress": "xsd:float",
-            "downloadStatus": "xsd:string",
-            "downloadUrl": "xsd:anyURI",
-            "fileSizeBytes": "xsd:long",
-            "itemKind": "xsd:string",
-            "mediaType": "xsd:string",
-            "productionYear": "xsd:integer",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": "System",
     },
 }
@@ -243,22 +138,3 @@ RESOURCES = (
         "name": "MediaLibrary",
     },
 )
-
-
-def declaration() -> IngestSourceDeclaration:
-    """The declaration the server assembles from this module."""
-    specs = []
-    for item in SOURCES:
-        for entry in item["connector_sources"]:
-            body = {k: v for k, v in entry.items() if k not in ("tool", "mapping")}
-            specs.append(
-                IngestSourceSpec.model_validate({**body, "tools": (entry["tool"],)})
-            )
-    return IngestSourceDeclaration.model_validate(
-        {
-            "connector": CONNECTOR,
-            "sources": specs,
-            "schema_mappings": SCHEMA_MAPPINGS,
-            "resources": RESOURCES,
-        }
-    )
