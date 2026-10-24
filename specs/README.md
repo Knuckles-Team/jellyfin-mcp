@@ -13,3 +13,4 @@ Read the existing specs first. Extend the spec that owns the behavior. Create a 
 ## Local specifications
 
 [`CONN-JELLYFIN-MCP`](connector/spec.md) — The connector authenticates to the Jellyfin server with the MediaBrowser token header.
+- [`CONN-JELLYFIN-MCP-CONNECTOR-CONTENT`](connector-content/spec.md) — The connector serves its packaged content.
