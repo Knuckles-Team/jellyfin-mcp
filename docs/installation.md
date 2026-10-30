@@ -16,7 +16,7 @@ pip install jellyfin-mcp
 ```
 
 The base install already includes the FastMCP MCP-server runtime
-(`agent-connector-sdk`), so the `jellyfin-mcp` console script is ready immediately.
+(`scion-sdk`), so the `jellyfin-mcp` console script is ready immediately.
 
 ### Optional extras
 
@@ -24,7 +24,7 @@ Install an extra only when the operator need the integrated agent or the test to
 
 | Extra | Install | Pulls in |
 |---|---|---|
-| _(base)_ | `pip install jellyfin-mcp` | FastMCP MCP-server runtime (`agent-connector-sdk`) |
+| _(base)_ | `pip install jellyfin-mcp` | FastMCP MCP-server runtime (`scion-sdk`) |
 | `all` | `pip install "jellyfin-mcp[all]"` | MCP server **and** the agent runtime |
 | `test` | `pip install "jellyfin-mcp[test]"` | `pytest`, `pytest-asyncio`, `pytest-cov`, `pytest-xdist` |
 

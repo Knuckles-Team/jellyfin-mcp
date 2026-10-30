@@ -3,7 +3,7 @@ import sys
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
+from scion_sdk.exceptions import AuthError, UnauthorizedError
 
 # --- Tests for jellyfin_mcp/__init__.py ---
 
@@ -313,7 +313,7 @@ def test_api_client_error_coverage():
 
     CONCEPT:JF-OS.governance.lazy-initialization — Lazy Initialization
     """
-    from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
+    from scion_sdk.exceptions import AuthError, UnauthorizedError
 
     from jellyfin_mcp.api_client import Api
 

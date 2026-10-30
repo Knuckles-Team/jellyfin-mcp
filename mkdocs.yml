@@ -1,5 +1,5 @@
 site_name: "jellyfin-mcp"
-site_description: "Jellyfin media-server API + MCP Server + A2A Agent for the agent-connector-sdk ecosystem — a typed, deterministic tool surface over the Jellyfin REST API for agentic media management."
+site_description: "Jellyfin media-server API + MCP Server + A2A Agent for the scion-sdk ecosystem — a typed, deterministic tool surface over the Jellyfin REST API for agentic media management."
 site_url: "https://knuckles-team.github.io/jellyfin-mcp/"
 repo_name: "Knuckles-Team/jellyfin-mcp"
 repo_url: "https://github.com/Knuckles-Team/jellyfin-mcp"

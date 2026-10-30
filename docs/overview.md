@@ -1,7 +1,7 @@
 # jellyfin-mcp — Concept Overview
 
 > **Category**: Media | **Ecosystem Role**: MCP Server + A2A Agent
-> Built on [`agent-connector-sdk`](https://github.com/Knuckles-Team/agent-connector-sdk) — the unified AGI Harness.
+> Built on [`scion-sdk`](https://github.com/Knuckles-Team/scion-sdk) — the unified AGI Harness.
 
 ## Description
 
@@ -9,13 +9,13 @@ Jellyfin MCP Server for Agentic AI!
 
 ## Enterprise Readiness
 
-All agents in the ecosystem inherit enterprise-grade infrastructure from `agent-connector-sdk`:
+All agents in the ecosystem inherit enterprise-grade infrastructure from `scion-sdk`:
 
 | Feature | Status | Source |
 |:--------|:-------|:-------|
-| **JWT/OIDC Authentication** | ✅ Built-in | `agent-connector-sdk` — Authlib JWKS + API key middleware |
-| **OpenTelemetry Instrumentation** | ✅ Built-in | `agent-connector-sdk` — OTLP export, FastAPI auto-instrumentation |
-| **HashiCorp Vault Integration** | ✅ Built-in | `agent-connector-sdk` — `secret://`, `env://`, `vault://` URI schemes |
+| **JWT/OIDC Authentication** | ✅ Built-in | `scion-sdk` — Authlib JWKS + API key middleware |
+| **OpenTelemetry Instrumentation** | ✅ Built-in | `scion-sdk` — OTLP export, FastAPI auto-instrumentation |
+| **HashiCorp Vault Integration** | ✅ Built-in | `scion-sdk` — `secret://`, `env://`, `vault://` URI schemes |
 | **Audit Logging** | ✅ Built-in | Append-only compliance trail with 30+ action types (CONCEPT:AU-OS.governance.wasm-micro-agent-sandbox) |
 | **Token Usage Analytics** | ✅ Built-in | 4-bucket tracking with budget alerting (CONCEPT:AU-OS.governance.wasm-micro-agent-sandbox) |
 | **Prompt Injection Defense** | ✅ Built-in | 25+ pattern scanner + jailbreak taxonomy (CONCEPT:AU-OS.config.secrets-authentication) |
@@ -30,13 +30,13 @@ This project implements or inherits the following ecosystem concepts:
 
 | Concept ID | Description | Source |
 |:-----------|:------------|:-------|
-| ECO-4.1 | MCP & Universal Skills | `agent-connector-sdk` (inherited) |
+| ECO-4.1 | MCP & Universal Skills | `scion-sdk` (inherited) |
 | CONCEPT:JF-OS.governance.lazy-initialization | Lazy Initialization | `jellyfin-mcp` (local) |
 | CONCEPT:JF-OS.config.dynamic-tool-routing | Dynamic Tool Routing | `jellyfin-mcp` (local) |
 | CONCEPT:JF-OS.config.a2a-agent-interface | A2A Agent Interface | `jellyfin-mcp` (local) |
 | CONCEPT:JF-OS.identity.access-delegation | Access Delegation | `jellyfin-mcp` (local) |
 
-> **Full Registry**: See [`agent-connector-sdk/docs/overview.md`](https://github.com/Knuckles-Team/agent-connector-sdk/blob/main/docs/overview.md) for the complete 5-Pillar concept index.
+> **Full Registry**: See [`scion-sdk/docs/overview.md`](https://github.com/Knuckles-Team/scion-sdk/blob/main/docs/overview.md) for the complete 5-Pillar concept index.
 
 ## Architecture
 

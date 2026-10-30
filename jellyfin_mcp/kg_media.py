@@ -3,11 +3,11 @@
 CONCEPT:AU-KG.ingest.list-durable-media. A Jellyfin item's **poster / primary image**
 (or any downloaded bytes) is stored as a content-addressed blob with a linked
 ``:MediaAsset`` graph node in ONE cross-modal ACID commit, via the
-``agent_connector_sdk.ingest`` facade. This makes the raw artwork bytes — not just an
+``scion_sdk.ingest`` facade. This makes the raw artwork bytes — not just an
 image URL — durable, deduped, and queryable inside the knowledge graph beside the typed
 library nodes that ``jellyfin_mcp.kg_ingest`` writes.
 
-The knowledge-ingest service is obtained through ``agent_connector_sdk.ingest
+The knowledge-ingest service is obtained through ``scion_sdk.ingest
 .current_ingest()`` (process-installed, or connected from settings on first use).
 Best-effort and engine-guarded: with no reachable engine every entry point **no-ops**
 (returns ``None``, never raises), so the connector runs with zero KG infrastructure.
@@ -19,7 +19,7 @@ import hashlib
 import logging
 from typing import Any
 
-from agent_connector_sdk.ingest import (
+from scion_sdk.ingest import (
     ChangeSet,
     IngestBinding,
     IngestError,

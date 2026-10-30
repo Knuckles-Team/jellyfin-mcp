@@ -14,7 +14,7 @@ description: >-
 license: MIT
 tags: [jellyfin, media, library, catalog, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 
