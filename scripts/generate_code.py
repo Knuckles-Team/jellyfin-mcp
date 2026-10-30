@@ -39,7 +39,7 @@ def generate_api_code(spec: dict) -> str:
     lines.append("import json")
     lines.append("import requests")
     lines.append(
-        "from agent_connector_sdk.core.transport_security import ResolvedTLSProfile, resolve_configured_tls_profile"
+        "from scion_sdk.core.transport_security import ResolvedTLSProfile, resolve_configured_tls_profile"
     )
     lines.append("from typing import Dict, List, Optional, Any, Union")
     lines.append("from urllib.parse import urljoin")
@@ -161,7 +161,7 @@ def generate_mcp_code(spec: dict) -> str:
     lines.append("from pydantic import Field")
     lines.append("from jellyfin_mcp.jellyfin_api import Api")
     lines.append(
-        "from agent_connector_sdk.core.transport_security import resolve_configured_tls_profile"
+        "from scion_sdk.core.transport_security import resolve_configured_tls_profile"
     )
     lines.append("")
     lines.append('mcp = FastMCP("jellyfin-mcp")')

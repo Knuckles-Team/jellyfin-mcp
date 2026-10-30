@@ -3,8 +3,8 @@ from typing import Any
 from urllib.parse import urljoin
 
 import requests
-from agent_connector_sdk.tls.profile import ResolvedTLSProfile
-from agent_connector_sdk.tls.resolve import resolve_tls_profile
+from scion_sdk.tls.profile import ResolvedTLSProfile
+from scion_sdk.tls.resolve import resolve_tls_profile
 
 
 class ApiBase:
@@ -27,7 +27,7 @@ class ApiBase:
                 {"Authorization": f'MediaBrowser Token="{token}"'}
             )
 
-        from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
+        from scion_sdk.exceptions import AuthError, UnauthorizedError
 
         try:
             response = self._session.get(urljoin(self.base_url, "/System/Info"))
