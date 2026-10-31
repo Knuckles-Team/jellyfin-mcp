@@ -1,6 +1,6 @@
 """Action-discovery standardization tests for the jellyfin-mcp condensed tools.
 
-Verifies the shared agent-connector-sdk async dispatch provides discovery, bounded
+Verifies the shared scion-sdk async dispatch provides discovery, bounded
 errors, and fail-closed destructive routing across the action-routed tools.
 
 CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing

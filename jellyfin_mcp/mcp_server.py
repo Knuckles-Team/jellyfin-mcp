@@ -7,12 +7,12 @@ Dynamic Tool Routing
 import logging
 from typing import Any
 
-from agent_connector_sdk.mcp.action_dispatch import dispatch_async, parse_json_object
-from agent_connector_sdk.mcp.concurrency import run_blocking
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from fastmcp.utilities.logging import get_logger
 from pydantic import Field
+from scion_sdk.mcp.action_dispatch import dispatch_async, parse_json_object
+from scion_sdk.mcp.concurrency import run_blocking
 
 from jellyfin_mcp.auth import get_client
 

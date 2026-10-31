@@ -4,7 +4,7 @@ CONCEPT:AU-KG.ingest.enterprise-source-extractor. The jellyfin-mcp connector pus
 library into the ONE epistemic-graph knowledge graph as **typed OWL nodes**
 (``:MediaItem``, ``:Book``, ``:Artist``, ``:Genre``) + links (``:hasGenre`` /
 ``:performedBy`` / ``:authoredBy``), and item overviews as searchable ``:Document`` nodes,
-through ``agent_connector_sdk.ingest`` -- the generated ``SourceIngest`` client, not a
+through ``scion_sdk.ingest`` -- the generated ``SourceIngest`` client, not a
 local ingestion helper. Node ids follow ``media:<class>:<externalId>`` and each
 ``node_type`` matches a class the package's ``jellyfin_mcp.ontology`` ``.ttl`` federates.
 """
@@ -14,7 +14,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from agent_connector_sdk.ingest import (
+from scion_sdk.ingest import (
     ChangeSet,
     Document,
     Entity,

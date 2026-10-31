@@ -3,11 +3,11 @@ name: jellyfin-mcp-development
 skill_type: skill
 description: >-
   Develop and validate the jellyfin-mcp connector using its actual
-  agent-connector-sdk entrypoint, Jellyfin API clients, ontology assets, packaged
+  scion-sdk entrypoint, Jellyfin API clients, ontology assets, packaged
   skills, and focused tests. Use this skill for source changes and delivery gates;
   use the provider skills for live Jellyfin operations.
 license: MIT
-tags: [jellyfin, mcp, connector, development, agent-connector-sdk]
+tags: [jellyfin, mcp, connector, development, scion-sdk]
 metadata:
   author: Repository Maintainers
   version: '0.1.0'
@@ -15,14 +15,14 @@ metadata:
 
 # Jellyfin MCP Development
 
-This package is the Jellyfin connector for the `agent-connector-sdk`. Keep changes
+This package is the Jellyfin connector for the `scion-sdk`. Keep changes
 bound to the existing connector surface and verify the packaged assets together with
 the runtime code.
 
 ## Source map
 
 - `pyproject.toml` declares the `jellyfin-mcp` console script at
-  `agent_connector_sdk.cli:serve` and the `agent_connector_sdk.connector` entry point
+  `scion_sdk.cli:serve` and the `scion_sdk.connector` entry point
   `jellyfin_mcp:connector`.
 - `jellyfin_mcp/mcp_server.py` (import path `jellyfin_mcp.mcp_server`) registers the
   MCP server and action-routed tools.

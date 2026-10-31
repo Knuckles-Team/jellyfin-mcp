@@ -18,7 +18,7 @@
 
 ## Functional Requirements
 
-- **FR-001**: Minor update: agent-connector-sdk 0.2.40 (installed) -> 0.16.0
+- **FR-001**: Minor update: scion-sdk 0.2.40 (installed) -> 0.16.0
 - **FR-002**: Minor update: pytest-xdist 3.6.0 (constraint — not installed) -> 3.8.0
 - **FR-003**: 2 functions exceed 200 lines (actionable refactoring targets): get_items (265L), get_trailers (259L)
 - **FR-004**: Monolithic: api_client_library.py (2223L) — 11 functions with high complexity (worst: LibraryClient.get_items at 265L, CC=87); God class: LibraryClient (98 methods) — consider mixins/composition
@@ -54,7 +54,7 @@
 - **FR-034**: Partial env var documentation: 37% coverage
 - **FR-035**: Undocumented env vars: AUTH_TYPE, DEFAULT_AGENT_NAME, DELEGATED_SCOPES, ENABLE_DELEGATION, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, JELLYFIN_ACCESS_TOKEN, JELLYFIN_AUDIENCE, JELLYFIN_BASE_URL, JELLYFIN_INSTANCE
 - **FR-036**: 7 Python env vars not in .env.example: JELLYFIN_AUDIENCE, JELLYFIN_INSTANCE, TLS_PROFILE, KNOWLEDGE_GRAPH_SYNC_BACKGROUND, OIDC_CLIENT_ID
-- **FR-037**: Analysis error: No module named 'agent_connector_sdk.knowledge_graph'
+- **FR-037**: Analysis error: No module named 'scion_sdk.knowledge_graph'
 
 ## Success Criteria
 

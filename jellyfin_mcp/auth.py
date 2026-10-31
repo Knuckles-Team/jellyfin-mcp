@@ -6,11 +6,11 @@ CONCEPT:JF-OS.identity.access-delegation — Access Delegation
 import threading
 
 import requests
-from agent_connector_sdk.config import setting
-from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
-from agent_connector_sdk.tls.profile import ResolvedTLSProfile
-from agent_connector_sdk.tls.resolve import resolve_tls_profile
 from fastmcp.utilities.logging import get_logger
+from scion_sdk.config import setting
+from scion_sdk.exceptions import AuthError, UnauthorizedError
+from scion_sdk.tls.profile import ResolvedTLSProfile
+from scion_sdk.tls.resolve import resolve_tls_profile
 
 local = threading.local()
 from jellyfin_mcp.api_client import Api
