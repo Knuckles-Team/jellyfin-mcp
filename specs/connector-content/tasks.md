@@ -2,4 +2,7 @@
 
 Governing spec: [spec.md](spec.md). Design: [plan.md](plan.md). Rows: [requirements.md](requirements.md).
 
-- [x] **CONN-JELLYFIN-MCP-CONNECTOR-CONTENT-R001:** Declare the fleet identity and serve the packaged content by default.
+Each task line reads `- [ ] T001 [P] [US1] <ID>-R012.4 description`. Order is producer first.
+
+- [ ] T001 [US1] CONN-JELLYFIN-MCP-CONNECTOR-CONTENT-R002 Stop declaring :Author in the shared namespace.
+- [x] T002 [US1] CONN-JELLYFIN-MCP-CONNECTOR-CONTENT-R001 Default content.
