@@ -31,6 +31,8 @@ An agent must call the Jellyfin server API through this connector. The server mu
 
 1. **Given** the connector is configured, **When** the behaviour of row `CONN-JELLYFIN-MCP-R002` (env declarations match the code) is exercised, **Then** `tests/test_env_declarations.py::test_env_declarations_match_the_code_read_surface` must pass.
 
+2. **Given** an API key is configured, **When** the behaviour of row `CONN-JELLYFIN-MCP-R001` (MediaBrowser token header) is exercised, **Then** `tests/test_auth_header.py::test_token_sent_as_mediabrowser_authorization_header` must pass.
+
 ### Edge Cases
 
 - If `CONN-JELLYFIN-MCP-R002` is not met, its proving test fails: env declarations match the code.
@@ -38,10 +40,12 @@ An agent must call the Jellyfin server API through this connector. The server mu
 ## Requirements
 
 - **FR-001**: Env declarations match the code. Rows: `CONN-JELLYFIN-MCP-R002`.
+- **FR-002**: The API key is sent as the MediaBrowser Authorization header. Rows: `CONN-JELLYFIN-MCP-R001`.
 
 ## Success Criteria
 
 - **SC-001**: `tests/test_env_declarations.py::test_env_declarations_match_the_code_read_surface` must pass. Rows: `CONN-JELLYFIN-MCP-R002`.
+- **SC-002**: `tests/test_auth_header.py::test_token_sent_as_mediabrowser_authorization_header` must pass. Rows: `CONN-JELLYFIN-MCP-R001`.
 
 ## Assumptions
 
@@ -52,4 +56,5 @@ An agent must call the Jellyfin server API through this connector. The server mu
 
 | Label | Rows | Design section | Test ID | Evidence |
 |---|---|---|---|---|
-| FR-001 | `CONN-JELLYFIN-MCP-R002` | [plan.md](plan.md) | T-001 | [test-spec.md](test-spec.md) |
+| FR-001 | `CONN-JELLYFIN-MCP-R002` | [plan.md](plan.md) | T-002 | [test-spec.md](test-spec.md) |
+| FR-002 | `CONN-JELLYFIN-MCP-R001` | [plan.md](plan.md) | T-001 | [test-spec.md](test-spec.md) |

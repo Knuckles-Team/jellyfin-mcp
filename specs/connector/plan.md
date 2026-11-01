@@ -70,7 +70,8 @@ The repository pre-commit hooks apply: `ruff-format`, `connector-standard`, `sec
 
 ## Production caller chain
 
-1. `CONN-JELLYFIN-MCP-R002`: the `jellyfin-mcp = scion_sdk.cli:serve` console script -> entry point `jellyfin_mcp:connector` (`jellyfin_mcp/__init__.py` line 12) -> `get_client` (`jellyfin_mcp/auth.py` line 21), which reads the JELLYFIN_* and delegation variables through `scion_sdk.config.setting`.
+1. `CONN-JELLYFIN-MCP-R001`: the `jellyfin-mcp = scion_sdk.cli:serve` console script -> entry point `jellyfin_mcp:connector` (`jellyfin_mcp/__init__.py` line 12) -> `get_client` (`jellyfin_mcp/auth.py` line 21) -> `ApiBase.__init__` (`jellyfin_mcp/api/api_client_base.py` line 10), which sets the Authorization header.
+2. `CONN-JELLYFIN-MCP-R002`: the `jellyfin-mcp = scion_sdk.cli:serve` console script -> entry point `jellyfin_mcp:connector` (`jellyfin_mcp/__init__.py` line 12) -> `get_client` (`jellyfin_mcp/auth.py` line 21), which reads the JELLYFIN_* and delegation variables through `scion_sdk.config.setting`.
 
 ## Cross-repo seams
 
