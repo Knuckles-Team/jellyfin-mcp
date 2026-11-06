@@ -33,7 +33,7 @@ engine-guarded (no engine reachable ⇒ clean no-op).
 ## When NOT to use
 - Interactive catalog browse/search → `jellyfin-library-catalog`.
 - Streaming / playback control → `jellyfin-media-playback`.
-- Server administration → the `jellyfin_system` tool.
+- Server administration → the typed system/user/backup `jellyfin_*` tools.
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`jellyfin-mcp`** MCP server.
@@ -47,10 +47,10 @@ Ingestion additionally requires a reachable epistemic-graph engine (an
 | `JELLYFIN_API_KEY` / `JELLYFIN_TOKEN` | ✅ | `X-Emby-Token` API key |
 | `JELLYFIN_USER_ID` | optional | Default `user_id` for item reads |
 
-## Tools & actions
+## Tools
 | Tool | Purpose |
 |------|---------|
-| `jellyfin_ingest_library` | List items (`get_items` filters via `params_json`) → typed nodes + documents |
+| `jellyfin_ingest_library` | List items (`get_items` filters as typed arguments) → typed nodes + documents |
 | `jellyfin_ingest_posters` | For given `item_ids`, fetch the primary image → `:Blob` + `:MediaAsset` |
 
 ### KG mapping
@@ -68,7 +68,7 @@ Ingest all movies + series (bounded, recursive):
 ```json
 {"include_item_types":["Movie","Series"],"recursive":true,"limit":500,"fields":["Overview","Genres","ProductionYear","CommunityRating"]}
 ```
-Then ingest posters for a handful of ids (tool args, not `params_json`):
+Then ingest posters for a handful of ids (tool arguments):
 ```json
 {"item_ids":["<id1>","<id2>"],"image_type":"Primary"}
 ```

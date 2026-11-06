@@ -115,9 +115,6 @@ _Auto-generated from the live MCP server — do not edit by hand._
 |----------|----------------|-------------|
 | `jellyfin_ingest_library` | `KG_INGESTTOOL` | Natively ingest the Jellyfin library into epistemic-graph as typed nodes. |
 | `jellyfin_ingest_posters` | `KG_INGESTTOOL` | Ingest item posters as content-addressed :Blob + :AssetOccurrence (best-effort). |
-| `jellyfin_library` | `CONDENSED_JELLYFINTOOL` | Execute library searches, items, collection updates, and catalog queries dynamically. |
-| `jellyfin_media` | `CONDENSED_JELLYFINTOOL` | Execute media playback, stream, artist, playlist, and audio/video queries dynamically. |
-| `jellyfin_system` | `CONDENSED_JELLYFINTOOL` | Execute administrative actions, system status, configurations, backups, and user management. |
 
 #### Verbose 1:1 API-mapped tools (`MCP_TOOL_MODE=verbose` or `both`)
 
@@ -497,7 +494,7 @@ _Auto-generated from the live MCP server — do not edit by hand._
 
 </details>
 
-_5 action-routed tool(s) · 368 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
+_2 ingest tool(s) · 368 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
 Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/index.md#mcp](docs/index.md#mcp).
@@ -546,7 +543,6 @@ When query strings or parameters are provided, an LLM-free **Knowledge Graph res
       ],
       "env": {
         "MCP_TOOL_MODE": "intent",
-        "CONDENSED_JELLYFINTOOL": "True",
         "DELEGATED_SCOPES": "api",
         "ENABLE_DELEGATION": "False",
         "JELLYFIN_API_KEY": "your_jellyfin_api_key_here",
@@ -587,7 +583,6 @@ own runtime secret boundary.
         "HOST": "127.0.0.1",
         "PORT": "8000",
         "MCP_TOOL_MODE": "intent",
-        "CONDENSED_JELLYFINTOOL": "True",
         "DELEGATED_SCOPES": "api",
         "ENABLE_DELEGATION": "False",
         "JELLYFIN_API_KEY": "your_jellyfin_api_key_here",
@@ -627,7 +622,6 @@ docker run -i --rm \
   --tmpfs /tmp:rw,noexec,nosuid,nodev,size=64m \
   -e TRANSPORT=stdio \
   -e MCP_TOOL_MODE=intent \
-  -e CONDENSED_JELLYFINTOOL=True \
   -e DELEGATED_SCOPES=api \
   -e ENABLE_DELEGATION=False \
   -e JELLYFIN_API_KEY=your_jellyfin_api_key_here \
@@ -858,7 +852,6 @@ diagrams are documented in the
 | `OIDC_TOKEN_ENDPOINT` | secret-injected |  |
 | `OIDC_CLIENT_ID` | `your-oidc-client-id` |  |
 | `OIDC_CLIENT_SECRET` | secret-injected |  |
-| `CONDENSED_JELLYFINTOOL` | `True` |  |
 
 #### Inherited scion-sdk variables (apply to every connector)
 
@@ -935,8 +928,7 @@ Every variable the server reads, grouped by purpose.
 | `EUNOMIA_REMOTE_URL` | Remote Eunomia server URL | — |
 
 ### Tool toggles
-The action-routed tools share one toggle env var, `CONDENSED_JELLYFINTOOL` (set to `false`
-to disable). See the [Available MCP Tools](#available-mcp-tools) table above.
+The KG ingest tools share the `KG_INGESTTOOL` toggle. See the [Available MCP Tools](#available-mcp-tools) table above.
 
 See [`.env.example`](.env.example) for a copy-paste starting point.
 

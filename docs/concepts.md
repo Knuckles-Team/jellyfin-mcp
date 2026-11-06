@@ -10,7 +10,6 @@
 
 | Concept ID | Name | Description |
 |------------|------|-------------|
-| `CONCEPT:JF-OS.governance.jellyfin` | Condensed Jellyfin Operations | MCP tool domain `condensed_jellyfin` — Action-routed dynamic tool registration |
 
 ## Cross-Project References (from scion-sdk)
 

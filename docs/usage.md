@@ -6,22 +6,17 @@ pattern and MCP configuration are covered in [Overview](overview.md).
 
 ## As an MCP server
 
-Once [deployed](deployment.md), the server registers a condensed, action-routed tool
-set. Each tool takes an `action` (the underlying client method name) and a
-`params_json` string of keyword arguments, so a small number of tools cover the full
-Jellyfin surface without overwhelming the LLM context window.
-
-| Tool | Tag | Covers |
-|---|---|---|
-| `jellyfin_media` | `Media` | Playback, streams, artists, playlists, genres, audio/video — e.g. `get_movies`, `get_videos`, `get_artists`, `get_playlists`, `get_audio_stream` |
-| `jellyfin_library` | `Library` | Items, search, collections, user views, channels — e.g. `get_items`, `search_items`, `get_collections`, `get_user_views`, `get_library_info` |
-| `jellyfin_system` | `System` | Administration, system status, configuration, backups, users — e.g. `get_system_info`, `get_users`, `get_devices`, `list_backups`, `get_configuration` |
+Once [deployed](deployment.md), the server registers one typed tool per Jellyfin API
+operation, named `jellyfin_<operation>` (for example `jellyfin_get_items`,
+`jellyfin_get_system_info`, `jellyfin_create_playlist`). Arguments are typed tool
+parameters; there is no `action` router and no `params_json` string. A fleet gateway
+loads them on demand.
 
 Example agent prompts that map onto these tools:
 
-- *"List the movies in my library"* → `jellyfin_media` with `action=get_movies`
-- *"Search the library for items named like 'matrix'"* → `jellyfin_library` with `action=search_items`
-- *"Show the Jellyfin server's system information"* → `jellyfin_system` with `action=get_system_info`
+- *"List the movies in my library"* -> `jellyfin_get_items` with `include_item_types=["Movie"]`
+- *"Search the library for items named like 'matrix'"* -> `jellyfin_get_search_hints`
+- *"Show the Jellyfin server's system information"* -> `jellyfin_get_system_info`
 
 ## As a Python API
 
