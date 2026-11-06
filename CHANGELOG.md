@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.9] - 2026-11-06
+
+### Added
+- Surface contracts: a tool-use contract step, link and data location for every one of the 370 tools, five business roles, and complete agent-definition prompts for the operator and four roles (media librarian, server administrator, playback coordinator, live TV manager).
+- Skills `jellyfin-server-administration` and `jellyfin-live-tv`; workflows added to the library, playback and ingestion skills.
+
+### Changed
+- Require `scion-sdk>=0.9.0,<0.10`.
+- The operations catalog names the typed tools, not the removed `jellyfin_system`, `jellyfin_library` and `jellyfin_media` tools.
+
 ## [2.3.8] - 2026-11-06
 
 ### Fixed

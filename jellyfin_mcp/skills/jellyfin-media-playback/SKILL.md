@@ -84,3 +84,37 @@ Mark an item played for a user:
 ## Related
 - `jellyfin-library-catalog` — find item ids to stream / add to playlists.
 - `jellyfin-kg-ingestion` — persist artists + media into the knowledge graph.
+
+## Workflows
+
+### jellyfin-mark-watched
+Find an item and mark it played for a user.
+
+1. `jellyfin_get_search_hints` (search_term, include_item_types, limit)
+2. `jellyfin_get_item` (item_id, user_id)
+3. `jellyfin_mark_played_item` (item_id, user_id, date_played)
+
+### jellyfin-build-playlist
+Create a playlist, add items and read it back.
+
+1. `jellyfin_create_playlist` (name, ids, media_type, user_id)
+2. `jellyfin_add_item_to_playlist` (playlist_id, ids, user_id)
+3. `jellyfin_get_playlist_items` (playlist_id, user_id, limit)
+
+### jellyfin-fetch-subtitles
+Search remote subtitle providers for an item and download the best match.
+
+1. `jellyfin_get_item` (item_id)
+2. `jellyfin_search_remote_subtitles` (item_id, language, is_perfect_match)
+3. `jellyfin_download_remote_subtitles` (item_id, subtitle_id)
+4. `jellyfin_get_item` (item_id)
+
+### jellyfin-message-session
+Show a message on a client that is signed in.
+
+1. `jellyfin_get_sessions` (active_within_seconds, device_id)
+2. `jellyfin_send_message_command` (session_id, body)
+
+## All tools of this skill
+
+`jellyfin_add_item_to_playlist`, `jellyfin_add_user_to_session`, `jellyfin_create_playlist`, `jellyfin_delete_alternate_sources`, `jellyfin_delete_device`, `jellyfin_delete_lyrics`, `jellyfin_delete_subtitle`, `jellyfin_display_content`, `jellyfin_download_remote_lyrics`, `jellyfin_download_remote_subtitles`, `jellyfin_get_additional_part`, `jellyfin_get_attachment`, `jellyfin_get_audio_stream`, `jellyfin_get_audio_stream_by_container`, `jellyfin_get_bitrate_test_bytes`, `jellyfin_get_device_info`, `jellyfin_get_device_options`, `jellyfin_get_devices`, `jellyfin_get_download`, `jellyfin_get_file`, `jellyfin_get_hls_audio_segment`, `jellyfin_get_hls_audio_segment_legacy_aac`, `jellyfin_get_hls_audio_segment_legacy_mp3`, `jellyfin_get_hls_playlist_legacy`, `jellyfin_get_hls_video_segment`, `jellyfin_get_hls_video_segment_legacy`, `jellyfin_get_instant_mix_from_playlist`, `jellyfin_get_item`, `jellyfin_get_live_hls_stream`, `jellyfin_get_lyrics`, `jellyfin_get_master_hls_audio_playlist`, `jellyfin_get_master_hls_video_playlist`, `jellyfin_get_playback_info`, `jellyfin_get_playlist`, `jellyfin_get_playlist_items`, `jellyfin_get_playlist_user`, `jellyfin_get_playlist_users`, `jellyfin_get_posted_playback_info`, `jellyfin_get_remote_lyrics`, `jellyfin_get_remote_subtitles`, `jellyfin_get_search_hints`, `jellyfin_get_sessions`, `jellyfin_get_subtitle`, `jellyfin_get_subtitle_playlist`, `jellyfin_get_subtitle_with_ticks`, `jellyfin_get_trickplay_hls_playlist`, `jellyfin_get_universal_audio_stream`, `jellyfin_get_variant_hls_audio_playlist`, `jellyfin_get_variant_hls_video_playlist`, `jellyfin_get_video_stream`, `jellyfin_get_video_stream_by_container`, `jellyfin_mark_played_item`, `jellyfin_mark_unplayed_item`, `jellyfin_merge_versions`, `jellyfin_move_item`, `jellyfin_on_playback_progress`, `jellyfin_on_playback_start`, `jellyfin_on_playback_stopped`, `jellyfin_ping_playback_session`, `jellyfin_play`, `jellyfin_post_capabilities`, `jellyfin_post_full_capabilities`, `jellyfin_remove_item_from_playlist`, `jellyfin_remove_user_from_playlist`, `jellyfin_remove_user_from_session`, `jellyfin_report_playback_progress`, `jellyfin_report_playback_start`, `jellyfin_report_playback_stopped`, `jellyfin_report_session_ended`, `jellyfin_report_viewing`, `jellyfin_search_remote_lyrics`, `jellyfin_search_remote_subtitles`, `jellyfin_send_full_general_command`, `jellyfin_send_general_command`, `jellyfin_send_message_command`, `jellyfin_send_playstate_command`, `jellyfin_stop_encoding_process`, `jellyfin_sync_play_buffering`, `jellyfin_sync_play_create_group`, `jellyfin_sync_play_get_group`, `jellyfin_sync_play_get_groups`, `jellyfin_sync_play_join_group`, `jellyfin_sync_play_leave_group`, `jellyfin_sync_play_move_playlist_item`, `jellyfin_sync_play_next_item`, `jellyfin_sync_play_pause`, `jellyfin_sync_play_ping`, `jellyfin_sync_play_previous_item`, `jellyfin_sync_play_queue`, `jellyfin_sync_play_ready`, `jellyfin_sync_play_remove_from_playlist`, `jellyfin_sync_play_seek`, `jellyfin_sync_play_set_ignore_wait`, `jellyfin_sync_play_set_new_queue`, `jellyfin_sync_play_set_playlist_item`, `jellyfin_sync_play_set_repeat_mode`, `jellyfin_sync_play_set_shuffle_mode`, `jellyfin_sync_play_stop`, `jellyfin_sync_play_unpause`, `jellyfin_update_device_options`, `jellyfin_update_playlist`, `jellyfin_update_playlist_user`, `jellyfin_upload_lyrics`, `jellyfin_upload_subtitle`
