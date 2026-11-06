@@ -16,3 +16,4 @@ The test asserts that the rejected header is absent.
 Run `pytest -q tests/test_auth_header.py`. The served proof is the fleet acceptance check through the gateway.
 | T-003 | CONN-JELLYFIN-MCP-R003 | Unit | Tool surface | The ingest registrar serves only typed tools; no action or params_json parameter and no condensed tool exists. | `tests/test_coverage_gap_fillers.py` |
 | T-004 | CONN-JELLYFIN-MCP-R004 | Unit | Item read | `get_item` without a user id requests `/Items` with the `ids` filter; with a user id it requests the user-scoped route. | `tests/test_coverage_gap_fillers.py` |
+| T-005 | CONN-JELLYFIN-MCP-R005 | Unit | Surface | Every served tool is called by a contract step. | `tests/test_surface_contracts.py` |

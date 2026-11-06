@@ -86,3 +86,15 @@ Then ingest posters for a handful of ids (tool arguments):
 - `jellyfin-library-catalog` — find the item ids / filters to feed ingestion.
 - Backed by `jellyfin_mcp.kg_ingest` (typed nodes + documents) and
   `jellyfin_mcp.kg_media` (poster blobs) over the shared `native_ingest` primitive.
+
+## Workflows
+
+### jellyfin-ingest-posters
+Push poster images of chosen items into the knowledge graph.
+
+1. `jellyfin_get_items` (include_item_types, recursive, limit)
+2. `jellyfin_ingest_posters` (item_ids, image_type)
+
+## All tools of this skill
+
+`jellyfin_get_items`, `jellyfin_ingest_posters`

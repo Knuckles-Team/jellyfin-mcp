@@ -41,6 +41,7 @@ An agent must call the Jellyfin server API through this connector. The server mu
 
 - **FR-001**: Env declarations match the code. Rows: `CONN-JELLYFIN-MCP-R002`.
 - **FR-002**: The API key is sent as the MediaBrowser Authorization header. Rows: `CONN-JELLYFIN-MCP-R001`.
+- **FR-005**: The whole surface is declared. Rows: `CONN-JELLYFIN-MCP-R005`.
 
 ## Success Criteria
 
@@ -58,3 +59,4 @@ An agent must call the Jellyfin server API through this connector. The server mu
 |---|---|---|---|---|
 | FR-001 | `CONN-JELLYFIN-MCP-R002` | [plan.md](plan.md) | T-002 | [test-spec.md](test-spec.md) |
 | FR-002 | `CONN-JELLYFIN-MCP-R001` | [plan.md](plan.md) | T-001 | [test-spec.md](test-spec.md) |
+| FR-005 | `CONN-JELLYFIN-MCP-R005` | [plan.md](plan.md) | T-005 | [test-spec.md](test-spec.md) |
