@@ -40,13 +40,7 @@ the runtime code.
 Use environment or secret injection for `JELLYFIN_URL`, `JELLYFIN_API_KEY`,
 `JELLYFIN_USERNAME`, `JELLYFIN_PASSWORD`, and the inherited auth/delegation values
 (`AUTH_TYPE`, `ENABLE_DELEGATION`, `DELEGATED_SCOPES`, `JELLYFIN_AUDIENCE`, and the
-`OIDC_*` settings). `MCP_TOOL_MODE` and the `CONDENSED_JELLYFINTOOL` toggle select
-the served tool surface. OIDC delegation uses the configured token exchange and
-TLS profile. Do not commit credentials, live endpoints, or captured personal media
-data. Preserve TLS verification and the connector SDK's auth and policy boundaries
-when changing clients or tool registration.
-
-## Focused checks
+`OIDC_*` settings). ## Focused checks
 
 Run the smallest relevant tests before the repository gates. The existing focused
 coverage is in `tests/test_env_declarations.py`, `tests/test_auth_header.py`,

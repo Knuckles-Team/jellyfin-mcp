@@ -116,7 +116,6 @@ connection set:
 | `JELLYFIN_TLS_PROFILE` | _(unset)_ | Named runtime TLS profile |
 | `JELLYFIN_TLS_PROFILE_REF` | _(unset)_ | Secret reference for private PKI, mTLS, or proxy policy |
 | `AUTH_TYPE` | `apiKey` | Authorization flow: `apiKey`, `credentials`, or `delegated` |
-| `CONDENSED_JELLYFIN_TOOL` | `True` | Register the condensed Jellyfin tool set |
 
 Provide **either** `JELLYFIN_API_KEY` **or** `JELLYFIN_USERNAME` + `JELLYFIN_PASSWORD`;
 when neither is present the server remains inactive rather than failing at import time.

@@ -20,9 +20,8 @@ action-routed MCP tools, and ships an integrated Pydantic-AI graph agent. It pro
 
 - **`Api`** — a unified Python client composed of modular media, library, system, and
   user sub-clients over the Jellyfin REST API.
-- **Condensed, action-routed MCP tools** — `jellyfin_media`, `jellyfin_library`, and
-  `jellyfin_system` dispatch dynamically to the client methods, minimizing tool bloat
-  in the LLM context window.
+- **One typed MCP tool per API operation** — `jellyfin_<operation>`, loaded on demand
+  by the fleet gateway; no action router.
 - **An A2A graph agent** (`jellyfin-agent` console script) — a Pydantic-AI agent with a
   confidence-gated router, optional Web UI (AG-UI), and OpenTelemetry tracing.
 

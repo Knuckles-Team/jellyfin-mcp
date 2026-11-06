@@ -998,13 +998,20 @@ class LibraryClient(ApiBase):
         return self.request("DELETE", endpoint, params=params)
 
     def get_item(self, item_id: str, user_id: str | None = None) -> Any:
-        """Gets an item from a user's library."""
+        """Gets an item from a user's library.
+
+        The server rejects ``GET /Items/{id}`` without a user (HTTP 400), so a call
+        without ``user_id`` reads the item through the ``ids`` filter of ``/Items``.
+        """
+        if user_id is None:
+            found = self.request("GET", "/Items", params={"ids": str(item_id)})
+            items = found.get("Items", []) if isinstance(found, dict) else []
+            if not items:
+                raise LookupError("Jellyfin item not found")
+            return items[0]
         endpoint = "/Items/{itemId}"
         endpoint = endpoint.replace("{itemId}", str(item_id))
-        params: dict[str, Any] = {}
-        if user_id is not None:
-            params["userId"] = user_id
-        return self.request("GET", endpoint, params=params)
+        return self.request("GET", endpoint, params={"userId": user_id})
 
     def update_item_content_type(
         self, item_id: str, content_type: str | None = None

@@ -160,117 +160,26 @@ def test_auth_credentials_invalid():
 # --- Tests for jellyfin_mcp/mcp_server.py ---
 
 
-@pytest.mark.asyncio
-async def test_mcp_server_tools_exception_handling():
-    """Verify tool execution safety & exception handling.
+def test_no_action_routed_or_json_passthrough_tools():
+    """Every served tool is one typed operation: no action= router, no params_json.
 
     CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
     """
+    import asyncio
+
     from fastmcp import FastMCP
 
-    from jellyfin_mcp.mcp_server import register_condensed_jellyfin_tools
+    import jellyfin_mcp.mcp_server as server
 
+    assert not hasattr(server, "register_condensed_jellyfin_tools")
     mcp = FastMCP("test")
-    register_condensed_jellyfin_tools(mcp)
-
-    class DummyClient:
-        def get_system_info(self, *args, **kwargs):
-            return {"mocked": "system_info"}
-
-        def get_items(self, *args, **kwargs):
-            return {"mocked": "items"}
-
-    mock_client = DummyClient()
-
-    # 1. Test media tool
-    media_tool_obj = await mcp.get_tool("jellyfin_media")
-    assert media_tool_obj is not None
-    media_tool = media_tool_obj.fn  # type: ignore
-
-    mock_context = MagicMock()
-    mock_context.info = AsyncMock()
-
-    # Invalid JSON params
-    res = await media_tool(
-        action="get_system_info", params_json="{invalid", client=None, ctx=mock_context
-    )
-    assert "error" in res
-    # The SDK action dispatcher never echoes caller input back in an error.
-    assert res["error"] == "Operation failed"
-    mock_context.info.assert_called_with("Executing media action: get_system_info...")
-
-    # Unknown dynamic action
-    res = await media_tool(
-        action="non_existent_method", params_json="{}", client=mock_client
-    )
-    assert "error" in res
-    assert res["error"] == "Operation failed"
-
-    # Discovery: list_actions returns the available action names
-    res = await media_tool(action="list_actions", params_json="{}", client=mock_client)
-    assert res["service"] == "jellyfin-mcp"
-    assert "get_system_info" in res["actions"]
-
-    # Action raises standard error
-    mock_error_client = MagicMock(spec=["get_system_info"])
-    mock_error_client.get_system_info.side_effect = RuntimeError("Mocked action error")
-    res = await media_tool(
-        action="get_system_info", params_json="{}", client=mock_error_client
-    )
-    assert "error" in res
-    assert res["error"] == "Media action failed: RuntimeError"
-
-    # 2. Test library tool
-    library_tool_obj = await mcp.get_tool("jellyfin_library")
-    assert library_tool_obj is not None
-    library_tool = library_tool_obj.fn  # type: ignore
-
-    res = await library_tool(
-        action="get_items", params_json="{invalid", client=None, ctx=mock_context
-    )
-    assert "error" in res
-    # The SDK action dispatcher never echoes caller input back in an error.
-    assert res["error"] == "Operation failed"
-
-    res = await library_tool(
-        action="non_existent_method", params_json="{}", client=mock_client
-    )
-    assert "error" in res
-    assert res["error"] == "Operation failed"
-
-    mock_error_client = MagicMock(spec=["get_items"])
-    mock_error_client.get_items.side_effect = RuntimeError("Library error")
-    res = await library_tool(
-        action="get_items", params_json="{}", client=mock_error_client
-    )
-    assert "error" in res
-    assert res["error"] == "Library action failed: RuntimeError"
-
-    # 3. Test system tool
-    system_tool_obj = await mcp.get_tool("jellyfin_system")
-    assert system_tool_obj is not None
-    system_tool = system_tool_obj.fn  # type: ignore
-
-    res = await system_tool(
-        action="get_system_info", params_json="{invalid", client=None, ctx=mock_context
-    )
-    assert "error" in res
-    # The SDK action dispatcher never echoes caller input back in an error.
-    assert res["error"] == "Operation failed"
-
-    res = await system_tool(
-        action="non_existent_method", params_json="{}", client=mock_client
-    )
-    assert "error" in res
-    assert res["error"] == "Operation failed"
-
-    mock_error_client = MagicMock(spec=["get_system_info"])
-    mock_error_client.get_system_info.side_effect = RuntimeError("System error")
-    res = await system_tool(
-        action="get_system_info", params_json="{}", client=mock_error_client
-    )
-    assert "error" in res
-    assert res["error"] == "System action failed: RuntimeError"
+    server.register_kg_ingest_tools(mcp)
+    tools = {t.name: t for t in asyncio.run(mcp.list_tools())}
+    assert set(tools) == {"jellyfin_ingest_library", "jellyfin_ingest_posters"}
+    for tool in tools.values():
+        props = tool.parameters.get("properties", {})
+        assert "action" not in props
+        assert "params_json" not in props
 
 
 def test_mcp_server_import_error_handling():
@@ -355,3 +264,26 @@ def test_api_client_error_coverage():
         api = Api(base_url="http://test")
         res = api.request("GET", "/some-endpoint")
         assert res == "plain text"
+
+
+def test_get_item_without_user_reads_through_the_ids_filter():
+    """``get_item`` without a user id must not call the route the server rejects.
+
+    CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
+    """
+    from jellyfin_mcp.api.api_client_library import LibraryClient
+
+    calls = []
+
+    class Stub(LibraryClient):
+        def __init__(self):
+            pass
+
+        def request(self, method, endpoint, params=None, **kw):
+            calls.append((method, endpoint, params))
+            return {"Items": [{"Id": "abc", "Name": "x"}]}
+
+    assert Stub().get_item("abc")["Id"] == "abc"
+    assert calls == [("GET", "/Items", {"ids": "abc"})]
+    Stub().get_item("abc", user_id="u1")
+    assert calls[-1] == ("GET", "/Items/abc", {"userId": "u1"})

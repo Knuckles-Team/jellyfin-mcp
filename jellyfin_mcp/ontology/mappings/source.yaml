@@ -4,8 +4,7 @@ ontology_source: media
 sync:
 - preset: jellyfin-library
   server: jellyfin-mcp
-  tool: jellyfin_library
-  action: get_items
+  tool: jellyfin_get_items
   records_path: Items
   id_field: Id
   title_field: Name

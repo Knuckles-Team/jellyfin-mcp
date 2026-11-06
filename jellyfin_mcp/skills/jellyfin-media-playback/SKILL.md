@@ -5,11 +5,10 @@ description: >-
   Stream and control Jellyfin playback and browse music via the jellyfin-mcp MCP
   server — list artists, albums, and music genres, resolve audio/video streams,
   manage playlists, and drive playstate (play, mark played, report progress) with
-  the domain-typed `jellyfin_media` tool. Use when the agent must start or control
+  the typed `jellyfin_*` tools. Use when the agent must start or control
   playback, enumerate artists/playlists, build an instant mix, or fetch stream
   URLs. Do NOT use for browsing/searching the catalog or collections (use
-  `jellyfin-library-catalog`), server administration (use the `jellyfin_system`
-  tool), or KG ingestion (use `jellyfin-kg-ingestion`).
+  `jellyfin-library-catalog`), server administration (use the typed system tools), or KG ingestion (use `jellyfin-kg-ingestion`).
 license: MIT
 tags: [jellyfin, media, playback, streaming, music, mcp]
 metadata:
@@ -20,8 +19,8 @@ metadata:
 # Jellyfin Media Playback
 
 Domain-typed streaming, music browsing, and playback control through the
-`jellyfin_media` condensed tool. Prefer it over raw HTTP — it action-routes to the
-media client methods (artists, streams, playlists, playstate).
+typed per-operation tools (`jellyfin_get_artists`, `jellyfin_create_playlist`,
+`jellyfin_get_audio_stream`, ...). Prefer them over raw HTTP.
 
 ## When to use
 - List artists / album artists (`get_artists`, `get_album_artists`) and music
@@ -34,7 +33,7 @@ media client methods (artists, streams, playlists, playstate).
 
 ## When NOT to use
 - Browsing/searching items, collections, user views → `jellyfin-library-catalog`.
-- Users, keys, backups, config → the `jellyfin_system` tool.
+- Users, keys, backups, config → the typed system/user/backup `jellyfin_*` tools.
 - Ingesting artists/media into the KG → `jellyfin-kg-ingestion`.
 
 ## Prerequisites & environment
@@ -47,14 +46,13 @@ Connect via the `mcp-client` skill against the **`jellyfin-mcp`** MCP server.
 | `JELLYFIN_USER_ID` | optional | Default `user_id` for playstate/favorites |
 | `JELLYFIN_VERIFY_SSL` | optional | TLS verification toggle |
 
-`MCP_TOOL_MODE` selects the condensed surface below vs. the verbose 1:1 tools.
+## Tools
+Each operation is its own tool named `jellyfin_<operation>`; arguments are typed tool
+parameters named after the Jellyfin query/body fields.
 
-## Tools & actions
-Prefer the **condensed** tool with `action` + a `params_json` **JSON string**.
-
-| Condensed tool | Actions |
-|----------------|---------|
-| `jellyfin_media` | `get_artists`, `get_album_artists`, `get_artist_by_name`, `get_music_genres`, `create_playlist`, `add_item_to_playlist`, `get_playlist_items`, `get_instant_mix_from_song`, `get_audio_stream`, `get_video_stream`, `get_universal_audio_stream`, `get_playback_info`, `play`, `mark_played_item`, `report_playback_progress`, `get_lyrics` |
+| Tools |
+|-------|
+| `jellyfin_get_artists`, `jellyfin_get_album_artists`, `jellyfin_get_artist_by_name`, `jellyfin_get_music_genres`, `jellyfin_create_playlist`, `jellyfin_add_item_to_playlist`, `jellyfin_get_playlist_items`, `jellyfin_get_instant_mix_from_song`, `jellyfin_get_audio_stream`, `jellyfin_get_video_stream`, `jellyfin_get_universal_audio_stream`, `jellyfin_get_playback_info`, `jellyfin_play`, `jellyfin_mark_played_item`, `jellyfin_report_playback_progress`, `jellyfin_get_lyrics` |
 
 ### Key parameters
 - `item_id` — required for stream/playstate/lyrics/instant-mix actions.
@@ -62,7 +60,7 @@ Prefer the **condensed** tool with `action` + a `params_json` **JSON string**.
 - `body` — object payload for `create_playlist` / `report_playback_*`.
 - `search_term` / `limit` / `start_index` — filter + paginate artist lists.
 
-## Recipes (`params_json`)
+## Recipes (tool arguments)
 List the first 50 artists:
 ```json
 {"limit":50,"start_index":0}
@@ -77,7 +75,6 @@ Mark an item played for a user:
 ```
 
 ## Gotchas
-- `params_json` is a **string** of JSON, not an object.
 - Stream actions return a URL/handle, not raw bytes — hand the URL to a player.
 - Playstate + favorite actions require a `user_id`; a server API key alone is not
   a user context.
