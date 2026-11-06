@@ -264,3 +264,26 @@ def test_api_client_error_coverage():
         api = Api(base_url="http://test")
         res = api.request("GET", "/some-endpoint")
         assert res == "plain text"
+
+
+def test_get_item_without_user_reads_through_the_ids_filter():
+    """``get_item`` without a user id must not call the route the server rejects.
+
+    CONCEPT:JF-OS.config.dynamic-tool-routing — Dynamic Tool Routing
+    """
+    from jellyfin_mcp.api.api_client_library import LibraryClient
+
+    calls = []
+
+    class Stub(LibraryClient):
+        def __init__(self):
+            pass
+
+        def request(self, method, endpoint, params=None, **kw):
+            calls.append((method, endpoint, params))
+            return {"Items": [{"Id": "abc", "Name": "x"}]}
+
+    assert Stub().get_item("abc")["Id"] == "abc"
+    assert calls == [("GET", "/Items", {"ids": "abc"})]
+    Stub().get_item("abc", user_id="u1")
+    assert calls[-1] == ("GET", "/Items/abc", {"userId": "u1"})
