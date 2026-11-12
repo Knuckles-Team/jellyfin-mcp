@@ -1,4 +1,4 @@
-"""Epistemic-graph typed-node ingestion via scion_sdk — Wire-First coverage.
+"""Medulla typed-node ingestion via scion_sdk — Wire-First coverage.
 
 Exercises the real ``ingest_entities`` / ``ingest_items`` / ``ingest_artists`` /
 ``ingest_documents`` seam against a fake transport one level below the SDK's own

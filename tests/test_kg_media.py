@@ -1,4 +1,4 @@
-"""Native epistemic-graph blob ingestion — Wire-First coverage.
+"""Native medulla blob ingestion — Wire-First coverage.
 
 Exercises the real ``ingest_image_bytes`` seam with a fake ``KnowledgeIngest``
 transport (no engine required), asserting the poster bytes + metadata reach the

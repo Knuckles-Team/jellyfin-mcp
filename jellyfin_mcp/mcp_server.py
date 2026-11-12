@@ -20,7 +20,7 @@ logger.setLevel(logging.INFO)
 
 
 def register_kg_ingest_tools(mcp: FastMCP):
-    """Register native epistemic-graph ingestion tools (Wire-First).
+    """Register native medulla ingestion tools (Wire-First).
 
     CONCEPT:AU-KG.ingest.enterprise-source-extractor. Lists the real Jellyfin library
     via the client and pushes it into the knowledge graph as typed :MediaItem/:Book/
@@ -45,7 +45,7 @@ def register_kg_ingest_tools(mcp: FastMCP):
         client=Depends(get_client),
         ctx: Context | None = None,
     ) -> Any:
-        """Natively ingest the Jellyfin library into epistemic-graph as typed nodes.
+        """Natively ingest the Jellyfin library into medulla as typed nodes.
 
         Lists items via ``get_items`` and pushes them (with :hasGenre/:performedBy/
         :authoredBy links + item overviews as :Document) into the knowledge graph.

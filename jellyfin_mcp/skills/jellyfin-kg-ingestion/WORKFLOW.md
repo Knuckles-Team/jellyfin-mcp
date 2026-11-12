@@ -1,10 +1,10 @@
 # Jellyfin Kg Ingestion
 
-Natively ingest a Jellyfin library into the epistemic-graph knowledge graph via the jellyfin-mcp MCP server — push library items as typed :MediaItem/:Book nodes with :hasGenre/:performedBy/:authoredBy links and item overviews as searchable :Document nodes (`jellyfin_ingest_library`), and item posters as content-addressed :Blob assets (`jellyfin_ingest_posters`). Use when the agent must make a Jellyfin catalog queryable in the KG or refresh its media nodes. Do NOT use for interactive browse/search (use `jellyfin-library-catalog`) or playback/streaming (use `jellyfin-media-playback`); this skill is the ingestion seam, not the operational surface.
+Natively ingest a Jellyfin library into the medulla knowledge graph via the jellyfin-mcp MCP server — push library items as typed :MediaItem/:Book nodes with :hasGenre/:performedBy/:authoredBy links and item overviews as searchable :Document nodes (`jellyfin_ingest_library`), and item posters as content-addressed :Blob assets (`jellyfin_ingest_posters`). Use when the agent must make a Jellyfin catalog queryable in the KG or refresh its media nodes. Do NOT use for interactive browse/search (use `jellyfin-library-catalog`) or playback/streaming (use `jellyfin-media-playback`); this skill is the ingestion seam, not the operational surface.
 
 # Jellyfin Knowledge-Graph Ingestion
 
-Native "maximum ingestion" of a **Jellyfin** library into the ONE epistemic-graph
+Native "maximum ingestion" of a **Jellyfin** library into the ONE medulla
 knowledge graph. Library items become typed OWL nodes; overviews become
 semantic-search documents; posters become deduped blobs — all best-effort and
 engine-guarded (no engine reachable ⇒ clean no-op).
@@ -21,7 +21,7 @@ engine-guarded (no engine reachable ⇒ clean no-op).
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`jellyfin-mcp`** MCP server.
-Ingestion additionally requires a reachable epistemic-graph engine (an
+Ingestion additionally requires a reachable medulla engine (an
 `scion_sdk` KG stack); with none present the tools return
 `{"ingested": null}` and do nothing else.
 
