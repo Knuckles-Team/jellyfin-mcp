@@ -135,13 +135,13 @@ async def test_ingest_items_maps_audio_artist_and_book_author(ingest):
     records = {r.record_id: r for r in transport.requests[0].records}
     assert _node_type(records["media:Book:b1"]) == "Book"
     assert "media:Artist:miles-davis" in records
-    assert "media:Author:frank-herbert" in records
+    assert "media:Person:frank-herbert" in records
     rels = {
         (r.source.record_id, r.target.record_id, _rel_name(r))
         for r in transport.requests[0].relationships
     }
     assert ("media:MediaItem:s1", "media:Artist:miles-davis", "performedBy") in rels
-    assert ("media:Book:b1", "media:Author:frank-herbert", "authoredBy") in rels
+    assert ("media:Book:b1", "media:Person:frank-herbert", "authoredBy") in rels
 
 
 async def test_ingest_artists_maps_artist_nodes(ingest):
