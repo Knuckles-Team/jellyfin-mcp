@@ -1,10 +1,11 @@
 @prefix fibo-fi: <https://spec.edmcouncil.org/fibo/ontology/FBC/FinancialInstruments/FinancialInstruments/> .
+@prefix core: <https://knuckles-team.github.io/ontology/core#> .
 @prefix fibo-org: <https://spec.edmcouncil.org/fibo/ontology/FND/Organizations/Organizations/> .
 @prefix bibo: <http://purl.org/ontology/bibo/> .
 @prefix time: <http://www.w3.org/2006/time#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix dc: <http://purl.org/dc/terms/> .
-@prefix : <http://knuckles.team/kg#> .
+@prefix : <https://knuckles-team.github.io/ontology/connector/jellyfin#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -12,6 +13,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 :Author a owl:Class ;
+    rdfs:subClassOf core:Author ;
     rdfs:seeAlso foaf:Person .
 
 
@@ -28,7 +30,7 @@
     rdfs:comment """An Audiobookshelf library (a collection of :Book items of one
 media type — audiobooks or ebooks). BFO:IndependentContinuant via System
 (CONCEPT:KG-2.163).""" ;
-    rdfs:subClassOf :System .
+    rdfs:subClassOf core:System .
 
 :addedDate a owl:DatatypeProperty ;
     rdfs:label "added date" ;
@@ -40,8 +42,8 @@ media type — audiobooks or ebooks). BFO:IndependentContinuant via System
     rdfs:comment """Links an :AssetOccurrence to the chat :Memory (ChatMessage) it arrived on,
 so "show me the chart they sent yesterday" resolves media from the conversation
 (CONCEPT:KG-2.251).""" ;
-    rdfs:domain :AssetOccurrence ;
-    rdfs:range :Memory .
+    rdfs:domain core:AssetOccurrence ;
+    rdfs:range core:Memory .
 
 :belongsToCollection a owl:ObjectProperty ;
     rdfs:label "belongs to collection" ;
@@ -79,12 +81,12 @@ substrate — the stable, dedup key the bytes are fetched back by (CONCEPT:KG-2.
 :downloadedVia a owl:ObjectProperty ;
     rdfs:label "downloaded via" ;
     rdfs:comment "Links an AssetOccurrence to the download System used." ;
-    rdfs:domain :AssetOccurrence ;
-    rdfs:range :System .
+    rdfs:domain core:AssetOccurrence ;
+    rdfs:range core:System .
 
 :fileSizeBytes a owl:DatatypeProperty ;
     rdfs:label "file size (bytes)" ;
-    rdfs:domain :AssetOccurrence ;
+    rdfs:domain core:AssetOccurrence ;
     rdfs:range xsd:long .
 
 :hasBlob a owl:ObjectProperty ;
@@ -92,7 +94,7 @@ substrate — the stable, dedup key the bytes are fetched back by (CONCEPT:KG-2.
     rdfs:comment """Links an :AssetOccurrence to the content-addressed :Blob holding its bytes.
 Maintains the engine blob refcount (BlobRef) so a referenced blob is never GC'd
 (CONCEPT:KG-2.251).""" ;
-    rdfs:domain :AssetOccurrence ;
+    rdfs:domain core:AssetOccurrence ;
     rdfs:range :Blob .
 
 :managedBy a owl:ObjectProperty ;
@@ -104,22 +106,22 @@ Maintains the engine blob refcount (BlobRef) so a referenced blob is never GC'd
 :mediaType a owl:DatatypeProperty ;
     rdfs:label "media type" ;
     rdfs:comment "MIME type or category: video/mp4, audio/flac, application/pdf." ;
-    rdfs:domain :AssetOccurrence ;
+    rdfs:domain core:AssetOccurrence ;
     rdfs:range xsd:string .
 
 :producedAsset a owl:ObjectProperty ;
     rdfs:label "produced asset" ;
     rdfs:comment "Links a DownloadJob to the AssetOccurrence it created." ;
     rdfs:domain :DownloadJob ;
-    rdfs:range :AssetOccurrence .
+    rdfs:range core:AssetOccurrence .
 
 :requestedBy a owl:ObjectProperty ;
     rdfs:label "requested by" ;
     rdfs:comment "Links a DownloadJob to the Person who requested it." ;
     rdfs:domain :DownloadJob ;
-    rdfs:range :Person .
+    rdfs:range core:Person .
 
-<http://knuckles.team/kg/media> a owl:Ontology ;
+<https://knuckles-team.github.io/ontology/connector/media> a owl:Ontology ;
     rdfs:label "Media & Downloads Ontology" ;
     rdfs:comment """Media asset management and download tracking ontology bridging
 qBittorrent (torrent downloads), Jellyfin (media library), and media
@@ -133,15 +135,16 @@ Standards alignment: schema:MediaObject, schema:DownloadAction.""" .
 :MediaCollection a owl:Class ;
     rdfs:label "Media Collection" ;
     rdfs:comment "A curated collection within a MediaLibrary (TV shows, movies, music)." ;
-    rdfs:subClassOf :Dataset .
+    rdfs:subClassOf core:Dataset .
 
 :MediaLibrary a owl:Class ;
     rdfs:label "Media Library" ;
     rdfs:comment """A media management system (Jellyfin, Plex). Organizes
 MediaItems into collections. BFO:IndependentContinuant via System.""" ;
-    rdfs:subClassOf :System .
+    rdfs:subClassOf core:System .
 
-:Blob a owl:Class .
+:Blob a owl:Class ;
+    rdfs:subClassOf core:Blob .
 
 
 :DownloadJob a owl:Class ;
@@ -149,7 +152,7 @@ MediaItems into collections. BFO:IndependentContinuant via System.""" ;
     rdfs:comment """A download task tracked in qBittorrent or media-downloader.
 BFO:Process via Action. Aligned to schema:DownloadAction.""" ;
     rdfs:seeAlso schema:DownloadAction ;
-    rdfs:subClassOf :Action .
+    rdfs:subClassOf core:Action .
 
 :MediaItem a owl:Class ;
     rdfs:label "Media Item" ;
@@ -158,9 +161,10 @@ series, or collection entry). Its source-system identity is distinct from any
 :AssetOccurrence that records observed bytes such as artwork or a downloaded file.
 Aligned to schema:MediaObject.""" ;
     rdfs:seeAlso schema:MediaObject ;
-    rdfs:subClassOf :Dataset .
+    rdfs:subClassOf core:Dataset .
 
 :Artist a owl:Class ;
+    rdfs:subClassOf core:Artist ;
     rdfs:label "Artist" ;
     rdfs:comment """A performer / musical artist credited on one or more :MediaItem
 items in a Jellyfin :MediaLibrary (audio tracks, albums, music videos). Aligned to
@@ -211,4 +215,4 @@ Audio, MusicAlbum, Book, etc.""" ;
     rdfs:range :Author .
 
 # ontology-codemod R4
-<http://knuckles.team/kg#Genre> rdfs:subClassOf <http://knuckles.team/kg#Category> .
+<https://knuckles-team.github.io/ontology/connector/jellyfin#Genre> rdfs:subClassOf <https://knuckles-team.github.io/ontology/core#Category> .

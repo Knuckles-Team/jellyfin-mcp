@@ -1,4 +1,4 @@
-"""Native epistemic-graph blob ingestion for Jellyfin artwork / media bytes.
+"""Native medulla blob ingestion for Jellyfin artwork / media bytes.
 
 CONCEPT:AU-KG.ingest.list-durable-media. A Jellyfin item's **poster / primary image**
 (or any downloaded bytes) is stored as a content-addressed blob with a linked

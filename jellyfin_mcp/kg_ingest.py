@@ -1,7 +1,7 @@
-"""Native epistemic-graph ingestion for Jellyfin media (typed graph nodes + docs).
+"""Native medulla ingestion for Jellyfin media (typed graph nodes + docs).
 
 CONCEPT:AU-KG.ingest.enterprise-source-extractor. The jellyfin-mcp connector pushes its
-library into the ONE epistemic-graph knowledge graph as **typed OWL nodes**
+library into the ONE medulla knowledge graph as **typed OWL nodes**
 (``:MediaItem``, ``:Book``, ``:Artist``, ``:Genre``) + links (``:hasGenre`` /
 ``:performedBy`` / ``:authoredBy``), and item overviews as searchable ``:Document`` nodes,
 through ``scion_sdk.ingest`` -- the generated ``SourceIngest`` client, not a
@@ -67,7 +67,7 @@ async def ingest_entities(
     *,
     ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
-    """Write typed OWL nodes (+ edges) into epistemic-graph via the SDK ingest facade.
+    """Write typed OWL nodes (+ edges) into medulla via the SDK ingest facade.
 
     Nodes use ``node_type`` and relationships use ``relationship``.
     """

@@ -9,7 +9,7 @@ description = "Jellyfin MCP Server for Agentic AI!"
 readme = "README.md"
 classifiers = [ "Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Environment :: Console", "Operating System :: POSIX :: Linux", "Programming Language :: Python :: 3",]
 requires-python = ">=3.12"
-dependencies = [ "scion-sdk[mcp]>=0.9.0,<0.10", "requests>=2.34.2",]
+dependencies = [ "scion-sdk[mcp]>=0.11.0,<0.12", "requests>=2.34.2",]
 [[project.authors]]
 name = "Repository Maintainers"
 email = "maintainers@knuckles.team"
@@ -25,7 +25,7 @@ test = [
 jellyfin-mcp = "scion_sdk.cli:serve"
 
 # CONCEPT:AU-KG.ontology.package-federation-migration — federate this package's OWL/RDF ontology module into the
-# scion-sdk hub (http://knuckles.team/kg/media). Resolved via
+# scion-sdk hub (https://knuckles-team.github.io/ontology/connector/media). Resolved via
 # iter_provider_dirs like the skill/prompt providers.
 
 # The one declared connector identity: the fleet name (SCION-CONNECTOR-CONTROL-R071).

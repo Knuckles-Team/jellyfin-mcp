@@ -113,7 +113,7 @@ _Auto-generated from the live MCP server — do not edit by hand._
 
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
-| `jellyfin_ingest_library` | `KG_INGESTTOOL` | Natively ingest the Jellyfin library into epistemic-graph as typed nodes. |
+| `jellyfin_ingest_library` | `KG_INGESTTOOL` | Natively ingest the Jellyfin library into medulla as typed nodes. |
 | `jellyfin_ingest_posters` | `KG_INGESTTOOL` | Ingest item posters as content-addressed :Blob + :AssetOccurrence (best-effort). |
 
 #### Verbose 1:1 API-mapped tools (`MCP_TOOL_MODE=verbose` or `both`)
@@ -526,7 +526,7 @@ When query strings or parameters are provided, an LLM-free **Knowledge Graph res
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `jellyfin-mcp[mcp]` to add
 > FastMCP / FastAPI through `scion-sdk`; the required Scion SDK core
-> still carries `epistemic-graph[full]`. The `[agent-runtime]` extra additionally
+> still carries `medulla[full]`. The `[agent-runtime]` extra additionally
 > enables model orchestration.
 
 #### stdio Transport (local IDEs — Cursor, Claude Desktop, VS Code)
@@ -786,7 +786,7 @@ Pick the extra that matches what the operator want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| `jellyfin-mcp[mcp]` | Connector-focused MCP server (`scion-sdk` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
+| `jellyfin-mcp[mcp]` | Connector-focused MCP server (`scion-sdk` — FastMCP/FastAPI + `medulla[full]`) | The operator only run the **MCP server** (smallest install / image) |
 | `jellyfin-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
@@ -805,7 +805,7 @@ One multi-stage `docker/Dockerfile` builds the MCP-only image (`--target mcp`):
 
 | Image tag | Build target | Contents | Entrypoint |
 |-----------|--------------|----------|------------|
-| `example/jellyfin-mcp:mcp` | `--target mcp` | `jellyfin-mcp[mcp]` — **connector-focused**, includes `epistemic-graph[full]`; no model-orchestration stack | `jellyfin-mcp` |
+| `example/jellyfin-mcp:mcp` | `--target mcp` | `jellyfin-mcp[mcp]` — **connector-focused**, includes `medulla[full]`; no model-orchestration stack | `jellyfin-mcp` |
 
 ```bash
 docker build --target mcp   -t example/jellyfin-mcp:mcp    docker/   # connector-focused MCP server
@@ -813,14 +813,14 @@ docker build --target mcp   -t example/jellyfin-mcp:mcp    docker/   # connector
 
 agent (`immutable agent digest`) with a co-located `:mcp` sidecar.
 
-### Knowledge-graph database (`epistemic-graph`)
+### Knowledge-graph database (`medulla`)
 
-Scion SDK core dependency (`epistemic-graph[full]`). The `[mcp]` extra keeps
+Scion SDK core dependency (`medulla[full]`). The `[mcp]` extra keeps
 deployments can use the bundled engine. For production or shared state, run
-**epistemic-graph as a dedicated database service** and configure the runtime to use it.
+**medulla as a dedicated database service** and configure the runtime to use it.
 Deployment recipes (single-node + Raft HA), connection configuration, and architecture
 diagrams are documented in the
-[epistemic-graph deployment guide](https://knuckles-team.github.io/epistemic-graph/deployment/).
+[medulla deployment guide](https://knuckles-team.github.io/medulla/deployment/).
 
 ---
 
