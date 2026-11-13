@@ -171,13 +171,13 @@ def _map_item(
             {"source": node_id, "target": gid, "relationship": "hasGenre"}
         )
 
-    # Artists (audio) / authors (books) -> :Artist|:Author + link
+    # Artists (audio) / authors (books) -> :Artist|:Person + link
     for artist in item.get("Artists") or []:
         if not artist:
             continue
         if cls == "Book":
-            aid = f"media:Author:{_norm(str(artist))}"
-            atype, link = "Author", "authoredBy"
+            aid = f"media:Person:{_norm(str(artist))}"
+            atype, link = "Person", "authoredBy"
         else:
             aid = f"media:Artist:{_norm(str(artist))}"
             atype, link = "Artist", "performedBy"

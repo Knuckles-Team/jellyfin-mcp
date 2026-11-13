@@ -10,17 +10,13 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix schema: <http://schema.org/> .
+@prefix mv: <https://knuckles-team.github.io/ontology/media#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
-:Author a owl:Class ;
-    rdfs:subClassOf core:Author ;
-    rdfs:seeAlso foaf:Person .
-
 
 :Book a owl:Class ;
     rdfs:label "Book" ;
-    rdfs:comment """A book / audiobook item in an Audiobookshelf :Library, authored_by an
-:Author. A specialization of :MediaItem. Aligned to schema:Book / bibo:Book
+    rdfs:comment """A book / audiobook item in an Audiobookshelf :Library, authored_by a
+core :Person. A specialization of :MediaItem. Aligned to schema:Book / bibo:Book
 (CONCEPT:KG-2.163).""" ;
     rdfs:seeAlso schema:Book ;
     rdfs:subClassOf :MediaItem .
@@ -210,9 +206,10 @@ Audio, MusicAlbum, Book, etc.""" ;
 
 :authoredBy a owl:ObjectProperty ;
     rdfs:label "authored by" ;
-    rdfs:comment "Links a :Book to its :Author." ;
+    rdfs:comment "Links a :Book to the core :Person who wrote it (an mv:contributor)." ;
+    rdfs:subPropertyOf mv:contributor ;
     rdfs:domain :Book ;
-    rdfs:range :Author .
+    rdfs:range core:Person .
 
 # ontology-codemod R4
 <https://knuckles-team.github.io/ontology/connector/jellyfin#Genre> rdfs:subClassOf <https://knuckles-team.github.io/ontology/core#Category> .

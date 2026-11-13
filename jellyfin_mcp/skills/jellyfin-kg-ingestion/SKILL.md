@@ -57,7 +57,7 @@ Ingestion additionally requires a reachable medulla engine (an
 - Item → `media:MediaAsset:<Id>` (`:Book` when the item Type is a book/audiobook),
   carrying `itemKind`, `overview`, `productionYear`, `communityRating`, …
 - `Genres[]` → `media:Genre:<slug>` + `:hasGenre` edge.
-- `Artists[]` → `media:Artist:<slug>` + `:performedBy` (or `:Author` + `:authoredBy`
+- `Artists[]` → `media:Artist:<slug>` + `:performedBy` (or `:Person` + `:authoredBy`
   for books).
 - Item `Overview` → `media:Document:<Id>` (`:Document`, embedded hub-side).
 - Node ids follow `media:<class>:<externalId>`; provenance `source=jellyfin-mcp`,
