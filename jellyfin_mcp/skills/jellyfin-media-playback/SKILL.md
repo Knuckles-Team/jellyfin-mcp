@@ -5,7 +5,7 @@ description: >-
   Stream and control Jellyfin playback and browse music via the jellyfin-mcp MCP
   server — list artists, albums, and music genres, resolve audio/video streams,
   manage playlists, and drive playstate (play, mark played, report progress) with
-  the typed `jellyfin_*` tools. Use when the agent must start or control
+  the typed `jellyfin_<op>` tools. Use when the agent must start or control
   playback, enumerate artists/playlists, build an instant mix, or fetch stream
   URLs. Do NOT use for browsing/searching the catalog or collections (use
   `jellyfin-library-catalog`), server administration (use the typed system tools), or KG ingestion (use `jellyfin-kg-ingestion`).
