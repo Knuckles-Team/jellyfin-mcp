@@ -2,15 +2,7 @@
 name: jellyfin-kg-ingestion
 skill_type: skill
 description: >-
-  Natively ingest a Jellyfin library into the medulla knowledge graph via
-  the jellyfin-mcp MCP server — push library items as typed :MediaAsset/:Book
-  nodes with :hasGenre/:performedBy/:authoredBy links and item overviews as
-  searchable :Document nodes (`jellyfin_ingest_library`), and item posters as
-  content-addressed :Blob assets (`jellyfin_ingest_posters`). Use when the agent
-  must make a Jellyfin catalog queryable in the KG or refresh its media nodes. Do
-  NOT use for interactive browse/search (use `jellyfin-library-catalog`) or
-  playback/streaming (use `jellyfin-media-playback`); this skill is the ingestion
-  seam, not the operational surface.
+  Natively ingest a Jellyfin library into the medulla knowledge graph via the jellyfin-mcp MCP server — push library items as typed :MediaAsset/:Book nodes with :hasGenre/:performedBy/:authoredBy links and item overviews as searchable :Document nodes (`jellyfin_ingest_library`), and item posters as content-addressed :Blob assets (`jellyfin_ingest_posters`).
 license: MIT
 tags: [jellyfin, media, knowledge-graph, ingestion, mcp]
 metadata:
@@ -19,6 +11,8 @@ metadata:
 ---
 
 # Jellyfin Knowledge-Graph Ingestion
+
+Scope: Natively ingest a Jellyfin library into the medulla knowledge graph via the jellyfin-mcp MCP server — push library items as typed :MediaAsset/:Book nodes with :hasGenre/:performedBy/:authoredBy links and item overviews as searchable :Document nodes (`jellyfin_ingest_library`), and item posters as content-addressed :Blob assets (`jellyfin_ingest_posters`). Use when the agent must make a Jellyfin catalog queryable in the KG or refresh its media nodes. Do NOT use for interactive browse/search (use `jellyfin-library-catalog`) or playback/streaming (use `jellyfin-media-playback`); this skill is the ingestion seam, not the operational surface.
 
 Native "maximum ingestion" of a **Jellyfin** library into the ONE medulla
 knowledge graph. Library items become typed OWL nodes; overviews become

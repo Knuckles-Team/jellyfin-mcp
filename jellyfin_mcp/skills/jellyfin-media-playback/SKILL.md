@@ -2,13 +2,7 @@
 name: jellyfin-media-playback
 skill_type: skill
 description: >-
-  Stream and control Jellyfin playback and browse music via the jellyfin-mcp MCP
-  server — list artists, albums, and music genres, resolve audio/video streams,
-  manage playlists, and drive playstate (play, mark played, report progress) with
-  the typed `jellyfin_<op>` tools. Use when the agent must start or control
-  playback, enumerate artists/playlists, build an instant mix, or fetch stream
-  URLs. Do NOT use for browsing/searching the catalog or collections (use
-  `jellyfin-library-catalog`), server administration (use the typed system tools), or KG ingestion (use `jellyfin-kg-ingestion`).
+  Stream and control Jellyfin playback and browse music via the jellyfin-mcp MCP server — list artists, albums, and music genres, resolve audio/video streams, manage playlists, and drive playstate (play, mark played, report progress) with the typed `jellyfin_<op>` tools. Use when the agent must start or control playback, enumerate artists/playlists, build an instant mix, or fetch stream URLs.
 license: MIT
 tags: [jellyfin, media, playback, streaming, music, mcp]
 metadata:
@@ -17,6 +11,8 @@ metadata:
 ---
 
 # Jellyfin Media Playback
+
+Scope: Stream and control Jellyfin playback and browse music via the jellyfin-mcp MCP server — list artists, albums, and music genres, resolve audio/video streams, manage playlists, and drive playstate (play, mark played, report progress) with the typed `jellyfin_<op>` tools. Use when the agent must start or control playback, enumerate artists/playlists, build an instant mix, or fetch stream URLs. Do NOT use for browsing/searching the catalog or collections (use `jellyfin-library-catalog`), server administration (use the typed system tools), or KG ingestion (use `jellyfin-kg-ingestion`).
 
 Domain-typed streaming, music browsing, and playback control through the
 typed per-operation tools (`jellyfin_get_artists`, `jellyfin_create_playlist`,

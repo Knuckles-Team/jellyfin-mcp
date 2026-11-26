@@ -2,10 +2,7 @@
 name: jellyfin-mcp-development
 skill_type: skill
 description: >-
-  Develop and validate the jellyfin-mcp connector using its actual
-  scion-sdk entrypoint, Jellyfin API clients, ontology assets, packaged
-  skills, and focused tests. Use this skill for source changes and delivery gates;
-  use the provider skills for live Jellyfin operations.
+  Develop and validate the jellyfin-mcp connector using its actual scion-sdk entrypoint, Jellyfin API clients, ontology assets, packaged skills, and focused tests. Use this skill for source changes and delivery gates; use the provider skills for live Jellyfin operations.
 license: MIT
 tags: [jellyfin, mcp, connector, development, scion-sdk]
 metadata:

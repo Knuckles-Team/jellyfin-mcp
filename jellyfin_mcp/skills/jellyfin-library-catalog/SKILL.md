@@ -2,15 +2,7 @@
 name: jellyfin-library-catalog
 skill_type: skill
 description: >-
-  Browse and search a Jellyfin media library via the jellyfin-mcp MCP server —
-  list library items (movies, series, episodes, audio, books), fetch one item by
-  id, walk collections and user views, and run search hints with the
-  typed `jellyfin_<op>` tools. Use when the agent must find or enumerate
-  catalog items, resolve an item id, inspect a collection, or query library
-  structure. Do NOT use for playback/streaming or artists/playlists (use
-  `jellyfin-media-playback`), for server administration, users, or backups (use
-  the typed `jellyfin_get_system_info` / `jellyfin_get_users` / `jellyfin_create_backup` tools), or for pushing the catalog into the knowledge
-  graph (use `jellyfin-kg-ingestion`).
+  Browse and search a Jellyfin media library via the jellyfin-mcp MCP server — list library items (movies, series, episodes, audio, books), fetch one item by id, walk collections and user views, and run search hints with the typed `jellyfin_<op>` tools. Use when the agent must find or enumerate catalog items, resolve an item id, inspect a collection, or query library structure.
 license: MIT
 tags: [jellyfin, media, library, catalog, mcp]
 metadata:
@@ -19,6 +11,8 @@ metadata:
 ---
 
 # Jellyfin Library Catalog
+
+Scope: Browse and search a Jellyfin media library via the jellyfin-mcp MCP server — list library items (movies, series, episodes, audio, books), fetch one item by id, walk collections and user views, and run search hints with the typed `jellyfin_<op>` tools. Use when the agent must find or enumerate catalog items, resolve an item id, inspect a collection, or query library structure. Do NOT use for playback/streaming or artists/playlists (use `jellyfin-media-playback`), for server administration, users, or backups (use the typed `jellyfin_get_system_info` / `jellyfin_get_users` / `jellyfin_create_backup` tools), or for pushing the catalog into the knowledge graph (use `jellyfin-kg-ingestion`).
 
 Domain-typed browse/search over a **Jellyfin** library through the
 typed per-operation tools (`jellyfin_get_items`, `jellyfin_get_item`,
