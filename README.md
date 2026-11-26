@@ -20,28 +20,9 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/jellyfin-mcp)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/jellyfin-mcp)
 
-> **Documentation** — Installation, deployment, usage across the MCP, API, and A2A
-> agent interfaces, and guidance for provisioning the Jellyfin media server are
-> maintained in the [official documentation](https://knuckles-team.github.io/jellyfin-mcp/).
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [CLI or API](#cli-or-api)
-- [MCP Integration](#mcp)
-  - [Available MCP Tools](#available-mcp-tools)
-  - [MCP Configuration Examples](#mcp-configuration-examples)
-- [Agent Capabilities](#agent)
-  - [Running the Agent CLI](#running-the-agent-cli)
-  - [Docker Compose Orchestration](#docker-compose-orchestration)
-- [Security & Governance](#security--governance)
-- [Documentation](#documentation)
-- [Contribute](#contribute)
+> **Documentation** — Installation, deployment, and usage across the API, CLI, MCP,
+> and A2A agent interfaces are maintained in the
+> [official documentation](https://knuckles-team.github.io/jellyfin-mcp/).
 
 ---
 
@@ -77,8 +58,6 @@ To start the interactive Graph Agent terminal interface:
 ```bash
 jellyfin-agent --provider openai --model-id gpt-4o
 ```
-
----
 
 ---
 
@@ -657,6 +636,8 @@ the detailed transport contract.
   `MCP_ALLOWED_HOSTS` in `AgentConfig`.
 <!-- END GENERATED: additional-deployment-options -->
 
+---
+
 ## Agent
 
 This repository features a fully integrated Pydantic AI Graph Agent. It communicates over the **Agent Control Protocol (ACP)** and interacts smoothly with the **Agent Web UI (AG-UI)** and Terminal interface.
@@ -760,67 +741,6 @@ Built directly upon the enterprise-ready [`scion-sdk`](https://github.com/Knuckl
 | **Tool Guard** | Sensitivity inspection with human-in-the-loop validation | Enabled by default |
 | **Prompt Injection Defense** | Input scanning, repetition monitoring, and recursive loop blocks | Enabled by default |
 | **Context Safety Guard** | Stuck-loop detectors and contextual overflow preemptive alerts | Enabled by default |
-
----
-
-## Documentation
-
-The complete documentation is published as the
-[official documentation site](https://knuckles-team.github.io/jellyfin-mcp/) and is the
-recommended reference for installation, deployment, and day-to-day operation.
-
-| Page | Contents |
-|---|---|
-| [Installation](https://knuckles-team.github.io/jellyfin-mcp/installation/) | pip, source, extras, prebuilt Docker image |
-| [Deployment](https://knuckles-team.github.io/jellyfin-mcp/deployment/) | run the MCP and agent servers, Compose, Caddy + Technitium, env config |
-| [Usage](https://knuckles-team.github.io/jellyfin-mcp/usage/) | the MCP tools, the `Api` client, the agent CLI |
-| [Backing Platform](https://knuckles-team.github.io/jellyfin-mcp/platform/) | deploy a Jellyfin media server with Docker |
-| [Overview](https://knuckles-team.github.io/jellyfin-mcp/overview/) | the agent-package pattern and MCP configuration |
-| [Concepts](https://knuckles-team.github.io/jellyfin-mcp/concepts/) | concept registry (`CONCEPT:JELLYFIN-*`) |
-
----
-
-## Installation
-
-Pick the extra that matches what the operator want to run:
-
-| Extra | Installs | Use when |
-|-------|----------|----------|
-| `jellyfin-mcp[mcp]` | Connector-focused MCP server (`scion-sdk` — FastMCP/FastAPI + `medulla[full]`) | The operator only run the **MCP server** (smallest install / image) |
-| `jellyfin-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
-
-```bash
-# Connector-focused MCP server (includes the shared graph engine)
-uv pip install "jellyfin-mcp[mcp]"
-
-# Agent runtime (adds model orchestration to the shared graph engine)
-
-# Everything (development)
-uv pip install "jellyfin-mcp[all]"      # or: python -m pip install "jellyfin-mcp[all]"
-```
-
-### Container images (`:mcp`)
-
-One multi-stage `docker/Dockerfile` builds the MCP-only image (`--target mcp`):
-
-| Image tag | Build target | Contents | Entrypoint |
-|-----------|--------------|----------|------------|
-| `example/jellyfin-mcp:mcp` | `--target mcp` | `jellyfin-mcp[mcp]` — **connector-focused**, includes `medulla[full]`; no model-orchestration stack | `jellyfin-mcp` |
-
-```bash
-docker build --target mcp   -t example/jellyfin-mcp:mcp    docker/   # connector-focused MCP server
-```
-
-agent (`immutable agent digest`) with a co-located `:mcp` sidecar.
-
-### Knowledge-graph database (`medulla`)
-
-Scion SDK core dependency (`medulla[full]`). The `[mcp]` extra keeps
-deployments can use the bundled engine. For production or shared state, run
-**medulla as a dedicated database service** and configure the runtime to use it.
-Deployment recipes (single-node + Raft HA), connection configuration, and architecture
-diagrams are documented in the
-[medulla deployment guide](https://knuckles-team.github.io/medulla/deployment/).
 
 ---
 
@@ -934,6 +854,67 @@ See [`.env.example`](.env.example) for a copy-paste starting point.
 
 ---
 
+## Installation
+
+Pick the extra that matches what the operator want to run:
+
+| Extra | Installs | Use when |
+|-------|----------|----------|
+| `jellyfin-mcp[mcp]` | Connector-focused MCP server (`scion-sdk` — FastMCP/FastAPI + `medulla[full]`) | The operator only run the **MCP server** (smallest install / image) |
+| `jellyfin-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
+
+```bash
+# Connector-focused MCP server (includes the shared graph engine)
+uv pip install "jellyfin-mcp[mcp]"
+
+# Agent runtime (adds model orchestration to the shared graph engine)
+
+# Everything (development)
+uv pip install "jellyfin-mcp[all]"      # or: python -m pip install "jellyfin-mcp[all]"
+```
+
+### Container images (`:mcp`)
+
+One multi-stage `docker/Dockerfile` builds the MCP-only image (`--target mcp`):
+
+| Image tag | Build target | Contents | Entrypoint |
+|-----------|--------------|----------|------------|
+| `example/jellyfin-mcp:mcp` | `--target mcp` | `jellyfin-mcp[mcp]` — **connector-focused**, includes `medulla[full]`; no model-orchestration stack | `jellyfin-mcp` |
+
+```bash
+docker build --target mcp   -t example/jellyfin-mcp:mcp    docker/   # connector-focused MCP server
+```
+
+agent (`immutable agent digest`) with a co-located `:mcp` sidecar.
+
+### Knowledge-graph database (`medulla`)
+
+Scion SDK core dependency (`medulla[full]`). The `[mcp]` extra keeps
+deployments can use the bundled engine. For production or shared state, run
+**medulla as a dedicated database service** and configure the runtime to use it.
+Deployment recipes (single-node + Raft HA), connection configuration, and architecture
+diagrams are documented in the
+[medulla deployment guide](https://knuckles-team.github.io/medulla/deployment/).
+
+---
+
+## Documentation
+
+The complete documentation is published as the
+[official documentation site](https://knuckles-team.github.io/jellyfin-mcp/) and is the
+recommended reference for installation, deployment, and day-to-day operation.
+
+| Page | Contents |
+|---|---|
+| [Installation](https://knuckles-team.github.io/jellyfin-mcp/installation/) | pip, source, extras, prebuilt Docker image |
+| [Deployment](https://knuckles-team.github.io/jellyfin-mcp/deployment/) | run the MCP and agent servers, Compose, Caddy + Technitium, env config |
+| [Usage](https://knuckles-team.github.io/jellyfin-mcp/usage/) | the MCP tools, the `Api` client, the agent CLI |
+| [Backing Platform](https://knuckles-team.github.io/jellyfin-mcp/platform/) | deploy a Jellyfin media server with Docker |
+| [Overview](https://knuckles-team.github.io/jellyfin-mcp/overview/) | the agent-package pattern and MCP configuration |
+| [Concepts](https://knuckles-team.github.io/jellyfin-mcp/concepts/) | concept registry (`CONCEPT:JELLYFIN-*`) |
+
+---
+
 ## Repository Owners
 
 <img width="100%" height="180em" src="https://github-readme-stats.vercel.app/api?username=example&show_icons=true&hide_border=true&&count_private=true&include_all_commits=true" />
@@ -950,8 +931,6 @@ Contributions are welcome! Please ensure code quality by running local checks be
 - Lint code using `ruff check .`
 - Validate type-safety with `mypy .`
 - Run test suites using `pytest`
-
-
 
 <!-- GOVERNED-CAPABILITY:START -->
 ## Governed capability contract
